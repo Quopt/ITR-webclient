@@ -1,0 +1,634 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://opensource.org/licenses/Artistic-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div NoTranslate id="AdminInterfaceTestTemplateEditorHeader" class="row col-12">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="AdminInterfaceTestTemplateEditorHeaderH4">Edit and create test definitions</h4>
+</div>
+
+<div id="AdminInterfaceTestTemplateEditorSelect">
+    <div><h1 id="AdminInterfaceTestTemplateEditorSelectHeader">Select a test definition or add a new one</h1></div>
+    <div>
+        <ul id="AdminInterfaceTestTemplateEditorSelectSelectList" class="list-unstyled">
+            <li id="AdminInterfaceTestTemplateEditorSelectListLoading"> list is loading ...</li>
+        </ul>
+    </div>
+    <div>
+        <button type="button" class="btn-sm btn-success" id="AdminInterfaceTestTemplateEditorAddNewTest"
+                onclick="ITSInstance.newITSTestEditorController.addNewTestDefinition(); ">
+            <i class="fa fa-sm fa-plus aria-hidden='true'"></i> Add new test definition
+        </button>&nbsp;
+    </div>
+</div>
+
+<div id="AdminInterfaceTestTemplateEditorEdit">
+    <!-- generic section -->
+    <div class="row col-12">
+        <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true"
+           onclick="ITSInstance.newITSTestEditorController.processBackClick();"></i>&nbsp;
+        <h4 id="AdminInterfaceTestTemplateEditorSelectHeader">Edit test definition</h4>
+    </div>
+    <div class="bg-dark text-white well"><label id="AdminInterfaceTestTemplateEditorSelectHeader">Test definition
+        section</label>
+    </div>
+
+    <div class="row col-12">
+        <ul class="nav nav-tabs">
+            <li id="AdminInterfaceTestTemplateEditor_TabTestInformation_li" notranslate class="nav-item">
+                <a class="nav-link active"
+                   onclick="ITSInstance.newITSTestEditorController.showTab('AdminInterfaceTestTemplateEditor_TabTestInformation','AdminInterfaceTestTemplateEditorTabTestInformation');">
+                    <label id="AdminInterfaceTestTemplateEditor_TabTestInformation">Test information</label>
+                </a>
+            </li>
+            <li id="AdminInterfaceTestTemplateEditor_TabScreens_li" notranslate class="nav-item">
+                <a class="nav-link active"
+                   onclick="ITSInstance.newITSTestEditorController.showTab('AdminInterfaceTestTemplateEditor_TabScreens','AdminInterfaceTestTemplateEditorTabScreens');">
+                    <label id="AdminInterfaceTestTemplateEditor_TabScreens">Contents</label>
+                </a>
+            </li>
+            <li id="AdminInterfaceTestTemplateEditor_TabScoring_li" notranslate class="nav-item">
+                <a class="nav-link active"
+                   onclick="ITSInstance.newITSTestEditorController.showTab('AdminInterfaceTestTemplateEditor_TabScoring','AdminInterfaceTestTemplateEditorTabScoring');">
+                    <label id="AdminInterfaceTestTemplateEditor_TabScoring">Scoring</label>
+                </a>
+            </li>
+            <li id="AdminInterfaceTestTemplateEditor_TabNorms_li" notranslate class="nav-item">
+                <a class="nav-link active"
+                   onclick="ITSInstance.newITSTestEditorController.showTab('AdminInterfaceTestTemplateEditor_TabNorms','AdminInterfaceTestTemplateEditorTabNorms');">
+                    <label id="AdminInterfaceTestTemplateEditor_TabNorms">Norms</label>
+                </a>
+            </li>
+            <li id="AdminInterfaceTestTemplateEditor_TabCatalog_li" notranslate class="nav-item">
+                <a class="nav-link active"
+                   onclick="ITSInstance.newITSTestEditorController.showTab('AdminInterfaceTestTemplateEditor_TabCatalog','AdminInterfaceTestTemplateEditorTabCatalog');">
+                    <label id="AdminInterfaceTestTemplateEditor_TabCatalog">Catalog information</label>
+                </a>
+            </li>
+            <li id="AdminInterfaceTestTemplateEditor_TabMedia_li" notranslate class="nav-item">
+                <a class="nav-link active"
+                   onclick="ITSInstance.newITSTestEditorController.showTab('AdminInterfaceTestTemplateEditor_TabMedia','AdminInterfaceTestTemplateEditorTabMedia');">
+                    <label id="AdminInterfaceTestTemplateEditor_TabMedia">Media</label>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div id="AdminInterfaceTestTemplateEditorTabTestInformation" class="row col-12">
+        <div class="form-group row col-12"></div>
+        <div class="form-group row col-12">
+            <label class="col-sm-4 col-form-label" for="AdminInterfaceTestTemplateEditorTestActive"
+                   id="AdminInterfaceTestTemplateEditorTestActiveLabel">Test can be
+                used</label>
+            <div class="col-sm-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" class="form-check-input"  data-field="currentTest.Active" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );"
+                                                                       id="AdminInterfaceTestTemplateEditorTestActive"/>
+            </div>
+        </div>
+        <div class="form-group row col-12">
+            <label class="col-sm-4 col-form-label" for="AdminInterfaceTestTemplateEditorTestName"
+                   id="AdminInterfaceTestTemplateEditorTestNameLabel">Test name</label>
+            <div class="col-sm-8"><input type="text" class="form-control" maxlength="50" required="true"
+                                         id="AdminInterfaceTestTemplateEditorTestName" data-field="currentTest.TestName" onkeyup="this.value = this.value.replace(/\W/g, ''); DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );"/></div>
+        </div>
+        <div id="AdminInterfaceTestTemplateEditorTestDescriptionDiv" class="form-group row col-12">
+            <label class="col-sm-4 col-form-label" id="AdminInterfaceTestTemplateEditorTestDescriptionLabel"
+                   for="AdminInterfaceTestTemplateEditorTestDescription">Description</label>
+            <div class="col-sm-8"><input type="text" class="form-control" maxlength="200"
+                                         id="AdminInterfaceTestTemplateEditorTestDescription" data-field="currentTest.Description" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );"/></div>
+        </div>
+        <div class="form-group row col-12">
+            <label class="col-sm-4 col-form-label" for="AdminInterfaceTestTemplateEditor-LanguageSelect"
+                   id="AdminInterfaceTestTemplateEditor-LanguageSelectLabel">Test language</label>
+            <div class="col-sm-8"><select notranslate class="form-control form-control-sm"
+                                                  id="AdminInterfaceTestTemplateEditor-LanguageSelect" onchange="ITSInstance.newITSTestEditorController.selectLanguageInEditor(this.selectedIndex);">
+            </select>
+            </div>
+        </div>
+        <div class="form-group row col-12">
+            <label class="col-sm-4 form-check-label" id="AdminInterfaceTestTemplateEditorTestCapabilities">Test capabilities</label>
+            <div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasScoring" id="AdminInterfaceTestTemplateEditorTestCapHasScoringLabel">Test has scoring</label>
+                <input  id="AdminInterfaceTestTemplateEditorTestCapHasScoring" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.PluginData.testHasScoring" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController ); ITSInstance.newITSTestEditorController.processTestCapabilities();"/>
+            </div><div class="col-sm-4 form-check">&nbsp</div><div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasNorms" id="AdminInterfaceTestTemplateEditorTestCapHasNormsLabel">Test has norms</label>
+                <input  id="AdminInterfaceTestTemplateEditorTestCapHasNorms" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.PluginData.testHasNorms" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController ); ITSInstance.newITSTestEditorController.processTestCapabilities();"/>
+            </div><div class="col-sm-4 form-check">&nbsp</div><div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasCatalog" id="AdminInterfaceTestTemplateEditorTestCapHasCatalogLabel">Test has catalog information</label>
+                <input  id="AdminInterfaceTestTemplateEditorTestCapHasCatalog" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.PluginData.testHasCatalog" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController ); ITSInstance.newITSTestEditorController.processTestCapabilities();"/>
+            </div><div class="col-sm-4 form-check">&nbsp</div><div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasAdditionalFiles" id="AdminInterfaceTestTemplateEditorTestCapHasAdditionalFilesLabel">Test uses additional files like images</label>
+                <input  id="AdminInterfaceTestTemplateEditorTestCapHasAdditionalFiles" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.PluginData.testHasMedia" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController ); ITSInstance.newITSTestEditorController.processTestCapabilities();"/>
+            </div><div class="col-sm-4 form-check">&nbsp</div><div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasMultipleScreens" id="AdminInterfaceTestTemplateEditorTestCapHasMultipleScreensLabel">Test has multiple screens</label>
+                <input  id="AdminInterfaceTestTemplateEditorTestCapHasMultipleScreens" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.PluginData.testHasMultipleScreens" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController ); ITSInstance.newITSTestEditorController.processTestCapabilities();"/>
+            </div><div class="col-sm-4 form-check">&nbsp</div><div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasScreenDynamics" id="AdminInterfaceTestTemplateEditorTestCapHasScreenDynamicsLabel">Test has screen dynamics</label>
+                <input  id="AdminInterfaceTestTemplateEditorTestCapHasScreenDynamics" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.PluginData.testHasScreenDynamics" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController ); ITSInstance.newITSTestEditorController.processTestCapabilities();"/>
+            </div><div class="col-sm-4 form-check">&nbsp</div><div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapShowTestClosureScreen" id="AdminInterfaceTestTemplateEditorTestCapShowTestClosureScreenLabel">Show the test closure screen after the test</label>
+            <input  id="AdminInterfaceTestTemplateEditorTestCapShowTestClosureScreen" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.ShowTestClosureScreen" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );"/>
+        </div>
+        </div>
+        <div id="AdminInterfaceTestTemplateEditorTestCopyrightsDiv" class="form-group row col-12">
+            <label class="col-sm-4 col-form-label" id="AdminInterfaceTestTemplateEditorTestCopyrightsLabel"
+                   for="AdminInterfaceTestTemplateEditorTestCopyrights">Copyrights</label>
+            <div class="col-sm-8"><input type="text" class="form-control" maxlength="200"  data-field="currentTest.Copyrights" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );"
+                                         id="AdminInterfaceTestTemplateEditorTestCopyrights"/></div>
+        </div>
+        <div id="AdminInterfaceTestTemplateEditorTestExplanationDiv" class="form-group row col-12">
+            <label class="col-sm-4 col-form-label" id="AdminInterfaceTestTemplateEditorTestExplanationLabel"
+                   for="AdminInterfaceTestTemplateEditorTestExplanation">Explanation</label>
+            <div class="col-sm-8">
+                <textarea-htmledit notranslate class="form-control"  data-field="currentTest.Explanation"
+                                   onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );"
+                                   id="AdminInterfaceTestTemplateEditorTestExplanation"></textarea-htmledit>
+            </div>
+        </div>
+        <div class="form-group row col-12">
+            <label class="col-sm-4 col-form-label" for="AdminInterfaceTestTemplateEditorTestRemarks"
+                   id="AdminInterfaceTestTemplateEditorTestRemarksLabel">Remarks (only shown
+                here)</label>
+            <div class="col-sm-8"><textarea class="form-control" rows="4"  data-field="currentTest.Remarks" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );"
+                                            id="AdminInterfaceTestTemplateEditorTestRemarks"></textarea></div>
+        </div>
+    </div>
+
+    <div id="AdminInterfaceTestTemplateEditorTabScreens" NoTranslate class="row col-12">
+        <div class="col-2" id="AdminInterfaceTestTemplateEditorTabScreensColScreenList">
+            <div class="row bg-dark text-white well">
+                <label id="AdminInterfaceTestTemplateEditorScreenHeaderText">Screen list</label>
+            </div>
+            <div NoTranslate id="AdminInterfaceTestTemplateEditorScreenHeader"></div>
+        </div>
+        <div id="AdminInterfaceTestTemplateEditorScreenContents" NoTranslate class="col-6">
+            <div class="row bg-dark text-white well">
+                <label id="AdminInterfaceTestTemplateEditorScreenContentsHeaderText">Screen contents</label>
+            </div>
+            <div NoTranslate id="AdminInterfaceTestTemplateEditorScreenContentsHeader"></div>
+        </div>
+        <div class="col-4 flex-row bg-light" id="AdminInterfaceTestTemplateEditorTabScreensColScreenItemSettings">
+            <div class="row bg-dark text-white well">
+                <label id="AdminInterfaceTestTemplateEditorScreenVarText">Screen item settings</label>
+            </div>
+            <div id="AdminInterfaceTestTemplateEditorScreenVar" NoTranslate class="flex-row">
+                <hr/>
+            </div>
+        </div>
+        <div class="col-2" id="AdminInterfaceTestTemplateEditorTabScreensColScreenListButtons">
+            <div class="row">
+                <button id="AdminInterfaceTestTemplateEditorAddScreenButton" type="button" class="btn-xs btn-success"
+                        onclick="ITSInstance.newITSTestEditorController.addNewScreen();"><i
+                        class="fa fa-fw fa-plus"></i> Add new screen
+                </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div id="AdminInterfaceTestTemplateEditorScreenContentButtons" NoTranslate class="row">
+                <div class="row col">
+                    <button id="AdminInterfaceTestTemplateEditorAddScreenComponentButton" type="button"
+                            class="btn-xs btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false"><i class="fa fa-fw fa-plus"></i> Add new screen component
+                    </button>
+                    <div class="dropdown-menu" NoTranslate id="AdminInterfaceTestTemplateEditorAddScreenComponentList"
+                         aria-labelledby="AdminInterfaceTestTemplateEditorAddScreenComponentButton">
+                        <a class="dropdown-item" href="#">...</a>
+                    </div>
+                    <button id="AdminInterfaceTestTemplateEditorCopyToNewScreenButton" type="button"
+                            class="btn-xs btn-success"
+                            onclick="ITSInstance.newITSTestEditorController.copyToNewScreen();"><i
+                            class="fa fa-fw fa-copy"></i> Copy to new screen
+                    </button>
+                </div>
+            </div>
+            <div id="AdminInterfaceTestTemplateEditorScreenDynamicsDiv" NoTranslate>
+                &nbsp;
+                <div class="bg-dark text-white well  dropdown-toggle" onclick="if ($('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility == 'hidden') { $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility = 'visible'; } else { $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility = 'hidden'; }"><label
+                        id="AdminInterfaceTestTemplateEditorScreenDynamics">Screen
+                    dynamics</label></div>
+                <div id="AdminInterfaceTestTemplateEditorScreenDynamics_section" style="visibility: hidden">
+                    <table notranslate="" class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th id="AdminInterfaceTestTemplateEditorScreenDynamics_sourcecomponent" scope="col">Screen
+                                component (source)
+                            </th>
+                            <th id="AdminInterfaceTestTemplateEditorScreenDynamics_source" scope="col">Value</th>
+                            <th id="AdminInterfaceTestTemplateEditorScreenDynamics_targetcomponent" scope="col">Screen
+                                component (target)
+                            </th>
+                            <th id="AdminInterfaceTestTemplateEditorScreenDynamics_targetvisible" scope="col">Visible
+                            </th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody id="AdminInterfaceTestTemplateEditorScreenDynamics_tbody">
+
+                        </tbody>
+                    </table>
+                    <button id="AdminInterfaceTestTemplateEditorScreenDynamics_addNewLine" type="button" onclick="ITSInstance.newITSTestEditorController.newScreenDynamicsRule();"
+                            class="btn-xs btn-success"><i class="fa fa-fw fa-plus"></i> Add new screen dynamics rule
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="AdminInterfaceTestTemplateEditorTabScoring" NoTranslate class="row col-12">
+        <div class="col-12">
+            <div class="bg-dark text-white well"><label id="AdminInterfaceTestTemplateEditorTabScalesListHeader">Scales</label>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label id="AdminInterfaceTestTemplateEditorScaleHeader"
+                           for="AdminInterfaceTestTemplateEditor-ScaleSelect">Select scale</label>
+                    <select notranslate class="form-control form-control-sm"
+                            id="AdminInterfaceTestTemplateEditor-ScaleSelect"
+                            onchange="ITSInstance.newITSTestEditorController.showScaleInEditor(this.selectedIndex);"></select>
+                    <button id="AdminInterfaceTestTemplateEditorAddScaleButton" type="button"
+                            class="btn-xs btn-success"
+                            onclick="ITSInstance.newITSTestEditorController.addNewScale();"><i
+                            class="fa fa-fw fa-plus"></i>Add
+                        new scale
+                    </button>
+                    <button id="AdminInterfaceTestTemplateEditorRemoveScaleButton" type="button"
+                            class="btn-xs btn-warning"
+                            onclick="ITSInstance.newITSTestEditorController.removeScale();"><i
+                            class="fa fa-fw fa-trash"></i>Remove scale
+                    </button>
+                </div>
+                <div class="col-8" id="AdminInterfaceTestTemplateEditorScaleDiv">&nbsp;
+                    <div class="row">
+                        <label class="col-4 col-form-label col-form-label-sm"
+                               id="AdminInterfaceTestTemplateEditorScaleActiveHeader"
+                               for="AdminInterfaceTestTemplateEditorScaleActiveCheck">Show scale as test result</label>
+                        <div class="col-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" data-field="currentScale.showScale" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"
+                                                                                class="form-check-input form-check-input-sm"
+                                                                                id="AdminInterfaceTestTemplateEditorScaleActiveCheck"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-4 col-form-label col-form-label-sm"
+                               id="AdminInterfaceTestTemplateEditorScaleNameHeader"
+                               for="AdminInterfaceTestTemplateEditorScaleName">Scale description</label>
+                        <div class="col-8"><input type="text" class="form-control form-control-sm" data-field="currentScale.scaleDescription" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"
+                                                  id="AdminInterfaceTestTemplateEditorScaleName"/></div>
+                    </div>
+                    <div class="row">
+                        <label class="col-4 col-form-label col-form-label-sm"
+                               id="AdminInterfaceTestTemplateEditorScaleVarNameHeader"
+                               for="AdminInterfaceTestTemplateEditorScaleVarName">Scale variable name</label>
+                        <div class="col-8"><input type="text" class="form-control form-control-sm" data-field="currentScale.scaleVarName" onkeyup="this.value = this.value.replace(/\W/g, ''); DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"
+                                                  id="AdminInterfaceTestTemplateEditorScaleVarName"/></div>
+                    </div>
+                    <div class="row">
+                        <label class="col-4 col-form-label col-form-label-sm"
+                               id="AdminInterfaceTestTemplateEditorScaleTypeHeader"
+                               for="AdminInterfaceTestTemplateEditorScaleType">Scale type</label>
+                        <div class="col-2"><select notranslate class="form-control form-control-sm" data-field="currentScale.scaleType" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"
+                                                   id="AdminInterfaceTestTemplateEditorScaleType">
+                            <option id="AdminInterfaceTestTemplateEditorScaleType-N" selected="true" value="N">Numeric
+                            </option>
+                            <option id="AdminInterfaceTestTemplateEditorScaleType-T" value="T">Textual</option>
+                        </select>
+                        </div>
+                        <label class="col-2 col-form-label col-form-label-sm"
+                               id="AdminInterfaceTestTemplateEditorScaleMinHeader"
+                               for="AdminInterfaceTestTemplateEditorScaleMin">Minimum value</label>
+                        <div class="col-1"><input type="text" class="form-control form-control-sm" data-field="currentScale.minimumScore" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"
+                                                  id="AdminInterfaceTestTemplateEditorScaleMin"/></div>
+                        <label class="col-2 col-form-label col-form-label-sm"
+                               id="AdminInterfaceTestTemplateEditorScaleMaxHeader"
+                               for="AdminInterfaceTestTemplateEditorScaleMax">Maximum value</label>
+                        <div class="col-1"><input type="text" class="form-control form-control-sm" data-field="currentScale.maximumScore" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"
+                                                  id="AdminInterfaceTestTemplateEditorScaleMax"/></div>
+                    </div>
+                    <div class="row">
+                        <label class="col-6 col-form-label col-form-label-sm">&nbsp;</label>
+                        <label class="col-2 col-form-label col-form-label-sm"
+                               id="AdminInterfaceTestTemplateEditorScaleDefaultHeader"
+                               for="AdminInterfaceTestTemplateEditorScaleDefault">Default value</label>
+                        <div class="col-1"><input type="text" class="form-control form-control-sm" data-field="currentScale.defaultValue" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"
+                                                  id="AdminInterfaceTestTemplateEditorScaleDefault"/></div>
+                        <label class="col-2 col-form-label col-form-label-sm"
+                               id="AdminInterfaceTestTemplateEditorScalePrecisionHeader"
+                               for="AdminInterfaceTestTemplateEditorScalePrecision">Scale precision</label>
+                        <div class="col-1"><input type="number" id="AdminInterfaceTestTemplateEditorScalePrecision"  data-field="currentScale.scalePrecision" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"
+                                                  min="0" step="1" max="5" placeholder="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-4 col-form-label col-form-label-sm"
+                               id="AdminInterfaceTestTemplateEditorScaleExplanationHeader"
+                               for="AdminInterfaceTestTemplateEditorScaleExplanation">Scale explanation</label>
+                        <div class="col-8">
+                            <textarea-htmledit type="text" class="form-control form-control-sm"  data-field="currentScale.scaleExplanation" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"
+                                               id="AdminInterfaceTestTemplateEditorScaleExplanation"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-4 col-form-label col-form-label-sm"
+                               id="AdminInterfaceTestTemplateEditorScaleRemarksHeader"
+                               for="AdminInterfaceTestTemplateEditorScaleRemarks">Remarks (only shown here)</label>
+                        <div class="col-8"><textarea rows="4" class="form-control form-control-sm" data-field="currentScale.remarks" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"
+                                                     id="AdminInterfaceTestTemplateEditorScaleRemarks"/></div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-row">&nbsp;
+                <div class="bg-dark text-white well"><label
+                        id="AdminInterfaceTestTemplateEditorTabScalesScoreMatrixHeader">Scoring matrix</label></div>
+                <table notranslate id="AdminInterfaceTestTemplateEditorTabScalesScoreTable" class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th id="AdminInterfaceTestTemplateEditorTabScalesScoreMatrixHeaderQ" scope="col">Question</th>
+                        <th id="AdminInterfaceTestTemplateEditorTabScalesScoreMatrixHeaderA" scope="col">Answer</th>
+                        <th id="AdminInterfaceTestTemplateEditorTabScalesScoreMatrixHeaderScale" scope="col">Scale</th>
+                        <th id="AdminInterfaceTestTemplateEditorTabScalesScoreMatrixHeaderScore" scope="col">Score</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody id="AdminInterfaceTestTemplateEditorTabScalesScoreTable_tbody">
+
+                    </tbody>
+                </table>
+                <button id="AdminInterfaceTestTemplateEditorAddScoreMatrixButton" type="button"
+                        class="btn-xs btn-success"
+                        onclick="ITSInstance.newITSTestEditorController.addNewScaleScoreMatrix();"><i
+                        class="fa fa-fw fa-plus"></i>Add new scoring line
+                </button>
+            </div>
+            <div class="flex-row">&nbsp;
+                <div class="bg-dark text-white well"><label
+                        id="AdminInterfaceTestTemplateEditorTabScalesComplexScoringHeader">Complex scoring
+                    script</label><label notranslate>(session, sessiontest, candidate, testdefinition, scores, scales, itsinstance)</label>
+                </div>
+
+                <div ace-edit id="AdminInterfaceTestTemplateEditorComplexScoringEditor" notranslate style="height: 100px;" data-field="currentTest.ScoringScript" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"></div>
+
+                <script>
+                    var myAdminInterfaceTestTemplateEditorComplexScoringEditor = ace.edit("AdminInterfaceTestTemplateEditorComplexScoringEditor");
+                    myAdminInterfaceTestTemplateEditorComplexScoringEditor.setTheme("ace/theme/monokai");
+                    myAdminInterfaceTestTemplateEditorComplexScoringEditor.session.setMode("ace/mode/javascript");
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div id="AdminInterfaceTestTemplateEditorTabNorms" class="row col-12">
+        <div class="col-12">
+            <div class="bg-dark text-white well"><label
+                    id="AdminInterfaceTestTemplateEditorTabNormsListHeader">Norms</label>
+            </div>
+        </div>
+
+        <div class="col-4">
+            <label id="AdminInterfaceTestTemplateEditorNormHeader"
+                   for="AdminInterfaceTestTemplateEditor-NormSelect">Select norm</label>
+            <select notranslate class="form-control form-control-sm"
+                    id="AdminInterfaceTestTemplateEditor-NormSelect"
+                    onchange="ITSInstance.newITSTestEditorController.showNormInEditor(this.selectedIndex);"></select>
+            <button id="AdminInterfaceTestTemplateEditorAddNormButton" type="button"
+                    class="btn-xs btn-success"
+                    onclick="ITSInstance.newITSTestEditorController.addNewNorm();"><i
+                    class="fa fa-fw fa-plus"></i>Add
+                new norm
+            </button>
+            <button id="AdminInterfaceTestTemplateEditorRemoveNormButton" type="button"
+                    class="btn-xs btn-warning"
+                    onclick="ITSInstance.newITSTestEditorController.removeNorm();"><i
+                    class="fa fa-fw fa-trash"></i>Remove norm
+            </button>
+        </div>
+        <div id="AdminInterfaceTestTemplateEditorNormDiv" class="col-8">&nbsp;
+            <div class="row">
+                <label class="col-4 col-form-label col-form-label-sm"
+                       id="AdminInterfaceTestTemplateEditorNormActiveHeader"
+                       for="AdminInterfaceTestTemplateEditorNormActiveCheck">Norm can be used</label>
+                <div class="col-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" data-field="currentNorm.active"
+                        onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabNorms', ITSInstance.newITSTestEditorController );"
+                        class="form-check-input form-check-input-sm"
+                        id="AdminInterfaceTestTemplateEditorNormActiveCheck"/>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-4 col-form-label col-form-label-sm"
+                       id="AdminInterfaceTestTemplateEditorNormNameHeader"
+                       for="AdminInterfaceTestTemplateEditorNormName">Norm description</label>
+                <div class="col-8"><input type="text" class="form-control form-control-sm" data-field="currentNorm.normDescription"
+                                          onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabNorms', ITSInstance.newITSTestEditorController );"
+                                          id="AdminInterfaceTestTemplateEditorNormName"/></div>
+            </div>
+            <div class="row">
+                <label class="col-4 col-form-label col-form-label-sm"
+                       id="AdminInterfaceTestTemplateEditorNormVarNameHeader"
+                       for="AdminInterfaceTestTemplateEditorNormVarName">Norm variable name</label>
+                <div class="col-8"><input type="text" class="form-control form-control-sm"
+                                          data-field="currentNorm.NormVarName"
+                                          onkeyup="this.value = this.value.replace(/\W/g, ''); DataBinderFrom('AdminInterfaceTestTemplateEditorTabNorms', ITSInstance.newITSTestEditorController );"
+                                          id="AdminInterfaceTestTemplateEditorNormVarName"/></div>
+            </div>
+            <div class="row">
+                <label class="col-4 col-form-label col-form-label-sm"
+                       id="AdminInterfaceTestTemplateEditorNormTypeHeader"
+                       for="AdminInterfaceTestTemplateEditorNormType">Norm type</label>
+                <div class="col-2"><select notranslate class="form-control form-control-sm"
+                                           data-field="currentNorm.normMetric"
+                                           onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabNorms', ITSInstance.newITSTestEditorController );"
+                                           id="AdminInterfaceTestTemplateEditorNormType">
+                    <option id="AdminInterfaceTestTemplateEditorNormType-S" value="S">Stanine (1-9)</option>
+                    <option id="AdminInterfaceTestTemplateEditorNormType-D" value="D">Decile (1-10)</option>
+                    <option id="AdminInterfaceTestTemplateEditorNormType-V" value="V">Vigintile (1-20)</option>
+                    <option id="AdminInterfaceTestTemplateEditorNormType-P" value="P">Percentile (1-100)</option>
+                    <option id="AdminInterfaceTestTemplateEditorNormType-T" value="T">Textual</option>
+                    <option id="AdminInterfaceTestTemplateEditorNormType-O" value="O">Other</option>
+                </select>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-4 col-form-label col-form-label-sm"
+                       id="AdminInterfaceTestTemplateEditorNormDefaultOrderLabel"
+                       for="AdminInterfaceTestTemplateEditorNormDefaultOrder">Default norm order</label>
+                <div class="col-2"><select notranslate class="form-control form-control-sm"
+                                           data-field="currentNorm.parameters.DefaultNormOrder"
+                                           onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabNorms', ITSInstance.newITSTestEditorController );"
+                                           id="AdminInterfaceTestTemplateEditorNormDefaultOrder">
+                    <option value="-1">-</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-4 col-form-label col-form-label-sm"
+                       id="AdminInterfaceTestTemplateEditorNormPercentilesHeader"
+                       for="AdminInterfaceTestTemplateEditorNormPercentilesCheck">Percentile values present</label>
+                <div class="col-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox"
+                           data-field="currentNorm.percentileValuesFilled"
+                           onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabNorms', ITSInstance.newITSTestEditorController );"
+                            class="form-check-input form-check-input-sm"
+                            id="AdminInterfaceTestTemplateEditorNormPercentilesCheck"/>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-4 col-form-label col-form-label-sm"
+                       id="AdminInterfaceTestTemplateEditorNormExplanationHeader"
+                       for="AdminInterfaceTestTemplateEditorNormExplanation">Norm explanation</label>
+                <div class="col-8">
+                    <textarea-htmledit type="text" class="form-control form-control-sm" data-field="currentNorm.explanation"
+                                       onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabNorms', ITSInstance.newITSTestEditorController );"
+                                       id="AdminInterfaceTestTemplateEditorNormExplanation"/>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-4 col-form-label col-form-label-sm"
+                       id="AdminInterfaceTestTemplateEditorNormRemarksHeader"
+                       for="AdminInterfaceTestTemplateEditorNormRemarks">Remarks (only shown here)</label>
+                <div class="col-8"><textarea rows="4" class="form-control form-control-sm" data-field="currentNorm.remarks"
+                                             onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabNorms', ITSInstance.newITSTestEditorController );"
+                                             id="AdminInterfaceTestTemplateEditorNormRemarks"/></div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="bg-dark text-white well"><label
+                    id="AdminInterfaceTestTemplateEditorTabNormColumnsHeader">Norm columns</label>
+            </div>
+        </div>
+
+        <div notranslate class="col-12" id="AdminInterfaceTestTemplateEditorNorm_NormColumnTable">
+        </div>
+
+        <div notranslate class="col-12" id="AdminInterfaceTestTemplateEditorNorm_ComplexNormScript">
+            <div class="flex-row">&nbsp;
+                <div class="bg-dark text-white well"><label
+                        id="AdminInterfaceTestTemplateEditorTabNormComplexScoringHeader">Complex norming
+                    script</label><label notranslate>(TestTakingObject, TestObject, trigger)</label>
+                </div>
+
+                <div ace-edit id="AdminInterfaceTestTemplateEditorComplexNormEditor" notranslate style="height: 100px;" data-field="currentNorm.afterNormScript"
+                     onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabNorms', ITSInstance.newITSTestEditorController );"></div>
+
+                <script>
+                    var myAdminInterfaceTestTemplateEditorComplexNormEditor = ace.edit("AdminInterfaceTestTemplateEditorComplexNormEditor");
+                    myAdminInterfaceTestTemplateEditorComplexNormEditor.setTheme("ace/theme/monokai");
+                    myAdminInterfaceTestTemplateEditorComplexNormEditor.session.setMode("ace/mode/javascript");
+                </script>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="AdminInterfaceTestTemplateEditorTabCatalog" class="row col-12">
+        <div class="form-group row col-12">
+            <label class="col-sm-4 col-form-label" id="AdminInterfaceTestTemplateEditorTestCatalogExplanationLabel"
+                   for="AdminInterfaceTestTemplateEditorTestCatalogExplanation">Catalog information</label>
+            <div class="col-sm-8">
+                <textarea-htmledit notranslate class="form-control" data-field="currentTest.CatalogInformation"
+                                   onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabCatalog', ITSInstance.newITSTestEditorController );"
+                                   id="AdminInterfaceTestTemplateEditorTestCatalogExplanation"></textarea-htmledit>
+            </div>
+        </div>
+    </div>
+
+    <div id="AdminInterfaceTestTemplateEditorTabMedia" class="row col-12">
+        <div class="col-12"><div class="bg-dark text-white well"><label id="AdminInterfaceTestTemplateEditorTestMediaHeader">Test media</label></div></div>
+        <div class="col-12">
+        <table notranslate="" class="table table-sm">
+            <thead>
+            <tr>
+                <th colspan=4 id="AdminInterfaceTestTemplateEditorMedia_AvailableMediaCol">Available media files</th>
+            </tr>
+            <tr>
+                <th scope="col">#</th>
+                <th id="AdminInterfaceTestTemplateEditorMedia_FileName" scope="col">File name</th>
+                <th id="AdminInterfaceTestTemplateEditorMedia_FileLink" scope="col">File link</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody id="AdminInterfaceTestTemplateEditorMedia_File_tbody">
+
+            </tbody>
+        </table>
+
+
+        <button id="AdminInterfaceTestTemplateEditor-uploadButtonA" type="button" class="btn btn-success" onclick="if ('FileReader' in window) { document.getElementById('AdminInterfaceTestTemplateEditor-filesA').click(); } else { alert('Your browser does not support this function. Please upgrade your browser.'); }"><i class="fa fa-fw fa-upload"></i> Upload file</button>&nbsp;
+        <input type="file" multiple="multiple" onchange="ITSInstance.newITSTestEditorController.uploadTestFile(event.target.files);" style="visibility: hidden" id="AdminInterfaceTestTemplateEditor-filesA" accept=""/>
+        </div>
+        <br/>
+        <div class="col-12"><div class="bg-dark text-white well"><label id="AdminInterfaceTestTemplateEditorCatalogMediaHeader">Catalog media</label></div></div>
+        <div class="col-12">
+
+            <table notranslate="" class="table table-sm">
+                <thead>
+                <tr>
+                    <th colspan=4 id="AdminInterfaceTestTemplateEditorMedia_AvailableCatalogCol">Available catalog files</th>
+                </tr>
+                <tr>
+                    <th scope="col">#</th>
+                    <th id="AdminInterfaceTestTemplateEditorMedia_CatFileNameCol" scope="col">File name</th>
+                    <th id="AdminInterfaceTestTemplateEditorMedia_CatFileLinkCol" scope="col">File link</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody id="AdminInterfaceTestTemplateEditorMedia_Cat_tbody">
+
+                </tbody>
+            </table>
+
+
+
+        <button id="AdminInterfaceTestTemplateEditor-uploadButtonB" type="button" class="btn btn-success" onclick="if ('FileReader' in window) { document.getElementById('AdminInterfaceTestTemplateEditor-filesB').click(); } else { alert('Your browser does not support this function. Please upgrade your browser.'); }"><i class="fa fa-fw fa-upload"></i> Upload PDF file</button>&nbsp;
+        <input type="file" multiple="multiple" onchange="ITSInstance.newITSTestEditorController.uploadCatalogFile(event.target.files);" style="visibility: hidden" id="AdminInterfaceTestTemplateEditor-filesB" accept=".pdf"/>
+        </div>
+        <br/>
+
+    </div>
+
+    <!-- action section -->
+    &nbsp;
+    <div class="bg-dark text-white well"><label id="AdminInterfaceTestTemplateEditorActionHeader">Actions</label></div>
+
+    <br/>
+    <button id="AdminInterfaceTestTemplateEditorActionButtonSave" type="button" class="btn btn-success"
+            onclick="ITSInstance.newITSTestEditorController.saveCurrentTest();"><i
+            id="AdminInterfaceTestTemplateEditor-saveIcon" class="fa fa-fw fa-thumbs-up"></i> Save test definition
+    </button>&nbsp;
+    <button id="AdminInterfaceTestTemplateEditorActionButtonCopy" type="button" class="btn btn-success"
+            onclick="ITSInstance.newITSTestEditorController.copyCurrentTest();"><i class="fa fa-fw fa-copy"></i>
+        Copy
+        this test
+    </button>&nbsp;
+    <button id="AdminInterfaceTestTemplateEditorActionButtonDelete" type="button" class="btn btn-warning"
+            onclick="ITSInstance.newITSTestEditorController.deleteCurrentTestWarning();"><i
+            class="fa fa-fw fa-trash"></i> Delete this test definition
+    </button>&nbsp;
+    <button id="AdminInterfaceTestTemplateEditorActionButtonTrial" type="button" style="visibility: hidden;" class="btn btn-success"
+            onclick="ITSInstance.newITSTestEditorController.trialRunTest(false);"><i class="fa fa-fw fa-flask"></i>
+        Trial lab run
+    </button>&nbsp;
+    <button id="AdminInterfaceTestTemplateEditorActionButtonTrialPnP" type="button" style="visibility: hidden;" class="btn btn-success"
+            onclick="ITSInstance.newITSTestEditorController.trialRunTest(true);"><i class="fa fa-fw fa-flask"></i>
+        Trial lab run PnP
+    </button>&nbsp;
+    <br/><br/>
+    <button id="AdminInterfaceScreenTemplate-downloadButton" type="button" class="btn btn-success" onclick="ITSInstance.newITSTestEditorController.downloadCurrentTemplate();"><i class="fa fa-fw fa-download"></i> Download template definition</button>&nbsp;
+    <button id="AdminInterfaceScreenTemplate-uploadButton" type="button" class="btn btn-success" onclick="if ('FileReader' in window) { document.getElementById('AdminInterfaceTestTemplate-files').click(); } else { alert('Your browser does not support this function. Please upgrade your browser.'); }"><i class="fa fa-fw fa-upload"></i> Upload template definition</button>&nbsp;
+    <input type="file" onchange="ITSInstance.newITSTestEditorController.uploadCurrentTemplate(event.target.files[0]);" style="visibility: hidden" id="AdminInterfaceTestTemplate-files" accept=".itrtesttemplate"/>
+
+</div>

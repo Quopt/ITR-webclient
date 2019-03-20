@@ -1,0 +1,213 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://opensource.org/licenses/Artistic-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div class="row col-12" id="ReportTemplateInterfaceEditSelectTest">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="ReportTemplateInterfaceEditSelectTestHeader">Report editor</h4>
+    <div class="row col-12"><h5 id="ReportTemplateInterfaceEditSelectTestHeader2">Select a test to edit the reports for</h5></div><br/>
+    <div class="row col-12">
+        <ul notranslate id="ReportTemplateInterfaceEditSelectTestList" class="list-unstyled">
+            <li id="ReportTemplateInterfaceEditSelectTestList1"> list is loading ...</li>
+        </ul>
+    </div>
+    <br/><br/>
+</div>
+
+<div class="row col-12" id="ReportTemplateInterfaceEditSelectReport">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="ReportTemplateInterfaceEditSelectReportHeader">Report editor</h4>
+    <div class="row col-12"><h5 id="ReportTemplateInterfaceEditSelectReportHeader2">Select a report to edit for</h5>&nbsp;<h5 id="ReportTemplateInterfaceEditSelectReportHeader2Test"></h5></div><br/>
+    <div class="row col-12">
+        <ul notranslate id="ReportTemplateInterfaceEditSelectReportList" class="list-unstyled">
+            <li id="ReportTemplateInterfaceEditSelectReportList1"> list is loading ...</li>
+        </ul>
+    </div>
+    <br/>
+    <div class="row col-12">
+        <button type="button" class="btn-sm btn-success" id="ReportTemplateInterfaceEditSelectReportAddNew"
+                onclick="ITSInstance.ReportTemplateSessionController.addNewReportDefinition(); ">
+            <i class="fa fa-sm fa-plus aria-hidden='true'"></i> Add new report definition
+        </button>&nbsp;
+    </div>
+</div>
+
+
+<div class="row col-12" id="ReportTemplateInterfaceEdit">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="ITSInstance.ReportTemplateSessionController.processBackClick();"></i>&nbsp;
+    <h4 id="ReportTemplateInterfaceEditHeader">Report editor</h4><br/>
+
+    <div class="bg-dark text-white well row col-12"><label id="ReportTemplateInterfaceEditSelectHeader">Report definition section</label>
+    </div>
+
+    <div class="row col-12">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active"
+                   onclick="ITSInstance.ReportTemplateSessionController.showTab('ReportTemplateInterfaceEdit_TabReportInformation','ReportTemplateInterfaceEditTabReportInformation');">
+                    <label id="ReportTemplateInterfaceEdit_TabReportInformation">Report information</label>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active"
+                   onclick="ITSInstance.ReportTemplateSessionController.showTab('ReportTemplateInterfaceEdit_TabReportWriter','ReportTemplateInterfaceEditTabReportWriter');">
+                    <label id="ReportTemplateInterfaceEdit_TabReportWriter">Report writer</label>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active"
+                   onclick="ITSInstance.ReportTemplateSessionController.showTab('ReportTemplateInterfaceEdit_TabGraphs','ReportTemplateInterfaceEditTabGraphBuilder');">
+                    <label id="ReportTemplateInterfaceEdit_TabGraphs">Graph builder</label>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div id="ReportTemplateInterfaceEditTabReportInformation" class="row col-12">
+        <div class="form-group row col-12"></div>
+        <div class="form-group row col-12">
+            <label class="col-sm-4 col-form-label" for="ReportTemplateInterfaceEdit_Active"
+                   id="ReportTemplateInterfaceEdit_ActiveLabel">Report can be
+                used</label>
+            <div class="col-sm-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" class="form-check-input"  data-field="Active" onchange="DataBinderFrom('ReportTemplateInterfaceEditTabReportInformation', ITSInstance.ReportTemplateSessionController.currentReport );"
+                                                                       id="ReportTemplateInterfaceEdit_Active"/>
+            </div>
+        </div>
+        <div class="form-group row col-12">
+            <label class="col-sm-4 col-form-label" for="ReportTemplateInterfaceEdit_Name"
+                   id="ReportTemplateInterfaceEdit_NameLabel">Report name</label>
+            <div class="col-sm-8"><input type="text" class="form-control" maxlength="50" required="true"
+                                         id="ReportTemplateInterfaceEdit_Name" data-field="Description" onkeyup="this.value = this.value.replace(/\W/g, ''); DataBinderFrom('ReportTemplateInterfaceEditTabReportInformation', ITSInstance.ReportTemplateSessionController.currentReport );"/></div>
+        </div>
+        <div class="form-group row col-12">
+            <label class="col-sm-4 col-form-label" for="ReportTemplateInterfaceEdit_LanguageSelect"
+                   id="ReportTemplateInterfaceEdit_LanguageSelectLabel">Report language</label>
+            <div class="col-sm-8"><select notranslate class="form-control form-control-sm"
+                                          id="ReportTemplateInterfaceEdit_LanguageSelect" onchange="ITSInstance.ReportTemplateSessionController.selectLanguageInEditor(this.selectedIndex);">
+            </select>
+            </div>
+        </div>
+        <div class="form-group row col-12">
+            <label class="col-sm-4 col-form-label" id="ReportTemplateInterfaceEdit_ExplanationLabel"
+                   for="ReportTemplateInterfaceEdit_Explanation">Explanation</label>
+            <div class="col-sm-8">
+                <textarea-htmledit notranslate class="form-control"  data-field="Explanation"
+                                   onkeyup="DataBinderFrom('ReportTemplateInterfaceEditTabReportInformation', ITSInstance.ReportTemplateSessionController.currentReport );"
+                                   id="ReportTemplateInterfaceEdit_Explanation"></textarea-htmledit>
+            </div>
+        </div>
+        <div class="form-group row col-12">
+            <label class="col-sm-4 col-form-label" for="ReportTemplateInterfaceEdit_Remarks"
+                   id="ReportTemplateInterfaceEdit_RemarksLabel">Remarks (only shown
+                here)</label>
+            <div class="col-sm-8"><textarea class="form-control" rows="4"  data-field="Remarks" onkeyup="DataBinderFrom('ReportTemplateInterfaceEditTabReportInformation', ITSInstance.ReportTemplateSessionController.currentReport );"
+                                            id="ReportTemplateInterfaceEdit_Remarks"></textarea></div>
+        </div>
+
+    </div>
+
+    <div id="ReportTemplateInterfaceEditTabReportWriter" class="row col-12">
+        <label class="col-sm-12" id="ReportTemplateInterfaceEdit_ReportWriterLabel">Report text (see below for an explanation on fields that can be used)</label>
+
+        <div class="col-sm-12">
+            <textarea-htmledit notranslate class="form-control"  data-field="ReportText"
+                               onkeyup="DataBinderFrom('ReportTemplateInterfaceEditTabReportWriter', ITSInstance.ReportTemplateSessionController.currentReport );"
+                               id="ReportTemplateInterfaceEdit_ReportWriter"></textarea-htmledit>
+        </div>
+
+        <div class="form-group row col-12">
+            <label class="col-12 col-form-label" for="ReportTemplateInterfaceEdit_ReportWriterFields"
+                   id="ReportTemplateInterfaceEdit_ReportWriterFieldsLabel">Usable fields</label>
+            <div class="col-12"><textarea NoTranslate class="form-control" rows="8" id="ReportTemplateInterfaceEdit_ReportWriterFields" disabled></textarea></div>
+        </div>
+
+        <div class="bg-dark text-white well row col-12"><label id="ReportTemplateInterfaceEditTabReportWriter_PreScriptHeader">Script run before the report</label><label notranslate>(...)</label>
+        </div>
+        <div class="flex-row col-12">&nbsp;
+            <div ace-edit id="ReportTemplateInterfaceEditTabReportWriterEditor" notranslate style="height:100px;" data-field="BeforeReportScript"
+                 onkeyup="DataBinderFrom('ReportTemplateInterfaceEditTabReportWriter', ITSInstance.ReportTemplateSessionController.currentReport);"></div>
+        </div>
+        <div class="flex-row col-12">&nbsp;</div>
+    </div>
+
+    <div id="ReportTemplateInterfaceEditTabGraphBuilder" class="row col-12">
+        <div class="row col-12">
+            <label class="col-2" id="ReportTemplateInterfaceEditTabGraphBuilderHeader"
+                   for="ReportTemplateInterfaceEditTabGraphBuilder-Select">Select graph</label>
+            <select notranslate class="form-control form-control-sm col-6"
+                    id="ReportTemplateInterfaceEditTabGraphBuilder-Select"
+                    onchange="ITSInstance.ReportTemplateSessionController.showGraphInEditor(this.selectedIndex);"></select>
+            <button id="ReportTemplateInterfaceEditTabGraphBuilderAddButton" type="button"
+                    class="btn-xs btn-success"
+                    onclick="ITSInstance.ReportTemplateSessionController.addNewGraphInEditor();"><i
+                    class="fa fa-fw fa-plus"></i>Add
+                new graph
+            </button>
+            <button id="ReportTemplateInterfaceEditTabGraphBuilderRemove" type="button"
+                    class="btn-xs btn-warning"
+                    onclick="ITSInstance.ReportTemplateSessionController.removeGraphFromEditor();"><i
+                    class="fa fa-fw fa-trash"></i>Remove graph
+            </button>
+        </div>
+
+        <div NoTranslate class="col-12 row" id="GraphEditor">
+            <div class="form-group row col-12">
+                <label class="col-sm-4 col-form-label" for="ReportTemplateInterfaceGraph_Name"
+                       id="ReportTemplateInterfaceGraph_NameLabel">Graph name</label>
+                <div class="col-sm-8"><input type="text" class="form-control" maxlength="50" required="true"
+                                             id="ReportTemplateInterfaceGraph_Name" data-field="Name" onkeyup="this.value = this.value.replace(/\W/g, ''); DataBinderFrom('ReportTemplateInterfaceEditTabGraphBuilder', ITSInstance.ReportTemplateSessionController.currentGraph ); ITSInstance.ReportTemplateSessionController.fillGraphsList(); "/></div>
+            </div>
+
+            <div class="col-6" id="GraphEditorProperties"></div>
+            <div class="col-6" id="GraphEditorPreview"></div>
+
+            <div class="form-group row col-12">
+                <label class="col-sm-12 col-form-label" for="ReportTemplateInterfaceEdit_GraphFields"
+                id="ReportTemplateInterfaceEdit_GraphFieldsLabel">Usable fields</label>
+                <div class="col-sm-12"><textarea NoTranslate disabled class="form-control" rows="8" id="ReportTemplateInterfaceEdit_GraphFields"></textarea></div>
+            </div>
+
+            <div class="form-group row col-12">
+                <label class="col-sm-4 col-form-label" for="ReportTemplateInterfaceEditGraph_Remarks"
+                       id="ReportTemplateInterfaceEditGraph_RemarksLabel">Remarks (only shown
+                    here)</label>
+                <div class="col-sm-8"><textarea class="form-control" rows="4"  data-field="Remarks" onkeyup="DataBinderFrom('ReportTemplateInterfaceEditTabGraphBuilder', ITSInstance.ReportTemplateSessionController.currentGraph );"
+                                                id="ReportTemplateInterfaceEditGraph_Remarks"></textarea></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bg-dark text-white well row col-12"><label id="ReportTemplateInterfaceEditTabReportWriter_ActionHeader">Actions</label></div>
+    <div id="ReportTemplateInterfaceEditButtonBar" class="row col-12">
+        <div class="row col-12"></div>
+        <button NoTranslate id="ReportTemplateInterfaceEditTabReportWriter_ActionButtonSave" type="button" class="btn btn-success"
+                onclick="ITSInstance.ReportTemplateSessionController.saveCurrentReport();"><i
+                id="ReportTemplateInterfaceEditTabReportWriter_saveIcon" class="fa fa-fw fa-thumbs-up"></i>
+            <span id="AdminInterfaceScreenTemplate-saveButtonLabel">Save report definition</span>
+        </button>&nbsp;
+        <button NoTranslate id="ReportTemplateInterfaceEditTabReportWriter_ActionButtonCopy" type="button" class="btn btn-success"
+                onclick="ITSInstance.ReportTemplateSessionController.copyCurrentReport();"><i class="fa fa-fw fa-copy"></i>
+            <span id="AdminInterfaceScreenTemplate-copyButtonLabel">Copy this report</span>
+        </button>&nbsp;
+        <button NoTranslate id="ReportTemplateInterfaceEditTabReportWriter_ActionButtonDelete" type="button" class="btn btn-warning"
+                onclick="ITSInstance.ReportTemplateSessionController.deleteCurrentReportWarning();"><i
+                class="fa fa-fw fa-trash"></i><span id="AdminInterfaceScreenTemplate-deleteButtonLabel"> Delete this report definition</span>
+        </button>&nbsp;
+        <button NoTranslateid="AdminInterfaceScreenTemplate-downloadButton" type="button" class="btn btn-success" onclick="ITSInstance.ReportTemplateSessionController.downloadCurrentTemplate();"><i class="fa fa-fw fa-download"></i><span id="AdminInterfaceScreenTemplate-downloadButtonLabel"> Download report definition</span></button>&nbsp;
+        <button NoTranslate id="AdminInterfaceScreenTemplate-uploadButton" type="button" class="btn btn-success" onclick="if ('FileReader' in window) { document.getElementById('AdminInterfaceReportTemplate-files').click(); } else { alert('Your browser does not support this function. Please upgrade your browser.'); }"><i class="fa fa-fw fa-upload"></i><span id="AdminInterfaceScreenTemplate-uploadButtonLabel"> Upload report definition</span></button>&nbsp;
+        <input NoTranslate type="file" onchange="ITSInstance.ReportTemplateSessionController.uploadCurrentTemplate(event.target.files[0]);" style="visibility: hidden" id="AdminInterfaceReportTemplate-files" accept=".itrreporttemplate"/>
+
+    </div>
+</div>

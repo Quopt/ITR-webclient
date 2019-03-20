@@ -1,0 +1,108 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://opensource.org/licenses/Artistic-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div class="row col-12">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="MailTemplateEditorInterfaceEditHeader">Edit e-mail templates</h4>
+    <br/><br/>
+</div>
+
+<div id="MailTemplateEditorInterfaceEditDiv">
+
+    <div class="form-group row col-12">
+        <label class="col-4 col-form-label col-form-label"
+               id="MailTemplateEditorTemplateTypeHeader"
+               for="MailTemplateEditorTemplateType">Template type</label>
+        <div class="col-8"><select notranslate class="form-control form-control" data-field="currentTemplate.ID"
+                                   onchange="ITSInstance.MailTemplateEditorController.selectTemplateTypeInEditor(this.value);"
+                                   id="MailTemplateEditorTemplateType">
+            <option id="MailTemplateEditorTemplateType-S" value="defaultSession">Session invitation mail</option>
+            <option id="MailTemplateEditorTemplateType-PS" value="defaultPassword">Password reset mail for candidate</option>
+            <option id="MailTemplateEditorTemplateType-PC" value="defaultPasswordConsultant">Password reset mail for consultant</option>
+            <option id="MailTemplateEditorTemplateType-O" value="other">Other</option>
+        </select>
+        </div>
+    </div>
+
+    <div class="form-group row col-12">
+        <label class="col-sm-4 col-form-label" for="MailTemplateEditor-LanguageSelect"
+               id="MailTemplateEditor-LanguageSelectLabel">Mail template language</label>
+        <div class="col-sm-8"><select notranslate class="form-control form-control" data-field="currentTemplate.language"
+                                      id="MailTemplateEditor-LanguageSelect" onchange="ITSInstance.MailTemplateEditorController.selectLanguageInEditor(this.value);">
+        </select>
+        </div>
+    </div>
+
+    <div class="form-group row col-12" id="MailTemplateEditorTemplateDescriptionHeaderMSDiv">
+        <label class="col-4 col-form-label col-form-label"
+               id="MailTemplateEditorTemplateDescriptionHeaderMS"
+               for="MailTemplateEditorDescriptionMS">Select, add or remove templates</label>
+        <div class="col-4"><select notranslate class="form-control form-control"
+                                   onchange="ITSInstance.MailTemplateEditorController.selectOtherTemplateInEditor(this.selectedIndex);"
+                                   onkeyup="DataBinderFrom('MailTemplateEditorInterfaceEditDiv', ITSInstance.MailTemplateEditorController );"
+                                   id="MailTemplateEditorDescriptionMS">
+        </select>
+        </div>
+        <button id="MailTemplateEditorAddButton" type="button"
+                class="btn-xs btn-success"
+                onclick="ITSInstance.MailTemplateEditorController.addNewTemplate();"><i
+                class="fa fa-fw fa-plus"></i>Add new template
+        </button>
+        <button id="MailTemplateEditorRemoveButton" type="button"
+                class="btn-xs btn-warning"
+                onclick="ITSInstance.MailTemplateEditorController.removeCurrentTemplate();"><i
+                class="fa fa-fw fa-trash"></i>Remove template
+        </button>
+    </div>
+
+    <div id="MailTemplateEditorTestDescriptionDiv" class="form-group row col-12">
+        <label class="col-sm-4 col-form-label" id="MailTemplateEditorTestDescriptionLabel"
+               for="MailTemplateEditorDescription">Description</label>
+        <div class="col-sm-8"><input type="text" class="form-control" maxlength="200"
+                                     id="MailTemplateEditorDescription" data-field="currentTemplate.description" onkeyup="DataBinderFrom('MailTemplateEditorInterfaceEditDiv', ITSInstance.MailTemplateEditorController );"/></div>
+    </div>
+
+    <div id="MailTemplateEditorTestSubjectDiv" class="form-group row col-12">
+        <label class="col-sm-4 col-form-label" id="MailTemplateEditorTestSubjectLabel"
+               for="MailTemplateEditorSubject">Subject</label>
+        <div class="col-sm-8"><input type="text" class="form-control" maxlength="200"
+                                     id="MailTemplateEditorSubject" data-field="currentTemplate.subject" onkeyup="DataBinderFrom('MailTemplateEditorInterfaceEditDiv', ITSInstance.MailTemplateEditorController );'", ITSInstance.MailTemplateEditorController );"/></div>
+    </div>
+
+    <div class="form-group row col-12">
+            <label for="MailTemplateEditorMailBody" id="MailTemplateEditorLabel" class="col-sm-4 col-form-label">Body of this mail</label>
+            <div class="col-sm-8">
+                <textarea-htmledit data-field="currentTemplate.body" onkeyup="DataBinderFrom('MailTemplateEditorInterfaceEditDiv', ITSInstance.MailTemplateEditorController );" notranslate class="form-control" required placeholder="Enter a text for this mail" value=""
+                                   id="MailTemplateEditorMailBody"/>
+            </div>
+    </div>
+
+    <div class="form-group row col-12">
+        <label class="col-12 col-form-label" for="MailTemplateEditor_WriterFields"
+               id="MailTemplateEditor_WriterFieldsLabel">Usable fields</label>
+        <div class="col-12"><textarea NoTranslate class="form-control" rows="8" id="MailTemplateEditor_WriterFields" disabled></textarea></div>
+    </div>
+</div>
+
+<!-- action section -->
+<div class="bg-dark text-white well"><label id="MailTemplateEditor_ActionHeader">Actions</label></div>
+
+<br/>
+<button id="MailTemplateEditor_ButtonSave" type="button" class="btn btn-success"
+        onclick="ITSInstance.MailTemplateEditorController.saveCurrentTemplate();"><i
+        id="MailTemplateEditor-saveIcon" class="fa fa-fw fa-thumbs-up"></i> Save template definitions
+</button>&nbsp;
+
+</div>

@@ -1,0 +1,99 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://opensource.org/licenses/Artistic-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div class="row col-12">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="SessionMailerInterfaceSessionEditHeader">Send mail for this session</h4>
+</div>
+<div id="SessionMailerInterfaceSessionEditMail" class="needs-validation" novalidate class="row col-12">
+    <div class="">
+        <div id="SessionMailerInterfaceSessionEditMailFromRow" class="form-group row">
+            <label for="SessionMailerInterfaceSessionEditMailFrom" id="SessionMailerInterfaceSessionEditMailFromLabel" class="col-sm-4 col-form-label">Reply address</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" required placeholder="The email address that will receive replies from the person receiving the e-mail" value=""
+                       id="SessionMailerInterfaceSessionEditMailFrom">
+            </div>
+        </div>
+    </div>
+
+    <div class="">
+        <div id="SessionMailerInterfaceSessionEditMailToRow" class="form-group row">
+            <label for="SessionMailerInterfaceSessionEditMailTo" id="SessionMailerInterfaceSessionEditMailToLabel" class="col-sm-4 col-form-label">Send mail to</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" required placeholder="Enter a mail address to send this mail to" value=""
+                       id="SessionMailerInterfaceSessionEditMailTo">
+            </div>
+        </div>
+    </div>
+
+    <div class="">
+        <div id="SessionMailerInterfaceSessionEditMailCcRow" class="form-group row">
+            <label for="SessionMailerInterfaceSessionEditMailCc" id="SessionMailerInterfaceSessionEditMailCcLabel" class="col-sm-4 col-form-label">Send a copy of this mail to</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" placeholder="Enter a mail address to send a copy of this mail to" value=""
+                       id="SessionMailerInterfaceSessionEditMailCc">
+            </div>
+        </div>
+    </div>
+
+    <div class="">
+        <div class="form-group row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-8">
+                <label class="form-check-label">
+                    &nbsp;&nbsp;&nbsp;<input class="form-check-input" id="SessionMailerInterfaceSessionEditMailCopyMe" type="checkbox" value="">
+                    <label id="SessionMailerInterfaceSessionEditMailCopyMeLabel">Send me a copy of this mail</label>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div id="SessionMailerInterfaceTemplateSelection">
+        <div id="SessionMailerInterfaceTemplateRow" class="form-group row">
+            <label class="col-sm-4 col-form-label" for="SessionMailerInterface-TemplateSelect"
+                   id="SessionMailerInterface-TemplateSelectLabel">Mail template for mail generation</label>
+            <div class="col-sm-8"><select notranslate class="form-control"
+                                          id="SessionMailerInterface-TemplateSelect" onchange="ITSInstance.SessionMailerSessionController.selectTemplateInEditor(this.selectedIndex);">
+            </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="">
+        <div id="SessionMailerInterfaceSessionEditMailSubjectRow" class="form-group row">
+            <label for="SessionMailerInterfaceSessionEditMailSubject" id="SessionMailerInterfaceSessionEditMailSubjectLabel" class="col-sm-4 col-form-label">Subject of this mail</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" required placeholder="Enter a subject for this mail" value=""
+                       id="SessionMailerInterfaceSessionEditMailSubject">
+            </div>
+        </div>
+    </div>
+
+    <div class="">
+        <div id="SessionMailerInterfaceSessionEditMailBodyRow" class="form-group row">
+            <label for="SessionMailerInterfaceSessionEditMailBody" id="SessionMailerInterfaceSessionEditMailBodyLabel" class="col-sm-4 col-form-label">Body of this mail</label>
+            <div class="col-sm-8">
+                <textarea-htmledit notranslate class="form-control" required placeholder="Enter a text for this mail" value=""
+                       id="SessionMailerInterfaceSessionEditMailBody"/>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="SessionMailerInterfaceButtonBar">
+    <button type="button" class="btn btn-success" id="SessionMailerInterfaceSendButton" onclick="ITSInstance.SessionMailerSessionController.sendMail();"><i id="SessionMailerInterfaceSession-mailIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="SessionMailerInterfaceSessionSendButtonLabel">Send mail now</span>
+    </button>&nbsp;
+</div>

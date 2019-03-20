@@ -1,0 +1,115 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://opensource.org/licenses/Artistic-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div class="row col-12">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="PersonInterfaceEditSessionEditHeader">Edit</h4>&nbsp;<h4 id="PersonInterfaceEditSessionEditHeaderEMail">
+    ...</h4>
+    <br/><br/>
+</div>
+
+<div class="bg-dark text-white well row col-12"><label id="PersonInterfaceEditSelectHeader">Person information</label>
+</div>
+
+
+<div class="col-sm-12">
+    <div class="form-group row col-sm-12">
+        <label for="PersonInterfaceEditSessionCandidateEMail"
+               id="PersonInterfaceEditSessionCandidateEMailLabel" class="col-sm-2 col-form-label">E-mail address / login</label>
+        <input class="form-control col-sm-2" type="text" data-field="EMail" placeholder="" novalidate
+               value="" id="PersonInterfaceEditSessionCandidateEMail">
+    </div>
+    <div class="form-group row col-sm-12">
+        <label for="PersonInterfaceEditSessionCandidateFirstName"
+               id="PersonInterfaceEditSessionCandidateFirstNameLabel" class="col-sm-2 col-form-label">First
+            name</label>
+        <input class="form-control col-sm-2" type="text" data-field="FirstName" placeholder="" novalidate
+               value="" id="PersonInterfaceEditSessionCandidateFirstName">
+        <label for="PersonInterfaceEditSessionCandidateInitials"
+               id="PersonInterfaceEditSessionCandidateInitialsLabel"
+               class="col-sm-2 col-form-label">Initials</label>
+        <input class="form-control col-sm-1" type="text" data-field="Initials" placeholder="" novalidate value=""
+               id="PersonInterfaceEditSessionCandidateInitials">
+        <label for="PersonInterfaceEditSessionCandidateLastName"
+               id="PersonInterfaceEditSessionCandidateLastNameLabel" class="col-sm-2 col-form-label">Last
+            name</label>
+        <input class="form-control col-sm-3" type="text" placeholder="" data-field="LastName" novalidate value=""
+               id="PersonInterfaceEditSessionCandidateLastName">
+    </div>
+    <div class="form-group row col-sm-12">
+        <label for="PersonInterfaceEditSessionCandidateBirthDate"
+               id="PersonInterfaceEditSessionCandidateBirthDateLabel"
+               class="col-sm-2 col-form-label">Birthdate</label>
+        <input class="form-control col-sm-2" type="text" placeholder="" value="" novalidate NoTranslate
+               data-field="BirthDate" name="datePicker"
+               id="PersonInterfaceEditSessionCandidateBirthDate">
+    </div>
+    <div class="form-group row col-sm-12">
+        <label for="PersonInterfaceEditSessionCandidateSexMale"
+               id="PersonInterfaceEditSessionCandidateSexLabel" class="col-sm-2 col-form-label">Sex</label>
+        <div class="form-check my-auto col-sm-2">
+            <label class="form-check-label">
+                <input class="form-check-input" type="radio" data-field-from-expression="Sex==1"
+                       data-field-to-free-expression="dataObject.Sex=(elm.checked?1:dataObject.Sex)"
+                       novalidate name="PersonInterfaceEditSessionCandidateSex"
+                       id="PersonInterfaceEditSessionCandidateSexMale" value="1">
+                <label id="PersonInterfaceEditSessionCandidateSexMaleLabel">Male</label>&nbsp;
+            </label>
+        </div>
+        <div class="form-check my-auto col-sm-2">
+            <label class="form-check-label">
+                <input class="form-check-input" type="radio" data-field-from-expression="Sex==2"
+                       data-field-to-free-expression="dataObject.Sex=(elm.checked?2:dataObject.Sex)"
+                       novalidate name="PersonInterfaceEditSessionCandidateSex"
+                       id="PersonInterfaceEditSessionCandidateSexFemale" value="2">
+                <label id="PersonInterfaceEditSessionCandidateSexFemaleLabel">Female</label>&nbsp;
+            </label>
+        </div>
+        <div class="form-check my-auto col-sm-2">
+            <label class="form-check-label">
+                <input class="form-check-input" type="radio" data-field-from-expression="Sex==3"
+                       data-field-to-free-expression="dataObject.Sex=(elm.checked?3:dataObject.Sex)"
+                       novalidate name="PersonInterfaceEditSessionCandidateSex"
+                       id="PersonInterfaceEditSessionCandidateSexUnknown" value="3" checked>
+                <label id="PersonInterfaceEditSessionCandidateSexUnknownLabel">Unknown or gender neutral</label>&nbsp;
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="bg-dark text-white well row col-12"><label id="PersonInterfaceEditActionHeader">Actions</label></div>
+<div id="PersonInterfaceEditButtonBar" class="row col-12">
+    <div class="row col-12"></div>
+    <button NoTranslate id="PersonInterfaceEditButtonBar_Save" type="button" class="btn btn-success"
+            onclick="ITSInstance.PersonSessionController.save();"><i
+            id="PersonInterfaceEditButtonBar_SaveIcon" class="fa fa-fw fa-thumbs-up"></i>
+        <span id="PersonInterfaceEditButtonBar_SaveButtonLabel">Save person</span>
+    </button>&nbsp;
+    <button NoTranslate id="PersonInterfaceEditButtonBar_ResetPassword" type="button" class="btn btn-success"
+            onclick="ITSInstance.PersonSessionController.resetPassword();"><i
+            id="PersonInterfaceEditButtonBar_ResetPasswordIcon" class="fa fa-fw fa-key"></i>
+        <span id="PersonInterfaceEditButtonBar_ResetPasswordButtonLabel">Reset password</span>
+    </button>&nbsp;
+    <button NoTranslate id="PersonInterfaceEditButtonBar_ShowSessions" type="button" class="btn btn-success"
+            onclick="ITSInstance.PersonSessionController.showSessions();"><i
+            id="PersonInterfaceEditButtonBar_ShowSessionsIcon" class="fa fa-fw fa-book-reader"></i>
+        <span id="PersonInterfaceEditButtonBar_ShowSessionsButtonLabel">Show person sessions</span>
+    </button>&nbsp;
+    <button id="PersonInterfaceEditButtonBar_Delete" type="button" class="btn btn-warning"
+            onclick="ITSInstance.PersonSessionController.deleteCurrentPersonWarning();"><i
+            class="fa fa-fw fa-trash"></i> Delete this person
+    </button>&nbsp;
+
+</div>

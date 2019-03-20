@@ -1,0 +1,220 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://opensource.org/licenses/Artistic-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div class="row col-12">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="AdminInterfaceSessionEditHeader">Create new candidate session</h4>
+</div>
+<div id="AdminInterfaceSessionNewSession" class="needs-validation" novalidate class="row">
+    <div class="panel-body col-sm-12">
+        <div id="AdminInterfaceSessionNewSessionDescription" class="form-group row">
+            <label for="AdminInterfaceSessionNewSessionDescriptionFor" id="AdminInterfaceSessionNewSessionDescriptionLabel" class="col-sm-3 col-form-label">Session
+                description</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="text" required placeholder="Enter a session description" data-field="Description" value=""
+                       id="AdminInterfaceSessionNewSessionDescriptionFor">
+                <div id="AdminInterfaceSessionNewSessionDescriptionForIF" class="invalid-tooltip">
+                    <label id="AdminInterfaceSessionNewSessionDescriptionTT">Please enter a session description.</label>
+                </div>
+            </div>
+        </div>
+        <div id="AdminInterfaceSessionNewSessionCandidate" class="form-group row">
+            <label for="AdminInterfaceSessionNewSessionCandidateFor"  id="AdminInterfaceSessionNewSessionCandidateForLabel" class="col-sm-3 col-form-label">Candidate
+                e-mail address or login</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="text" required placeholder="Enter the e-mail address or login of the candidate"
+                       value="" data-field="Person.EMail" onchange="ITSInstance.newCandidateSessionController.emailAddressChanged(this.value);" id="AdminInterfaceSessionNewSessionCandidateFor">
+                <div id="AdminInterfaceSessionNewSessionCandidateForIF" class="invalid-tooltip">
+                    Please enter a login or email address.
+                </div>
+            </div>
+        </div>
+        <div id="AdminInterfaceSessionNewSessionTests" class="form-group row">
+            <label for="AdminInterfaceSessionNewSessionTestsInputList" id="AdminInterfaceSessionNewSessionTestsInputListLabel" class="col-sm-3 col-form-label">Tests in this session</label>
+            <div class="col-sm-9">
+                <div class="form-group">
+                    <select id="AdminInterfaceSessionNewSessionTestsInputList" novalidate class="combobox form-control" style="display: none;">
+                        <option value="" selected="selected">Select a test</option>
+                    </select>
+                </div>
+                <label class="form-check-label">
+                    &nbsp;&nbsp;&nbsp;<input class="form-check-input" id="AdminInterfaceSessionNewSessionTestsIncludeOtherLanguages" type="checkbox" onchange="ITSInstance.newCandidateSessionController.loadTestAndBatteriesList();" value="">
+                    <label id="AdminInterfaceSessionNewSessionTestsIncludeOtherLanguagesLabel">Include tests in other languages</label>
+                </label>
+                <table class="table table-sm table-striped table-hover" style="text-align: left"
+                       id="AdminInterfaceSessionNewSessionTestsSelection" NoTranslate>
+                    <thead NoTranslate id="AdminInterfaceSessionNewSessionTestsSelectionHead">
+                    <tr>
+                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH1">Test name</td>
+                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH2">Test language</td>
+                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH3">Norm 1</td>
+                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH4">Norm 2</td>
+                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH5">Norm 3</td>
+                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH6">Actions</td>
+                    </tr>
+                    </thead>
+                    <tbody id="AdminInterfaceSessionNewSessionTestsSelectionBody">
+                    <tr>
+                        <td id="AdminInterfaceSessionNewSessionTestsSelectionC1">No tests added yet</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="AdminInterfaceSessionEditAccordion" role="tablist" aria-multiselectable="true">
+            <div class="card">
+                <div class="card-header" role="tab" id="headingTwo">
+                    <h5 class="mb-0">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"
+                           aria-expanded="true" aria-controls="collapseTwo">
+                            <i class="fa fa-fw fa-arrow-down aria-hidden='true'"></i><label id="AdminInterfaceSessionEditInformationLabel">Information about the candidate</label>
+                        </a>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse show" role="tabpanel" aria-labelledby="headingTwo" class="col-sm-12">
+                    <div class="form-group row col-sm-12">
+                        <label for="AdminInterfaceSessionNewSessionCandidateFirstName" id="AdminInterfaceSessionNewSessionCandidateFirstNameLabel" class="col-sm-2 col-form-label">First name</label>
+                        <input class="form-control col-sm-2" type="text" data-field="Person.FirstName" placeholder=""  novalidate value="" id="AdminInterfaceSessionNewSessionCandidateFirstName">
+                        <label for="AdminInterfaceSessionNewSessionCandidateInitials" id="AdminInterfaceSessionNewSessionCandidateInitialsLabel" class="col-sm-2 col-form-label">Initials</label>
+                        <input class="form-control col-sm-1" type="text" data-field="Person.Initials" placeholder=""  novalidate value="" id="AdminInterfaceSessionNewSessionCandidateInitials">
+                        <label for="AdminInterfaceSessionNewSessionCandidateLastName" id="AdminInterfaceSessionNewSessionCandidateLastNameLabel" class="col-sm-2 col-form-label">Last name</label>
+                        <input class="form-control col-sm-3" type="text" placeholder="" data-field="Person.LastName"  novalidate value="" id="AdminInterfaceSessionNewSessionCandidateLastName">
+                    </div>
+                    <div class="form-group row col-sm-12">
+                        <label for="AdminInterfaceSessionNewSessionCandidateBirthDate" id="AdminInterfaceSessionNewSessionCandidateBirthDateLabel" class="col-sm-2 col-form-label">Birthdate</label>
+                        <input class="form-control col-sm-2" type="text" placeholder="" value="" novalidate NoTranslate data-field="Person.BirthDate" name="datePicker" id="AdminInterfaceSessionNewSessionCandidateBirthDate">
+                    </div>
+                    <div class="form-group row col-sm-12">
+                        <label for="AdminInterfaceSessionNewSessionCandidateSexMale" id="AdminInterfaceSessionNewSessionCandidateSexLabel" class="col-sm-2 col-form-label">Sex</label>
+                        <div class="form-check my-auto col-sm-2">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" data-field-from-expression="Person.Sex==1" data-field-to-free-expression="dataObject.Person.Sex=(elm.checked?1:dataObject.Person.Sex)"  novalidate name="AdminInterfaceSessionNewSessionCandidateSex" id="AdminInterfaceSessionNewSessionCandidateSexMale" value="1">
+                                <label id="AdminInterfaceSessionNewSessionCandidateSexMaleLabel">Male</label>&nbsp;
+                            </label>
+                        </div>
+                        <div class="form-check my-auto col-sm-2">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" data-field-from-expression="Person.Sex==2"  data-field-to-free-expression="dataObject.Person.Sex=(elm.checked?2:dataObject.Person.Sex)"  novalidate name="AdminInterfaceSessionNewSessionCandidateSex" id="AdminInterfaceSessionNewSessionCandidateSexFemale" value="2">
+                                <label id="AdminInterfaceSessionNewSessionCandidateSexFemaleLabel">Female</label>&nbsp;
+                            </label>
+                        </div>
+                        <div class="form-check my-auto col-sm-2">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" data-field-from-expression="Person.Sex==3"  data-field-to-free-expression="dataObject.Person.Sex=(elm.checked?3:dataObject.Person.Sex)"  novalidate name="AdminInterfaceSessionNewSessionCandidateSex" id="AdminInterfaceSessionNewSessionCandidateSexUnknown" value="3" checked>
+                                <label id="AdminInterfaceSessionNewSessionCandidateSexUnknownLabel">Unknown or gender neutral</label>&nbsp;
+                            </label>
+                        </div>
+                    </div>
+                    <div id="AdminInterfaceSessionNewSessionCandidatePasswordDiv" class="form-group row col-sm-12">
+                        <label for="AdminInterfaceSessionNewSessionCandidatePassword" class="col-sm-2 col-form-label">Password</label>
+                        <input class="form-control col-sm-2" data-field="Person.Password" type="text" placeholder="" value="" required id="AdminInterfaceSessionNewSessionCandidatePassword">
+                        <div id="AdminInterfaceSessionNewSessionCandidatePasswordIF" class="invalid-tooltip">
+                            <label id="AdminInterfaceSessionNewSessionCandidatePasswordLabel">Please enter a password.</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" role="tab" id="headingOne">
+                    <h5 class="mb-0">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                           aria-expanded="false" aria-controls="collapseOne">
+                            <i class="fa fa-fw fa-arrow-down" NoTranslate></i><label id="AdminInterfaceSessionEditAccordionLabel">Session validity</label>
+                        </a>
+                    </h5>
+                </div>
+                <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" class="col-sm-12">
+                    <div class="card-block">
+
+                        <div class="form-group row">
+                            <label for="AdminInterfaceSessionNewSessionStartDate" id="AdminInterfaceSessionNewSessionStartDateLabel"
+                                   class="col-sm-3 col-form-label">Session cannot start <b>before</b> this date & time</label>
+                            <div class="col-sm-3">
+                                <input class="form-control" type="text"
+                                       placeholder="" value="" name="dateTimePicker"  novalidate data-field="AllowedStartDateTime"
+                                       id="AdminInterfaceSessionNewSessionStartDate">
+                            </div>
+                            <label for="AdminInterfaceSessionNewSessionEndDate" id="AdminInterfaceSessionNewSessionEndDateLabel"
+                                   class="col-sm-3 col-form-label">Session cannot start <b>after</b> this date & time</label>
+                            <div class="col-sm-3">
+                                <input class="form-control" type="text"
+                                       placeholder="" value="" name="dateTimePicker" novalidate  data-field="AllowedEndDateTime"
+                                       id="AdminInterfaceSessionNewSessionEndDate">
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-7"></label>
+                            <label class="col-sm-5">
+                                <input id="AdminInterfaceSessionNewSessionEndDateEnforced"  novalidate data-field="EnforceSessionEndDateTime" type="checkbox">
+                                <label id="AdminInterfaceSessionNewSessionEndDateEnforcedLabel" >Stop the session when still in progress at this date and time</label>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" role="tab" id="headingThree">
+                <h5 class="mb-0">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree"
+                       aria-expanded="false" aria-controls="collapseThree" class="col-sm-12">
+                        <i class="fa fa-fw fa-arrow-down aria-hidden='true'"></i><label id="AdminInterfaceSessionEditNotificationLabel">Session notification settings</label>
+                    </a>
+                </h5>
+            </div>
+            <div id="collapseThree" class="collapse col-sm-12" role="tabpanel" aria-labelledby="headingThree">
+                <div class="form-group row">
+                    <label class="col-sm-4">
+                        <input id="AdminInterfaceSessionEditMailMe"  novalidate type="checkbox"> <label id="AdminInterfaceSessionEditMailMeLabel">Mail me when this session completes at</label>
+                    </label>
+                        <input class="form-control col-sm-8" type="text"
+                               placeholder="" value=""  novalidate data-field="EMailNotificationAdresses"
+                               id="AdminInterfaceSessionNewSessionMail">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <label for="AdminInterfaceSessionEditRemarks" id="AdminInterfaceSessionEditRemarksLabel">Remarks</label>
+        <textarea class="form-control" id="AdminInterfaceSessionEditRemarks" data-field="Remarks"
+                  rows="3"></textarea>
+    </div>
+
+</div>
+<div id="AdminInterfaceSessionNewButtonBar">
+<span class="badge badge-warning" id="AdminInterfaceSessionNewWarningExistsLabel" >Please note : The candidate you have selected is already known. The session will be added as usual, the password and other data of the candidate will be updated. </span>
+<br/>
+<button type="button" class="btn btn-default btn-success" id="AdminInterfaceSessionNewSessionSaveButton" onclick="ITSInstance.newCandidateSessionController.saveNewSession();"><i id="AdminInterfaceSessionNewSession-saveIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="AdminInterfaceSessionNewSessionSaveButtonLabel">Save session</span>
+</button>&nbsp;
+<button type="button" class="btn btn-success" id="AdminInterfaceSessionNewSessionAddMoreButton" onclick="ITSInstance.newCandidateSessionController.clearSession();"><i id="AdminInterfaceSessionNewSession-newIcon" class="fa fa-fw fa-plus-square"></i> <span id="AdminInterfaceSessionNewSessionNewButtonLabel">Add another session</span>
+</button>&nbsp;
+<button type="button" id="AdminInterfaceSessionNewSessionInviteButton" class="btn btn-success" onclick="ITSInstance.newCandidateSessionController.mailSessionInvitation();"><i class="fa fa-fw fa-envelope"></i><span id="AdminInterfaceSessionNewSessionInviteButtonLabel">Invite candidate by e-mail</span>
+</button>&nbsp;
+<button type="button" id="AdminInterfaceSessionNewSessionStartButton" class="btn btn-success" onclick="ITSInstance.newCandidateSessionController.startNowSession();"><i id="AdminInterfaceSessionNewSession-startNowIcon" class="fa fa-fw fa-hourglass-start"></i><span id="AdminInterfaceSessionNewSessionStartButtonLabel">Start session now</span>
+</button>&nbsp;
+<button type="button" id="AdminInterfaceSessionNewSessionDeleteButton" class="btn btn-warning" onclick="ITSInstance.newCandidateSessionController.deleteNewSession();"><i class="fa fa-fw fa-trash aria-hidden='true'"></i> <span id="AdminInterfaceSessionNewSessionDeleteButtonLabel">Delete session</span>
+</button>
+<!-- <button type="button" class="btn btn-default btn-secondary"><i class="fa fa-fw fa-archive aria-hidden='true'"></i> Archive session</button> -->
+</div>

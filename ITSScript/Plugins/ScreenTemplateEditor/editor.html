@@ -1,0 +1,245 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://opensource.org/licenses/Artistic-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div NoTranslate id="AdminInterfaceScreenTemplateEditHeader" class="row col-12">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="AdminInterfaceScreenTemplateEditHeaderH4">Edit and create test screen templates</h4>
+</div>
+<div id="AdminInterfaceScreenTemplateSelect">
+    <div><h1 id="AdminInterfaceScreenTemplateSelectHeader">Select a screen template or add a new one</h1></div>
+    <div>
+        <ul id="AdminInterfaceScreenTemplateSelectList" class="list-unstyled">
+            <li id="AdminInterfaceScreenTemplateSelectListLoading"> list is loading ...</li>
+        </ul>
+    </div>
+    <div>
+        <button type="button" class="btn-sm btn-success"
+                onclick="ITSInstance.newITSScreenTemplateEditorController.addNewTemplate(); $('#AdminInterfaceScreenTemplateEditHeader').hide(); $('#AdminInterfaceScreenTemplateEdit').show(); $('#AdminInterfaceScreenTemplateSelect').hide();">
+            <i class="fa fa-sm fa-plus aria-hidden='true'"></i> Add new template
+        </button>&nbsp;
+    </div>
+</div>
+<div id="AdminInterfaceScreenTemplateEdit" style="visibility: visible">
+    <!-- generic section -->
+    <div class="row col-12">
+        <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true"
+           onclick="$('#AdminInterfaceScreenTemplateEditHeader').show(); $('#AdminInterfaceScreenTemplateEdit').hide(); $('#AdminInterfaceScreenTemplateSelect').show(); window.history.back();"></i>&nbsp;
+        <h4 id="AdminInterfaceScreenTemplateSelectHeader">Select a screen template or add a new one</h4>
+    </div>
+    <div class="bg-dark text-white well"><label id="AdminInterfaceScreenTemplate-GenericHeader">Generic section</label></div>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group row">
+                <label id="AdminInterfaceScreenTemplate-descriptionHeader" for="AdminInterfaceScreenTemplate-description" class="col-2 col-form-label">Description</label>
+                <div class="col">
+                    <input class="form-control" type="text" maxlength="200"
+                           placeholder="screen template description as shown in the test editor"
+                           id="AdminInterfaceScreenTemplate-description" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.Description = this.value;">
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="form-group row">
+                <label id="AdminInterfaceScreenTemplate-explanationHeader" for="AdminInterfaceScreenTemplate-explanation" class="col-2 col-form-label">Explanation</label>
+                <div class="col">
+                    <textarea rows="1" class="form-control"
+                              placeholder="explanation about this screen templates as shown in the test editor"
+                              id="AdminInterfaceScreenTemplate-explanation"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.Explanation = this.value;"></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label id="AdminInterfaceScreenTemplate-remarksHeader" for="AdminInterfaceScreenTemplate-remarks" class="col-2 col-form-label">Remarks</label>
+                <div class="col">
+                    <textarea rows="1" class="form-control"
+                              placeholder="any remarks that you might have about this template, only shown here"
+                              id="AdminInterfaceScreenTemplate-remarks"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.Remarks = this.value;"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- template variable section -->
+    <div class="bg-dark text-white well"><label id="AdminInterfaceScreenTemplate-VarHeader" >Template variable section</label></div>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-TemplateVarSelectHeader" for="AdminInterfaceScreenTemplate-TemplateVarSelect">Select template variable</label>
+                <select NoTranslate class="form-control" id="AdminInterfaceScreenTemplate-TemplateVarSelect" onchange="ITSInstance.newITSScreenTemplateEditorController.showVariableInEditor(this.selectedIndex);">
+                    <option id="AdminInterfaceScreenVarSelectListLoading">list is loading ...</option>
+                </select>
+                <div>
+                    <button type="button" id="AdminInterfaceScreenTemplate-addTemplateVar" class="btn-sm btn-success"
+                            onclick="ITSInstance.newITSScreenTemplateEditorController.addVariableInEditor();">
+                        <i class="fa fa-sm fa-plus aria-hidden='true'"></i> Add new template variable
+                    </button>&nbsp;
+                    <button type="button" id="AdminInterfaceScreenTemplate-removeTemplateVar" class="btn-sm btn-success"
+                                            onclick="ITSInstance.newITSScreenTemplateEditorController.removeVariableInEditor();">
+                    <i class="fa fa-sm fa-minus aria-hidden='true'"></i> Remove template variable
+                </button>&nbsp;
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="form-group row">
+                <label id="AdminInterfaceScreenTemplate-varnameheader" for="AdminInterfaceScreenTemplate-varname" class="col-2 col-form-label">Var name</label>
+                <div class="col">
+                    <input class="form-control" type="text"
+                           placeholder="screen template variable name"
+                           id="AdminInterfaceScreenTemplate-varname" onkeyup="ITSInstance.newITSScreenTemplateEditorController.currentVariable.variableName = this.value.replace(/\W/g, ''); $('#AdminInterfaceScreenTemplate-varname').val(ITSInstance.newITSScreenTemplateEditorController.currentVariable.variableName); ITSInstance.newITSScreenTemplateEditorController.populateTemplateVariableList();">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label id="AdminInterfaceScreenTemplate-vardescriptionheader" for="AdminInterfaceScreenTemplate-vardescription"
+                       class="col-2 col-form-label">Description</label>
+                <div class="col">
+                    <input class="form-control" type="text"
+                           placeholder="description of the purpose of the variable as shown in the test editor"
+                           id="AdminInterfaceScreenTemplate-vardescription" onkeyup="ITSInstance.newITSScreenTemplateEditorController.currentVariable.description = this.value; ">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label id="AdminInterfaceScreenTemplate-vardefaultvalueheader" for="AdminInterfaceScreenTemplate-vardefaultvalue"
+                       class="col-2 col-form-label">Default value</label>
+                <div class="col">
+                    <input class="form-control" type="text"
+                           placeholder="screen template default value"
+                           id="AdminInterfaceScreenTemplate-vardefaultvalue"  onkeyup="ITSInstance.newITSScreenTemplateEditorController.currentVariable.defaultValue = this.value; ">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label id="AdminInterfaceScreenTemplate-vartype" for="AdminInterfaceScreenTemplate-vartype"
+                       class="col-2 col-form-label">Type of variable</label>
+                <div class="col">
+                    <select NoTranslate class="form-control" id="AdminInterfaceScreenTemplate-vartype" onchange="ITSInstance.newITSScreenTemplateEditorController.currentVariable.variableType = this.value; ">
+                        <option id="AdminInterfaceScreenTemplate-vartypeT" value="T">Text</option>
+                        <option id="AdminInterfaceScreenTemplate-vartypeA" value="A">Text (multiple lines)</option>
+                        <option id="AdminInterfaceScreenTemplate-vartypeH" value="H">HTML Text (multiple lines)</option>
+                        <option id="AdminInterfaceScreenTemplate-vartypeL" value="L">List of choices</option>
+                        <option id="AdminInterfaceScreenTemplate-vartypeB" value="B">On/off switch</option>
+                        <option id="AdminInterfaceScreenTemplate-vartypeC" value="C">Color picker</option>
+                        <option id="AdminInterfaceScreenTemplate-vartypeP" value="P">Placeholder</option>
+                        <option id="AdminInterfaceScreenTemplate-vartypeE" value="E">Explanation</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- html and scripting section -->
+    <div class="bg-dark text-white well"><label id="AdminInterfaceScreenTemplate-HTMLHeader">HTML and scripting section</label></div>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-labelGeneratorHTML" for="AdminInterfaceScreenTemplate-htmltemplate">HTML template</label>
+                <textarea class="form-control" id="AdminInterfaceScreenTemplate-htmltemplate" rows="19"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.HTMLContent = this.value;">
+<div class="form-group">
+<label for="%%ID%%">Email address</label>
+<input type="email" class="form-control democolor" id="%%ID%%" aria-describedby="emailHelp"
+  placeholder="Enter email">
+<small id="emailHelp" class="form-text text-muted">We will never share your email with anyone else.</small>
+</div>
+                </textarea>
+            </div>
+
+            <div>
+                <button id="AdminInterfaceScreenTemplate-labelGeneratorGeneratePreviews" type="button" class="btn-sm btn-success"
+                        onclick="ITSInstance.newITSScreenTemplateEditorController.generatePreviews(); ">
+                    <i class="fa fa-sm fa-check aria-hidden='true'"></i> Show previews
+                </button>&nbsp;
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-labelGeneratorHTMLPnP" for="AdminInterfaceScreenTemplate-pnptemplate">HTML template for PnP input (if different from
+                    html template)</label>
+                <textarea class="form-control" id="AdminInterfaceScreenTemplate-pnptemplate" rows="19"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.HTMLContentPnP = this.value;"></textarea>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-labelGeneratorGetValue" for="AdminInterfaceScreenTemplate-getvalue">Snippet to get value (id, num_blocks)</label>
+                <textarea class="form-control" id="AdminInterfaceScreenTemplate-getvalue" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.get_value_snippet = this.value;">return $('#'+id).val();</textarea>
+            </div>
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-labelGeneratorSetValue" for="AdminInterfaceScreenTemplate-setvalue">Snippet to set value (id, num_blocks, varvalue)</label>
+                <textarea class="form-control" id="AdminInterfaceScreenTemplate-setvalue" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.set_value_snippet = this.value;">$('#'+id).val(varvalue);</textarea>
+            </div>
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-labelGeneratorInitScript" for="AdminInterfaceScreenTemplate-initscript">Initialisation snippet (id, num_blocks, test_mode, template_values)</label>
+                <textarea class="form-control" id="AdminInterfaceScreenTemplate-initscript" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.init_value_snippet = this.value;">$('#'+id).val('');</textarea>
+            </div>
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-labelGeneratorValidateScript" for="AdminInterfaceScreenTemplate-validatescript">Validation snippet (id, num_blocks, test_mode, template_values, runtime_values)</label>
+                <textarea class="form-control" id="AdminInterfaceScreenTemplate-validatescript" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.validation_snippet = this.value;">/* no validation script needed */</textarea>
+            </div>
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-labelIsAnsweredScript" for="AdminInterfaceScreenTemplate-isansweredscript">IsAnswered snippet (id, num_blocks, test_mode, template_values, runtime_values)</label>
+                <textarea class="form-control" id="AdminInterfaceScreenTemplate-isansweredscript" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.isanswered_snippet = this.value;">return true;</textarea>
+            </div>
+<!--            <div class="form-group">
+                <label for="AdminInterfaceScreenTemplate-css">CSS additions</label>
+                <textarea class="form-control" id="AdminInterfaceScreenTemplate-css" rows="1">.democolor {background-color: lightskyblue;}</textarea>
+            </div> -->
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-labelGenerator" for="AdminInterfaceScreenTemplate-genscript">Generator snippet (id, num_blocks, template_values)</label>
+                <textarea class="form-control" id="AdminInterfaceScreenTemplate-genscript" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.generator_snippet = this.value;">/* no generator script needed */</textarea>
+            </div>
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-labelGeneratorPnP" for="AdminInterfaceScreenTemplate-genscript">Generator snippet PnP (id, num_blocks, template_values)</label>
+                <textarea class="form-control" id="AdminInterfaceScreenTemplate-genscript-PnP" rows="1"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.generator_pnp_snippet = this.value;">/* no generator script needed */</textarea>
+            </div>
+        </div>
+    </div>
+    <!-- preview section (test editor, test taking, PnP input) -->
+    <div class="bg-dark text-white well"><label id="AdminInterfaceScreenTemplate-PreviewHeader">Preview section</label></div>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-PreviewHeaderTE">Test Editor preview</label>&nbsp;
+                <button id="AdminInterfaceScreenTemplate-showValuesTEButton" type="button" class="btn-xs btn-success" onclick="ITSInstance.newITSScreenTemplateEditorController.showTestEditorPreviewJSon();"><i class="fa fa-eye"></i> Show values</button>
+            </div>
+            <div id="AdminInterfaceScreenTemplate-TEPreview">
+
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-PreviewHeaderTT">Test Taking preview</label>
+                <button id="AdminInterfaceScreenTemplate-showValuesTTButton" type="button" class="btn-xs btn-success" onclick="ITSInstance.newITSScreenTemplateEditorController.showTestTakingPreviewJSon();"><i class="fa fa-eye"></i> Show values</button>
+            </div>
+            <div id="AdminInterfaceScreenTemplate-TTPreview">
+
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-PreviewHeaderPnP">PnP preview</label>
+                <button id="AdminInterfaceScreenTemplate-showValuesPnPButton" type="button" class="btn-xs btn-success" onclick="ITSInstance.newITSScreenTemplateEditorController.showTestTakingPnPPreviewJSon();"><i class="fa fa-eye"></i> Show values</button>
+            </div>
+            <div id="AdminInterfaceScreenTemplate-PnPPreview">
+
+            </div>
+        </div>
+    </div>
+
+    <!-- action section fa-spinner fa-spin fa-thumbs-up fa-spin -->
+    <div class="bg-dark text-white well"><label id="AdminInterfaceScreenTemplate-ActionsHeader">Actions</label></div><br/>
+    <button id="AdminInterfaceScreenTemplate-saveButton" type="button" class="btn btn-success" onclick="ITSInstance.newITSScreenTemplateEditorController.saveCurrentTemplate();"><i id="AdminInterfaceScreenTemplate-saveIcon" class="fa fa-fw fa-thumbs-up"></i> Save screen template</button>&nbsp;
+    <button id="AdminInterfaceScreenTemplate-copyButton" type="button" class="btn btn-success" onclick="ITSInstance.newITSScreenTemplateEditorController.copyCurrentTemplate();"><i class="fa fa-fw fa-copy"></i> Copy this template</button>&nbsp;
+    <button id="AdminInterfaceScreenTemplate-deleteButton" type="button" class="btn btn-success" onclick="ITSInstance.newITSScreenTemplateEditorController.deleteCurrentTemplateWarning();"><i class="fa fa-fw fa-trash"></i> Delete this template</button>&nbsp;
+    <br/>
+    <br/>
+    <button id="AdminInterfaceScreenTemplate-downloadButton" type="button" class="btn btn-success" onclick="ITSInstance.newITSScreenTemplateEditorController.downloadCurrentTemplate();"><i class="fa fa-fw fa-download"></i> Download template definition</button>&nbsp;
+    <button id="AdminInterfaceScreenTemplate-uploadButton" type="button" class="btn btn-success" onclick="if ('FileReader' in window) { document.getElementById('AdminInterfaceScreenTemplate-files').click(); } else { alert('Your browser does not support this function. Please upgrade your browser.'); }"><i class="fa fa-fw fa-upload"></i> Upload template definition</button>&nbsp;
+    <input type="file" onchange="ITSInstance.newITSScreenTemplateEditorController.uploadCurrentTemplate(event.target.files[0]);" style="visibility: hidden" id="AdminInterfaceScreenTemplate-files" accept=".itrscreentemplate"/>
+</div>

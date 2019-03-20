@@ -1,0 +1,45 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://opensource.org/licenses/Artistic-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div class="row col-12">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 ><span id="AdminInterfaceEditSessionEditHeader">Candidate session</span>&nbsp;<span NoTranslate id="AdminInterfaceEditSessionEditHeaderName"></span></h4>
+    <br/>
+</div>
+
+<div id="AdminInterfaceEditSessionEditTestsList">
+</div>
+
+<div id="AdminInterfaceEditSessionEditButtonBar">
+    <br/>
+    <!-- <button onclick="ITSInstance.editSessionController.sessionReports();" class="btn btn-success"><i class="fa fa-fw fa-pen-alt "></i><span id="AdminInterfaceEditSessionEditReportSession">Session reports</span></button> -->
+    <button id="AdminInterfaceEditSessionEditResendInvitationNoReset" type="button" onclick="ITSInstance.editSessionController.resendInvitation(false);" class="btn btn-success"><i class="fa fa-fw fa-envelope "></i><span id="AdminInterfaceEditSessionEditResendInvitationIconNoReset">Resend invitation</span></button>
+    <button id="AdminInterfaceEditSessionEditResendInvitation" type="button" onclick="ITSInstance.editSessionController.resendInvitation(true);" class="btn btn-success"><i class="fa fa-fw fa-envelope "></i><span id="AdminInterfaceEditSessionEditResendInvitationIcon">Reset password and resend</span></button>
+    <button id="AdminInterfaceEditSessionEditStartNow" type="button" onclick="ITSInstance.editSessionController.startNowSession();" class="btn btn-success"><i class="fa fa-fw fa-envelope "></i><span id="AdminInterfaceEditSessionEditStartNowIcon">Reset password and start now</span></button>
+    <button type="button" id="AdminInterfaceEditSessionEditAddTest"
+       class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+       aria-expanded="false"><i class="fa fa-fw fa-plus "></i><span id="AdminInterfaceEditSessionEditAddTestLabel">Add another test</span>
+    </button>
+    <div class="dropdown-menu" NoTranslate id="AdminInterfaceEditSessionEditAddTestList"
+         aria-labelledby="AdminInterfaceEditSessionEditAddTest">
+        <button type="button" class="dropdown-item" href="#">...</a>
+    </div>
+    <button type="button" id="AdminInterfaceEditSessionChange"
+            class="btn btn-success" onclick="ITSInstance.editSessionController.changeSession();"><i class="fa fa-fw fa-edit"></i><span id="AdminInterfaceEditSessionChangeLabel">Change session</span>
+    </button>
+    <button id="AdminInterfaceEditSessionEditArchiveTest" type="button" onclick="ITSInstance.editSessionController.archiveSession();" class="btn btn-warning"><i id="AdminInterfaceEditSessionEditArchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceEditSessionEditArchive">Archive this session</span></button>
+    <button id="AdminInterfaceEditSessionEditUnarchiveTest" type="button" onclick="ITSInstance.editSessionController.unarchiveSession();" class="btn btn-warning"><i id="AdminInterfaceEditSessionEditUnarchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceEditSessionEditArchive">Unarchive this session</span></button>
+    <button type="button" onclick="ITSInstance.editSessionController.deleteSession();" class="btn btn-warning"><i class="fa fa-fw fa-trash "></i><span id="AdminInterfaceEditSessionEditDelete">Delete this session</span></button>
+</div>

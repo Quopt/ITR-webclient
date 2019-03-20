@@ -1,0 +1,34 @@
+/* Copyright 2019 by Quopt IT Services BV
+ *
+ *  Licensed under the Artistic License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    https://opensource.org/licenses/Artistic-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+@import url(https://fonts.googleapis.com/css?family=Alegreya+Sans);
+@import url(https://fonts.googleapis.com/css?family=Roboto+Slab);
+@import url(https://fonts.googleapis.com/css?family=Lato);
+@import url(https://fonts.googleapis.com/css?family=Indie+Flower);
+
+li.active {
+    background-color: lightskyblue;
+}
+
+/* fix for MCE full screen mode and bootstrap menu bar */
+div.mce-fullscreen {
+    z-index: 1050;
+}
+
+.p_compressed {
+    line-height: 100%;
+    border : 0px;
+    margin : 0px;
+    color: #06b6ef;
+}

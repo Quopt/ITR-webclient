@@ -1,0 +1,1382 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://opensource.org/licenses/Artistic-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="ITS Main page">
+    <meta name="author" content="Quopt IT Services BV">
+    <link rel="icon" href="images/its.png">
+
+    <title>ITR - The Internet Test Room</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-combobox.css" media="screen" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template -->
+    <link href="css/starter-template.css" rel="stylesheet">
+    <link href="css/login.css" rel="stylesheet">
+    <link href="css/ITS.css" rel="stylesheet">
+    <link href="css/ITS-print.css"  media="print" rel="stylesheet">
+    <link href="css/ace.css" rel="stylesheet">
+    <link href="fontawesome/css/all.css" rel="stylesheet">
+    <link href="css/flatpickr.min.css" rel="stylesheet">
+</head>
+
+<body onresize="if (resizeFunction)  { resizeFunction(); }">
+
+<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top" id="NavbarsAdmin"
+     style="left:64px;background-color: #331a00;display: none;max-height:49px;min-height:49px;">
+    <a class="navbar-brand fixed-top"><img src="images\its.png"
+                                           style="width:64px;height:64px;position:absolute; left:0;top:0;z-index: 1;"
+                                           data-toggle="tooltip" title="User settings"
+                                           onclick="if ($('#NavBarsAdminSidebar:visible').length > 0) {$('#NavBarsAdminSidebar').hide();} else {$('#NavBarsAdminSidebar').show();}"
+                                           ;/></a>
+    <div class="form-inline col-6" id="NavbarsAdminLoginBlock" style="width:80%;color:white;vertical-align: bottom;"><label
+            id="NavbarsLabelHeading" NoTranslate><label
+            id="NavbarsLabelHeadingWelcome">Welcome</label>&nbsp;<label id="welcomeUserName" NoTranslate>...</label>&nbsp;<label
+            id="welcomeCompany" NoTranslate>...</label></label></div>
+    <div class="form-inline col-2" id="NavbarsAdminSearchButtonBlock" class="text-right align-content-right text-nowrap" style="position:absolute; left:90%; top:1px; width:10%;">
+        <!-- <input class="form-control-xs mr-sm-2" id="NavbarsAdminSearch" type="text" placeholder="Search">
+        <button class="btn-xs btn-success" id="NavbarsAdminSearchButton">Search</button> -->
+        <button class="btn-small btn-warning" id="NavbarsAdminLogoutButton"
+                onclick="ITSInstance.logoutController.logout();">Logout
+        </button>&nbsp;
+    </div>
+</nav>
+
+<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top" id="NavbarsTestTaking"
+     style="background-color: #D3D3D3;display: none;max-height:49px;min-height:49px;">
+    <img src="images\its.png" style="width:32px;height:32px;position:absolute; left:2px;top:2px;z-index: 1;"/>
+    <div class="form-inline col-8" id="NavbarsAdminLoginBlockTT" style="width:100%;color:white;vertical-align: bottom; left:10px;"><label
+            id="NavbarsLabelHeadingTT" NoTranslate><label
+            id="NavbarsLabelHeadingWelcomeTT">Welcome</label>&nbsp;<label id="welcomeUserNameTT" NoTranslate>...</label>&nbsp;<label
+            id="welcomeCompanyTT" NoTranslate>...</label></label></div>
+    <div class="form-inline col-2" id="NavbarsAdminSearchButtonBlockTT" style="position:absolute; left:80%; top:1px; width:400px;min-width:400px;max-width:400px;">
+        <button class="btn btn-warning" id="NavbarsAdminLogoutButtonTT"
+                onclick="processEvent('Logout');">Logout
+        </button>
+    </div>
+</nav>
+
+<div class="fixed-top" id="NavBarsAdminSidebar"
+     style="display: none;color:white;background-color: #331a00;top:35px; z-index:1;min-width: 300px;max-width: 300px;">
+    <br/>
+    <div id="NavBarsAdminSidebarMenu" class="d-md-flex pt-2">
+        <ul class="nav flex-column">
+            <li NoTranslate class="nav-item"><a class="nav-link" style="color:white;" id="NavBarsAdminSidebarSwitchboard" onclick="ITSRedirectPath('Switchboard');"><label id="NavBarsAdminSidebarSwitchboardLabel">Switchboard</label></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-toggle="collapse" data-target="#submenuCandidates"
+                   style="color:white;" id="NavBarsAdminSidebarUsers"><label id="NavBarsAdminSidebarUsersLabel">Candidates</label></a>
+                <div NoTranslate class="collapse small" id="submenuCandidates" aria-expanded="false">
+                    <ul NoTranslate class="flex-column pl-4 nav" id="submenuCandidatesLI">
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-toggle="collapse"
+                   data-target="#submenuSessions" style="color:white;" id="NavBarsAdminSidebarSessions"><label id="NavBarsAdminSidebarSessionsLabel">Sessions</label></a>
+                <div NoTranslate class="collapse small" id="submenuSessions" aria-expanded="false">
+                    <ul NoTranslate class="flex-column pl-4 nav" id="submenuSessionsLI">
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-toggle="collapse"
+                       data-target="#submenuTestsAndReports" style="color:white;" id="NavBarsAdminSidebarSettings"><label id="NavBarsAdminSidebarTestAndReportsLabel">Tests and Reports</label></a>
+                    <div NoTranslate class="collapse small" id="submenuTestsAndReports" aria-expanded="false">
+                        <ul NoTranslate class="flex-column pl-4 nav" id="submenuTestsAndReportsLI">
+
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#submenuSettings" data-toggle="collapse"
+                       data-target="#submenuSettings" style="color:white;" id="NavBarsAdminSidebarSettings"><label id="NavBarsAdminSidebarSettingsLabel">Settings</label></a>
+                    <div NoTranslate class="collapse small" id="submenuSettings" aria-expanded="false">
+                        <ul NoTranslate class="flex-column pl-4 nav" id="submenuSettingsLI">
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" style="color:white;" data-toggle="collapse"
+                       data-target="#submenuCompanies" id="NavBarsAdminSidebarCompanies"><label id="NavBarsAdminSidebarCompaniesLabel">Organisation</label></a>
+                    <div NoTranslate class="collapse small" id="submenuCompanies" aria-expanded="false">
+                        <ul NoTranslate class="flex-column pl-4 nav" id="submenuCompaniesLI">
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item"><a class="nav-link" style="color:white;" onclick="ITSInstance.logoutController.logout();"
+                                        id="NavBarsAdminSidebarLogout"><label id="NavBarsAdminSidebarLogoutLabel">Logout</label></a></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="container-fluid" id="ITSTestTakingDiv"  style="display: none;">
+        <label>...</label>
+    </div>
+
+
+    <div class="container-fluid" id="ITSTestTakingDivTestEnded"  style="display: none;">
+        <label id="ITSTestTakingDivTestEndedTest">You have completed this test ! Please click the button below to proceed to the next test.</label><br/>
+        <button class="btn btn-primary" id="ITSTestTakingDivTestEndedButton"
+                onclick="ITSInstance.testTakingController.nextTest();">
+            Start the next test
+        </button>&nbsp;&nbsp;
+    </div>
+
+    <div class="container-fluid" id="ITSTestTakingDivSessionEnded"  style="display: none;">
+        <label id="ITSTestTakingDivSessionEndedText">You have completed all the tests. The results have been send to your test institute. Many thanks for using the Internet Test Room system. </label><br/>
+        <button class="btn btn-primary" id="ITSTestTakingDivSessionEndedButton"
+                onclick="ITSInstance.logoutController.logout();">
+            Return to the login screen
+        </button>&nbsp;&nbsp;
+    </div>
+
+    <div class="container-fluid" id="ITSMainDiv">
+
+        <div class="starter-template" id="AdminInterface" style="display: none;">
+            <div class="container">
+                <div class="row" id="AdminInterfacePortlets">
+                    <div class="col-lg-12">
+                        <h1 class="page-header" id="AdminInterfaceCompanyHailing" NoTranslate>
+                            <label id="AdminInterfaceCompanyHailingHeading">Welcome to&nbsp;</label><label id="CompanyName" NoTranslate>...</label>!
+                        </h1><br/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid" id="AdminInterfaceSessions" style="display: none;">
+            <div class="row">
+                <h1 id="AdminInterfaceSessionsHeader">Sessions overview</h1>
+            </div>
+            <div class="row">
+                <div class="panel-body">
+                    <p id="AdminInterfaceSettingsBody">Select the session from the list below to view the details. If your
+                        session is not in the list enter a part of any text in the session in the Filter box below. </p>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="AdminInterfaceSessionsFilter">Filter</span>
+                        <input type="text" class="form-control" placeholder="Enter filter text ..."
+                               id="AdminInterfaceSessionsFilterText" aria-describedby="AdminInterfaceSessionsFilter">
+                    </div>
+                    <table class="table table-sm table-striped table-hover" style="text-align: left"
+                           id="AdminInterfaceSessionsTable">
+                        <thead>
+                        <tr>
+                            <td>A</td>
+                            <td>B</td>
+                            <td>C</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="starter-template" id="TestTakingInterface" style="display: none;">
+        <h1>Bootstrap starter template TEST TAKING</h1>
+        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a
+            mostly barebones HTML document.</p>
+    </div>
+
+    <div class="form-check" id="LoginWindow">
+        <div class="row d-flex align-items-center">
+            <div class="mx-auto" style="max-width:390px;min-width:190px;">
+                <h3 style="vertical-align:text-bottom;"><img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/><label id="LoginWindowHeading">Login</label></h3>
+                <div class="form-group">
+                    <label for="LoginWindowinputUsername" id="LoginWindowUserName">User name</label>
+                    <input type="text" class="form-control" id="LoginWindowinputUsername" NoTranslate/>
+                </div>
+                <div class="form-group">
+                    <label for="LoginWindowinputPassword" id="LoginWindowPassword">Password</label>
+                    <input type="password" class="form-control" id="LoginWindowinputPassword" NoTranslate/>
+                </div>
+                <span id="LoginWindowIEWarning" class="badge badge-danger" style="display: none">Internet Explorer is <B>NOT</B> supported for this website. <br/>Please use a recent version of Microsoft Edge,<br/>Google Chrome, Mozilla Firefox, Apple Safari or Opera.</span>
+                <span id="LoginWindowUnknownBrowserWarning" class="badge badge-warning" style="display: none;">Your browser could not be detected and <br/>may not work with this website.<br/>Please use a recent version of Microsoft Edge,<br/>Google Chrome, Mozilla Firefox, Apple Safari or Opera.</span>
+                <button class="btn btn-primary" id="LoginWindowLoginButton"
+                        onclick="ITSInstance.loginController.login( $('#LoginWindowinputUsername').val(), $('#LoginWindowinputPassword').val());">
+                    Login
+                </button>
+                <span class="pull-right nav-link" href="#" id="LoginWindowPasswordForgotten"
+                   onclick="ITSInstance.UIController.activateScreenPath('PasswordForgotten');">Have you forgotten your
+                    password?</span>
+
+                <div class="form-group" id="LoginWindowSelectLangGroup" style="display: none;">
+                    <br/>
+                    <label for="LoginWindowSelectLanguage" id="LoginWindowSelectLanguageLabel">Select other language</label>
+                    <select NoTranslate class="form-control" id="LoginWindowSelectLanguage" onchange="ITSInstance.loginController.changeLanguage($('#LoginWindowSelectLanguage').val());"></select>
+                </div>
+
+                <div id="NavBarsCopyright" style="z-index: -1;" NoTranslate><br/><p style="line-height: 0.3; text-align: center;"><label id="CopyrightText1" NoTranslate></label><br/><label style="font-size: 8px" id="ITR365" NoTranslate>Powered by <a href="http://www.itr365.com">itr365</a></label></p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-check" id="LoginWindowSelectCompany" style="display: none;">
+        <div class="row d-flex align-items-center">
+            <div class="mx-auto" style="max-width:390px;min-width:190px;">
+
+                <h3 id="LoginWindowSelectCompanyHeader" style="vertical-align:text-bottom;">
+                    <img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>
+                    Select the company you want to work with </h3>
+                <table class="table table-sm table-striped table-hover" style="text-align: center"
+                       id="LoginWindowSelectCompanyTable">
+                    <tbody>
+                    <tr>
+                        <td>-</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br/>
+                <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightText2" NoTranslate></label></p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-check" id="LoginWindowSelectSession" style="display: none;">
+        <div class="row d-flex align-items-center">
+            <div class="mx-auto" style="max-width:390px;min-width:190px;">
+
+                <h3 id="LoginWindowSelectSessionHeader" style="vertical-align:text-bottom;">
+                    <img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>
+                    Select the session you want to take</h3>
+                <table class="table table-sm table-striped table-hover" style="text-align: center"
+                       id="LoginWindowSelectSessionTable">
+                    <tbody>
+                    <tr>
+                        <td>-</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br/>
+                <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightTextSession" NoTranslate></label></p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-check" id="ForgotWindow" style="display: none;">
+        <div class="row d-flex align-items-center">
+            <div class="mx-auto" style="max-width:390px;min-width:190px;">
+                <h3 style="vertical-align:text-bottom;"><img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>Password
+                    forgotten</h3>
+                <div class="form-group">
+                    <label id="ForgotWindowInstruction">Please enter your email address below and we will send you a link to reset your password.</label> <br/><br/>
+                    <label for="inputUsername" id="UserName">E-mail</label>
+                    <input type="text" class="form-control" id="ForgotWindowinputUsername"/>
+                </div>
+                <button class="btn btn-primary" id="ForgotWindowBackButton"
+                        onclick="ITSInstance.UIController.activateScreenPath('Login');">
+                    Cancel
+                </button>
+                <button class="btn btn-primary" id="ForgotWindowResetButton"
+                        onclick="ITSInstance.UIController.activateScreenPath('Login');">
+                    Send password reset mail
+                </button>
+                <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightText3" NoTranslate></label></p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-check-inline" id="PasswordResetWindow" style="display: none; width:390px;">
+        <!-- Token=X&Path=PasswordReset -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 style="vertical-align:text-bottom;"><img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>Password
+                reset</h3>
+            <div class="form-group">
+                <br/>Please enter your new password below <br/><br/>
+                <label for="inputUsername" id="UserName">New password</label>
+                <input type="text" class="form-control" id="PasswordResetWindow1"/>
+                <br/><br/>Please confirm your new password below by entering it again<br/><br/>
+                <label for="inputUsername" id="UserName">Confirm new password</label>
+                <input type="text" class="form-control" id="PasswordResetWindow2"/>
+            </div>
+            <button class="btn btn-primary" id="PasswordResetWindowBackButton"
+                    onclick="ITSInstance.UIController.activateScreenPath('Login');">
+                Cancel
+            </button>
+            <button class="btn btn-primary" id="PasswordResetWindowButton"
+                    onclick="ITSInstance.UIController.activateScreenPath('Login');">
+                Reset password
+            </button>
+            <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightText4" NoTranslate></label></p></div>
+        </div>
+    </div>
+</div>
+
+<!-- system service components -->
+<!-- modal dialog box -->
+<div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-faded">
+                <h5 class="modal-title" id="basicModalHeader"></h5>
+            </div>
+            <div class="modal-body">
+                <h6 id="basicModalBody"></h6>
+            </div>
+            <div class="modal-footer bg-faded" id="basicModalFooter">
+                <button type="button" id="basicModalButtonClose" class="btn btn-default" data-dismiss="modal">x</button>
+                <!--- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal wait box -->
+<div class="modal fade" tabindex="-1" role="dialog" id="waitModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-faded">
+                <h5 class="modal-title" id="waitModalHeader">Processing</h5>
+            </div>
+            <div class="modal-body"><center><i id="waitModalIcon" class="fa fa-spinner fa-spin fa-5x"></i></center></div>
+        </div>
+    </div>
+</div>
+
+<footer class="bd-footer text-muted" id="NavBarsFooter" style="display:none; position: absolute; width:100%; z-index: -1;">
+        <div class="container" id="NavBarsCopyright" style="width:100%;text-align:center;">
+            <p><br/><label id="CopyrightText5" NoTranslate></label></p>
+        </div>
+</footer>
+
+    <!-- Bootstrap core JavaScript ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!-- <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>-->
+<script src="js/jquery-3.2.1.js"></script>
+<!--
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script> -->
+<script src="fontawesome/js/all.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-combobox.js" type="text/javascript"></script>
+<script src="js/moment.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="js/ie10-viewport-bug-workaround.js"></script>
+<!-- charting -->
+<script src="js/chart.js"></script>
+<!-- date time picker -->
+<script src="js/flatpickr.js"></script>
+<!-- jstx -->
+<script src="js/jstz/jstz.main.js" type="text/javascript"></script>
+<script src="js/jstz/jstz.rules.js" type="text/javascript"></script>
+<!-- enum language support -->
+<script src="js/enums.js"></script>
+<!-- bootstrap toggle support -->
+<script src="js/bootstrap-toggle/bootstrap-toggle.min.js"></script>
+<!-- sizing etc for this screen -->
+<script>
+    // generic user initialization functions
+    function getUrlVars() {
+        var vars = {};
+        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+            vars[key] = value;
+        });
+        return vars;
+    }
+
+    if (!ITSLanguage) {
+        var ITSLanguage = navigator.language || navigator.userLanguage;
+        if (getUrlVars()['Lang']) {
+            ITSLanguage = getUrlVars()['Lang'];
+            // clear all cookies including the ITRLanguage cookie
+            document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+        };
+        ITSLanguage = ITSLanguage.split("-")[0];
+    }
+
+    var timezone = jstz.determine();
+    console.log ("User preferred default language detected : " + ITSLanguage + ". Timezone : " + timezone.name() );
+
+    function switchLanguage(ITSLanguage) {
+        switch (ITSLanguage) {
+            case "af" :
+                document.write('<script type="text/javascript" src="js/datejs/date-af-ZA.js"><\/script>');
+                break; // Afrikaans
+            case "af-ZA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-af-ZA.js"><\/script>');
+                break; // Afrikaans (South Africa)
+            case "ar" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-MA.js"><\/script>');
+                break; // Arabic
+            case "ar-AE" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-AE.js"><\/script>');
+                break; // Arabic (U.A.E.)
+            case "ar-BH" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-BH.js"><\/script>');
+                break; // Arabic (Bahrain)
+            case "ar-DZ" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-DZ.js"><\/script>');
+                break; // Arabic (Algeria)
+            case "ar-EG" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-EG.js"><\/script>');
+                break; // Arabic (Egypt)
+            case "ar-IQ" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-IQ.js"><\/script>');
+                break; // Arabic (Iraq)
+            case "ar-JO" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-JO.js"><\/script>');
+                break; // Arabic (Jordan)
+            case "ar-KW" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-KW.js"><\/script>');
+                break; // Arabic (Kuwait)
+            case "ar-LB" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-LB.js"><\/script>');
+                break; // Arabic (Lebanon)
+            case "ar-LY" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-LY.js"><\/script>');
+                break; // Arabic (Libya)
+            case "ar-MA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-MA.js"><\/script>');
+                break; // Arabic (Morocco)
+            case "ar-OM" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-OM.js"><\/script>');
+                break; // Arabic (Oman)
+            case "ar-QA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-QA.js"><\/script>');
+                break; // Arabic (Qatar)
+            case "ar-SA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-SA.js"><\/script>');
+                break; // Arabic (Saudi Arabia)
+            case "ar-SY" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-SY.js"><\/script>');
+                break; // Arabic (Syria)
+            case "ar-TN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-TN.js"><\/script>');
+                break; // Arabic (Tunisia)
+            case "ar-YE" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ar-YE.js"><\/script>');
+                break; // Arabic (Yemen)
+            case "az" :
+                document.write('<script type="text/javascript" src="js/datejs/date-az-Cyrl-AZ.js"><\/script>');
+                break; // Azeri (Latin)
+            case "az-AZ" :
+                document.write('<script type="text/javascript" src="js/datejs/date-az-Latn-AZ.js"><\/script>');
+                break; // Azeri (Latin) (Azerbaijan)
+            case "be" :
+                document.write('<script type="text/javascript" src="js/datejs/date-be-BY.js"><\/script>');
+                break; // Belarusian
+            case "be-BY" :
+                document.write('<script type="text/javascript" src="js/datejs/date-be-BY.js"><\/script>');
+                break; // Belarusian (Belarus)
+            case "bg" :
+                document.write('<script type="text/javascript" src="js/datejs/date-bg-BG.js"><\/script>');
+                break; // Bulgarian
+            case "bg-BG" :
+                document.write('<script type="text/javascript" src="js/datejs/date-bg-BG.js"><\/script>');
+                break; // Bulgarian (Bulgaria)
+            case "bs-BA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-bs-Latn-BA.js"><\/script>');
+                break; // Bosnian (Bosnia and Herzegovina)
+            case "ca" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ca-ES.js"><\/script>');
+                break; // Catalan
+            case "ca-ES" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ca-ES.js"><\/script>');
+                break; // Catalan (Spain)
+            case "cs" :
+                document.write('<script type="text/javascript" src="js/datejs/date-cs-CZ.js"><\/script>');
+                break; // Czech
+            case "cs-CZ" :
+                document.write('<script type="text/javascript" src="js/datejs/date-cs-CZ.js"><\/script>');
+                break; // Czech (Czech Republic)
+            case "cy" :
+                document.write('<script type="text/javascript" src="js/datejs/date-cy-GB.js"><\/script>');
+                break; // Welsh
+            case "cy-GB" :
+                document.write('<script type="text/javascript" src="js/datejs/date-cy-GB.js"><\/script>');
+                break; // Welsh (United Kingdom)
+            case "da" :
+                document.write('<script type="text/javascript" src="js/datejs/date-da-DK.js"><\/script>');
+                break; // Danish
+            case "da-DK" :
+                document.write('<script type="text/javascript" src="js/datejs/date-da-DK.js"><\/script>');
+                break; // Danish (Denmark)
+            case "de" :
+                document.write('<script type="text/javascript" src="js/datejs/date-de-DE.js"><\/script>');
+                break; // German
+            case "de-AT" :
+                document.write('<script type="text/javascript" src="js/datejs/date-de-AT.js"><\/script>');
+                break; // German (Austria)
+            case "de-CH" :
+                document.write('<script type="text/javascript" src="js/datejs/date-de-CH.js"><\/script>');
+                break; // German (Switzerland)
+            case "de-DE" :
+                document.write('<script type="text/javascript" src="js/datejs/date-de-DE.js"><\/script>');
+                break; // German (Germany)
+            case "de-LI" :
+                document.write('<script type="text/javascript" src="js/datejs/date-de-LI.js"><\/script>');
+                break; // German (Liechtenstein)
+            case "de-LU" :
+                document.write('<script type="text/javascript" src="js/datejs/date-de-LU.js"><\/script>');
+                break; // German (Luxembourg)
+            case "dv" :
+                document.write('<script type="text/javascript" src="js/datejs/date-dv-MV.js"><\/script>');
+                break; // Divehi
+            case "dv-MV" :
+                document.write('<script type="text/javascript" src="js/datejs/date-dv-MV.js"><\/script>');
+                break; // Divehi (Maldives)
+            case "el" :
+                document.write('<script type="text/javascript" src="js/datejs/date-el-GR.js"><\/script>');
+                break; // Greek
+            case "el-GR" :
+                document.write('<script type="text/javascript" src="js/datejs/date-el-GR.js"><\/script>');
+                break; // Greek (Greece)
+            case "en" :
+                document.write('<script type="text/javascript" src="js/datejs/date-en-029.js"><\/script>');
+                break; // English
+            case "en-AU" :
+                document.write('<script type="text/javascript" src="js/datejs/date-en-AU.js"><\/script>');
+                break; // English (Australia)
+            case "en-BZ" :
+                document.write('<script type="text/javascript" src="js/datejs/date-en-BZ.js"><\/script>');
+                break; // English (Belize)
+            case "en-CA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-en-CA.js"><\/script>');
+                break; // English (Canada)
+            case "en-CB" :
+                document.write('<script type="text/javascript" src="js/datejs/date-en-GB.js"><\/script>');
+                break; // English (Caribbean)
+            case "en-GB" :
+                document.write('<script type="text/javascript" src="js/datejs/date-en-GB.js"><\/script>');
+                break; // English (United Kingdom)
+            case "en-IE" :
+                document.write('<script type="text/javascript" src="js/datejs/date-en-IE.js"><\/script>');
+                break; // English (Ireland)
+            case "en-JM" :
+                document.write('<script type="text/javascript" src="js/datejs/date-en-JM.js"><\/script>');
+                break; // English (Jamaica)
+            case "en-NZ" :
+                document.write('<script type="text/javascript" src="js/datejs/date-en-NZ.js"><\/script>');
+                break; // English (New Zealand)
+            case "en-PH" :
+                document.write('<script type="text/javascript" src="js/datejs/date-en-PH.js"><\/script>');
+                break; // English (Republic of the Philippines)
+            case "en-TT" :
+                document.write('<script type="text/javascript" src="js/datejs/date-en-TT.js"><\/script>');
+                break; // English (Trinidad and Tobago)
+            case "en-US" :
+                document.write('<script type="text/javascript" src="js/datejs/date-en-US.js"><\/script>');
+                break; // English (United States)
+            case "en-ZA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-en-ZA.js"><\/script>');
+                break; // English (South Africa)
+            case "en-ZW" :
+                document.write('<script type="text/javascript" src="js/datejs/date-en-ZW.js"><\/script>');
+                break; // English (Zimbabwe)
+            case "eo" :
+                document.write('<script type="text/javascript" src="js/datejs/date.js"><\/script>');
+                break; // Esperanto
+            case "es" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-HN.js"><\/script>');
+                break; // Spanish
+            case "es-AR" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-BO.js"><\/script>');
+                break; // Spanish (Argentina)
+            case "es-BO" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-BO.js"><\/script>');
+                break; // Spanish (Bolivia)
+            case "es-CL" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-CL.js"><\/script>');
+                break; // Spanish (Chile)
+            case "es-CO" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-CO.js"><\/script>');
+                break; // Spanish (Colombia)
+            case "es-CR" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-CR.js"><\/script>');
+                break; // Spanish (Costa Rica)
+            case "es-DO" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-DO.js"><\/script>');
+                break; // Spanish (Dominican Republic)
+            case "es-EC" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-EC.js"><\/script>');
+                break; // Spanish (Ecuador)
+            case "es-ES" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-ES.js"><\/script>');
+                break; // Spanish (Spain)
+            case "es-GT" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-GT.js"><\/script>');
+                break; // Spanish (Guatemala)
+            case "es-HN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-HN.js"><\/script>');
+                break; // Spanish (Honduras)
+            case "es-MX" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-MX.js"><\/script>');
+                break; // Spanish (Mexico)
+            case "es-NI" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-NI.js"><\/script>');
+                break; // Spanish (Nicaragua)
+            case "es-PA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-PA.js"><\/script>');
+                break; // Spanish (Panama)
+            case "es-PE" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-PE.js"><\/script>');
+                break; // Spanish (Peru)
+            case "es-PR" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-PR.js"><\/script>');
+                break; // Spanish (Puerto Rico)
+            case "es-PY" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-PY.js"><\/script>');
+                break; // Spanish (Paraguay)
+            case "es-SV" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-SV.js"><\/script>');
+                break; // Spanish (El Salvador)
+            case "es-UY" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-UY.js"><\/script>');
+                break; // Spanish (Uruguay)
+            case "es-VE" :
+                document.write('<script type="text/javascript" src="js/datejs/date-es-VE.js"><\/script>');
+                break; // Spanish (Venezuela)
+            case "et" :
+                document.write('<script type="text/javascript" src="js/datejs/date-et-EE.js"><\/script>');
+                break; // Estonian
+            case "et-EE" :
+                document.write('<script type="text/javascript" src="js/datejs/date-et-EE.js"><\/script>');
+                break; // Estonian (Estonia)
+            case "eu" :
+                document.write('<script type="text/javascript" src="js/datejs/date-eu-ES.js"><\/script>');
+                break; // Basque
+            case "eu-ES" :
+                document.write('<script type="text/javascript" src="js/datejs/date-eu-ES.js"><\/script>');
+                break; // Basque (Spain)
+            case "fa" :
+                document.write('<script type="text/javascript" src="js/datejs/date-fa-IR.js"><\/script>');
+                break; // Farsi
+            case "fa-IR" :
+                document.write('<script type="text/javascript" src="js/datejs/date-fa-IR.js"><\/script>');
+                break; // Farsi (Iran)
+            case "fi" :
+                document.write('<script type="text/javascript" src="js/datejs/date-fi-FI.js"><\/script>');
+                break; // Finnish
+            case "fi-FI" :
+                document.write('<script type="text/javascript" src="js/datejs/date-fi-FI.js"><\/script>');
+                break; // Finnish (Finland)
+            case "fo" :
+                document.write('<script type="text/javascript" src="js/datejs/date-fo-FO.js"><\/script>');
+                break; // Faroese
+            case "fo-FO" :
+                document.write('<script type="text/javascript" src="js/datejs/date-fo-FO.js"><\/script>');
+                break; // Faroese (Faroe Islands)
+            case "fr" :
+                document.write('<script type="text/javascript" src="js/datejs/date-fr-FR.js"><\/script>');
+                break; // French
+            case "fr-BE" :
+                document.write('<script type="text/javascript" src="js/datejs/date-fr-BE.js"><\/script>');
+                break; // French (Belgium)
+            case "fr-CA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-fr-CA.js"><\/script>');
+                break; // French (Canada)
+            case "fr-CH" :
+                document.write('<script type="text/javascript" src="js/datejs/date-fr-CH.js"><\/script>');
+                break; // French (Switzerland)
+            case "fr-FR" :
+                document.write('<script type="text/javascript" src="js/datejs/date-fr-FR.js"><\/script>');
+                break; // French (France)
+            case "fr-LU" :
+                document.write('<script type="text/javascript" src="js/datejs/date-fr-LU.js"><\/script>');
+                break; // French (Luxembourg)
+            case "fr-MC" :
+                document.write('<script type="text/javascript" src="js/datejs/date-fr-MC.js"><\/script>');
+                break; // French (Principality of Monaco)
+            case "gl" :
+                document.write('<script type="text/javascript" src="js/datejs/date-gl-ES.js"><\/script>');
+                break; // Galician
+            case "gl-ES" :
+                document.write('<script type="text/javascript" src="js/datejs/date-gl-ES.js"><\/script>');
+                break; // Galician (Spain)
+            case "gu" :
+                document.write('<script type="text/javascript" src="js/datejs/date-gu-IN.js"><\/script>');
+                break; // Gujarati
+            case "gu-IN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-gu-IN.js"><\/script>');
+                break; // Gujarati (India)
+            case "he" :
+                document.write('<script type="text/javascript" src="js/datejs/date-he-IL.js"><\/script>');
+                break; // Hebrew
+            case "he-IL" :
+                document.write('<script type="text/javascript" src="js/datejs/date-he-IL.js"><\/script>');
+                break; // Hebrew (Israel)
+            case "hi" :
+                document.write('<script type="text/javascript" src="js/datejs/date-hi-IN.js"><\/script>');
+                break; // Hindi
+            case "hi-IN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-hi-IN.js"><\/script>');
+                break; // Hindi (India)
+            case "hr" :
+                document.write('<script type="text/javascript" src="js/datejs/date-hr-BA.js"><\/script>');
+                break; // Croatian
+            case "hr-BA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-hr-BA.js"><\/script>');
+                break; // Croatian (Bosnia and Herzegovina)
+            case "hr-HR" :
+                document.write('<script type="text/javascript" src="js/datejs/date-hr-HR.js"><\/script>');
+                break; // Croatian (Croatia)
+            case "hu" :
+                document.write('<script type="text/javascript" src="js/datejs/date-hu-HU.js"><\/script>');
+                break; // Hungarian
+            case "hu-HU" :
+                document.write('<script type="text/javascript" src="js/datejs/date-hu-HU.js"><\/script>');
+                break; // Hungarian (Hungary)
+            case "hy" :
+                document.write('<script type="text/javascript" src="js/datejs/date-hy-AM.js"><\/script>');
+                break; // Armenian
+            case "hy-AM" :
+                document.write('<script type="text/javascript" src="js/datejs/date-hy-AM.js"><\/script>');
+                break; // Armenian (Armenia)
+            case "id" :
+                document.write('<script type="text/javascript" src="js/datejs/date-id-ID.js"><\/script>');
+                break; // Indonesian
+            case "id-ID" :
+                document.write('<script type="text/javascript" src="js/datejs/date-id-ID.js"><\/script>');
+                break; // Indonesian (Indonesia)
+            case "is" :
+                document.write('<script type="text/javascript" src="js/datejs/date-is-IS.js"><\/script>');
+                break; // Icelandic
+            case "is-IS" :
+                document.write('<script type="text/javascript" src="js/datejs/date-is-IS.js"><\/script>');
+                break; // Icelandic (Iceland)
+            case "it" :
+                document.write('<script type="text/javascript" src="js/datejs/date-it-CH.js"><\/script>');
+                break; // Italian
+            case "it-CH" :
+                document.write('<script type="text/javascript" src="js/datejs/date-it-CH.js"><\/script>');
+                break; // Italian (Switzerland)
+            case "it-IT" :
+                document.write('<script type="text/javascript" src="js/datejs/date-it-IT.js"><\/script>');
+                break; // Italian (Italy)
+            case "ja" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ja-JP.js"><\/script>');
+                break; // Japanese
+            case "ja-JP" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ja-JP.js"><\/script>');
+                break; // Japanese (Japan)
+            case "ka" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ka-GE.js"><\/script>');
+                break; // Georgian
+            case "ka-GE" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ka-GE.js"><\/script>');
+                break; // Georgian (Georgia)
+            case "kk" :
+                document.write('<script type="text/javascript" src="js/datejs/date-kk-KZ.js"><\/script>');
+                break; // Kazakh
+            case "kk-KZ" :
+                document.write('<script type="text/javascript" src="js/datejs/date-kk-KZ.js"><\/script>');
+                break; // Kazakh (Kazakhstan)
+            case "kn" :
+                document.write('<script type="text/javascript" src="js/datejs/date-kn-IN.js"><\/script>');
+                break; // Kannada
+            case "kn-IN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-kn-IN.js"><\/script>');
+                break; // Kannada (India)
+            case "ko" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ko-KR.js"><\/script>');
+                break; // Korean
+            case "ko-KR" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ko-KR.js"><\/script>');
+                break; // Korean (Korea)
+            case "kok" :
+                document.write('<script type="text/javascript" src="js/datejs/date-kok-IN.js"><\/script>');
+                break; // Konkani
+            case "kok-IN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-kok-IN.js"><\/script>');
+                break; // Konkani (India)
+            case "ky" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ky-KG.js"><\/script>');
+                break; // Kyrgyz
+            case "ky-KG" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ky-KG.js"><\/script>');
+                break; // Kyrgyz (Kyrgyzstan)
+            case "lt" :
+                document.write('<script type="text/javascript" src="js/datejs/date-lt-LT.js"><\/script>');
+                break; // Lithuanian
+            case "lt-LT" :
+                document.write('<script type="text/javascript" src="js/datejs/date-lt-LT.js"><\/script>');
+                break; // Lithuanian (Lithuania)
+            case "lv" :
+                document.write('<script type="text/javascript" src="js/datejs/date-lv-LV.js"><\/script>');
+                break; // Latvian
+            case "lv-LV" :
+                document.write('<script type="text/javascript" src="js/datejs/date-lv-LV.js"><\/script>');
+                break; // Latvian (Latvia)
+            case "mi" :
+                document.write('<script type="text/javascript" src="js/datejs/date-mi-NZ.js"><\/script>');
+                break; // Maori
+            case "mi-NZ" :
+                document.write('<script type="text/javascript" src="js/datejs/date-mi-NZ.js"><\/script>');
+                break; // Maori (New Zealand)
+            case "mk" :
+                document.write('<script type="text/javascript" src="js/datejs/date-mk-MK.js"><\/script>');
+                break; // FYRO Macedonian
+            case "mk-MK" :
+                document.write('<script type="text/javascript" src="js/datejs/date-mk-MK.js"><\/script>');
+                break; // FYRO Macedonian (Former Yugoslav Republic of Macedonia)
+            case "mn" :
+                document.write('<script type="text/javascript" src="js/datejs/date-mn-MN.js"><\/script>');
+                break; // Mongolian
+            case "mn-MN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-mn-MN.js"><\/script>');
+                break; // Mongolian (Mongolia)
+            case "mr" :
+                document.write('<script type="text/javascript" src="js/datejs/date-mr-IN.js"><\/script>');
+                break; // Marathi
+            case "mr-IN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-mr-IN.js"><\/script>');
+                break; // Marathi (India)
+            case "ms" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ms-BN.js"><\/script>');
+                break; // Malay
+            case "ms-BN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ms-BN.js"><\/script>');
+                break; // Malay (Brunei Darussalam)
+            case "ms-MY" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ms-MY.js"><\/script>');
+                break; // Malay (Malaysia)
+            case "mt" :
+                document.write('<script type="text/javascript" src="js/datejs/date-mt-MT.js"><\/script>');
+                break; // Maltese
+            case "mt-MT" :
+                document.write('<script type="text/javascript" src="js/datejs/date-mt-MT.js"><\/script>');
+                break; // Maltese (Malta)
+            case "nb" :
+                document.write('<script type="text/javascript" src="js/datejs/date-nb-NO.js"><\/script>');
+                break; // Norwegian (Bokm?l)
+            case "nb-NO" :
+                document.write('<script type="text/javascript" src="js/datejs/date-nb-NO.js"><\/script>');
+                break; // Norwegian (Bokm?l) (Norway)
+            case "nl" :
+                document.write('<script type="text/javascript" src="js/datejs/date-nl-NL.js"><\/script>');
+                break; // Dutch
+            case "nl-BE" :
+                document.write('<script type="text/javascript" src="js/datejs/date-nl-BE.js"><\/script>');
+                break; // Dutch (Belgium)
+            case "nl-NL" :
+                document.write('<script type="text/javascript" src="js/datejs/date-nl-NL.js"><\/script>');
+                break; // Dutch (Netherlands)
+            case "nn-NO" :
+                document.write('<script type="text/javascript" src="js/datejs/date-nn-NO.js"><\/script>');
+                break; // Norwegian (Nynorsk) (Norway)
+            case "ns" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ns-ZA.js"><\/script>');
+                break; // Northern Sotho
+            case "ns-ZA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ns-ZA.js"><\/script>');
+                break; // Northern Sotho (South Africa)
+            case "pa" :
+                document.write('<script type="text/javascript" src="js/datejs/date-pa-IN.js"><\/script>');
+                break; // Punjabi
+            case "pa-IN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-pa-IN.js"><\/script>');
+                break; // Punjabi (India)
+            case "pl" :
+                document.write('<script type="text/javascript" src="js/datejs/date-pl-PL.js"><\/script>');
+                break; // Polish
+            case "pl-PL" :
+                document.write('<script type="text/javascript" src="js/datejs/date-pl-PL.js"><\/script>');
+                break; // Polish (Poland)
+            case "ps" :
+                document.write('<script type="text/javascript" src="js/datejs/date-pt-BR.js"><\/script>');
+                break; // Pashto
+            case "ps-AR" :
+                document.write('<script type="text/javascript" src="js/datejs/date.js"><\/script>');
+                break; // Pashto (Afghanistan)
+            case "pt" :
+                document.write('<script type="text/javascript" src="js/datejs/date-pt-PT.js"><\/script>');
+                break; // Portuguese
+            case "pt-BR" :
+                document.write('<script type="text/javascript" src="js/datejs/date-pt-BR.js"><\/script>');
+                break; // Portuguese (Brazil)
+            case "pt-PT" :
+                document.write('<script type="text/javascript" src="js/datejs/date-pt-PT.js"><\/script>');
+                break; // Portuguese (Portugal)
+            case "qu" :
+                document.write('<script type="text/javascript" src="js/datejs/date-quz-BO.js"><\/script>');
+                break; // Quechua
+            case "qu-BO" :
+                document.write('<script type="text/javascript" src="js/datejs/date-quz-BO.js"><\/script>');
+                break; // Quechua (Bolivia)
+            case "qu-EC" :
+                document.write('<script type="text/javascript" src="js/datejs/date-quz-EC.js"><\/script>');
+                break; // Quechua (Ecuador)
+            case "qu-PE" :
+                document.write('<script type="text/javascript" src="js/datejs/date-quz-PE.js"><\/script>');
+                break; // Quechua (Peru)
+            case "ro" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ro-RO.js"><\/script>');
+                break; // Romanian
+            case "ro-RO" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ro-RO.js"><\/script>');
+                break; // Romanian (Romania)
+            case "ru" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ru-RU.js"><\/script>');
+                break; // Russian
+            case "ru-RU" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ru-RU.js"><\/script>');
+                break; // Russian (Russia)
+            case "sa" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sa-IN.js"><\/script>');
+                break; // Sanskrit
+            case "sa-IN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sa-IN.js"><\/script>');
+                break; // Sanskrit (India)
+            case "se" :
+                document.write('<script type="text/javascript" src="js/datejs/date-se-FI.js"><\/script>');
+                break; // Sami (Northern)
+            case "se-FI" :
+                document.write('<script type="text/javascript" src="js/datejs/date-se-FI.js"><\/script>');
+                break; // Sami (Northern) (Finland)
+            case "se-NO" :
+                document.write('<script type="text/javascript" src="js/datejs/date-se-NO.js"><\/script>');
+                break; // Sami (Northern) (Norway)
+            case "se-SE" :
+                document.write('<script type="text/javascript" src="js/datejs/date-se-SE.js"><\/script>');
+                break; // Sami (Northern) (Sweden)
+            case "sk" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sk-SK.js"><\/script>');
+                break; // Slovak
+            case "sk-SK" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sk-SK.js"><\/script>');
+                break; // Slovak (Slovakia)
+            case "sl" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sl-SI.js"><\/script>');
+                break; // Slovenian
+            case "sl-SI" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sl-SI.js"><\/script>');
+                break; // Slovenian (Slovenia)
+            case "sq" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sq-AL.js"><\/script>');
+                break; // Albanian
+            case "sq-AL" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sq-AL.js"><\/script>');
+                break; // Albanian (Albania)
+            case "sr-BA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sr-Latn-BA.js"><\/script>');
+                break; // Serbian (Latin) (Bosnia and Herzegovina)
+            case "sr-SP" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sr-Latn-BA.js"><\/script>');
+                break; // Serbian (Latin) (Serbia and Montenegro)
+            case "sv" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sv-SE.js"><\/script>');
+                break; // Swedish
+            case "sv-FI" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sv-FI.js"><\/script>');
+                break; // Swedish (Finland)
+            case "sv-SE" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sv-SE.js"><\/script>');
+                break; // Swedish (Sweden)
+            case "sw" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sw-KE.js"><\/script>');
+                break; // Swahili
+            case "sw-KE" :
+                document.write('<script type="text/javascript" src="js/datejs/date-sw-KE.js"><\/script>');
+                break; // Swahili (Kenya)
+            case "syr" :
+                document.write('<script type="text/javascript" src="js/datejs/date-syr-SY.js"><\/script>');
+                break; // Syriac
+            case "syr-SY" :
+                document.write('<script type="text/javascript" src="js/datejs/date-syr-SY.js"><\/script>');
+                break; // Syriac (Syria)
+            case "ta" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ta-IN.js"><\/script>');
+                break; // Tamil
+            case "ta-IN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ta-IN.js"><\/script>');
+                break; // Tamil (India)
+            case "te" :
+                document.write('<script type="text/javascript" src="js/datejs/date-te-IN.js"><\/script>');
+                break; // Telugu
+            case "te-IN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-te-IN.js"><\/script>');
+                break; // Telugu (India)
+            case "th" :
+                document.write('<script type="text/javascript" src="js/datejs/date-th-TH.js"><\/script>');
+                break; // Thai
+            case "th-TH" :
+                document.write('<script type="text/javascript" src="js/datejs/date-th-TH.js"><\/script>');
+                break; // Thai (Thailand)
+            case "tl" :
+                document.write('<script type="text/javascript" src="js/datejs/date.js"><\/script>');
+                break; // Tagalog
+            case "tl-PH" :
+                document.write('<script type="text/javascript" src="js/datejs/date.js"><\/script>');
+                break; // Tagalog (Philippines)
+            case "tn" :
+                document.write('<script type="text/javascript" src="js/datejs/date-tn-ZA.js"><\/script>');
+                break; // Tswana
+            case "tn-ZA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-tn-ZA.js"><\/script>');
+                break; // Tswana (South Africa)
+            case "tr" :
+                document.write('<script type="text/javascript" src="js/datejs/date-tr-TR.js"><\/script>');
+                break; // Turkish
+            case "tr-TR" :
+                document.write('<script type="text/javascript" src="js/datejs/date-tr-TR.js"><\/script>');
+                break; // Turkish (Turkey)
+            case "tt" :
+                document.write('<script type="text/javascript" src="js/datejs/date-tt-RU.js"><\/script>');
+                break; // Tatar
+            case "tt-RU" :
+                document.write('<script type="text/javascript" src="js/datejs/date-tt-RU.js"><\/script>');
+                break; // Tatar (Russia)
+            case "ts" :
+                document.write('<script type="text/javascript" src="js/datejs/date.js"><\/script>');
+                break; // Tsonga
+            case "uk" :
+                document.write('<script type="text/javascript" src="js/datejs/date-uk-UA.js"><\/script>');
+                break; // Ukrainian
+            case "uk-UA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-uk-UA.js"><\/script>');
+                break; // Ukrainian (Ukraine)
+            case "ur" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ur-PK.js"><\/script>');
+                break; // Urdu
+            case "ur-PK" :
+                document.write('<script type="text/javascript" src="js/datejs/date-ur-PK.js"><\/script>');
+                break; // Urdu (Islamic Republic of Pakistan)
+            case "uz" :
+                document.write('<script type="text/javascript" src="js/datejs/date-uz-Latn-UZ.js"><\/script>');
+                break; // Uzbek (Latin)
+            case "uz-UZ" :
+                document.write('<script type="text/javascript" src="js/datejs/date-uz-Latn-UZ.js"><\/script>');
+                break; // Uzbek (Latin) (Uzbekistan)
+            case "vi" :
+                document.write('<script type="text/javascript" src="js/datejs/date-vi-VN.js"><\/script>');
+                break; // Vietnamese
+            case "vi-VN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-vi-VN.js"><\/script>');
+                break; // Vietnamese (Viet Nam)
+            case "xh" :
+                document.write('<script type="text/javascript" src="js/datejs/date-xh-ZA.js"><\/script>');
+                break; // Xhosa
+            case "xh-ZA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-xh-ZA.js"><\/script>');
+                break; // Xhosa (South Africa)
+            case "zh" :
+                document.write('<script type="text/javascript" src="js/datejs/date-zh-CN.js"><\/script>');
+                break; // Chinese
+            case "zh-CN" :
+                document.write('<script type="text/javascript" src="js/datejs/date-zh-CN.js"><\/script>');
+                break; // Chinese (S)
+            case "zh-HK" :
+                document.write('<script type="text/javascript" src="js/datejs/date-zh-HK.js"><\/script>');
+                break; // Chinese (Hong Kong)
+            case "zh-MO" :
+                document.write('<script type="text/javascript" src="js/datejs/date-zh-MO.js"><\/script>');
+                break; // Chinese (Macau)
+            case "zh-SG" :
+                document.write('<script type="text/javascript" src="js/datejs/date-zh-SG.js"><\/script>');
+                break; // Chinese (Singapore)
+            case "zh-TW" :
+                document.write('<script type="text/javascript" src="js/datejs/date-zh-TW.js"><\/script>');
+                break; // Chinese (T)
+            case "zu" :
+                document.write('<script type="text/javascript" src="js/datejs/date-zu-ZA.js"><\/script>');
+                break; // Zulu
+            case "zu-ZA" :
+                document.write('<script type="text/javascript" src="js/datejs/date-zu-ZA.js"><\/script>');
+                break; // Zulu (South Africa)
+            default :
+                document.write("<script type='text/javascript' src='js/datejs/date.js'><\/script>");
+                break;
+        }
+    }
+    switchLanguage(ITSLanguage);
+
+    // generic UI initialization functions
+    $(window).scroll(function () {
+        if ($(document).scrollTop() > 50) {
+            //$('#NavbarsAdminSearchButtonBlock').hide();
+            $('#NavbarsAdmin').css("min-height", 34);
+            $('#NavbarsAdmin').css("max-height", 34);
+            $('#NavbarsTestTaking').css("min-height", 34);
+            $('#NavbarsTestTaking').css("max-height", 34);
+        } else {
+            //$('#NavbarsAdminSearchButtonBlock').show();
+            $('#NavbarsAdmin').css("min-height", 49);
+            $('#NavbarsAdmin').css("max-height", 49);
+            $('#NavbarsTestTaking').css("min-height", 49);
+            $('#NavbarsTestTaking').css("max-height", 49);
+        }
+    });
+    function onResize() {
+        if ($(window).width() > 400) {
+            $('#NavbarsAdminSearchButtonBlock').show();
+            $('#NavbarsAdminSearchButtonBlock').css("left", $(window).width() - 150 );
+        }
+        else {
+            $('#NavbarsAdminSearchButtonBlock').hide();
+        }
+        $('#NavbarsAdminSearchButtonBlockTT').css("left", $(window).width() - 100 );
+        if ($(window).width() > 750) {
+            $('#welcomeCompany').show();
+            $('#welcomeCompanyTT').show();
+        }
+        else {
+            $('#welcomeCompany').hide();
+            $('#welcomeCompanyTT').hide();
+        }
+        $('#waitModalImage').top = $(window).height() / 2 - 32;
+        $('#waitModalImage').left = $(window).width() / 2 - 32;
+        $('#waitModalImage').position = 'absolute';
+    }
+    $(window).resize( function() { onResize(); } );
+    setTimeout(onResize,5000);
+    $('#LoginWindowinputPassword').keypress(function (e) {
+        if (e.which == '13') {
+            $('#LoginWindowLoginButton').click();
+        }
+    });
+    $('#ForgotWindowinputUsername').keypress(function (e) {
+        if (e.which == '13') {
+            $('#ForgotWindowResetButton').click();
+        }
+    });
+    $('#LoginWindowinputUsername').keypress(function (e) {
+        if (e.which == '13') {
+            $('#LoginWindowinputPassword').focus();
+        }
+    });
+
+    // append the date/time picker to the desired elements
+    ITSDateFormatPicker = "Y-m-d";
+    ITSDateTimeFormatPicker = "Y-m-d H:i";
+    ITSDateSeparator = "-";
+    function setDatePickerFormats(){
+        // switch to the right date time format for this language
+        if (Date.CultureInfo != undefined) {
+            dfp = Date.CultureInfo.dateElementOrder;
+            dfp = dfp.replace('y', "Y");
+            dsp = "-";
+            if (Date.CultureInfo.formatPatterns.shortDate.indexOf('/')) {
+                dsp = "/";
+            }
+            dfp = dfp[0] + dsp + dfp[1] + dsp + dfp[2]
+            hfp = ""
+            if (Date.CultureInfo.amDesignator != "") {
+                hfp = " h:i K";
+                hfpm = " hh:mm:ss A"
+                tfor = dfp + hfp;
+                $('*[name=dateTimePicker]').flatpickr({
+                    "enableTime": true,
+                    "weekNumbers": true,
+                    "allowInput": true,
+                    "dateFormat": tfor
+                });
+            } else {
+                hfp = " H:i";
+                hfpm = " HH:mm:ss"
+                tfor = dfp + hfp;
+                $('*[name=dateTimePicker]').flatpickr({
+                    "enableTime": true,
+                    "weekNumbers": true,
+                    "allowInput": true,
+                    "dateFormat": tfor,
+                    "time_24hr": true
+                });
+            }
+            $('*[name=datePicker]').flatpickr({
+                "enableTime": false,
+                "weekNumbers": true,
+                "allowInput": true,
+                "dateFormat": dfp
+            });
+            console.log("DateFormat picker : " + dfp + ". DateTimeFormat picker : " + tfor);
+            ITSDateFormatPicker = dfp;
+            ITSDateTimeFormatPicker = tfor;
+            ITSDateFormatPickerMomentJS = dfp.replace('d','DD').replace('m','MM').replace('Y','YYYY');
+            ITSDateTimeFormatPickerMomentJS = ITSDateFormatPickerMomentJS + hfpm;
+            ITSDateSeparator = dsp;
+        } else
+        {
+          setTimeout(setDatePickerFormats , 100);
+        }
+    }
+    setDatePickerFormats();
+</script>
+
+<!-- Finally initialize the application and plugins -->
+<script src="InitServerVars.js" type="text/javascript"></script>
+<script src="InitVars.js" type="text/javascript"></script>
+
+<!-- and last but not least the initialisation of the tinymce editor-->
+<script src='js/tinymce/tinymce.min.js'></script>
+<!-- color js -->
+<script src="js/jscolor.js"></script>
+
+<script>
+    // define custom elements for html editor
+    customElements.define('textarea-htmledit', TAHTML, { extends: 'textarea' });
+    function TAHTML() {
+        this.prototype = HTMLTextAreaElement;
+    }
+    function init_html_editor(specificId) {
+        if (!specificId) { specificId = "textarea-htmledit"; }
+        tinymce.init({
+            selector: specificId,
+            theme: 'modern',
+            plugins: 'print preview fullpage searchreplace autolink FMathEditor lineheight directionality visualblocks visualchars fullscreen image link media code codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount imagetools  contextmenu colorpicker textpattern help',
+            toolbar1: 'formatselect | undo redo | bold italic strikethrough forecolor backcolor fontselect fontsizeselect | link | alignleft aligncenter alignright alignjustify lineheightselect | numlist bullist outdent indent  | removeformat | FMathEditor',
+            image_advtab: true,
+            images_dataimg_filter: function(img) {
+                return img.hasAttribute('internal-blob');
+            },
+            paste_data_images : true,
+            fontsize_formats: "6pt 8pt 9pt 10pt 11pt 12pt 13pt 14pt 18pt 24pt 36pt",
+            lineheight_formats: "8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 20pt 22pt 24pt 26pt 36pt",
+            forced_root_block_attrs: {
+                'class': 'p_compressed'
+            },
+            content_css: [
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '//fonts.googleapis.com/css?family=Roboto+Slab:300,300i,400,400i',
+                '//fonts.googleapis.com/css?family=Alegreya+Sans:300,300i,400,400i',
+                '//fonts.googleapis.com/css?family=Indie+Flower:300,300i,400,400i'
+//                'css/TinyMCE.css'
+//                '//www.tinymce.com/css/codepen.min.css'
+            ],
+            font_formats: 'Arial Black=arial black,avant garde;Arial=arial,avant garde;Times New Roman=times new roman,times;Lato=Lato;Roboto slab=Roboto Slab;Alegreya Sans=Alegreya Sans;Indie Flower=indie flower, cursive;',
+            // cascade onkeyup event to embedded element
+            init_instance_callback: function (editor) {
+                editor.on('KeyUp', function (e) {
+                   if ($('#'+this.id)[0].onkeyup) {
+                       $('#'+this.id)[0].onkeyup() ;
+                   }
+                });
+            }
+        });
+    }
+    var dtPickers = [];
+    function init_bootstrap_components() {
+        // init the combos
+        var newdtPickers = $('*[name=dateTimePicker]');
+        var newdPickers = $('*[name=datePicker');
+        newdtPickers.push.apply(newdtPickers, newdPickers);
+        if (!dtPickers) { dtPickers = []; };
+        var theSame = dtPickers.length == newdtPickers.length;
+        if (theSame) {
+            for (var i = 0; i < newdtPickers.length; i++) {
+                theSame = dtPickers[i] == newdtPickers[i];
+                if (!theSame) break;
+            }
+        }
+        if (!theSame) {
+            initDateTimePickers();
+            dtPickers = newdtPickers;
+        }
+    }
+    function reset_html_editor(specificId) {
+        if (!specificId) { specificId = "textarea-htmledit"; }
+        if (typeof tinymce != 'undefined') {
+            console.log('reset html editor');
+            tinymce.execCommand('mceFocus', true, specificId);
+            tinymce.execCommand('mceRemoveEditor', true, specificId);
+        }
+    }
+    function flatpickrDateUpdate(something, dateString, flatpickrObject, somethingmore) {
+        try {
+            var momentDate = moment(dateString, ITSDateFormatPickerMomentJS);
+            flatpickrObject.jumpToDate(momentDate.toDate());
+            flatpickrObject.setDate(momentDate.toDate());
+        } catch(err) {}
+    }
+    function flatpickrDateTimeUpdate(something, dateString, flatpickrObject, somethingmore) {
+        try {
+            var momentDate = moment(dateString, ITSDateTimeFormatPickerMomentJS);
+            flatpickrObject.jumpToDate(momentDate.toDate());
+            flatpickrObject.setDate(momentDate.toDate());
+        } catch(err) {}
+    }
+    function initDateTimePickers () {
+        if (Date.CultureInfo != undefined) {
+            if (Date.CultureInfo.amDesignator != "") {
+                tfor = ITSDateFormatPicker + " h:i";
+                $('*[name=dateTimePicker]').flatpickr({
+                    "enableTime": true,
+                    "weekNumbers": true,
+                    "allowInput": true,
+                    "dateFormat": ITSDateTimeFormatPicker,
+                    "onOpen": flatpickrDateTimeUpdate
+                });
+            } else {
+                tfor = ITSDateFormatPicker + " H:i";
+                $('*[name=dateTimePicker]').flatpickr({
+                    "enableTime": true,
+                    "weekNumbers": true,
+                    "allowInput": true,
+                    "dateFormat": ITSDateTimeFormatPicker,
+                    "time_24hr": true,
+                    "onOpen": flatpickrDateTimeUpdate
+                });
+            }
+            $('*[name=datePicker]').flatpickr({
+                "enableTime": false,
+                "weekNumbers": true,
+                "allowInput": true,
+                "dateFormat": ITSDateFormatPicker,
+                "onOpen": flatpickrDateUpdate
+            });
+        } else {
+            setTimeout(initDateTimePickers, 1000);
+        }
+    }
+
+</script>
+
+<script>
+    var browser = (function(agent){
+        switch(true){
+            case agent.indexOf("edge") > -1: return "edge";
+            case agent.indexOf("opr") > -1 && !!window.opr: return "opera";
+            case agent.indexOf("chrome") > -1 && !!window.chrome: return "chrome";
+            case agent.indexOf("trident") > -1: return "ie";
+            case agent.indexOf("firefox") > -1: return "firefox";
+            case agent.indexOf("safari") > -1: return "safari";
+            default: return "other";
+        }
+    })(window.navigator.userAgent.toLowerCase());
+
+    // detect browser and show warning for unsupported browser
+    if (browser == "ie") { $('#LoginWindowIEWarning').removeAttr("style"); $('#LoginWindowIEWarning').attr("style","display:block"); };
+    if (browser == "other") { $('#LoginWindowUnknownBrowserWarning').removeAttr("style"); $('#LoginWindowUnknownBrowserWarning').attr("style","display:block"); };
+
+</script>
+
+<!-- code editors can be loaded last -->
+<script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<!-- statistics libraries are not needed immediately as well -->
+<script src="ITSScript/Support/simple-statistics.js" type="text/javascript" charset="utf-8"></script>
+<script src="ITSScript/Support/ITSStatistics.js" type="text/javascript" charset="utf-8"></script>
+
+</body>
+</html>

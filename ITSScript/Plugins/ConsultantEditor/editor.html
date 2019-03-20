@@ -1,0 +1,227 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://opensource.org/licenses/Artistic-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div class="row col-12">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="ConsultantEditorInterfaceHeader">Edit consultant</h4>&nbsp;<h4 id="ConsultantEditorInterfaceHeaderName" data-field="UserName"></h4>
+    <br/><br/>
+</div>
+
+<div class="col-sm-12">
+    <div class="form-group row col-sm-12">
+        <label for="ConsultantEditorInterfaceEMail"
+               id="ConsultantEditorInterfaceEMailLabel" class="col-sm-2 col-form-label">E-mail address / login</label>
+        <input class="form-control col-sm-6" type="text" maxlength="50" data-field="Email" placeholder="" novalidate
+               onkeyup="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"  value="" id="ConsultantEditorInterfaceEMail">
+    </div>
+    <div class="form-group row col-sm-12">
+        <label for="ConsultantEditorInterfaceName"
+               id="ConsultantEditorInterfaceNameLabel" class="col-sm-2 col-form-label">Name</label>
+        <input class="form-control col-sm-6" type="text" maxlength="200" data-field="UserName" placeholder="" novalidate
+               onkeyup="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"  value="" id="ConsultantEditorInterfaceName">
+    </div>
+    <div class="form-group row col-sm-12 d-none">
+    <label for="ConsultantEditorInterfaceMailAddress"
+           id="ConsultantEditorInterfaceMailAddressLabel" class="col-sm-2 col-form-label">Mail address</label>
+    <textarea  class="form-control col-sm-6" rows="3"data-field="MailAddress" placeholder="" novalidate
+               onkeyup="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );" value="" id="ConsultantEditorInterfaceMailAddress"/>
+    </div>
+    <div class="form-group row col-sm-12">
+        <label for="ConsultantEditorInterfaceVisitingAddress"
+               id="ConsultantEditorInterfaceVisitingAddressLabel" class="col-sm-2 col-form-label">Address</label>
+        <textarea  class="form-control col-sm-6" rows="3" data-field="VisitingAddress" placeholder="" novalidate
+                   onkeyup="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );" value="" id="ConsultantEditorInterfaceVisitingAddress"/>
+    </div>
+    <div class="form-group row col-sm-12 d-none">
+        <label for="ConsultantEditorInterfaceInvoiceAddress"
+               id="ConsultantEditorInterfaceInvoiceAddressLabel" class="col-sm-2 col-form-label">Invoicing address</label>
+        <textarea class="form-control col-sm-6" rows="3" data-field="InvoiceAddress" placeholder="" novalidate
+                  onkeyup="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );" value="" id="ConsultantEditorInterfaceInvoiceAddress"/>
+    </div>
+    <div class="form-group row col-sm-12 d-none">
+        <label for="ConsultantEditorInterfaceInformationAddress"
+               id="ConsultantEditorInterfaceInformationAddressLabel" class="col-sm-2 col-form-label">Information address</label>
+        <textarea  class="form-control col-sm-6" rows="3" data-field="InformationAddress" placeholder="" novalidate
+                   onkeyup="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );" value="" id="ConsultantEditorInterfaceInformationAddress"/>
+    </div>
+    <div class="form-group row col-sm-12">
+        <label for="ConsultantEditorInterfaceRemarks"
+               id="ConsultantEditorInterfaceRemarksLabel" class="col-sm-2 col-form-label">Remarks</label>
+        <textarea  class="form-control col-sm-6" rows="3" data-field="Remarks" placeholder="" novalidate
+                   onkeyup="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );" value="" id="ConsultantEditorInterfaceRemarks"/>
+    </div>
+</div>
+
+<div class="bg-dark text-white well row col-12"><label id="ConsultantEditorEditRightsHeader">User rights</label></div>
+<div id="ConsultantEditorEditRights" class="row col-12">
+    <div class="col-3" id="ConsultantEditorInterfaceMasterUserDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="IsMasterUser"
+                   onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"
+                   class="form-check-input form-check-input-sm"
+                   id="ConsultantEditorInterfaceMasterUser"/>
+        </div>
+        <label class="col-sm-11"
+               id="ConsultantEditorInterfaceMasterUserHeader"
+               for="ConsultantEditorInterfaceMasterUser">Master user</label>
+    </div>
+
+    <div class="col-3" id="ConsultantEditorInterfaceOrganisationSupervisorDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="IsOrganisationSupervisor"
+                   onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"
+                   class="form-check-input form-check-input-sm"
+                   id="ConsultantEditorInterfaceOrganisationSupervisor"/>
+        </div>
+        <label class="col-sm-11"
+               id="ConsultantEditorInterfaceOrganisationSupervisorHeader"
+               for="ConsultantEditorInterfaceOrganisationSupervisor">Organisation supervisor</label>
+    </div>
+
+    <div class="col-3" id="ConsultantEditorInterfaceMayOrderCreditsDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="MayOrderCredits"
+                   onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"
+                   class="form-check-input form-check-input-sm"
+                   id="ConsultantEditorInterfaceMayOrderCredits"/>
+        </div>
+        <label class="col-sm-11"
+               id="ConsultantEditorInterfaceMayOrderCreditsHeader"
+               for="ConsultantEditorInterfaceMayOrderCredits">May order credits</label>
+    </div>
+
+    <div class="col-3" id="ConsultantEditorInterfaceIsTestAuthorDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="IsTestAuthor"
+                   onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"
+                   class="form-check-input form-check-input-sm"
+                   id="ConsultantEditorInterfaceIsTestAuthor"/>
+        </div>
+        <label class="col-sm-11"
+               id="ConsultantEditorInterfaceIsTestAuthorHeader"
+               for="ConsultantEditorInterfaceIsTestAuthor">Test author</label>
+    </div>
+
+    <div class="col-3" id="ConsultantEditorInterfaceIsReportAuthorDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="IsReportAuthor"
+                   onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"
+                   class="form-check-input form-check-input-sm"
+                   id="ConsultantEditorInterfaceIsReportAuthor"/>
+        </div>
+        <label class="col-sm-11"
+               id="ConsultantEditorInterfaceIsReportAuthorHeader"
+               for="ConsultantEditorInterfaceIsReportAuthor">Report author</label>
+    </div>
+
+    <div class="col-3" id="ConsultantEditorInterfaceTestScreenTemplateAuthorDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="IsTestScreenTemplateAuthor"
+                   onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"
+                   class="form-check-input form-check-input-sm"
+                   id="ConsultantEditorInterfaceTestScreenTemplateAuthor"/>
+        </div>
+        <label class="col-sm-11"
+               id="ConsultantEditorInterfaceTestScreenTemplateAuthorHeader"
+               for="ConsultantEditorInterfaceTestScreenTemplateAuthor">Test screen template author</label>
+    </div>
+
+    <div class="col-3" id="ConsultantEditorInterfaceTranslatorDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="IsTranslator"
+                   onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"
+                   class="form-check-input form-check-input-sm"
+                   id="ConsultantEditorInterfaceTranslator"/>
+        </div>
+        <label class="col-sm-11"
+               id="ConsultantEditorInterfaceTranslatorHeader"
+               for="ConsultantEditorInterfaceTranslator">Translator</label>
+    </div>
+
+    <div class="col-3" id="ConsultantEditorInterfaceMayWorkWithBatteriesOnlyDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="MayWorkWithBatteriesOnly"
+                   onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"
+                   class="form-check-input form-check-input-sm"
+                   id="ConsultantEditorInterfaceMayWorkWithBatteriesOnly"/>
+        </div>
+        <label class="col-sm-11"
+               id="ConsultantEditorInterfaceMayWorkWithBatteriesOnlyHeader"
+               for="ConsultantEditorInterfaceMayWorkWithBatteriesOnly">May work with batteries only</label>
+    </div>
+
+    <div class="col-3" id="ConsultantEditorInterfaceMayWorkWithOwnObjectsOnlyDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="MayWorkWithOwnObjectsOnly"
+                   onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"
+                   class="form-check-input form-check-input-sm"
+                   id="ConsultantEditorInterfaceMayWorkWithOwnObjectsOnly"/>
+        </div>
+        <label class="col-sm-11"
+               id="ConsultantEditorInterfaceMayWorkWithOwnObjectsOnlyHeader"
+               for="ConsultantEditorInterfaceMayWorkWithOwnObjectsOnly">May work with own objects only</label>
+    </div>
+</div>
+
+<div class="bg-dark text-white well row col-12"><label id="ConsultantEditorEditAPIKeyHeader">External API key</label></div>
+<div class="card col-12">
+    <div class="card-header" role="tab" id="ConsultantEditorheadingOne">
+        <h5 class="mb-0">
+            <a data-toggle="collapse" data-parent="#accordion" href="#ConsultantEditorcollapseOne"
+               aria-expanded="false" aria-controls="ConsultantEditorcollapseOne">
+                <i class="fa fa-fw fa-arrow-down" NoTranslate></i><label id="ConsultantEditorEditAccordionLabel">External API key (DO NOT SHARE OR SHOW TO ANYONE!)</label>
+            </a>
+        </h5>
+    </div>
+    <div id="ConsultantEditorcollapseOne" class="collapse" role="tabpanel" aria-labelledby="ConsultantEditorheadingOne" class="col-12">
+        <div class="row">
+            <label for="ConsultantEditorInterfaceExternalAPIKey"
+                   id="ConsultantEditorInterfaceExternalAPIKeyLabel" class="col-sm-2 col-form-label">External API Key</label>
+            <textarea readonly class="form-control col-sm-6" rows="3" data-field="PluginData.ExternalAPIKey" placeholder="" novalidate
+                      value="" id="ConsultantEditorInterfaceExternalAPIKey"/>
+        </div>
+        <button NoTranslate id="ConsultantEditorEditButtonBar_GenerateAPIKey" type="button" class="btn btn-success col-4"
+                onclick="ITSInstance.ConsultantEditorController.generateAPIKey();"><i
+                id="ConsultantEditorEditButtonBar_GenerateAPIKeyIcon" class="fa fa-fw fa-key"></i>
+            <span id="ConsultantEditorEditButtonBar_GenerateAPIKeyLabel">Generate (new) API key</span>
+        </button>&nbsp;
+    </div>
+
+</div>
+
+<div class="bg-dark text-white well row col-12"><label id="ConsultantEditorEditActionHeader">Actions</label></div>
+<div id="ConsultantEditorEditButtonBar" class="row col-12">
+    <div class="row col-12"></div>
+    <button NoTranslate id="ConsultantEditorEditButtonBar_Save" type="button" class="btn btn-success"
+            onclick="ITSInstance.ConsultantEditorController.save();"><i
+            id="ConsultantEditorEditButtonBar_SaveIcon" class="fa fa-fw fa-thumbs-up"></i>
+        <span id="ConsultantEditorEditButtonBar_SaveButtonLabel">Save consultant</span>
+    </button>&nbsp;
+    <button NoTranslate id="ConsultantEditorEditButtonBar_ResetPassword" type="button" class="btn btn-success"
+            onclick="ITSInstance.ConsultantEditorController.resetPassword();"><i
+            id="ConsultantEditorEditButtonBar_ResetPasswordIcon" class="fa fa-fw fa-key"></i>
+        <span id="ConsultantEditorEditButtonBar_ResetPasswordButtonLabel">Reset and mail password</span>
+    </button>&nbsp;
+    <button NoTranslate id="ConsultantEditorEditButtonBar_ShowSessions" type="button" class="btn btn-success"
+            onclick="ITSInstance.ConsultantEditorController.showSessions();"><i
+            id="ConsultantEditorEditButtonBar_ShowSessionsIcon" class="fa fa-fw fa-book-reader"></i>
+        <span id="ConsultantEditorEditButtonBar_ShowSessionsButtonLabel">Show consultant sessions</span>
+    </button>&nbsp;
+    <button id="ConsultantEditorEditButtonBar_Delete" type="button" class="btn btn-warning"
+            onclick="ITSInstance.ConsultantEditorController.deleteCurrentConsultantWarning();"><i
+            class="fa fa-fw fa-trash"></i> Delete this consultant
+    </button>&nbsp;
+
+</div>

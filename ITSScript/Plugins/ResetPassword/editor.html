@@ -1,0 +1,69 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://opensource.org/licenses/Artistic-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div class="row col-12">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="ResetPasswordInterfaceEditSessionEditHeader">Reset password</h4>
+    <br/><br/>
+</div>
+
+<div id="ResetPasswordInterfaceInformation" class="row col-12">
+    <div class="row col-8">
+        <label class="col-4 col-form-label" for="ResetPasswordInterfaceInformationOld"
+               id="ResetPasswordInterfaceInformationOldLabel">Old password</label>
+        <div id="ResetPasswordInterfaceInformationOldGroup" class="input-group col-8">
+            <input type="password" class="form-control" maxlength="50" required="true"
+                   id="ResetPasswordInterfaceInformationOld"/>
+            <div class="input-group-append">
+                <span class="input-group-text bg-white"><i class="fa fa-eye-slash" id="ResetPasswordInterfaceInformationOldGroupIcon" onclick="ITSInstance.ResetPasswordSessionController.resetShowPassword('ResetPasswordInterfaceInformationOldGroup', this);" aria-hidden="true"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="row col-8">
+        <label class="col-4 col-form-label" for="ResetPasswordInterfaceInformationNew1"
+               id="ResetPasswordInterfaceInformationNew1Label">New password</label>
+        <div id="ResetPasswordInterfaceInformationNew1Group" class="input-group col-8">
+            <input type="password" class="form-control" maxlength="50" required="true"
+                   id="ResetPasswordInterfaceInformationNew1"/>
+            <div class="input-group-append">
+                <span class="input-group-text bg-white"><i id="ResetPasswordInterfaceInformationNew1Icon" class="fa fa-eye-slash" onclick="ITSInstance.ResetPasswordSessionController.resetShowPassword('ResetPasswordInterfaceInformationNew1Group', this);" aria-hidden="true"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="input-group row col-8">
+        <label class="col-4 col-form-label" for="ResetPasswordInterfaceInformationNew2"
+               id="ResetPasswordInterfaceInformationNew2Label">Retype new password</label>
+        <div id="ResetPasswordInterfaceInformationNew2Group" class="input-group col-8">
+            <input type="password" class="form-control" maxlength="50" required="true"
+                                     id="ResetPasswordInterfaceInformationNew2"/>
+            <div class="input-group-append">
+                <span class="input-group-text bg-white"><i id="ResetPasswordInterfaceInformationNew2Icon" class="fa fa-eye-slash" aria-hidden="true" onclick="ITSInstance.ResetPasswordSessionController.resetShowPassword('ResetPasswordInterfaceInformationNew2Group', this);" ></i></span>
+            </div>
+        </div>
+    </div>
+    <br/>
+
+    <div class="bg-dark text-white well row col-12"><label id="AdminInterfaceTestTemplateEditorActionHeader">Actions</label></div>
+    <br/>
+    <div class="row col-12"></div>
+    <div class="row col-12">
+    <button id="ResetPasswordInterfaceInformationButtonSave" type="button" class="btn btn-success"
+            onclick="ITSInstance.ResetPasswordSessionController.saveNewPassword();"><i
+            id="ResetPasswordInterfaceInformationButtonSaveIcon" class="fa fa-fw fa-thumbs-up"></i> Change password
+    </button>&nbsp;
+    </div>
+</div>
+
+

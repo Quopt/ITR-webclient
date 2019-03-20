@@ -1,0 +1,185 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://opensource.org/licenses/Artistic-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div class="row col-12">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="OrganisationInterfaceEditHeader">Edit organisation</h4>&nbsp;
+    <br/><br/>
+</div>
+
+<div class="bg-dark text-white well row col-12"><label id="OrganisationEditorEditKeyInfoHeader">Key information</label></div>
+
+<div class="col-sm-12">
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceOrganisationName"
+               id="OrganisationEditorInterfaceOrganisationNameLabel" class="col-sm-2 col-form-label">Organisation name</label>
+        <input class="form-control col-sm-6" type="text" maxlength="200" data-field="CompanyName" placeholder="" novalidate
+               onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"  value="" id="OrganisationEditorInterfaceOrganisationName">
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceCompanyCountry"
+               id="OrganisationEditorInterfaceCompanyCountryLabel" class="col-sm-2 col-form-label">Organsation country</label>
+        <input class="form-control col-sm-6" type="text" maxlength="200" data-field="CompanyCountry" placeholder="" novalidate
+               onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"  value="" id="OrganisationEditorInterfaceCompanyCountry">
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceCompanyLicenseEndDate" id="OrganisationEditorInterfaceCompanyLicenseEndDateLabel" class="col-sm-2 col-form-label">License end date</label>
+        <input class="form-control col-sm-2" type="text" placeholder="" value="" novalidate NoTranslate data-field-from-free-expression="convertDateToITR(dataObject.LicenseEndDate)" name="datePicker" id="OrganisationEditorInterfaceCompanyLicenseEndDate">
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceContactPerson"
+               id="OrganisationEditorInterfaceContactPersonLabel" class="col-sm-2 col-form-label">Contact person name</label>
+        <input class="form-control col-sm-6" type="text" maxlength="200" data-field="ContactPerson" placeholder="" novalidate
+               onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"  value="" id="OrganisationEditorInterfaceContactPerson">
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceContactPhone"
+               id="OrganisationEditorInterfaceContactPhoneLabel" class="col-sm-2 col-form-label">Contact phone number</label>
+        <input class="form-control col-sm-6" type="text" maxlength="200" data-field="ContactPhone" placeholder="" novalidate
+               onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"  value="" id="OrganisationEditorInterfaceContactPhone">
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceContactEMail"
+               id="OrganisationEditorInterfaceContactEMailLabel" class="col-sm-2 col-form-label">Contact e-mail</label>
+        <input class="form-control col-sm-6" type="text" maxlength="200" data-field="ContactEMail" placeholder="" novalidate
+               onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"  value="" id="OrganisationEditorInterfaceContactEMail">
+    </div>
+
+</div>
+
+<div class="bg-dark text-white well row col-12"><label id="OrganisationEditorEditCreditInfoHeader">Credit information</label></div>
+<div class="col-sm-12">
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceCurrentCreditLevel"
+               id="OrganisationEditorInterfaceCurrentCreditLevelLabel" class="col-sm-2 col-form-label">Current credit level</label>
+        <input class="form-control col-sm-6" readonly type="number" maxlength="20" data-field="CurrentCreditLevel" placeholder="" novalidate
+               onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);" onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"  value="" id="OrganisationEditorInterfaceCurrentCreditLevel">
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceLowCreditWarningLevel"
+               id="OrganisationEditorInterfaceLowCreditWarningLevelLabel" class="col-sm-2 col-form-label">Low credit warning level</label>
+        <input class="form-control col-sm-6" type="number" maxlength="20" data-field="LowCreditWarningLevel" placeholder="" novalidate
+               onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);" onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"  value="" id="OrganisationEditorInterfaceLowCreditWarningLevel">
+    </div>
+
+    <div class="col-3" id="OrganisationEditorInterfaceOrganisationAllowNegativeCreditsDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="AllowNegativeCredits"
+                   onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );"
+                   class="form-check-input form-check-input-sm"
+                   id="OrganisationEditorInterfaceOrganisationAllowNegativeCredits"/>
+        </div>
+        <label class="col-sm-11"
+               id="OrganisationEditorInterfaceOrganisationAllowNegativeCreditsHeader"
+               for="OrganisationEditorInterfaceOrganisationAllowNegativeCredits">Allow negative credits</label>
+    </div>
+</div>
+
+<div class="bg-dark text-white well row col-12"><label id="OrganisationEditorEditKeyInfoHeader">Other information</label></div>
+<div class="col-sm-12">
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceAdministrativeID"
+               id="OrganisationEditorInterfaceAdministrativeIDLabel" class="col-sm-2 col-form-label">Administrative id</label>
+        <input class="form-control col-sm-6" type="text" maxlength="200" data-field="AdministrativeID" placeholder="" novalidate
+               onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"  value="" id="OrganisationEditorInterfaceAdministrativeID">
+    </div>
+
+
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceInternationalVATNr"
+               id="OrganisationEditorInterfaceInternationalVATNrLabel" class="col-sm-2 col-form-label">(International) VAT number</label>
+        <input class="form-control col-sm-6" type="text" maxlength="200" data-field="InternationalVATNr" placeholder="" novalidate
+               onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"  value="" id="OrganisationEditorInterfaceInternationalVATNr">
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceVATPercentage"
+               id="OrganisationEditorInterfaceVATPercentageLabel" class="col-sm-2 col-form-label">VAT percentage</label>
+        <input class="form-control col-sm-6" type="number" maxlength="20" data-field="VATPercentage" placeholder="" novalidate
+               onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);" onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"  value="" id="OrganisationEditorInterfaceVATPercentage">
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceInvoiceCurrency"
+               id="OrganisationEditorInterfaceInvoiceCurrencyLabel" class="col-sm-2 col-form-label">Invoice currency</label>
+        <input class="form-control col-sm-6" type="text" maxlength="200" data-field="InvoiceCurrency" placeholder="" novalidate
+               onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"  value="" id="OrganisationEditorInterfaceInvoiceCurrency">
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceMailAddress"
+               id="OrganisationEditorInterfaceMailAddressLabel" class="col-sm-2 col-form-label">Mail (physical) address</label>
+        <textarea  class="form-control col-sm-6" rows="3" data-field="MailAddress" placeholder="" novalidate
+                   onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );" value="" id="OrganisationEditorInterfaceMailAddress"/>
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceVisitingAddress"
+               id="OrganisationEditorInterfaceVisitingAddressLabel" class="col-sm-2 col-form-label">Visiting address</label>
+        <textarea  class="form-control col-sm-6" rows="3" data-field="VisitingAddress" placeholder="" novalidate
+                   onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );" value="" id="OrganisationEditorInterfaceVisitingAddress"/>
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceInvoiceAddress"
+               id="OrganisationEditorInterfaceInvoiceAddressLabel" class="col-sm-2 col-form-label">Invoice address</label>
+        <textarea  class="form-control col-sm-6" rows="3" data-field="InvoiceAddress" placeholder="" novalidate
+                   onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );" value="" id="OrganisationEditorInterfaceInvoiceAddress"/>
+    </div>
+
+    <div class="col-3" id="OrganisationEditorInterfaceOrganisationNoPublicTestsDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="NoPublicTests"
+                   onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );"
+                   class="form-check-input form-check-input-sm"
+                   id="OrganisationEditorInterfaceOrganisationNoPublicTests"/>
+        </div>
+        <label class="col-sm-11"
+               id="OrganisationEditorInterfaceOrganisationNoPublicTestsHeader"
+               for="OrganisationEditorInterfaceOrganisationNoPublicTests">No public tests</label>
+    </div>
+
+</div>
+
+<div class="bg-dark text-white well row col-12"><label id="OrganisationEditorEditActionHeader">Actions</label></div>
+<div id="OrganisationEditorEditButtonBar" class="row col-12">
+    <div class="row col-12"></div>
+    <button NoTranslate id="OrganisationEditorEditButtonBar_Save" type="button" class="btn btn-success"
+            onclick="ITSInstance.OrganisationEditorController.save();"><i
+            id="OrganisationEditorEditButtonBar_SaveIcon" class="fa fa-fw fa-thumbs-up"></i>
+        <span id="OrganisationEditorEditButtonBar_SaveButtonLabel">Save Organisation</span>
+    </button>&nbsp;
+    <button NoTranslate id="OrganisationEditorEditButtonBar_GrantCredits" type="button" class="btn btn-success"
+            onclick="ITSInstance.OrganisationEditorController.grantCredits();"><i
+            id="OrganisationEditorEditButtonBar_GrantCreditsIcon" class="fa fa-fw fa-credit-card"></i>
+        <span id="OrganisationEditorEditButtonBar_GrantCreditsButtonLabel">Grant credits</span>
+    </button>&nbsp;
+    <button NoTranslate id="OrganisationEditorEditButtonBar_SwitchTo" type="button" class="btn btn-success"
+            onclick="ITSInstance.OrganisationEditorController.switchToCompany();"><i
+            id="OrganisationEditorEditButtonBar_SwitchToIcon" class="fa fa-fw fa-building"></i>
+        <span id="OrganisationEditorEditButtonBar_SwitchToButtonLabel">Switch to company</span>
+    </button>&nbsp;&nbsp;
+    <button id="OrganisationEditorEditButtonBar_Delete" type="button" class="btn btn-warning"
+            onclick="ITSInstance.OrganisationEditorController.deleteCurrentOrganisationWarning();"><i
+            class="fa fa-fw fa-trash"></i> Delete this Organisation
+    </button>&nbsp;
+
+</div>
