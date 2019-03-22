@@ -144,7 +144,7 @@
         } catch (err) {  }
         try {
             if (this.systemMailTemplates.templates) this.systemMailTemplates.templates.sort(this.templateSortFunction);
-            if (templateList.templates) {
+            if (templateList.length > 0) {
                 if (this.systemMailTemplates.templates) templateList = templateList.concat(this.systemMailTemplates.templates);
             } else {
                 if (this.systemMailTemplates.templates) templateList = this.systemMailTemplates.templates;
@@ -158,7 +158,7 @@
             var personalTemplates = ITSInstance.users.currentUser.PluginData.MailTemplates;
             if (personalTemplates.templates) {
                 personalTemplates.templates.sort(this.templateSortFunction);
-                if (templateList.templates) {
+                if (templateList.length > 0) {
                     templateList = personalTemplates.templates.concat(templateList);
                 } else {
                     templateList = personalTemplates.templates
