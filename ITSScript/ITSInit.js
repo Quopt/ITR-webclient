@@ -408,10 +408,19 @@ function parseURLandTakeAction() {
         if (getUrlParameterValue('Path')) {
             // check if the ITS session is valid
             if (ITSInstance.token.get() != "") {
-                ITSInstance.token.keepTokenFresh();
+                //ITSInstance.token.keepTokenFresh();
                 ITSInstance.UIController.activateScreenPath(getUrlParameterValue('Path'));
             } else {
-                ITSInstance.UIController.activateScreenPath('Login');
+                if (getUrlParameterValue('Token') && getUrlParameterValue('Path') && getUrlParameterValue('CompanyID') && getUrlParameterValue('SessionID')) {
+                    ITSInstance.token.IssuedToken = getUrlParameterValue("Token");
+                    ITSInstance.token.companyID = getUrlParameterValue("CompanyID");
+                    // disable the logout button and the menu
+                    $('#NavbarsAdminLogoutButton').hide();
+                    $('#NavBarsAdminSidebarMenu')[0].outerHTML = "";
+                    history.pushState('Switchboard', 'Switchboard', Global_OriginalURL + '?Path=' + getUrlParameterValue('Path') + "&SessionID=" + getUrlParameterValue('SessionID'));
+                } else {
+                    ITSInstance.UIController.activateScreenPath('Login');
+                }
             }
             if (getUrlParameterValue('Path') == 'PasswordReset') {
                 ITSInstance.UIController.activateScreenPath(getUrlParameterValue('Path'));

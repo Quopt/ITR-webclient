@@ -140,6 +140,13 @@
             ITSInstance.UIController.initNavBar();
 
             if (!ITSInstance.companies.currentCompany.detailsLoaded) { setTimeout(this.show.bind(this),1000); return; }
+            if (!ITSInstance.screenTemplates.templatesLoaded ) {
+                ITSInstance.screenTemplates.loadAvailableScreenTemplates(function () {
+                    this.show();
+                }.bind(this), function () {
+                });
+                return;
+            }
             if (ITSInstance.companies.currentCompany.outOfCredits()) {
                 ITSInstance.UIController.showError('OutOfCredits', 'You have no credit units left. Please order new credit units.', '',
                     "ITSRedirectPath('CreditsOrderByMail');" );

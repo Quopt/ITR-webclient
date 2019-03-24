@@ -24,6 +24,7 @@ function ITSScreenTemplates(session) {
 
 ITSScreenTemplates.prototype.loadAvailableSucces = function () {
     this.currentlyLoading = false;
+    this.templatesLoaded = true;
     for (var i = 0; i < this.onSuccessCallbacks.length; i++) {
         setTimeout(this.onSuccessCallbacks[i], i);
     }
