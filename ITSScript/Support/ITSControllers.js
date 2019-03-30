@@ -464,7 +464,8 @@ ITSTestTakingController.prototype.endTest = function (forcedEnding) {
         this.currentTestIndex = nextTestIndex;
         $('#ITSTestTakingDiv').hide();
         $('#ITSTestTakingDivTestEnded').show();
-        if (endTestFunction) endTestFunction();
+        if (ITREndTestFunction) ITREndTestFunction();
+        if (window.parent) window.parent.postMessage("ITREndTestFunction", this.currentSession, "*")
     } else {
         if (nextTestIndex > -1) {
             this.nextTest(nextTestIndex);

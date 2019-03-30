@@ -257,7 +257,8 @@
         defaultTemplate.body = "...";
         defaultTemplate.description = "Template #" + this.templates.length;
         defaultTemplate.subject = "Template #" + this.templates.length;
-        this.templates.append(defaultTemplate);
+        defaultTemplate._objectType = "ITSObject";
+        this.templates.push(defaultTemplate);
         this.showTemplateWithIndex(this.templates.length-1);
     };
 
@@ -274,6 +275,8 @@
         for (var i=this.templates.length-1; i >= 0; i--) {
             if (this.templates[i].description.trim() == "") {
                 this.templates.splice(i, 1);
+            } else {
+                this.templates[i]._objectType = "ITSObject";
             }
         }
 

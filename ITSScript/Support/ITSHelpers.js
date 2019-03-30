@@ -620,6 +620,7 @@ function scanITSJsonLoadObject(tempObject, someITSObject, parentITSObject, ITSIn
                 for (var j = 0; j < (tempObject[keys[i]]).length; j++) {
                     var tempObjectType = "";
                     if ((tempObject[keys[i]][j])['_objectType'] != undefined) { tempObjectType = (tempObject[keys[i]][j])['_objectType']; }
+                    if (!DefaultObjectType) DefaultObjectType="ITSObject";
                     var tempITSObject = eval( "new " +  ( (tempObjectType == "") ?  DefaultObjectType : (tempObject[keys[i]][j])._objectType ) + "(parentITSObject, ITSInstanceObject);");
                     if (! someITSObject[keys[i]] ) { someITSObject[keys[i]] = [] ; };
                     someITSObject[keys[i]].push( tempITSObject);
