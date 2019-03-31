@@ -788,6 +788,9 @@ ITSTestTemplateEditor.prototype.fillScreenDynamicsTable = function () {
         ;
 
     }
+
+    // finally bind the scripts
+    DataBinderTo('AdminInterfaceTestTemplateEditorTabScreens', ITSInstance.newITSTestEditorController);
 };
 
 
@@ -1429,6 +1432,7 @@ ITSTestTemplateEditor.prototype.processTestCapabilities = function () {
     $('#AdminInterfaceTestTemplateEditorTabScreensColScreenListButtons').hide();
     //$('#AdminInterfaceTestTemplateEditorTestDescriptionDiv').hide();
     $('#AdminInterfaceTestTemplateEditorTestCopyrightsDiv').hide();
+    $('#AdminInterfaceTestTemplateEditorTestCostsDiv').hide();
     $('#AdminInterfaceTestTemplateEditorTestExplanationDiv').hide();
     $('#AdminInterfaceTestTemplateEditorTabScreensColScreenItemSettings').addClass('col-6');
     $('#AdminInterfaceTestTemplateEditorTabScreensColScreenItemSettings').removeClass('col-4');
@@ -1445,6 +1449,7 @@ ITSTestTemplateEditor.prototype.processTestCapabilities = function () {
             //$('#AdminInterfaceTestTemplateEditorTestDescriptionDiv').show();
             $('#AdminInterfaceTestTemplateEditorTestCopyrightsDiv').show();
             $('#AdminInterfaceTestTemplateEditorTestExplanationDiv').show();
+            $('#AdminInterfaceTestTemplateEditorTestCostsDiv').show();
         }
         if (this.currentTest.PluginData.testHasMedia) {
             $('#AdminInterfaceTestTemplateEditor_TabMedia_li').show();
@@ -1457,6 +1462,8 @@ ITSTestTemplateEditor.prototype.processTestCapabilities = function () {
         }
         if (this.currentTest.PluginData.testHasScreenDynamics) {
             $('#AdminInterfaceTestTemplateEditorScreenDynamicsDiv').show();
+            $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility = 'hidden';
+            $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.display = 'none';
         }
     }
 };

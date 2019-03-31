@@ -146,6 +146,14 @@
             <div class="col-sm-8"><input type="text" class="form-control" maxlength="200"  data-field="currentTest.Copyrights" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );"
                                          id="AdminInterfaceTestTemplateEditorTestCopyrights"/></div>
         </div>
+
+        <div id="AdminInterfaceTestTemplateEditorTestCostsDiv" class="form-group row col-12">
+            <label class="col-sm-4 col-form-label" id="AdminInterfaceTestTemplateEditorTestCostsLabel"
+                   for="AdminInterfaceTestTemplateEditorTestCosts">Test costs (in credit units)</label>
+            <div class="col-sm-8"><input type="number" id="AdminInterfaceTestTemplateEditorTestCosts" data-field="currentTest.Costs" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );" min="0" step="1" max="9999" placeholder="">
+            </div>
+        </div>
+
         <div id="AdminInterfaceTestTemplateEditorTestExplanationDiv" class="form-group row col-12">
             <label class="col-sm-4 col-form-label" id="AdminInterfaceTestTemplateEditorTestExplanationLabel"
                    for="AdminInterfaceTestTemplateEditorTestExplanation">Explanation</label>
@@ -213,7 +221,7 @@
             </div>
             <div id="AdminInterfaceTestTemplateEditorScreenDynamicsDiv" NoTranslate>
                 &nbsp;
-                <div class="bg-dark text-white well  dropdown-toggle" onclick="if ($('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility == 'hidden') { $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility = 'visible'; } else { $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility = 'hidden'; }"><label
+                <div class="bg-dark text-white well  dropdown-toggle" onclick="if ($('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility == 'hidden') { $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility = 'visible'; $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.display = 'block'; } else { $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility = 'hidden'; $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.display = 'none'; }"><label
                         id="AdminInterfaceTestTemplateEditorScreenDynamics">Screen
                     dynamics</label></div>
                 <div id="AdminInterfaceTestTemplateEditorScreenDynamics_section" style="visibility: hidden">
@@ -240,6 +248,26 @@
                     <button id="AdminInterfaceTestTemplateEditorScreenDynamics_addNewLine" type="button" onclick="ITSInstance.newITSTestEditorController.newScreenDynamicsRule();"
                             class="btn-xs btn-success"><i class="fa fa-fw fa-plus"></i> Add new screen dynamics rule
                     </button>
+                    <div class="flex-row">&nbsp;
+                        <div class="bg-dark text-white well"><label
+                                id="AdminInterfaceTestTemplateEditorTabScreenPreScriptHeader">Screen pre script</label><label notranslate>(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance)</label>
+                        </div>
+                        <div ace-edit id="AdminInterfaceTestTemplateEditorScreenDynamicsPre" notranslate style="height: 100px;" data-field="currentScreen.beforeScreenScript" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScreens', ITSInstance.newITSTestEditorController );"></div>
+                        <script>
+                            var myAdminInterfaceTestTemplateEditorComplexScoringEditorPreScreen = ace.edit("AdminInterfaceTestTemplateEditorScreenDynamicsPre");
+                            myAdminInterfaceTestTemplateEditorComplexScoringEditorPreScreen.setTheme("ace/theme/monokai");
+                            myAdminInterfaceTestTemplateEditorComplexScoringEditorPreScreen.session.setMode("ace/mode/javascript");
+                        </script>
+                        <div class="bg-dark text-white well"><label
+                                id="AdminInterfaceTestTemplateEditorTabScreenPostScriptHeader">Screen post script</label><label notranslate>(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance)</label>
+                        </div>
+                        <div ace-edit id="AdminInterfaceTestTemplateEditorScreenDynamicsPost" notranslate style="height: 100px;" data-field="currentScreen.afterScreenScript" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScreens', ITSInstance.newITSTestEditorController );"></div>
+                        <script>
+                            var myAdminInterfaceTestTemplateEditorComplexScoringEditorPostScreen = ace.edit("AdminInterfaceTestTemplateEditorScreenDynamicsPost");
+                            myAdminInterfaceTestTemplateEditorComplexScoringEditorPostScreen.setTheme("ace/theme/monokai");
+                            myAdminInterfaceTestTemplateEditorComplexScoringEditorPostScreen.session.setMode("ace/mode/javascript");
+                        </script>
+                    </div>
                 </div>
             </div>
         </div>
@@ -377,7 +405,6 @@
                 </div>
 
                 <div ace-edit id="AdminInterfaceTestTemplateEditorComplexScoringEditor" notranslate style="height: 100px;" data-field="currentTest.ScoringScript" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"></div>
-
                 <script>
                     var myAdminInterfaceTestTemplateEditorComplexScoringEditor = ace.edit("AdminInterfaceTestTemplateEditorComplexScoringEditor");
                     myAdminInterfaceTestTemplateEditorComplexScoringEditor.setTheme("ace/theme/monokai");
@@ -523,7 +550,6 @@
 
                 <div ace-edit id="AdminInterfaceTestTemplateEditorComplexNormEditor" notranslate style="height: 100px;" data-field="currentNorm.afterNormScript"
                      onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabNorms', ITSInstance.newITSTestEditorController );"></div>
-
                 <script>
                     var myAdminInterfaceTestTemplateEditorComplexNormEditor = ace.edit("AdminInterfaceTestTemplateEditorComplexNormEditor");
                     myAdminInterfaceTestTemplateEditorComplexNormEditor.setTheme("ace/theme/monokai");
