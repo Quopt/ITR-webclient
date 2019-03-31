@@ -22,6 +22,6 @@ This repository contains other open source sofware components which have their o
 
 Is your component used but not mentioned? Let us know! We will add it to the list. 
 
-# How to user this repo?
+# How to use this repo?
 Please check the http://wiki.itr365.com
 
