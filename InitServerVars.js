@@ -18,7 +18,12 @@
 var ITSJavaScriptVersion="ITSScript"; // the required sub folder where the javascript and plugins are loaded from
 // this is the base path to the application on the server. Many paths are linked to this path in javascript for security reasons (same site policy)
 var configBaseURL = "https://" + document.location.host;
-if (document.location.host.indexOf("localhost") == 0) configBaseURL = "http://localhost:443";
+if (document.location.host.indexOf("localhost") == 0) {
+    configBaseURL = "http://localhost:443";
+    if (document.location.protocol == "http:") {
+        configBaseURL = "http://localhost";
+    }
+}
 var CopyrightString = ""; // this copyright line is shown by default. You will need to claim copyright of the pages server for your customers protection (copyright laws ... sigh)
 var CompanyName = ""; // this is the default company name
 var DebugMode=false;
