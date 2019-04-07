@@ -185,7 +185,7 @@ ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSucces
         dataType: "text",
         success: function (data, textStatus, xhr) {
             //console.log(ITSInstance.baseURLAPI + URL + '=' + data);
-            if (objectToPutDataIn) {
+            if ((objectToPutDataIn) && (objectToPutDataIn !== "") ) {
                 ITSJSONLoad(objectToPutDataIn, data, objectToPutDataIn, ITSInstance, DefaultObjectType);
                 if (OnSuccess) OnSuccess();
             } else if (objectToPutDataIn === "") {

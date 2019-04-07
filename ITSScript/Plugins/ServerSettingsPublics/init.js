@@ -35,7 +35,6 @@
             "   <th id=\"ServerSettingsPublics_refreshdate\" scope=\"col\">Last refresh date and time</th>" +
             "   <th id=\"ServerSettingsPublics_actions\" scope=\"col\">Actions</th>" +
             "   <th scope=\"col\"></th>" +
-            "  </tr>" +
             "  </thead>" +
             "  <tbody>" ;
         this.tablePart2 = "  <tr>" +
@@ -43,13 +42,21 @@
             "   <td><span notranslate>%%FEATURENAME%%</span></td>" +
             "   <td><span notranslate>%%EXPLANATION%%</span></td>" +
             "   <td><span notranslate>%%LASTREFRESHDATE%%</span></td>" +
-            "   <td><span notranslate id='%%ID%%'>%%ACTIONS%%</span></td>" +
+            "   <td nowrap><span notranslate id='%%ID%%'>%%ACTIONS%%</span>" +
+            "   <button type=\"button\" class=\"btn-xs btn-success %%hide%% \"" +
+            "    onclick=\'ITSInstance.ServerSettingsPublicsController.install(\"%%ID%%\",\"%%TYPE%%\");\'>" +
+            "    <i class=\"fa fa-xs fa-cart-plus\"></i></button>" +
+            "   <button type=\"button\" class=\"btn-xs btn-warning %%hiderevoke%% \"" +
+            "    onclick=\'ITSInstance.ServerSettingsPublicsController.uninstall(\"%%ID%%\",\"%%TYPE%%\");\'>" +
+            "    <i class=\"fa fa-xs fa-cart-arrow-down\"></i></button>" +
+            "   </td>" +
             "  </tr>";
         this.tablePart3 = "</tbody></table>" ;
 
         this.mFEATURENAME = /%%FEATURENAME%%/g;
         this.mNR = /%%NR%%/g;
         this.mID = /%%ID%%/g;
+        this.mTYPE = /%%TYPE%%/g;
         this.mEXPLANATION = /%%EXPLANATION%%/g;
         this.mLASTREFRESHDATE = /%%LASTREFRESHDATE%%/g;
         this.mACTIONS = /%%ACTIONS%%/g;
@@ -85,19 +92,99 @@
     };
 
     ITSServerSettingsPublicsEditor.prototype.translationTemplatesLoaded = function () {
-        console.log(this.translationTemplates);
+        this.tblTranslationTemplates = this.tablePart1;
+        for (var i=0; i < this.translationTemplates.length; i++) {
+            //console.log(this.testScreenTemplates[i].name);
+            var rowText = this.tablePart2;
+            rowText = rowText.replace( this.mNR, i +1 );
+            rowText = rowText.replace( this.mFEATURENAME, this.translationTemplates[i].name );
+            rowText = rowText.replace( this.mID, this.translationTemplates[i].name );
+            rowText = rowText.replace( this.mTYPE, "TRANS");
+            rowText = rowText.replace( this.mEXPLANATION, this.translationTemplates[i].explanation );
+            rowText = rowText.replace( this.mLASTREFRESHDATE, this.translationTemplates[i].getdate );
+            rowText = rowText.replace( this.mACTIONS, "");
+
+            this.tblTranslationTemplates += rowText;
+        }
+        $('#ServerSettingsLanguageTemplate-list').empty();
+        $('#ServerSettingsLanguageTemplate-list').append(this.tblTranslationTemplates + this.tablePart3);
     };
 
     ITSServerSettingsPublicsEditor.prototype.testScreenTemplatesLoaded = function () {
+        console.log(this.testScreenTemplates);
+        this.tblTestScreenTemplates = this.tablePart1;
+        for (var i=0; i < this.testScreenTemplates.length; i++) {
+            //console.log(this.testScreenTemplates[i].name);
+            var rowText = this.tablePart2;
+            rowText = rowText.replace( this.mNR, i +1 );
+            rowText = rowText.replace( this.mFEATURENAME, this.testScreenTemplates[i].name );
+            rowText = rowText.replace( this.mID, this.testScreenTemplates[i].name );
+            rowText = rowText.replace( this.mTYPE, "TST");
+            rowText = rowText.replace( this.mEXPLANATION, this.testScreenTemplates[i].explanation );
+            rowText = rowText.replace( this.mLASTREFRESHDATE, this.testScreenTemplates[i].getdate );
+            rowText = rowText.replace( this.mACTIONS, "");
+
+            this.tblTestScreenTemplates += rowText;
+        }
+        $('#ServerSettingsPublicsTestScreenTemplate-list').empty();
+        $('#ServerSettingsPublicsTestScreenTemplate-list').append(this.tblTestScreenTemplates + this.tablePart3);
     };
 
     ITSServerSettingsPublicsEditor.prototype.reportTemplatesLoaded = function () {
+        this.tblReportTemplates = this.tablePart1;
+        for (var i=0; i < this.reportTemplates.length; i++) {
+            //console.log(this.testScreenTemplates[i].name);
+            var rowText = this.tablePart2;
+            rowText = rowText.replace( this.mNR, i +1 );
+            rowText = rowText.replace( this.mFEATURENAME, this.reportTemplates[i].name );
+            rowText = rowText.replace( this.mID, this.reportTemplates[i].name );
+            rowText = rowText.replace( this.mTYPE, "RT");
+            rowText = rowText.replace( this.mEXPLANATION, this.reportTemplates[i].explanation );
+            rowText = rowText.replace( this.mLASTREFRESHDATE, this.reportTemplates[i].getdate );
+            rowText = rowText.replace( this.mACTIONS, "");
+
+            this.tblReportTemplates += rowText;
+        }
+        $('#ServerSettingsPublicsReportTemplate-list').empty();
+        $('#ServerSettingsPublicsReportTemplate-list').append(this.tblReportTemplates + this.tablePart3);
     };
 
     ITSServerSettingsPublicsEditor.prototype.testTemplatesLoaded = function () {
+        this.tblTestTemplates = this.tablePart1;
+        for (var i=0; i < this.testTemplates.length; i++) {
+            //console.log(this.testScreenTemplates[i].name);
+            var rowText = this.tablePart2;
+            rowText = rowText.replace( this.mNR, i +1 );
+            rowText = rowText.replace( this.mFEATURENAME, this.testTemplates[i].name );
+            rowText = rowText.replace( this.mID, this.testTemplates[i].name );
+            rowText = rowText.replace( this.mTYPE, "TT");
+            rowText = rowText.replace( this.mEXPLANATION, this.testTemplates[i].explanation );
+            rowText = rowText.replace( this.mLASTREFRESHDATE, this.testTemplates[i].getdate );
+            rowText = rowText.replace( this.mACTIONS, "");
+
+            this.tblTestTemplates += rowText;
+        }
+        $('#ServerSettingsPublicsTestTemplate-list').empty();
+        $('#ServerSettingsPublicsTestTemplate-list').append(this.tblTestTemplates + this.tablePart3);
     };
 
     ITSServerSettingsPublicsEditor.prototype.pluginTemplatesLoaded = function () {
+        this.tblPluginTemplates = this.tablePart1;
+        for (var i=0; i < this.pluginTemplates.length; i++) {
+            //console.log(this.testScreenTemplates[i].name);
+            var rowText = this.tablePart2;
+            rowText = rowText.replace( this.mNR, i +1 );
+            rowText = rowText.replace( this.mFEATURENAME, this.pluginTemplates[i].name );
+            rowText = rowText.replace( this.mID, this.pluginTemplates[i].name );
+            rowText = rowText.replace( this.mTYPE, "PT");
+            rowText = rowText.replace( this.mEXPLANATION, this.pluginTemplates[i].explanation );
+            rowText = rowText.replace( this.mLASTREFRESHDATE, this.pluginTemplates[i].getdate );
+            rowText = rowText.replace( this.mACTIONS, "");
+
+            this.tblPluginTemplates += rowText;
+        }
+        $('#ServerSettingsPluginTemplate-list').empty();
+        $('#ServerSettingsPluginTemplate-list').append(this.tblPluginTemplates + this.tablePart3);
     };
 
     ITSServerSettingsPublicsEditor.prototype.testScreenTemplatesFailed= function () {
@@ -116,6 +203,104 @@
         ITSInstance.UIController.showError("ITSServerSettingsPublicsEditor.LoadTranslationsFailed", "The translation list could not be loaded at this moment.");
     };
 
+    ITSServerSettingsPublicsEditor.prototype.install = function (fileid, type) {
+        if (type == "TRANS") {
+            ITSInstance.genericAjaxUpdate('installpublics/itr-translations/'+fileid, {}
+                , function () { ITSInstance.UIController.showInfo("ITSServerSettingsPublicsEditor.InstallOK", "The action has succeeded."); }
+                , function () { ITSInstance.UIController.showError("ITSServerSettingsPublicsEditor.InstallFailed", "The action could not be completed."); }
+                );
+        }
+        if (type == "TST") {
+            this.loadedTestScreenTemplate = "";
+            ITSInstance.JSONAjaxLoader('listpublics/itr-testscreentemplates/'+fileid, this.loadedTestScreenTemplate
+                , function (data) {
+                    var temp = new ITSScreenTemplate(this, ITSInstance);
+                    ITSJSONLoad(temp, data);
+                    temp.saveToServerMaster(
+                    function () { ITSInstance.UIController.showInfo("ITSServerSettingsPublicsEditor.InstallOK", "The action has succeeded."); },
+                    function () { ITSInstance.UIController.showInfo("ITSServerSettingsPublicsEditor.InstallFailed", "The action could not be completed."); } );
+                }.bind(this)
+                , function () { ITSInstance.UIController.showError("ITSServerSettingsPublicsEditor.InstallFailed", "The action could not be completed."); }
+            );
+        }
+        if (type == "TT") {
+            this.loadedTemplate = "";
+            ITSInstance.JSONAjaxLoader('listpublics/itr-testtemplates/'+fileid, this.loadedTemplate
+                , function (data) {
+                    var temp = new ITSTest(this, ITSInstance);
+                    ITSJSONLoad(temp, data);
+                    temp.saveToServerMaster(
+                        function () { ITSInstance.UIController.showInfo("ITSServerSettingsPublicsEditor.InstallOK", "The action has succeeded."); },
+                        function () { ITSInstance.UIController.showInfo("ITSServerSettingsPublicsEditor.InstallFailed", "The action could not be completed."); },
+                        true);
+                }.bind(this)
+                , function () { ITSInstance.UIController.showError("ITSServerSettingsPublicsEditor.InstallFailed", "The action could not be completed."); }
+            );
+        }
+        if (type == "RT") {
+            this.loadedTemplate = "";
+            ITSInstance.JSONAjaxLoader('listpublics/itr-reporttemplates/'+fileid, this.loadedTemplate
+                , function (data) {
+                    var temp = new ITSReport(this, ITSInstance);
+                    ITSJSONLoad(temp, data);
+                    temp.saveToServerMaster(
+                        function () { ITSInstance.UIController.showInfo("ITSServerSettingsPublicsEditor.InstallOK", "The action has succeeded."); },
+                        function () { ITSInstance.UIController.showInfo("ITSServerSettingsPublicsEditor.InstallFailed", "The action could not be completed."); },
+                        true);
+                }.bind(this)
+                , function () { ITSInstance.UIController.showError("ITSServerSettingsPublicsEditor.InstallFailed", "The action could not be completed."); }
+            );
+        }
+    };
+
+    ITSServerSettingsPublicsEditor.prototype.uninstall = function (fileid, type) {
+        if (type == "TRANS") {
+            ITSInstance.genericAjaxDelete('installpublics/itr-translations/'+fileid
+                , function () { ITSInstance.UIController.showInfo("ITSServerSettingsPublicsEditor.InstallOK", "The action has succeeded."); }
+                , function () { ITSInstance.UIController.showError("ITSServerSettingsPublicsEditor.InstallFailed", "The action could not be completed."); }
+            );
+        }
+        if (type == "TST") {
+            this.loadedTestScreenTemplate = "";
+            ITSInstance.JSONAjaxLoader('listpublics/itr-testscreentemplates/'+fileid, this.loadedTestScreenTemplate
+                , function (data) {
+                    var temp = new ITSScreenTemplate(this, ITSInstance);
+                    ITSJSONLoad(temp, data);
+                    temp.deleteFromServerMaster(
+                        function () { ITSInstance.UIController.showInfo("ITSServerSettingsPublicsEditor.InstallOK", "The action has succeeded."); },
+                        function () { ITSInstance.UIController.showInfo("ITSServerSettingsPublicsEditor.InstallFailed", "The action could not be completed."); } );
+                }.bind(this)
+                , function () { ITSInstance.UIController.showError("ITSServerSettingsPublicsEditor.InstallFailed", "The action could not be completed."); }
+            );
+        }
+        if (type == "TT") {
+            this.loadedTemplate = "";
+            ITSInstance.JSONAjaxLoader('listpublics/itr-testtemplates/'+fileid, this.loadedTemplate
+                , function (data) {
+                    var temp = new ITSTest(this, ITSInstance);
+                    ITSJSONLoad(temp, data);
+                    temp.deleteFromServerMaster(
+                        function () { ITSInstance.UIController.showInfo("ITSServerSettingsPublicsEditor.InstallOK", "The action has succeeded."); },
+                        function () { ITSInstance.UIController.showInfo("ITSServerSettingsPublicsEditor.InstallFailed", "The action could not be completed."); });
+                }.bind(this)
+                , function () { ITSInstance.UIController.showError("ITSServerSettingsPublicsEditor.InstallFailed", "The action could not be completed."); }
+            );
+        }
+        if (type == "RT") {
+            this.loadedTemplate = "";
+            ITSInstance.JSONAjaxLoader('listpublics/itr-reporttemplates/'+fileid, this.loadedTemplate
+                , function (data) {
+                    var temp = new ITSReport(this, ITSInstance);
+                    ITSJSONLoad(temp, data);
+                    temp.deleteFromServerMaster (
+                        function () { ITSInstance.UIController.showInfo("ITSServerSettingsPublicsEditor.InstallOK", "The action has succeeded."); },
+                        function () { ITSInstance.UIController.showInfo("ITSServerSettingsPublicsEditor.InstallFailed", "The action could not be completed."); },
+                        true);
+                }.bind(this)
+                , function () { ITSInstance.UIController.showError("ITSServerSettingsPublicsEditor.InstallFailed", "The action could not be completed."); }
+            );
+        }
+    };
     // register the portlet
     ITSInstance.ServerSettingsPublicsController = new ITSServerSettingsPublicsEditor();
     ITSInstance.UIController.registerEditor(ITSInstance.ServerSettingsPublicsController);

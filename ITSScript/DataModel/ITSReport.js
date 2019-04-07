@@ -283,7 +283,11 @@ ITSReport.prototype.saveToServerMaster = function (OnSuccess, OnError, toMaster)
 };
 
 ITSReport.prototype.deleteFromServer = function (OnSuccess, OnError) {
-    ITSInstance.genericAjaxDelete('reportdefinitions/' + this.ID, OnSuccess, OnError, false, true);
+    ITSInstance.genericAjaxDelete('reportdefinitions/' + this.ID, OnSuccess, OnError, 'N', 'Y');
+};
+
+ITSReport.prototype.deleteFromServerMaster = function (OnSuccess, OnError) {
+    ITSInstance.genericAjaxDelete('reportdefinitions/' + this.ID, OnSuccess, OnError, 'Y', 'N');
 };
 
 ITSReport.prototype.saveToServerRequired = function () {
