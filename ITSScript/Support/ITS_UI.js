@@ -377,6 +377,9 @@ ITSUIController = function () {
         ITSInstance.ITRSessionType = "office";
         ITSInstance.screenTemplates.loadAvailableScreenTemplates(); // always load the screen templates
 
+        // make sure the server updates periodically
+        ITSInstance.genericAjaxUpdate('refreshpublics', function () {}, function () {});
+
         // now initialise the editors and portlets. The may need more data.
         ITSInstance.UIController.registeredEditors.forEach(
             function (currentValue, index, arr) {

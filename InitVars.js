@@ -56,6 +56,7 @@ if (window.location.href.indexOf('TestTakingOnly=Y') < 0 ) {
     document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/CreditsUsedLister/init.js' defer><\/script>");
     document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/CreditsOrderByMail/init.js' defer><\/script>");
     document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ServerSettings/init.js' defer><\/script>");
+    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ServerSettingsPublics/init.js' defer><\/script>");
     document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/CustomerSettings/init.js' defer><\/script>");
     document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/MailTemplateEditor/init.js' defer><\/script>");
     document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionChangeEditor/init.js' defer><\/script>");

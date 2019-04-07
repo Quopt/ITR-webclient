@@ -19,9 +19,11 @@ var ITSJavaScriptVersion="ITSScript"; // the required sub folder where the javas
 // this is the base path to the application on the server. Many paths are linked to this path in javascript for security reasons (same site policy)
 var configBaseURL = "https://" + document.location.host;
 if (document.location.host.indexOf("localhost") == 0) {
-    configBaseURL = "http://localhost:443";
     if (document.location.protocol == "http:") {
         configBaseURL = "http://localhost";
+    }
+    if (document.location.port != 80) {
+        configBaseURL = "http://localhost:443";
     }
 }
 var CopyrightString = ""; // this copyright line is shown by default. You will need to claim copyright of the pages server for your customers protection (copyright laws ... sigh)
