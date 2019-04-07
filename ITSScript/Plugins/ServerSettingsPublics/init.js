@@ -301,6 +301,32 @@
             );
         }
     };
+
+    ITSServerSettingsPublicsEditor.prototype.installAllTranslationTemplates = function () {
+        for (var i=0; i < this.translationTemplates.length; i++) {
+            this.install(this.translationTemplates[i].name, "TRANS" );
+        }
+    };
+
+    ITSServerSettingsPublicsEditor.prototype.installAllReportTemplates = function () {
+        for (var i=0; i < this.reportTemplates.length; i++) {
+            this.install(this.reportTemplates[i].name , "RT");
+        }
+    };
+
+    ITSServerSettingsPublicsEditor.prototype.installAllTestTemplates = function () {
+        for (var i=0; i < this.testTemplates.length; i++) {
+            this.install( this.testTemplates[i].name, "TT" );
+        }
+    };
+
+    ITSServerSettingsPublicsEditor.prototype.installAllScreenTemplates = function () {
+        for (var i=0; i < this.testScreenTemplates.length; i++) {
+            this.install(this.testScreenTemplates[i].name, "TST" );
+        }
+    };
+
+
     // register the portlet
     ITSInstance.ServerSettingsPublicsController = new ITSServerSettingsPublicsEditor();
     ITSInstance.UIController.registerEditor(ITSInstance.ServerSettingsPublicsController);
