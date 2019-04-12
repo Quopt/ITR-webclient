@@ -281,12 +281,77 @@ ITSTest.prototype.supportsLanguage = function (languageCodeToTestFor) {
 
 ITSTest.prototype.preloadTestImages = function () {
     //this.filesCache = [];
+    this.files_images = [];
     for (var i=0; i < this.files.length; i++) {
       tempImg = new Image();
-      tempImg.src = this.createLinkForFile(i);
+      tempImg.crossOrigin = "Anonymous";
+
+      //tempImg.onload = function () {
+      //      var canvas = document.createElement('canvas');
+      //      canvas.width = this.naturalWidth; // or 'width' if you want a special/scaled size
+      //      canvas.height = this.naturalHeight; // or 'height' if you want a special/scaled size
+
+      //      canvas.getContext('2d').drawImage(this, 0, 0);
+      //      tempImg.dataURL = canvas.toDataURL('image/png');
+      //  }.bind(tempImg);
+
+      if (ITSInstance.baseURL.indexOf("localhost") > 0) tempSrc = this.createLinkForFile(i).replace('/api/', ITSInstance.baseURL + '/api/');
+      tempImg.src = tempSrc;
+      this.files_images.push(tempImg);
+
       //ITSInstance.downloadImage(tempImg, this.ID + '/test/' + this.files[i]);
       //this.filesCache[this.files[i]] = tempImg;
     }
+};
+
+ITSTest.prototype.loadFilesAsBinary = function () {
+    this.files_binary = {};
+    this.files_binary.persistentProperties =  ['list', 'name', 'type',
+        'loadcount' ];
+    this.files_binary.list = [];
+    this.files_binary.name = [];
+    this.files_binary.type = [];
+    this.files_binary.loadcount = 0;
+
+    for (var i=0; i < this.files.length; i++) {
+        var tempSrc = this.createLinkForFile(i);
+        if (ITSInstance.baseURL.indexOf("localhost") > 0) tempSrc = this.createLinkForFile(i).replace('/api/', ITSInstance.baseURL + '/api/');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', tempSrc, true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function(i, e) {
+            //console.log(e.currentTarget.response);
+            this.files_binary.list[i] = binArrayToString(e.currentTarget.response);
+            //var temp = stringToBinArray (this.files_binary.list[i]);
+            //console.log(temp);
+            this.files_binary.loadcount ++;
+        }.bind(this, i);
+        this.files_binary.list.push("");
+        this.files_binary.name.push(this.files[i]);
+        this.files_binary.type.push("media");
+        xhr.send();
+    }
+
+    var baseIndex = this.files_binary.list.length;
+
+    for (var i=0; i < this.media.length; i++) {
+        var tempSrc = this.createLinkForMedia(i);
+        if (ITSInstance.baseURL.indexOf("localhost") > 0) tempSrc = this.createLinkForMedia(i).replace('/api/', ITSInstance.baseURL + '/api/');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', tempSrc, true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function(i, e) {
+            this.files_binary.list[i] =  binArrayToString(e.currentTarget.response);
+            this.files_binary.loadcount ++;
+        }.bind(this, i + baseIndex);
+        this.files_binary.list.push("");
+        this.files_binary.name.push(this.media[i]);
+        this.files_binary.type.push("catalog");
+        xhr.send();
+    }
+
 };
 
 ITSTest.prototype.createLinkForFile = function (fileIndex, OmitLeadingSlash) {
@@ -336,8 +401,11 @@ ITSTest.prototype.loadTestDetailSucces = function () {
     }
 
     // pre load all test media
-    ITSInstance.genericAjaxLoader('files/' + this.ITSSession.companies.currentCompany.ID + "/" + this.ID + '/test', this.files, this.preloadTestImages.bind(this), function () {}, undefined, 0, 999999, '', 'N');
-    ITSInstance.genericAjaxLoader('files/' + this.ITSSession.companies.currentCompany.ID + "/" + this.ID + '/media', this.media, function () {}, function () {}, undefined, 0, 999999, '', 'N');
+    //ITSInstance.genericAjaxLoader('files/' + this.ITSSession.companies.currentCompany.ID + "/" + this.ID + '/test', this.files, this.preloadTestImages.bind(this), function () {}, undefined, 0, 999999, '', 'N');
+    //ITSInstance.genericAjaxLoader('files/' + this.ITSSession.companies.currentCompany.ID + "/" + this.ID + '/media', this.media, function () {}, function () {}, undefined, 0, 999999, '', 'N');
+    this.loadMediaFiles( this.preloadTestImages.bind(this), function () {});
+    this.loadCatalogFiles(function () {},function () {});
+
     if (!waitForTemplateLoading) this.loadTestDetailWithTemplateSuccess();
 };
 

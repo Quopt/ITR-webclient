@@ -900,3 +900,22 @@ function makeHTMLTable(myArray, headers) {
 
     return result;
 }
+
+var stringToBinArray = function(inStr)
+{
+    var ret = new Uint8Array(inStr.length);
+    for (var i = 0; i < inStr.length; i++) {
+        ret[i] = inStr.charCodeAt(i);
+    }
+    return ret;
+};
+
+var binArrayToString = function(binArrayi)
+{
+    var str = "";
+    binArray = new Uint8Array( binArrayi );
+    for (var i = 0; i < binArray.length; i++) {
+        str += String.fromCharCode(binArray[i]);
+    }
+    return str;
+}

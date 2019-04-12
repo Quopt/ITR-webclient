@@ -564,6 +564,19 @@ ITSTestTemplateEditor.prototype.templatePlaceHolderChanged = function (newVal) {
 };
 
 ITSTestTemplateEditor.prototype.templateValueChanged = function () {
+    this.nextTemplateValueChangedRefresh = new Date();
+    setTimeout(this.templateValueChangedProcessTimed.bind(this), 3001);
+};
+
+ITSTestTemplateEditor.prototype.templateValueChangedProcessTimed = function () {
+    var dateNow = new Date();
+    if ((Math.abs(dateNow.getTime() - this.nextTemplateValueChangedRefresh.getTime()) ) > 3000) {
+        this.nextTemplateValueChangedRefresh = new Date();
+        this.templateValueChangedProcess();
+    }
+};
+
+ITSTestTemplateEditor.prototype.templateValueChangedProcess = function () {
     var oldValues = this.currentScreenComponent.templateValues;
     this.currentScreenComponent.templateValues = this.currentTemplate.extract_test_editor_view_templatevalues("AdminInterfaceTestTemplateEditorScreenVar", "", false);
     if (oldValues != this.currentScreenComponent.templateValues) {
@@ -1265,10 +1278,8 @@ ITSTestTemplateEditor.prototype.fillMediaTab = function () {
 };
 
 ITSTestTemplateEditor.prototype.populateMediaTabLists = function () {
-    this.currentTest.loadMediaFiles(this.populateMediaTabListFilesAfterLoad.bind(this), function () {
-    });
-    this.currentTest.loadCatalogFiles(this.populateMediaTabListCatalogAfterLoad.bind(this), function () {
-    });
+    this.currentTest.loadMediaFiles(this.populateMediaTabListFilesAfterLoad.bind(this), function () {});
+    this.currentTest.loadCatalogFiles(this.populateMediaTabListCatalogAfterLoad.bind(this), function () {});
 };
 
 ITSTestTemplateEditor.prototype.populateMediaTabListFilesAfterLoad = function () {
