@@ -1345,7 +1345,27 @@ ITSTestTemplateEditor.prototype.uploadCatalogFileSingle = function (fileContents
 
 
 ITSTestTemplateEditor.prototype.downloadCurrentTemplate = function () {
-    saveFileLocally(this.currentTest.Description.replace(/[^a-z0-9]/gi, '_').toLowerCase() + ".itrtesttemplate", ITSJSONStringify(this.currentTest));
+    if (! this.binariesLoading) {
+        this.binariesLoading = true;
+        this.currentTest.loadFilesAsBinary();
+        ITSInstance.UIController.showInterfaceAsWaitingOn();
+    }
+    if (this.currentTest.files_binary.loadcount < this.currentTest.files_binary.list.length) {
+        setTimeout(this.downloadCurrentTemplate.bind(this), 250);
+    } else {
+        this.binariesLoading = false;
+        this.downloadCurrentTemplateProcess()
+    }
+}
+
+ITSTestTemplateEditor.prototype.downloadCurrentTemplateProcess = function () {
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+    this.currentTest.persistentProperties.push("files_binary");
+    try {
+        saveFileLocally(this.currentTest.Description.replace(/[^a-z0-9]/gi, '_').toLowerCase() + ".itrtesttemplate", ITSJSONStringify(this.currentTest));
+    } finally {
+        this.currentTest.persistentProperties.pop();
+    }
 };
 
 ITSTestTemplateEditor.prototype.uploadCurrentTemplate = function (fileName) {
@@ -1358,9 +1378,30 @@ ITSTestTemplateEditor.prototype.uploadCurrentTemplate_process = function (fileCo
     if (newTest) {
         this.currentTest.scales.length = 0;
     }
+
     ITSJSONLoad(this.currentTest, fileContents, this.currentTest, ITSInstance, "ITSTest");
     if (!newTest) {
         this.currentTest.ID = currentTestId;
+    }
+
+    // now post the files if there are any
+    var prefix = "";
+    if (ITSInstance.baseURL.indexOf("localhost") > 0) {
+        //prefix = ITSInstance.baseURL + "/api/" ;
+    }
+    for (var i=0; i < this.currentTest.files_binary.list.length; i++) {
+        if (this.currentTest.files_binary.list[i].type == "media") {
+            var tempSrc = prefix + 'files/' + ITSInstance.companies.currentCompany.ID + "/" + this.currentTest.ID + '/test/' + this.currentTest.files_binary.list[i].name
+        } else {
+            var tempSrc = prefix + 'files/' + ITSInstance.companies.currentCompany.ID + "/" + this.currentTest.ID + '/media/' + this.currentTest.files_binary.list[i].name
+        }
+//        var xhr = new XMLHttpRequest();
+//        xhr.open('POST', tempSrc, true);
+//        xhr.requestType = 'arraybuffer';
+//        xhr.data = this.currentTest.files_binary.list[i].data;
+//        xhr.send();
+        var tempDat = stringToBinArray(this.currentTest.files_binary.list[i].data);
+        ITSInstance.genericAjaxUpdate(tempSrc, tempDat, function () {}, function () {}, "N", "Y", 'application/octet-stream')
     }
     this.populateTests();
     this.currentTest.detailsLoaded = true;

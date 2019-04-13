@@ -306,11 +306,9 @@ ITSTest.prototype.preloadTestImages = function () {
 
 ITSTest.prototype.loadFilesAsBinary = function () {
     this.files_binary = {};
-    this.files_binary.persistentProperties =  ['list', 'name', 'type',
-        'loadcount' ];
+    this.files_binary.persistentProperties =  ['list' ];
+    this.files_binary._objectType = "ITSObject";
     this.files_binary.list = [];
-    this.files_binary.name = [];
-    this.files_binary.type = [];
     this.files_binary.loadcount = 0;
 
     for (var i=0; i < this.files.length; i++) {
@@ -322,14 +320,15 @@ ITSTest.prototype.loadFilesAsBinary = function () {
         xhr.responseType = 'arraybuffer';
         xhr.onload = function(i, e) {
             //console.log(e.currentTarget.response);
-            this.files_binary.list[i] = binArrayToString(e.currentTarget.response);
+            this.files_binary.list[i].data = binArrayToString(e.currentTarget.response);
             //var temp = stringToBinArray (this.files_binary.list[i]);
             //console.log(temp);
             this.files_binary.loadcount ++;
         }.bind(this, i);
-        this.files_binary.list.push("");
-        this.files_binary.name.push(this.files[i]);
-        this.files_binary.type.push("media");
+        this.files_binary.list.push({});
+        this.files_binary.list[i].name = this.files[i];
+        this.files_binary.list[i].type = "media";
+        this.files_binary.list[i]._objectType = "ITSObject";
         xhr.send();
     }
 
@@ -343,15 +342,16 @@ ITSTest.prototype.loadFilesAsBinary = function () {
         xhr.open('GET', tempSrc, true);
         xhr.responseType = 'arraybuffer';
         xhr.onload = function(i, e) {
-            this.files_binary.list[i] =  binArrayToString(e.currentTarget.response);
+            this.files_binary.list[i].data = binArrayToString(e.currentTarget.response);
             this.files_binary.loadcount ++;
         }.bind(this, i + baseIndex);
-        this.files_binary.list.push("");
-        this.files_binary.name.push(this.media[i]);
-        this.files_binary.type.push("catalog");
+        this.files_binary.list.push({});
+        this.files_binary.list[i + baseIndex].name = this.media[i];
+        this.files_binary.list[i + baseIndex].type = "catalog";
+        this.files_binary.list[i + baseIndex]._objectType = "ITSObject";
+
         xhr.send();
     }
-
 };
 
 ITSTest.prototype.createLinkForFile = function (fileIndex, OmitLeadingSlash) {

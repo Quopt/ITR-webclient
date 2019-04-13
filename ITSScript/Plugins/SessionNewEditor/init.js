@@ -433,6 +433,9 @@ ITSInviteNewCandidateEditor.prototype.deleteNewSession = function () {
 };
 
 ITSInviteNewCandidateEditor.prototype.startNowSession = function () {
+    this.existingUserFound = false; // always save the password
+    this.newSession.Person.regeneratePassword();
+    $('#AdminInterfaceSessionNewSessionCandidatePassword').val(this.newSession.Person.Password);
     this.saveNewSession(function () { setTimeout(this.startNowSessionCallback.bind(this),1000); } );
 };
 

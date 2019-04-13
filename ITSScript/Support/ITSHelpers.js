@@ -598,6 +598,9 @@ function ITSJSONStringify(someITSObject) {
             }
             toReturn = toReturn + "}";
         }
+        else {
+            toReturn = JSON.stringify( someITSObject)
+        }
     }
     return toReturn;
 }

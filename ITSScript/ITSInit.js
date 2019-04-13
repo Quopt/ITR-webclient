@@ -209,9 +209,15 @@ ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSucces
     }
     tempHeaders['TimeZoneOffset'] = "" + moment().utcOffset() / 60; //(new Date()).getTimezoneOffset()/60;
 
+    processDataCall = true;
+    contentTypeCall = 'application/x-www-form-urlencoded; charset=UTF-8';
+    if (dataType) { contentTypeCall = dataType; processDataCall = false; }
+
     $.ajax({
         url: this.baseURLAPI + URL,
         headers: tempHeaders,
+        contentType : contentTypeCall,
+        processData : processDataCall,
         data : objectToUpdate,
         error: function (xhr, ajaxOptions, thrownError) {
             console.log("Ajax update or create error : " + xhr.status + " - " + thrownError);
