@@ -278,6 +278,12 @@ ITSTestTakingController.prototype.sessionLoadingSucceeded = function () {
         // now render the current page and wait for the candidate to do something or a screen component to fire some event
         this.startTest();
         this.renderTestPage();
+
+        // set the session start date time if not done yet
+        if (this.currentSession.StartedAt < new Date(2000,2,2)) {
+            this.currentSession.StartedAt = new Date.now();
+        }
+
     } else {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         ITSInstance.UIController.showError('ITSTestTakingController.LoadingSessionFailed', 'There are no tests in the session for you to take at this moment.','',
