@@ -117,6 +117,9 @@
                 }
                 if (getUrlParameterValue('Status')) {
                     this.status = getUrlParameterValue('Status');
+                    if (this.status == "Busy") {
+                        this.sortField = "StartedAt desc, Description";
+                    }
                 }
                 if (getUrlParameterValue('ConsultantID')) {
                     this.consultantID = getUrlParameterValue('ConsultantID');
