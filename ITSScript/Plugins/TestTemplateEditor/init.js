@@ -564,15 +564,20 @@ ITSTestTemplateEditor.prototype.templatePlaceHolderChanged = function (newVal) {
 };
 
 ITSTestTemplateEditor.prototype.templateValueChanged = function () {
-    this.nextTemplateValueChangedRefresh = new Date();
-    setTimeout(this.templateValueChangedProcessTimed.bind(this), 3001);
+    if (!this.nextTemplateValueChangedRefresh) this.nextTemplateValueChangedRefresh = new Date();
+    var dateNow = new Date();
+    if ((dateNow.getTime() - this.nextTemplateValueChangedRefresh.getTime()) > 1000) {
+        this.nextTemplateValueChangedRefresh = new Date();
+        setTimeout(this.templateValueChangedProcessTimed, 1001);
+    }
 };
 
+// this procedure does not required this but works on ITSInstance directly to avoid caching problems and memory shortage
 ITSTestTemplateEditor.prototype.templateValueChangedProcessTimed = function () {
     var dateNow = new Date();
-    if ((Math.abs(dateNow.getTime() - this.nextTemplateValueChangedRefresh.getTime()) ) > 3000) {
-        this.nextTemplateValueChangedRefresh = new Date();
-        this.templateValueChangedProcess();
+    if ((Math.abs(dateNow.getTime() - ITSInstance.newITSTestEditorController.nextTemplateValueChangedRefresh.getTime()) ) > 1000) {
+        ITSInstance.newITSTestEditorController.nextTemplateValueChangedRefresh = new Date();
+        ITSInstance.newITSTestEditorController.templateValueChangedProcess();
     }
 };
 
@@ -1395,11 +1400,6 @@ ITSTestTemplateEditor.prototype.uploadCurrentTemplate_process = function (fileCo
         } else {
             var tempSrc = prefix + 'files/' + ITSInstance.companies.currentCompany.ID + "/" + this.currentTest.ID + '/media/' + this.currentTest.files_binary.list[i].name
         }
-//        var xhr = new XMLHttpRequest();
-//        xhr.open('POST', tempSrc, true);
-//        xhr.requestType = 'arraybuffer';
-//        xhr.data = this.currentTest.files_binary.list[i].data;
-//        xhr.send();
         var tempDat = stringToBinArray(this.currentTest.files_binary.list[i].data);
         ITSInstance.genericAjaxUpdate(tempSrc, tempDat, function () {}, function () {}, "N", "Y", 'application/octet-stream')
     }
