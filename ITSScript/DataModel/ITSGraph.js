@@ -88,6 +88,7 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
         dsetentry["pointStyle"] = 'circle';
         dsetentry["pointRadius"] = 5;
         dsetentry["pointHoverRadius"] = 6;
+        dsetentry["lineTension"] = 0.4;
         try {
             if (template_values["Series_point_size"+dsetpostfix]) {
                 dsetentry["pointRadius"] = parseInt(envSubstitute(template_values["Series_point_size" + dsetpostfix], context, true));
@@ -95,6 +96,7 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
             }
         } catch(err) {};
         try { if (template_values["Series_point_type"+dsetpostfix]!="") dsetentry["pointStyle"] = template_values["Series_point_type"+dsetpostfix]; } catch(err) {};
+        try { if (template_values["Series_line_tension"+dsetpostfix]!="") dsetentry["lineTension"] = template_values["Series_line_tension"+dsetpostfix]; } catch(err) {};
         try { if (template_values["Series_line_show"+dsetpostfix]) dsetentry["showLine"] = template_values["Series_line_show"+dsetpostfix] == "T"; } catch(err) {};
         try { if (template_values["Series_line_curve"+dsetpostfix]) dsetentry["steppedLine"] = template_values["Series_line_curve"+dsetpostfix] == "T"; } catch(err) {};
 
@@ -365,7 +367,7 @@ ITSGraph_editTemplate = {
             "_objectType": "ITSScreenTemplateVariable",
             "ID": "63b62707-4373-4f27-6a46-8d647c3d4720",
             "variableName": "Series_line_curve",
-            "description": "Show the line curved or straight",
+            "description": "Show the line curved or stepped",
             "defaultValue": "T",
             "variableType": "B"
         },
@@ -384,8 +386,16 @@ ITSGraph_editTemplate = {
             "description": "Size for the point",
             "defaultValue": "3",
             "variableType": "T"
+        },
+        {
+            "_objectType": "ITSScreenTemplateVariable",
+            "ID": "6440a904-dfde-447c-b809-bc11b9f8a1bb",
+            "variableName": "Series_line_tension",
+            "description": "",
+            "defaultValue": "0.4",
+            "variableType": "T"
         } ],
-    "HTMLContent": "<div id=\"%%ID%%\" style=\"height:%%Height%%; width:%%Width%%;\"></div>\n<!--REPEATBLOCK-->\n<!-- %%Series_name%% -->\n<!--%%Series_data%%-->\n<!-- %%Series_color_start%% -->\n<!-- %%Series_color_end%% -->\n<!-- %%Series_type%% -->\n<!-- %%Series_fill%% -->\n<!-- %%StackGroup%% -->\n<!-- %%Series_line_show%% -->\n<!-- %%Series_line_curve%% -->\n<!-- %%Series_point_type%% -->\n<!-- %%Series_point_size%% -->\n<!--REPEATBLOCK-->\n",
+    "HTMLContent": "<div id=\"%%ID%%\" style=\"height:%%Height%%; width:%%Width%%;\"></div>\n<!--REPEATBLOCK-->\n<!-- %%Series_name%% -->\n<!--%%Series_data%%-->\n<!-- %%Series_color_start%% -->\n<!-- %%Series_color_end%% -->\n<!-- %%Series_type%% -->\n<!-- %%Series_fill%% -->\n<!-- %%StackGroup%% -->\n<!-- %%Series_line_show%% -->\n<!-- %%Series_line_curve%% -->\n<!-- %%Series_point_type%% -->\n<!-- %%Series_point_size%% -->\n<!-- %%Series_line_tension%% -->\n<!--REPEATBLOCK-->\n",
     "HTMLContentPnP": "",
     "get_value_snippet": "",
     "set_value_snippet": "",
