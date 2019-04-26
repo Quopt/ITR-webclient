@@ -82,8 +82,21 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
         dsetentry["borderColor"].fill("#"+ envSubstitute( template_values["Series_color_start"+dsetpostfix] ,context,true));
         dsetentry["fill"] =  envSubstitute( template_values["Series_fill"+dsetpostfix] ,context,true) == "T";
 
+        // Series_line_show Series_line_curve  Series_point_type
+        dsetentry["showLine"] = true;
+        dsetentry["steppedLine"] = false;
+        dsetentry["pointStyle"] = 'circle';
         dsetentry["pointRadius"] = 5;
         dsetentry["pointHoverRadius"] = 6;
+        try {
+            if (template_values["Series_point_size"+dsetpostfix]) {
+                dsetentry["pointRadius"] = parseInt(envSubstitute(template_values["Series_point_size" + dsetpostfix], context, true));
+                dsetentry["pointHoverRadius"] = parseInt(envSubstitute(template_values["Series_point_size" + dsetpostfix], context, true)) + 1;
+            }
+        } catch(err) {};
+        try { if (template_values["Series_point_type"+dsetpostfix]!="") dsetentry["pointStyle"] = template_values["Series_point_type"+dsetpostfix]; } catch(err) {};
+        try { if (template_values["Series_line_show"+dsetpostfix]) dsetentry["showLine"] = template_values["Series_line_show"+dsetpostfix] == "T"; } catch(err) {};
+        try { if (template_values["Series_line_curve"+dsetpostfix]) dsetentry["steppedLine"] = template_values["Series_line_curve"+dsetpostfix] == "T"; } catch(err) {};
 
         start = RGBstringToNumber( envSubstitute( template_values["Series_color_start"+dsetpostfix] ,context,true));
         end = RGBstringToNumber( envSubstitute( template_values["Series_color_end"+dsetpostfix] ,context,true));
@@ -339,8 +352,40 @@ ITSGraph_editTemplate = {
             "description": "The stack group name",
             "defaultValue": "",
             "variableType": "T", "persistentProperties": "*ALL*"
-        }],
-    "HTMLContent": "<div id=\"%%ID%%\" style=\"height:%%Height%%; width:%%Width%%;\"></div>\n<!--REPEATBLOCK-->\n<!-- %%Series_name%% -->\n<!--%%Series_data%%-->\n<!-- %%Series_color_start%% -->\n<!-- %%Series_color_end%% -->\n<!-- %%Series_type%% -->\n<!-- %%Series_fill%% -->\n<!-- %%StackGroup%% -->\n<!--REPEATBLOCK-->\n",
+        },
+        {
+            "_objectType": "ITSScreenTemplateVariable",
+            "ID": "fd1e8ef5-e13a-4e3b-f497-071d051535ea",
+            "variableName": "Series_line_show",
+            "description": "Show the line or not",
+            "defaultValue": "T",
+            "variableType": "B"
+        },
+        {
+            "_objectType": "ITSScreenTemplateVariable",
+            "ID": "63b62707-4373-4f27-6a46-8d647c3d4720",
+            "variableName": "Series_line_curve",
+            "description": "Show the line curved or straight",
+            "defaultValue": "T",
+            "variableType": "B"
+        },
+        {
+            "_objectType": "ITSScreenTemplateVariable",
+            "ID": "d39b5af2-13db-4bba-1e9b-d6b0c4518df3",
+            "variableName": "Series_point_type",
+            "description": "",
+            "defaultValue": "circle|circle,cross|cross,crossRot|rotated cross,dash|dash,line|line,rect|rectangle,rectRounded|rounded rectangle,rectRot|rotated rectangle,star|star,triangle|triangle",
+            "variableType": "L"
+        },
+        {
+            "_objectType": "ITSScreenTemplateVariable",
+            "ID": "ee58ab92-ea6f-4cfa-6c68-54410d1853f2",
+            "variableName": "Series_point_size",
+            "description": "Size for the point",
+            "defaultValue": "3",
+            "variableType": "T"
+        } ],
+    "HTMLContent": "<div id=\"%%ID%%\" style=\"height:%%Height%%; width:%%Width%%;\"></div>\n<!--REPEATBLOCK-->\n<!-- %%Series_name%% -->\n<!--%%Series_data%%-->\n<!-- %%Series_color_start%% -->\n<!-- %%Series_color_end%% -->\n<!-- %%Series_type%% -->\n<!-- %%Series_fill%% -->\n<!-- %%StackGroup%% -->\n<!-- %%Series_line_show%% -->\n<!-- %%Series_line_curve%% -->\n<!-- %%Series_point_type%% -->\n<!-- %%Series_point_size%% -->\n<!--REPEATBLOCK-->\n",
     "HTMLContentPnP": "",
     "get_value_snippet": "",
     "set_value_snippet": "",
