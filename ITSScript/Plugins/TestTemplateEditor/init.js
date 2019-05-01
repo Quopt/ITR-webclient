@@ -1461,16 +1461,33 @@ ITSTestTemplateEditor.prototype.trialRunTest = function (PnPRequired) {
 
 ITSTestTemplateEditor.prototype.fillLanguagesInEditor = function () {
     $('#AdminInterfaceTestTemplateEditor-LanguageSelect').empty();
+    $('#AdminInterfaceTestTemplateEditor-SourceLanguageSelect').empty();
+    $('#AdminInterfaceTestTemplateEditor-TargetLanguageSelect').empty();
     var desc = "";
     var selected = "";
     for (var i = 0; i < ITSSupportedLanguages.length; i++) {
         desc = ITSInstance.translator.getLanguageDescription(ITSSupportedLanguages[i].languageCode);
         selected = "";
-        if (ITSSupportedLanguages[i].languageCode == this.currentTest.LanguageSupport) selected = " selected='selected' ";
+        if (ITSSupportedLanguages[i].languageCode == this.currentTest.LanguageSupport) {
+            selected = " selected='selected' ";
+
+            this.translate_source_language = ITSSupportedLanguages[i].languageCode;
+            this.translate_target_language = ITSSupportedLanguages[i].languageCode;
+        }
         $('#AdminInterfaceTestTemplateEditor-LanguageSelect').append(
             '<option NoTranslate ' + selected + 'value=\"' + ITSSupportedLanguages[i].languageCode + '\">' +
             desc + '</option>'
         );
+        if (ITSSupportedLanguages[i].translations_available) {
+            $('#AdminInterfaceTestTemplateEditor-SourceLanguageSelect').append(
+                '<option NoTranslate ' + selected + 'value=\"' + ITSSupportedLanguages[i].languageCode + '\">' +
+                desc + '</option>'
+            );
+            $('#AdminInterfaceTestTemplateEditor-TargetLanguageSelect').append(
+                '<option NoTranslate ' + selected + 'value=\"' + ITSSupportedLanguages[i].languageCode + '\">' +
+                desc + '</option>'
+            );
+        }
     }
 };
 
@@ -1524,6 +1541,121 @@ ITSTestTemplateEditor.prototype.selectLanguageInEditor = function (i) {
     this.currentTest.LanguageSupport = ITSSupportedLanguages[i].languageCode;
 };
 
+ITSTestTemplateEditor.prototype.selectAllScreensForTranslation = function (checkval){
+    this.translate_all_screens = checkval;
+};
+ITSTestTemplateEditor.prototype.selectSourceLanguageForTranslation = function (value){
+    this.translate_source_language = value;
+};
+ITSTestTemplateEditor.prototype.selectTargetLanguageForTranslation = function (value){
+    this.translate_target_language = value;
+};
+ITSTestTemplateEditor.prototype.startTranslation = function () {
+    this.translate_screen_index = 0;
+    this.translate_calls = 0;
+    ITSInstance.UIController.showInterfaceAsWaitingOn();
+    this.translate_screen_index_end = this.currentTest.screens.length;
+    if (this.translate_all_screens) {
+        this.translateScreen(0);
+    } else {
+        this.translate_screen_index_end = this.currentScreenIndex + 1;
+        this.translateScreen(this.currentScreenIndex );
+    }
+};
+ITSTestTemplateEditor.prototype.translateScreen = function (screenIndex) {
+    this.translate_component_index = -1;
+    this.translation_calls = [];
+    this.translation_call_index = 0;
+    if (this.translate_screen_index < this.currentTest.screens.length) {
+        for (var i=screenIndex; i < this.translate_screen_index_end; i++) {
+            this.translate_screen_index = i;
+            this.translateScreenComponent(i);
+        }
+    }
+    if (this.translate_calls > 0) {
+        this.loadCurrentTestOnScreen();
+        ITSInstance.UIController.showInterfaceAsWaitingOn();
+        this.translateIndexedCall(0);
+    } else {
+        ITSInstance.UIController.showInterfaceAsWaitingOff();
+    }
+};
+ITSTestTemplateEditor.prototype.translateScreenComponent = function (componentIndex) {
+    this.translate_component_index = componentIndex ;
+    for (var i=0; i < this.currentTest.screens[this.translate_screen_index].screenComponents.length; i++) {
+        var thisTemplate = ITSInstance.screenTemplates.findTemplateById(ITSInstance.screenTemplates.screenTemplates,
+               this.currentTest.screens[this.translate_screen_index].screenComponents[i].templateID );
+        this.translate_component_index = i;
+        if (thisTemplate >= 0) {
+            var template = ITSInstance.screenTemplates.screenTemplates[thisTemplate];
+            this.translate_template = template;
+            this.translate_component_variable_index = -1;
+            for (var j=0; j < this.translate_template.TemplateVariables.length; j++) {
+                this.translateScreenComponentVariable(j);
+            }
+        }
+    }
+};
+ITSTestTemplateEditor.prototype.translateScreenComponentVariable = function (componentVariableIndex) {
+    this.translate_component_variable_index = componentVariableIndex;
+
+    if (this.translate_template.TemplateVariables[this.translate_component_variable_index].translatable) {
+        for (var i=1; i <= this.currentTest.screens[this.translate_screen_index].screenComponents[this.translate_component_index].templateValues.RepeatBlockCount; i++) {
+            var postfix = "";
+            if (i > 1 ) postfix = "_"+ i;
+            var toTranslate = this.currentTest.screens[this.translate_screen_index].screenComponents[this.translate_component_index].templateValues[
+                this.translate_template.TemplateVariables[this.translate_component_variable_index].variableName + postfix];
+            var tempHeaders = {
+                'SessionID': ITSInstance.token.IssuedToken,
+                'CompanyID': ITSInstance.token.companyID,
+                'TextToTranslate': toTranslate
+            };
+            this.translate_calls++;
+            console.log(ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language + " " + toTranslate);
+            this.translateCall(this.translate_screen_index, this.translate_component_index,this.translate_component_variable_index,this.translate_template, postfix, tempHeaders);
+        }
+    }
+};
+ITSTestTemplateEditor.prototype.translateCall = function (translate_screen_index, translate_component_index, translate_component_variable_index,translate_template,  postfix, tempHeaders) {
+    var context = {};
+    context.translate_screen_index = translate_screen_index;
+    context.translate_component_index = translate_component_index;
+    context.translate_component_variable_index = translate_component_variable_index;
+    context.translate_template = translate_template;
+    context.postfix = postfix;
+    context.tempHeaders = tempHeaders;
+    context.url =  ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language;
+    this.translation_calls.push(context);
+};
+ITSTestTemplateEditor.prototype.translateIndexedCall = function (index) {
+   this.translation_call_index = index;
+   var context = this.translation_calls[index];
+    $.ajax({
+        url: this.translation_calls[index].url,
+        headers: this.translation_calls[index].tempHeaders,
+        error: function (xhr, ajaxOptions, thrownError) {
+            ITSInstance.newITSTestEditorController.translateError();
+        }.bind(this),
+        dataType: "text",
+        success: function (data) {
+            ITSInstance.newITSTestEditorController.translateSuccess(data, context.translate_screen_index, context.translate_component_index, context.translate_component_variable_index, context.translate_template, context.postfix);
+        }.bind(context),
+        type: 'GET'
+    });
+};
+ITSTestTemplateEditor.prototype.translateSuccess = function (data, translate_screen_index, translate_component_index, translate_component_variable_index, translate_template, postfix) {
+    this.currentTest.screens[translate_screen_index].screenComponents[translate_component_index].templateValues[
+        translate_template.TemplateVariables[translate_component_variable_index].variableName + postfix ] = data;
+    if (this.translation_call_index < this.translation_calls.length) {
+        this.translateIndexedCall(this.translation_call_index+1);
+    } else {
+        ITSInstance.UIController.showInterfaceAsWaitingOff();
+    }
+};
+ITSTestTemplateEditor.prototype.translateError = function () {
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+    ITSInstance.UIController.showError('TestTemplateEditor.TranslationNotFound', 'The translation failed. Please check if the azure translate string is set and if this user has the proper rights.');
+};
 
 (function () { // iife to prevent pollution of the global memspace
 

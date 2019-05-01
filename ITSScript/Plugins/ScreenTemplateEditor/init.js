@@ -185,6 +185,7 @@ ITSScreenTemplateEditor.prototype.showVariableInEditor = function (var_index) {
         $('#AdminInterfaceScreenTemplate-vardescription').removeAttr('disabled');
         $('#AdminInterfaceScreenTemplate-vardefaultvalue').removeAttr('disabled');
         $('#AdminInterfaceScreenTemplate-vartype').removeAttr('disabled');
+        $('#AdminInterfaceScreenTemplate-vartranslatable').removeAttr('disabled');
         $('#AdminInterfaceScreenTemplate-removeTemplateVar').removeAttr('disabled');
         this.currentVariableIndex = var_index;
         if ($('#AdminInterfaceScreenTemplate-TemplateVarSelect')[0].selectedIndex != var_index) {
@@ -195,6 +196,7 @@ ITSScreenTemplateEditor.prototype.showVariableInEditor = function (var_index) {
         $('#AdminInterfaceScreenTemplate-varname').val(cur_var.variableName);
         $('#AdminInterfaceScreenTemplate-vardescription').val(cur_var.description);
         $('#AdminInterfaceScreenTemplate-vardefaultvalue').val(cur_var.defaultValue);
+        $('#AdminInterfaceScreenTemplate-vartranslatable')[0].checked = cur_var.translatable;
         $('#AdminInterfaceScreenTemplate-vartype'+cur_var.variableType)[0].selected = true;
         //$('#AdminInterfaceScreenTemplate-vartype').val(cur_var.variableType);
     } else {
@@ -203,6 +205,7 @@ ITSScreenTemplateEditor.prototype.showVariableInEditor = function (var_index) {
         $('#AdminInterfaceScreenTemplate-vardescription').attr('disabled', 'disabled');
         $('#AdminInterfaceScreenTemplate-vardefaultvalue').attr('disabled', 'disabled');
         $('#AdminInterfaceScreenTemplate-vartype').attr('disabled', 'disabled');
+        $('#AdminInterfaceScreenTemplate-vartranslatable').attr('disabled', 'disabled');
         $('#AdminInterfaceScreenTemplate-removeTemplateVar').attr('disabled', 'disabled');
     }
 };

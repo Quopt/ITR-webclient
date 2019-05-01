@@ -594,9 +594,10 @@ function ITSScreenTemplateVariable(parent, session) {
     this.varValue = null;
     this.variableType = "T"; // T = text, A = textarea, H = HTML text, L = list, B = boolean, C = color picker, P = placeholder
     this.varTraceID = "";
+    this.translatable = false;
     this.RepeatBlockCounter = 0;
 
-    this.persistentProperties = ['ID', 'variableName', 'description', 'defaultValue', 'variableType'];
+    this.persistentProperties = ['ID', 'variableName', 'description', 'defaultValue', 'variableType', 'translatable'];
 };
 
 ITSScreenTemplateVariable.prototype.traceID = function (template_parent, repeat_block_counter) {
