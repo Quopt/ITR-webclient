@@ -565,11 +565,11 @@ ITSTestTemplateEditor.prototype.templatePlaceHolderChanged = function (newVal) {
 
 ITSTestTemplateEditor.prototype.templateValueChanged = function () {
     if (!this.nextTemplateValueChangedRefresh) this.nextTemplateValueChangedRefresh = new Date();
-    var dateNow = new Date();
-    if ((dateNow.getTime() - this.nextTemplateValueChangedRefresh.getTime()) > 1000) {
+    //var dateNow = new Date();
+    //if ((dateNow.getTime() - this.nextTemplateValueChangedRefresh.getTime()) > 1000) {
         this.nextTemplateValueChangedRefresh = new Date();
         setTimeout(this.templateValueChangedProcessTimed, 1001);
-    }
+    //}
 };
 
 // this procedure does not required this but works on ITSInstance directly to avoid caching problems and memory shortage

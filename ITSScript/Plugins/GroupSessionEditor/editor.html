@@ -1,0 +1,168 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://opensource.org/licenses/Artistic-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div class="row col-12">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="AdminInterfaceGroupSessionHeader">Create or change group session</h4>
+</div>
+<div id="AdminInterfaceGroupSession" class="needs-validation" novalidate class="row">
+    <div class="panel-body col-sm-12">
+        <div id="AdminInterfaceGroupSessionDescription" class="form-group row">
+            <label for="AdminInterfaceGroupSessionDescriptionFor" id="AdminInterfaceGroupSessionDescriptionLabel" class="col-sm-3 col-form-label">Group session
+                description</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="text" required placeholder="Enter a session description" data-field="Description" value=""
+                       id="AdminInterfaceGroupSessionDescriptionFor">
+                <div id="AdminInterfaceGroupSessionDescriptionForIF" class="invalid-tooltip">
+                    <label id="AdminInterfaceGroupSessionDescriptionTT">Please enter a description for this group session.</label>
+                </div>
+            </div>
+        </div>
+        <div id="AdminInterfaceGroupSessionCandidate" class="form-group row">
+            <label for="AdminInterfaceGroupSessionCandidateFor"  id="AdminInterfaceGroupSessionCandidateForLabel" class="col-sm-3 col-form-label">Candidate
+                e-mail addresses or logins</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="text" required placeholder="Enter the e-mail addresses or logins of the candidates in this group"
+                       value="" data-field="Person.EMail" onchange="ITSInstance.groupSessionController.emailAddressChanged(this.value);" id="AdminInterfaceGroupSessionCandidateFor">
+                <div id="AdminInterfaceGroupSessionCandidateForIF" class="invalid-tooltip">
+                    Please enter the logins or email addresses for all group members.
+                </div>
+            </div>
+        </div>
+        <div id="AdminInterfaceGroupSessionTests" class="form-group row">
+            <label for="AdminInterfaceGroupSessionTestsInputList" id="AdminInterfaceGroupSessionTestsInputListLabel" class="col-sm-3 col-form-label">Tests in these group sessions</label>
+            <div class="col-sm-9">
+                <div class="form-group">
+                    <select id="AdminInterfaceGroupSessionTestsInputList" novalidate class="combobox form-control" style="display: none;">
+                        <option value="" selected="selected">Select a test</option>
+                    </select>
+                </div>
+                <label class="form-check-label">
+                    &nbsp;&nbsp;&nbsp;<input class="form-check-input" id="AdminInterfaceGroupSessionTestsIncludeOtherLanguages" type="checkbox" onchange="ITSInstance.groupSessionController.loadTestAndBatteriesList();" value="">
+                    <label id="AdminInterfaceGroupSessionTestsIncludeOtherLanguagesLabel">Include tests in other languages</label>
+                </label>
+                <table class="table table-sm table-striped table-hover" style="text-align: left"
+                       id="AdminInterfaceGroupSessionTestsSelection" NoTranslate>
+                    <thead NoTranslate id="AdminInterfaceGroupSessionTestsSelectionHead">
+                    <tr>
+                        <td id="AdminInterfaceGroupSessionTestsSelectionH1">Test name</td>
+                        <td id="AdminInterfaceGroupSessionTestsSelectionH2">Test language</td>
+                        <td id="AdminInterfaceGroupSessionTestsSelectionH3">Norm 1</td>
+                        <td id="AdminInterfaceGroupSessionTestsSelectionH4">Norm 2</td>
+                        <td id="AdminInterfaceGroupSessionTestsSelectionH5">Norm 3</td>
+                        <td id="AdminInterfaceGroupSessionTestsSelectionH6">Actions</td>
+                    </tr>
+                    </thead>
+                    <tbody id="AdminInterfaceGroupSessionTestsSelectionBody">
+                    <tr>
+                        <td id="AdminInterfaceGroupSessionTestsSelectionC1">No tests added yet</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="AdminInterfaceGroupSessionAccordion" role="tablist" aria-multiselectable="true">
+            <div class="card">
+                <div class="card-header" role="tab" id="AdminInterfaceGroupSessionheadingOne">
+                    <h5 class="mb-0">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#AdminInterfaceGroupSessioncollapseOne"
+                           aria-expanded="false" aria-controls="AdminInterfaceGroupSessioncollapseOne">
+                            <i class="fa fa-fw fa-arrow-down" NoTranslate></i><label id="AdminInterfaceGroupSessionAccordionLabel">Session validity</label>
+                        </a>
+                    </h5>
+                </div>
+                <div id="AdminInterfaceGroupSessioncollapseOne" class="collapse" role="tabpanel" aria-labelledby="AdminInterfaceGroupSessionheadingOne" class="col-sm-12">
+                    <div class="card-block">
+
+                        <div class="form-group row">
+                            <label for="AdminInterfaceGroupSessionStartDate" id="AdminInterfaceGroupSessionStartDateLabel"
+                                   class="col-sm-3 col-form-label">Session cannot start <b>before</b> this date & time</label>
+                            <div class="col-sm-3">
+                                <input class="form-control" type="text"
+                                       placeholder="" value="" name="dateTimePicker"  novalidate data-field="AllowedStartDateTime"
+                                       id="AdminInterfaceGroupSessionStartDate">
+                            </div>
+                            <label for="AdminInterfaceGroupSessionEndDate" id="AdminInterfaceGroupSessionEndDateLabel"
+                                   class="col-sm-3 col-form-label">Session cannot start <b>after</b> this date & time</label>
+                            <div class="col-sm-3">
+                                <input class="form-control" type="text"
+                                       placeholder="" value="" name="dateTimePicker" novalidate  data-field="AllowedEndDateTime"
+                                       id="AdminInterfaceGroupSessionEndDate">
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-7"></label>
+                            <label class="col-sm-5">
+                                <input id="AdminInterfaceGroupSessionEndDateEnforced"  novalidate data-field="EnforceSessionEndDateTime" type="checkbox">
+                                <label id="AdminInterfaceGroupSessionEndDateEnforcedLabel" >Stop the session when still in progress at this date and time</label>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" role="tab" id="AdminInterfaceGroupSessionheadingThree">
+                <h5 class="mb-0">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#AdminInterfaceGroupSessioncollapseThree"
+                       aria-expanded="false" aria-controls="AdminInterfaceGroupSessioncollapseThree" class="col-sm-12">
+                        <i class="fa fa-fw fa-arrow-down aria-hidden='true'"></i><label id="AdminInterfaceGroupSessionNotificationLabel">Session notification settings</label>
+                    </a>
+                </h5>
+            </div>
+            <div id="AdminInterfaceGroupSessioncollapseThree" class="collapse col-sm-12" role="tabpanel" aria-labelledby="AdminInterfaceGroupSessionheadingThree">
+                <div class="form-group row">
+                    <label class="col-sm-4">
+                        <input id="AdminInterfaceGroupSessionMailMe"  novalidate type="checkbox"> <label id="AdminInterfaceGroupSessionMailMeLabel">Mail me when this session completes at</label>
+                    </label>
+                    <input class="form-control col-sm-8" type="text"
+                           placeholder="" value=""  novalidate data-field="EMailNotificationAdresses"
+                           id="AdminInterfaceGroupSessionMail">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <label for="AdminInterfaceGroupSessionRemarks" id="AdminInterfaceGroupSessionRemarksLabel">Remarks</label>
+        <textarea class="form-control" id="AdminInterfaceGroupSessionRemarks" data-field="Remarks"
+                  rows="3"></textarea>
+    </div>
+
+</div>
+<div id="AdminInterfaceGroupSessionButtonBar">
+    <span class="badge badge-warning" id="AdminInterfaceGroupSessionWarningExistsLabel" >Please note : Some of the candidates you have selected are already known. The session will be added as usual, the password of the candidate will NOT be updated. </span>
+    <br/>
+    <button type="button" class="btn btn-default btn-success" id="AdminInterfaceGroupSessionSaveButton" onclick="ITSInstance.groupSessionController.saveCurrentSession();">
+        <i id="AdminInterfaceGroupSession-saveIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="AdminInterfaceGroupSessionSaveButtonLabel">Save session</span>
+    </button>&nbsp;
+    <button type="button" class="btn btn-default btn-success" id="AdminInterfaceGroupSessionInviteButton" onclick="ITSInstance.groupSessionController.sendInvitations();">
+        <i id="AdminInterfaceGroupSessionInviteButton-saveIcon" class="fa fa-fw fa-mail-bulk"></i> <span id="AdminInterfaceGroupSessionInviteButton-Label">Send e-mail invitations</span>
+    </button>&nbsp;
+    <button type="button" class="btn btn-default btn-success" id="AdminInterfaceGroupSessionOverviewButton" onclick="ITSInstance.groupSessionController.showUserAndPasswordOverview();">
+        <i id="AdminInterfaceGroupSessionOverviewButton-saveIcon" class="fa fa-fw fa-notes-medical"></i> <span id="AdminInterfaceGroupSessionOverviewButton-Label">Show user id and password overview</span>
+    </button>&nbsp;
+    <button type="button" class="btn btn-default btn-success" id="AdminInterfaceGroupSessionShowRelatedButton" onclick="ITSInstance.groupSessionController.showGroupSessions();">
+        <i id="AdminInterfaceGroupSessionShowRelatedButton-saveIcon" class="fa fa-fw fa-tasks"></i> <span id="AdminInterfaceGroupSessionShowRelatedButton">Show related person sessions</span>
+    </button>&nbsp;
+</div>

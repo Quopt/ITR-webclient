@@ -1291,6 +1291,8 @@ ITSTest.prototype.scoreTest = function (session, sessionTest, candidate, results
                 if (( (String(source.Value) == String(rule.SourceValue)) ||
                     ((rule.SourceValue.indexOf('%%QuestionValue%%') >= 0) && (rule.TargetScaleValue.indexOf('%%QuestionValue%%') >= 0) ) ) && (s["__" + rule.TargetScale])) {
                     var target = s["__" + rule.TargetScale];
+                    //console.log(target);
+                    var thisScale = this.findScaleByID(rule.TargetScale);
 
                     var TargetScaleValue = rule.TargetScaleValue;
                     if (TargetScaleValue.indexOf('%%QuestionValue%%') >= 0) {
@@ -1304,7 +1306,8 @@ ITSTest.prototype.scoreTest = function (session, sessionTest, candidate, results
                     if (TargetScaleValue.indexOf('=') == 0) {
                         try {
                             TargetScaleValue = TargetScaleValue.substring(1);
-                            if ($.isNumeric(target.Score) && $.isNumeric(TargetScaleValue)) {
+//                            if ($.isNumeric(target.Score) && $.isNumeric(TargetScaleValue)) {
+                            if (thisScale.scaleType == "N") {
                                 eval("target.Score = Number(target.Score) " + TargetScaleValue)
                             } else {
                                 eval("target.Score = " + TargetScaleValue)
@@ -1312,7 +1315,8 @@ ITSTest.prototype.scoreTest = function (session, sessionTest, candidate, results
                         } catch (err) { console.log("Calculate scale failed for "  + this.TestName + "(" + i + ")"  + err);  }
                     } else {
                         try {
-                            if ($.isNumeric(target.Score) && $.isNumeric(TargetScaleValue)) {
+//                            if ($.isNumeric(target.Score) && $.isNumeric(TargetScaleValue)) {
+                            if (thisScale.scaleType == "N") {
                                 eval("target.Score = Number(target.Score) + Number(" + TargetScaleValue + ")");
                             } else {
                                 eval("target.Score = " + TargetScaleValue );

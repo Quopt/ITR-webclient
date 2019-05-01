@@ -62,6 +62,8 @@ if (window.location.href.indexOf('TestTakingOnly=Y') < 0 ) {
     document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionChangeEditor/init.js' defer><\/script>");
     document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/BatteryLister/init.js' defer><\/script>");
     document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/BatteryEditor/init.js' defer><\/script>");
+    //document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/GroupSessionEditor/init.js' defer><\/script>");
+    //document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/GroupSessionLister/init.js' defer><\/script>");
     // %OFFICEEDITOREND%
 
     if (window.location.href.indexOf('DevMode=Y') >= 0 ) {
