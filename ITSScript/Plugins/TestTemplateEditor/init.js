@@ -1394,14 +1394,18 @@ ITSTestTemplateEditor.prototype.uploadCurrentTemplate_process = function (fileCo
     if (ITSInstance.baseURL.indexOf("localhost") > 0) {
         //prefix = ITSInstance.baseURL + "/api/" ;
     }
-    for (var i=0; i < this.currentTest.files_binary.list.length; i++) {
-        if (this.currentTest.files_binary.list[i].type == "media") {
-            var tempSrc = prefix + 'files/' + ITSInstance.companies.currentCompany.ID + "/" + this.currentTest.ID + '/test/' + this.currentTest.files_binary.list[i].name
-        } else {
-            var tempSrc = prefix + 'files/' + ITSInstance.companies.currentCompany.ID + "/" + this.currentTest.ID + '/media/' + this.currentTest.files_binary.list[i].name
+    if (this.currentTest.files_binary.list) {
+        for (var i = 0; i < this.currentTest.files_binary.list.length; i++) {
+            if (this.currentTest.files_binary.list[i].type == "media") {
+                var tempSrc = prefix + 'files/' + ITSInstance.companies.currentCompany.ID + "/" + this.currentTest.ID + '/test/' + this.currentTest.files_binary.list[i].name
+            } else {
+                var tempSrc = prefix + 'files/' + ITSInstance.companies.currentCompany.ID + "/" + this.currentTest.ID + '/media/' + this.currentTest.files_binary.list[i].name
+            }
+            var tempDat = stringToBinArray(this.currentTest.files_binary.list[i].data);
+            ITSInstance.genericAjaxUpdate(tempSrc, tempDat, function () {
+            }, function () {
+            }, "N", "Y", 'application/octet-stream')
         }
-        var tempDat = stringToBinArray(this.currentTest.files_binary.list[i].data);
-        ITSInstance.genericAjaxUpdate(tempSrc, tempDat, function () {}, function () {}, "N", "Y", 'application/octet-stream')
     }
     this.populateTests();
     this.currentTest.detailsLoaded = true;
@@ -1607,16 +1611,15 @@ ITSTestTemplateEditor.prototype.translateScreenComponentVariable = function (com
                 this.translate_template.TemplateVariables[this.translate_component_variable_index].variableName + postfix];
             var tempHeaders = {
                 'SessionID': ITSInstance.token.IssuedToken,
-                'CompanyID': ITSInstance.token.companyID,
-                'TextToTranslate': toTranslate
+                'CompanyID': ITSInstance.token.companyID
             };
             this.translate_calls++;
-            console.log(ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language + " " + toTranslate);
-            this.translateCall(this.translate_screen_index, this.translate_component_index,this.translate_component_variable_index,this.translate_template, postfix, tempHeaders);
+            console.log(ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language);// + " " + toTranslate);
+            this.translateCall(this.translate_screen_index, this.translate_component_index,this.translate_component_variable_index,this.translate_template, postfix, tempHeaders, toTranslate);
         }
     }
 };
-ITSTestTemplateEditor.prototype.translateCall = function (translate_screen_index, translate_component_index, translate_component_variable_index,translate_template,  postfix, tempHeaders) {
+ITSTestTemplateEditor.prototype.translateCall = function (translate_screen_index, translate_component_index, translate_component_variable_index,translate_template,  postfix, tempHeaders, toTranslate) {
     var context = {};
     context.translate_screen_index = translate_screen_index;
     context.translate_component_index = translate_component_index;
@@ -1624,13 +1627,15 @@ ITSTestTemplateEditor.prototype.translateCall = function (translate_screen_index
     context.translate_template = translate_template;
     context.postfix = postfix;
     context.tempHeaders = tempHeaders;
+    context.data = toTranslate.replace(/(\r\n|\n|\r|\t)/gm, "");;
     context.url =  ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language;
     this.translation_calls.push(context);
 };
 ITSTestTemplateEditor.prototype.translateIndexedCall = function (index) {
    this.translation_call_index = index;
    var context = this.translation_calls[index];
-    $.ajax({
+   this.translation_calls[index].tempHeaders.ToTranslate = encodeURI(this.translation_calls[index].data);
+   $.ajax({
         url: this.translation_calls[index].url,
         headers: this.translation_calls[index].tempHeaders,
         error: function (xhr, ajaxOptions, thrownError) {
@@ -1646,7 +1651,7 @@ ITSTestTemplateEditor.prototype.translateIndexedCall = function (index) {
 ITSTestTemplateEditor.prototype.translateSuccess = function (data, translate_screen_index, translate_component_index, translate_component_variable_index, translate_template, postfix) {
     this.currentTest.screens[translate_screen_index].screenComponents[translate_component_index].templateValues[
         translate_template.TemplateVariables[translate_component_variable_index].variableName + postfix ] = data;
-    if (this.translation_call_index < this.translation_calls.length) {
+    if (this.translation_call_index +1 < this.translation_calls.length) {
         this.translateIndexedCall(this.translation_call_index+1);
     } else {
         ITSInstance.UIController.showInterfaceAsWaitingOff();

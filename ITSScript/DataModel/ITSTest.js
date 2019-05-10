@@ -248,6 +248,7 @@ ITSTest.prototype.copyTest = function () {
     ITSJSONLoad(newTest, ITSJSONStringify(this), this.myParent, this.ITSSession, 'ITSTest');
 
     newTest.ID = newGuid();
+    newTest.detailsLoaded = true; 
 
     return newTest;
 };
