@@ -138,6 +138,18 @@ ITSCandidateSession.prototype.saveToServer = function (OnSuccess, OnError) {
     this.ITSSession.MessageBus.publishMessage("Session.Update", this);
 };
 
+ITSCandidateSession.prototype.saveToServerIncludingTests = function (OnSuccess, OnError) {
+    this.lastSavedJSON = ITSJSONStringify(this);
+    this.newSession = false;
+    ITSInstance.genericAjaxUpdate('sessions/' + this.ID, this.lastSavedJSON, function () {
+            for (var i=0; i < this.SessionTests.length; i ++) {
+                this.SessionTests[i].saveToServer(function () {} , function () {} );
+            }
+            if (OnSuccess) OnSuccess(); }.bind(this, OnSuccess)
+        , OnError, false, true);
+    this.ITSSession.MessageBus.publishMessage("Session.Update", this);
+};
+
 ITSCandidateSession.prototype.saveToServerIncludingTestsAndPerson = function (OnSuccess, OnError) {
     this.lastSavedJSON = ITSJSONStringify(this);
     this.newSession = false;
@@ -153,6 +165,109 @@ ITSCandidateSession.prototype.saveToServerIncludingTestsAndPerson = function (On
     this.ITSSession.MessageBus.publishMessage("Session.Update", this);
 };
 
+ITSCandidateSession.prototype.saveGroupSessionsToServer = function (OnSuccess, OnError) {
+    // saves all group sessions to server
+    this.saveGroupSessionsToServerOnSuccess = OnSuccess;
+    this.saveGroupSessionsToServerOnError = OnError;
+
+    ITSInstance.JSONAjaxLoader('sessions/' + this.SessionID + "/groupmembers" , this.currentGroupMembers, this.saveGroupSessionsToServerStageCompare.bind(this), OnError);
+};
+
+ITSCandidateSession.prototype.saveGroupSessionsToServerStageCompare = function () {
+    // this.currentGroupMembers this.PluginData.GroupMembers
+    this.saveGroupSessionsCount = 0;
+    for (var i=0; i < this.PluginData.GroupMembers.length; i++) {
+        if ( InArray(this.currentGroupMembers, "ID", this.PluginData.GroupMembers.ID, "==") > -1 ) {
+            // update
+            // first load the session so we can validate it
+            var tempSession = new ITSCandidateSession(this, this.ITSSession);
+            tempSession.loadSession(this.PluginData.GroupMembers.sessionid, this.saveGroupSessionsToServerStageCheckSession.bind(this, tempSession),
+                this.saveGroupSessionsToServerStageUpdateError.bind(this, tempSession) )
+        } else {
+            // create
+            var newSession = new ITSCandidateSession(this, this.ITSSession);
+            newSession.Person.EMail = this.PluginData.GroupMembers.EMail;
+            newSession.GroupSessionID = this.ID;
+            newSession.Description = this.Description;
+            newSession.AllowedStartDateTime = this.AllowedStartDateTime;
+            newSession.AllowedEndDateTime = this.AllowedEndDateTime;
+            newSession.EnforceSessionEndDateTime = this.EnforceSessionEndDateTime;
+            newSession.EmailNotificationIncludeResults = this.EmailNotificationIncludeResults;
+            newSession.EMailNotificationAdresses = this.EMailNotificationAdresses;
+            for (var st=0; st < this.SessionTests.count; st++) {
+                var tempTestSession = new ITSCandidateSessionTest(this, this.ITSSession);
+                newSession.SessionTests.push(tempTestSession);
+                shallowCopy(this.SessionTests[st], tempTestSession);
+                tempTestSession.SessionID = newSession.ID;
+            }
+            newSession.saveToServerIncludingTestsAndPerson(this.saveGroupSessionsToServerStageUpdateOK.bind(this),
+                                                           this.saveGroupSessionsToServerStageUpdateError.bind(this));
+        }
+    }
+    // now check for deletions
+    for (var i=0; i < this.currentGroupMembers.length; i++) {
+        if ( InArray(this.PluginData.GroupMembers, "ID", this.currentGroupMembers.ID, "==") > -1) {
+            // it exists and will already be in the update process
+        } else {
+            // delete. Deletes will be fired and we will not wait for them.
+            ITSInstance.genericAjaxDelete('sessions/' + this.ID, function () {}, function () {}, false, true);
+        }
+    }
+};
+
+ITSCandidateSession.prototype.saveGroupSessionsToServerStageCheckSession = function (tempSession) {
+    tempSession.Person.EMail = this.PluginData.GroupMembers.EMail;
+    // update
+    for (var st = tempSession.SessionTests.count-1; st>=0; st++) {
+        // check if the session is not in tempSession yet
+        var index = InArray( this.SessionTests , "TestID", tempSession.SessionTests[st].TestID, "==" );
+        if ( index > -1  ) {
+            if (tempSession.SessionTests[st].Status <= 10) {
+                shallowCopy( this.SessionTests[index] , tempSession.SessionTests[st]);
+            }
+        }
+    }
+    tempSession.GroupSessionID = this.ID;
+    tempSession.Description = this.Description;
+    tempSession.AllowedStartDateTime = this.AllowedStartDateTime;
+    tempSession.AllowedEndDateTime = this.AllowedEndDateTime;
+    tempSession.EnforceSessionEndDateTime = this.EnforceSessionEndDateTime;
+    tempSession.EmailNotificationIncludeResults = this.EmailNotificationIncludeResults;
+    tempSession.EMailNotificationAdresses = this.EMailNotificationAdresses;
+    // delete
+    for (var st = tempSession.SessionTests.count-1; st>=0; st++) {
+        // check if the session is not in tempSession yet
+        if (! (InArray( this.SessionTests , "TestID", tempSession.SessionTests[st].TestID, "==" ) > -1) ) {
+            if (tempSession.SessionTests[st].Status <= 10) {
+                tempSession.SessionTests = tempSession.SessionTests.splice(st);
+            }
+        }
+    }
+    // add
+    for (var st=0; st < this.SessionTests.count; st++) {
+        // check if the session is not in tempSession yet
+        if (! (InArray( tempSession.SessionTests , "TestID", this.SessionTests[st].TestID, "==" ) > -1) ) {
+            var tempTestSession = new ITSCandidateSessionTest(this, this.ITSSession);
+            tempSession.SessionTests.push(tempTestSession);
+            shallowCopy(this.SessionTests[st], tempTestSession);
+            tempTestSession.SessionID = tempSession.ID;
+        }
+    }
+    tempSession.saveToServerIncludingTestsAndPerson(this.saveGroupSessionsToServerStageUpdateOK.bind(this),
+        this.saveGroupSessionsToServerStageUpdateError.bind(this));
+};
+
+ITSCandidateSession.prototype.saveGroupSessionsToServerStageUpdateOK = function () {
+    this.saveGroupSessionsCount ++;
+    if (this.saveGroupSessionsCount >= this.PluginData.GroupMembers.length) {
+        this.saveGroupSessionsToServerOnSuccess();
+    }
+};
+
+ITSCandidateSession.prototype.saveGroupSessionsToServerStageUpdateError = function () {
+    this.saveGroupSessionsToServerOnError();
+};
+
 ITSCandidateSession.prototype.loadSession = function (sessionID, OnSuccess, OnError, excludeDoneTests, InTestTaking) {
     if (OnError) this.OnError = OnError;
     if (OnSuccess) this.OnSucces = OnSuccess;
@@ -161,12 +276,18 @@ ITSCandidateSession.prototype.loadSession = function (sessionID, OnSuccess, OnEr
     if (excludeDoneTests) {
         ITSInstance.JSONAjaxLoader('sessions/' + sessionID, this, function () {
             // load the candidate information
-            ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, function () {}, this.sessionLoadingFailed.bind(this));
+            if (this.SessionType < 100) {
+                ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, function () {
+                }, this.sessionLoadingFailed.bind(this));
+            }
         }.bind(this), this.sessionLoadingFailed.bind(this), 'ITSCandidateSession', 0, 99999, "", "N", "N", "Y", "Status=10, Status=20");
     } else {
         ITSInstance.JSONAjaxLoader('sessions/' + sessionID, this, function () {
             // load the candidate information
-            ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, function () {}, this.sessionLoadingFailed.bind(this));
+            if (this.SessionType < 100) {
+                ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, function () {
+                }, this.sessionLoadingFailed.bind(this));
+            }
         }.bind(this), this.sessionLoadingFailed.bind(this), 'ITSCandidateSession');
     }
     // load the tests in the session
@@ -217,6 +338,7 @@ ITSCandidateSession.prototype.testLoadedFine = function (testIndex) {
         this.OnSucces = undefined;
     }
 };
+
 ITSCandidateSession.prototype.resequence = function (preventSort) {
     // order tests in sequence
     if (!preventSort) this.SessionTests.sort(function(a, b){return a.Sequence - b.Sequence});
@@ -268,6 +390,11 @@ ITSCandidateSession.prototype.newCandidateSessionTest = function (testToAdd) {
     tempST.TestID = testToAdd.ID;
 
     return tempST;
+};
+
+ITSCandidateSession.prototype.loadRelatedGroupMembers = function (OnSuccess, OnError) {
+    this.PluginData.GroupMembers = [];
+    ITSInstance.JSONAjaxLoader('sessions/' + this.ID + "/groupmembers" , this.PluginData.GroupMembers, OnSuccess, OnError);
 };
 
 // the test definition belonging to the sessions
@@ -632,5 +759,12 @@ ITSCandidateSessions = function (session) {
 
 ITSCandidateSessions.prototype.newCandidateSession = function () {
     return new ITSCandidateSession(this, this.ITSSession);
+};
+
+ITSCandidateSessions.prototype.newGroupSession = function () {
+    var x = new ITSCandidateSession(this, this.ITSSession);
+    x.SessionType = 100;
+    x.PluginData.GroupMembers = []; // array of groupmembers
+    return x;
 };
 

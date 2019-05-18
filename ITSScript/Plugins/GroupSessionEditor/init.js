@@ -17,7 +17,7 @@
 function ITSGroupSessionEditor (session) {
     this.ITSSession = session;
     this.availableTestsAndBatteries = []; // tests and batteries available to the session selection
-    this.currentSession = ITSInstance.candidateSessions.newCandidateSession(); // the session we are changing with this object
+    this.currentSession = ITSInstance.candidateSessions.newGroupSession(); // the session we are changing with this object
     this.path = "GroupSession";
     $('#AdminInterfaceGroupSessionWarningExistsLabel').hide();
     //$('#AdminInterfaceGroupSessionDeleteButton').hide();
@@ -30,12 +30,13 @@ ITSGroupSessionEditor.prototype.hide = function () {
 };
 
 ITSGroupSessionEditor.prototype.show = function () {
+    $('#AdminInterfaceGroupSessionCandidateFor').tagsManager();
     if (getUrlParameterValue('SessionID')) {
         this.SessionID = getUrlParameterValue('SessionID');
     } else {
         // this is a new session because a session id is not given
         this.newSession = true;
-        this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
+        this.currentSession = ITSInstance.candidateSessions.newGroupSession();
         this.SessionID = this.currentSession.ID;
     }
 
@@ -47,7 +48,7 @@ ITSGroupSessionEditor.prototype.show = function () {
 
     // load the session
     if ( (!this.currentSession) || (this.currentSession.ID != this.SessionID)) {
-        this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
+        this.currentSession = ITSInstance.candidateSessions.newGroupSession();
         this.currentSession.loadSession(this.SessionID, this.sessionLoadingSucceeded.bind(this), this.sessionLoadingFailed.bind(this));
         ITSInstance.UIController.showInterfaceAsWaitingOn();
     } else {
@@ -57,17 +58,25 @@ ITSGroupSessionEditor.prototype.show = function () {
 
 ITSGroupSessionEditor.prototype.sessionLoadingSucceeded = function () {
     // make sure to populate the test list ONLY with test in ready state.
-    ITSInstance.UIController.showInterfaceAsWaitingOff();
     DataBinderTo("AdminInterfaceGroupSession", this.currentSession);
     this.repopulateTestsLists(true);
-    this.emailAddressChanged(this.currentSession.Person.EMail);
     this.loadTestAndBatteriesList();
+    this.currentSession.loadRelatedGroupMembers(this.groupMemberLoadingSucceeded.bind(this), this.groupMemberLoadingFailed.bind(this))
+};
 
-    if (this.currentSession.Status >= 30 ) {
-        $('#AdminInterfaceGroupSessionStartButton').hide();
-    } else {
-        $('#AdminInterfaceGroupSessionStartButton').show();
+ITSGroupSessionEditor.prototype.groupMemberLoadingSucceeded = function () {
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+    $('#AdminInterfaceGroupSessionCandidateFor').tagsManager('empty');
+    this.currentSession.PluginData.GroupMembers.sort( function (a,b) { return a.EMail.localeCompare(b.EMail); } );
+    for (var i=0; i < this.currentSession.PluginData.GroupMembers.length; i++) {
+        $('#AdminInterfaceGroupSessionCandidateFor').tagsManager('pushTag', this.currentSession.PluginData.GroupMembers[i].EMail);
     }
+};
+
+ITSGroupSessionEditor.prototype.groupMemberLoadingFailed = function () {
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+    ITSInstance.UIController.showError("ITSGroupSessionEditor.LoadSessionFailed", "The session could not be loaded at this moment.", '',
+        'window.history.back();');
 };
 
 ITSGroupSessionEditor.prototype.sessionLoadingFailed = function () {
@@ -171,16 +180,14 @@ ITSGroupSessionEditor.prototype.TestOrBatterySelected = function (textFound) {
 ITSGroupSessionEditor.prototype.createNewSession= function (EmailAddress) {
     console.log("Change test session requested " + EmailAddress);
     // create a new and empty session
-    this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
-    this.currentSession.Person.EMail = EmailAddress;
+    this.currentSession = ITSInstance.candidateSessions.newGroupSession();
+    $('#AdminInterfaceGroupSessionCandidateFor').tagsManager('empty');
 
     // bind it to the div elements AdminInterfaceGroupSession
     DataBinderTo("AdminInterfaceGroupSession", this.currentSession);
 
     // for the tests and batteries
     this.loadTestAndBatteriesList();
-
-    if (EmailAddress != '')  this.emailAddressChanged(EmailAddress);
 };
 
 ITSGroupSessionEditor.prototype.repopulateTestsLists =  function (animate) {
@@ -355,25 +362,22 @@ ITSGroupSessionEditor.prototype.saveCurrentSession = function ( onSuccessCallbac
     var ValidationMessage = "";
     // check if all information is present to save the session
     DataBinderFrom("AdminInterfaceGroupSession", this.currentSession);
-    this.currentSession.relinkToCurrentPersonID();
-    // email adres must be set and last name
-    if (this.currentSession.Person.EMail == "") {
-        ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','PersonMissing','You have not selected a person to add for this session.')
-    }
-    if ((this.currentSession.Person.Password.length <= 6) && (! this.existingUserFound)) {
-        ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','PasswordMissing','The password is not set or less than 6 characters.')
-    }
+
     if (this.currentSession.Description == "") {
-        ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','DescriptionMissing','Please enter a description for this session.')
+        ValidationMessage = ITSInstance.translator.getTranslatedString('GroupSessionEditor','DescriptionMissing','Please enter a description for this session.')
     }
     if (this.currentSession.SessionTests.length == 0) {
-        ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','TestMissing','Please add a test to this session.')
+        ValidationMessage = ITSInstance.translator.getTranslatedString('GroupSessionEditor','TestMissing','Please add a test to this session.')
     }
     // get the date & time fields from the interface
-    var tempValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','DatesInvalid','Please check the date fields in the birthdate and session validity fields. The values are no valid dates.');
+    var tempValidationMessage = ITSInstance.translator.getTranslatedString('GroupSessionEditor','DatesInvalid','Please check the date fields in the session validity fields. The values are no valid dates.');
     // check for invalid dates
-    if (! (isValidDate(this.currentSession.Person.BirthDate) && isValidDate(this.currentSession.AllowedStartDateTime) && isValidDate(this.currentSession.AllowedEndDateTime)  )) {
+    if (! isValidDate(this.currentSession.AllowedStartDateTime) && isValidDate(this.currentSession.AllowedEndDateTime)) {
         ValidationMessage = tempValidationMessage;
+    }
+    // check if there are candidates assigned to the session
+    if ($('#AdminInterfaceGroupSessionCandidateFor').tagsManager('tags').length == 0) {
+        ValidationMessage = ITSInstance.translator.getTranslatedString('GroupSessionEditor','CandidatesMissing','Please add candidates to this group. Enter the email address for the candidate and then press the ENTER key to add this candidate..')
     }
 
     this.currentSession.EMailNotificationAdresses = "";
@@ -387,7 +391,6 @@ ITSGroupSessionEditor.prototype.saveCurrentSession = function ( onSuccessCallbac
     }
 
     if (ValidationMessage == "") {
-        this.currentSession.SessionType = 100;
         if (this.currentSession.Status >= 30) this.currentSession.Status = 20;
         if (this.currentSession.firstTestToTake() == -1) {
             this.currentSession.Status = 30;
@@ -397,29 +400,45 @@ ITSGroupSessionEditor.prototype.saveCurrentSession = function ( onSuccessCallbac
             // if this session is not active then activate it
             this.currentSession.Active = this.currentSession.Status != 30;
         }
-        if (!this.currentSession.Person.Active ) {
-            this.currentSession.Person.Active = this.currentSession.Status != 30;
-            this.currentSession.Person.saveToServer(function () {}, function () {});
-        }
 
         // update on the server
-        if (this.existingUserFound)  this.currentSession.Person.Password = "";
-        if (!this.existingUserFound)  this.currentSession.Person.Password = $('#AdminInterfaceGroupSessionCandidatePassword').val();
-
         $('#AdminInterfaceGroupSession-saveIcon')[0].outerHTML = "<i id='AdminInterfaceGroupSession-saveIcon' class='fa fa-fw fa-life-ring fa-spin fa-lg'></i>";
-        this.currentSession.saveToServerIncludingTestsAndPerson(function () {
-            $('#AdminInterfaceGroupSession-saveIcon')[0].outerHTML = "<i id='AdminInterfaceGroupSession-saveIcon' class='fa fa-fw fa-thumbs-up'</i>";
-            $('#AdminInterfaceGroupSessionDeleteButton').show();
-            if (this.savecurrentSessionCallback) this.savecurrentSessionCallback();
+        this.currentSession.saveToServerIncludingTests(function () {
+            this.expandGroupSessionsForCandidates.bind(this);
         }.bind(this), function (errorText) {
-            $('#AdminInterfaceGroupSession-saveIcon')[0].outerHTML = "<i id='AdminInterfaceGroupSession-saveIcon' class='fa fa-fw fa-thumbs-up'></i>";
-            ITSInstance.UIController.showDialog("ITSSessionNewEditorSaveError", "Session cannot be saved", "The session could not be saved. Please try again." , [{btnCaption: "OK"}], [errorText]);
+            this.saveSessionsError();
         });
     } else {
-        ITSInstance.UIController.showWarning('SessionNewEditor.SessionValidationFailed', 'The session could not be saved because information is missing', ValidationMessage);
+        ITSInstance.UIController.showWarning('GroupSessionEditor.SessionValidationFailed', 'The session could not be saved because information is missing', ValidationMessage);
     }
 };
 
+ITSGroupSessionEditor.prototype.saveSessionsError = function () {
+    $('#AdminInterfaceGroupSession-saveIcon')[0].outerHTML = "<i id='AdminInterfaceGroupSession-saveIcon' class='fa fa-fw fa-thumbs-up'></i>";
+    ITSInstance.UIController.showDialog("ITSGroupSessionEditorSaveError", "Session cannot be saved", "The session could not be saved. Please try again." , [{btnCaption: "OK"}], [errorText]);
+};
+
+ITSGroupSessionEditor.prototype.expandGroupSessionsForCandidates = function () {
+    this.currentSession.saveGroupSessionsToServer(this.saveSessionsDone.bind(this), this.saveSessionsError.bind(this));
+};
+
+ITSGroupSessionEditor.prototype.saveSessionsDone = function () {
+    $('#AdminInterfaceGroupSession-saveIcon')[0].outerHTML = "<i id='AdminInterfaceGroupSession-saveIcon' class='fa fa-fw fa-thumbs-up'</i>";
+    $('#AdminInterfaceGroupSessionDeleteButton').show();
+    if (this.savecurrentSessionCallback) this.savecurrentSessionCallback();
+};
+
+ITSGroupSessionEditor.prototype.sendInvitations = function () {
+
+};
+
+ITSGroupSessionEditor.prototype.showUserAndPasswordOverview = function () {
+
+};
+
+ITSGroupSessionEditor.prototype.showGroupSessions = function () {
+
+};
 
 ITSGroupSessionEditor.prototype.emailAddressChangedFound = function () {
     var tempUser = $('#AdminInterfaceGroupSessionCandidateFor')[0].value;
@@ -470,7 +489,7 @@ ITSGroupSessionEditor.prototype.clearSession = function () {
 };
 
 ITSGroupSessionEditor.prototype.clearSessionCallback = function () {
-    this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
+    this.currentSession = ITSInstance.candidateSessions.newGroupSession();
     DataBinderTo("AdminInterfaceGroupSession", this.currentSession);
     this.repopulateTestsLists();
     this.show();

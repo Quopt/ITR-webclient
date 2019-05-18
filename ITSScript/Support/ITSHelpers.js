@@ -922,3 +922,12 @@ var binArrayToString = function(binArrayi)
     }
     return str;
 }
+
+function InArray( arrayToSearch, propertyToFind, ValueToFind, comparisonOperator ) {
+    for (var i = 0; i < arrayToSearch.length; i++) {
+        if (eval("arrayToSearch["+i+"]." + propertyToFind + comparisonOperator + "ValueToFind") ) {
+            return i;
+        }
+    }
+    return -1;
+};

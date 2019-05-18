@@ -34,11 +34,8 @@
             <label for="AdminInterfaceGroupSessionCandidateFor"  id="AdminInterfaceGroupSessionCandidateForLabel" class="col-sm-3 col-form-label">Candidate
                 e-mail addresses or logins</label>
             <div class="col-sm-9">
-                <input class="form-control" type="text" required placeholder="Enter the e-mail addresses or logins of the candidates in this group"
-                       value="" data-field="Person.EMail" onchange="ITSInstance.groupSessionController.emailAddressChanged(this.value);" id="AdminInterfaceGroupSessionCandidateFor">
-                <div id="AdminInterfaceGroupSessionCandidateForIF" class="invalid-tooltip">
-                    Please enter the logins or email addresses for all group members.
-                </div>
+                <input class="form-control" type="text" placeholder="Enter the e-mail addresses or logins of the candidates in this group"
+                       value="" id="AdminInterfaceGroupSessionCandidateFor">
             </div>
         </div>
         <div id="AdminInterfaceGroupSessionTests" class="form-group row">
@@ -165,4 +162,6 @@
     <button type="button" class="btn btn-default btn-success" id="AdminInterfaceGroupSessionShowRelatedButton" onclick="ITSInstance.groupSessionController.showGroupSessions();">
         <i id="AdminInterfaceGroupSessionShowRelatedButton-saveIcon" class="fa fa-fw fa-tasks"></i> <span id="AdminInterfaceGroupSessionShowRelatedButton">Show related person sessions</span>
     </button>&nbsp;
+    <button id="AdminInterfaceGroupSessionArchiveTest" type="button" onclick="ITSInstance.editSessionController.archiveSession();" class="btn btn-warning"><i id="AdminInterfaceGroupSessionArchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceGroupSessionArchive">Archive this session</span></button>
+    
 </div>

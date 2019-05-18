@@ -119,12 +119,19 @@
     };
 
     ITSSessionViewAnswersEditor.prototype.saveTestResults = function () {
-        // this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results);
-        this.currentSession.SessionTests[this.currentTestIndex].testDefinition.updateResultsStorageFromQuestionOverview("SessionViewAnswersInterfaceEditTestAnswers",
-            this.currentSession.SessionTests[this.currentTestIndex].Results, true, "_" + this.checkAnswers + this.genNumber);
-        $('#SessionViewAnswersInterfaceEditTestAnswers-saveIcon')[0].outerHTML = "<i id='SessionViewAnswersInterfaceEditTestAnswers-saveIcon' class='fa fa-fw fa-life-ring fa-spin fa-lg'></i>";
-        this.currentSession.SessionTests[this.currentTestIndex].saveToServer( this.saveSessionTestOK.bind(this), this.saveSessionTestError.bind(this) );
-
+        var oneday = new Date();
+        oneday.setHours(oneday.getHours() + 24);
+        if ( (this.currentSession.SessionTests[this.currentTestIndex].TestEnd < new Date(2001,1,1) ) ||
+            (this.currentSession.SessionTests[this.currentTestIndex].testDefinition.Costs <= 0) ||
+            (this.currentSession.SessionTests[this.currentTestIndex].TestEnd > oneday) ) {
+                // this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results);
+                this.currentSession.SessionTests[this.currentTestIndex].testDefinition.updateResultsStorageFromQuestionOverview("SessionViewAnswersInterfaceEditTestAnswers",
+                    this.currentSession.SessionTests[this.currentTestIndex].Results, true, "_" + this.checkAnswers + this.genNumber);
+                $('#SessionViewAnswersInterfaceEditTestAnswers-saveIcon')[0].outerHTML = "<i id='SessionViewAnswersInterfaceEditTestAnswers-saveIcon' class='fa fa-fw fa-life-ring fa-spin fa-lg'></i>";
+                this.currentSession.SessionTests[this.currentTestIndex].saveToServer( this.saveSessionTestOK.bind(this), this.saveSessionTestError.bind(this) );
+        } else {
+            ITSInstance.UIController.showError("ITSSessionEditor.NoEditTest", "You cannot edit these results any more. Paid test results can only be edited for 24 hours.");
+        }
     };
 
     ITSSessionViewAnswersEditor.prototype.saveSessionTestOK = function () {

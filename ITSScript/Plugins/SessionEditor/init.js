@@ -435,8 +435,16 @@
     ITSSessionEditor.prototype.checkAnswers = function (testIndex) {
         if (this.currentSession.SessionTests.length > testIndex) {
             var testSessionID = this.currentSession.SessionTests[testIndex].ID;
-            ITSInstance.SessionViewAnswersSessionController.currentSession = this.currentSession;
-            ITSRedirectPath('SessionViewAnswers&SessionID=' + this.currentSession.ID + '&SessionTestID=' + testSessionID + "&checkAnswers=1");
+            var oneday = new Date();
+            oneday.setHours(oneday.getHours() + 24);
+            if ( (this.currentSession.SessionTests[testIndex].TestEnd < new Date(2001,1,1) ) ||
+                 (this.currentSession.SessionTests[testIndex].testDefinition.Costs <= 0) ||
+                 (this.currentSession.SessionTests[testIndex].TestEnd > oneday) ) {
+                ITSInstance.SessionViewAnswersSessionController.currentSession = this.currentSession;
+                ITSRedirectPath('SessionViewAnswers&SessionID=' + this.currentSession.ID + '&SessionTestID=' + testSessionID + "&checkAnswers=1");
+            } else {
+                ITSInstance.UIController.showError("ITSSessionEditor.NoEditTest", "You cannot edit these results any more. Paid test results can only be edited for 24 hours.");
+            }
         }
     };
 
@@ -496,7 +504,18 @@
     ITSSessionEditor.prototype.restartTest = function (index) {
         this.currentSession.Status = 20;
         this.currentSession.saveToServer(function () {}, function () {});
-        this.currentSession.SessionTests[index].Status = 10;
+        var oldTest = this.currentSession.SessionTests[index];
+        this.currentSession.SessionTests[index] = new ITSCandidateSessionTest(oldTest.myParent, ITSInstance);
+        this.currentSession.SessionTests[index].ID = oldTest.ID;
+        this.currentSession.SessionTests[index].SessionID = oldTest.SessionID;
+        this.currentSession.SessionTests[index].TestID = oldTest.TestID;
+        this.currentSession.SessionTests[index].PersID = oldTest.PersID;
+        this.currentSession.SessionTests[index].Sequence = oldTest.Sequence;
+        this.currentSession.SessionTests[index].TestLanguage = oldTest.TestLanguage;
+        this.currentSession.SessionTests[index].NormID1 = oldTest.NormID1;
+        this.currentSession.SessionTests[index].NormID2 = oldTest.NormID2;
+        this.currentSession.SessionTests[index].NormID3 = oldTest.NormID3;
+        this.currentSession.SessionTests[index].testDefinition = oldTest.testDefinition;
         $("#AdminInterfaceEditSessionEditRestartTestIcon" + index)[0].outerHTML = '<i id="AdminInterfaceEditSessionEditRestartTestIcon' + index + '" class=\"fa fa-fw fa-life-ring fa-spin \"></i>';
         this.currentSession.SessionTests[index].saveToServer(this.restartTestOK.bind(this,index), this.restartTestError.bind(this,index));
     };
