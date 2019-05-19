@@ -404,7 +404,7 @@ ITSGroupSessionEditor.prototype.saveCurrentSession = function ( onSuccessCallbac
         // update on the server
         $('#AdminInterfaceGroupSession-saveIcon')[0].outerHTML = "<i id='AdminInterfaceGroupSession-saveIcon' class='fa fa-fw fa-life-ring fa-spin fa-lg'></i>";
         this.currentSession.saveToServerIncludingTests(function () {
-            this.expandGroupSessionsForCandidates.bind(this);
+            this.expandGroupSessionsForCandidates();
         }.bind(this), function (errorText) {
             this.saveSessionsError();
         });
@@ -419,7 +419,44 @@ ITSGroupSessionEditor.prototype.saveSessionsError = function () {
 };
 
 ITSGroupSessionEditor.prototype.expandGroupSessionsForCandidates = function () {
-    this.currentSession.saveGroupSessionsToServer(this.saveSessionsDone.bind(this), this.saveSessionsError.bind(this));
+   this.validateGroupMembers( function() {
+       // if there are group members expand the sessions
+       this.currentSession.saveGroupSessionsToServer(this.saveSessionsDone.bind(this), this.saveSessionsError.bind(this));
+   }.bind(this) );
+};
+
+ITSGroupSessionEditor.prototype.validateGroupMembers = function (afterValidate) {
+    this.currentSession.PluginData.GroupMembers = [];
+    this.validateGroupMembersAfterValidate = afterValidate;
+    // get the list of entered candidates
+    var selectedCandidates = $('#AdminInterfaceGroupSessionCandidateFor').tagsManager('tags');
+    this.currentSession.PluginData.GroupMembersCount = 0;
+    for (var i=0; i < selectedCandidates.length; i++) {
+        var newEntry = {};
+        newEntry.ID = "00000000-0000-0000-0000-000000000000";
+        newEntry.EMail = selectedCandidates[i];
+        newEntry.candidate = new ITSCandidate(this, ITSInstance);
+        // now validate if this email address is already known
+        newEntry.candidate.loadByLogin( newEntry.EMail, this.validateGroupMemberFound.bind(this, newEntry), this.validateGroupMemberNotFound.bind(this, newEntry) );
+        this.currentSession.PluginData.GroupMembers.push(newEntry);
+    }
+};
+
+ITSGroupSessionEditor.prototype.validateGroupMemberFound = function (newEntry) {
+    this.currentSession.PluginData.GroupMembersCount++;
+    if (newEntry.candidate[0]) { newEntry.ID = newEntry.candidate[0].ID; } // always select the first even when there are multiple
+    else { newEntry.ID = newEntry.candidate.ID; } //unknown = new id
+    if (this.currentSession.PluginData.GroupMembersCount == this.currentSession.PluginData.GroupMembers.length){
+        if (this.validateGroupMembersAfterValidate) { this.validateGroupMembersAfterValidate();}
+    }
+};
+
+ITSGroupSessionEditor.prototype.validateGroupMemberNotFound = function (newEntry) {
+    this.currentSession.PluginData.GroupMembersCount++;
+    newEntry.ID = newEntry.candidate.ID ;
+    if (this.currentSession.PluginData.GroupMembersCount == this.currentSession.PluginData.GroupMembers.length){
+        if (this.validateGroupMembersAfterValidate) { this.validateGroupMembersAfterValidate();}
+    }
 };
 
 ITSGroupSessionEditor.prototype.saveSessionsDone = function () {

@@ -169,24 +169,28 @@ ITSCandidateSession.prototype.saveGroupSessionsToServer = function (OnSuccess, O
     // saves all group sessions to server
     this.saveGroupSessionsToServerOnSuccess = OnSuccess;
     this.saveGroupSessionsToServerOnError = OnError;
+    this.currentGroupMembers = [];
 
-    ITSInstance.JSONAjaxLoader('sessions/' + this.SessionID + "/groupmembers" , this.currentGroupMembers, this.saveGroupSessionsToServerStageCompare.bind(this), OnError);
+    ITSInstance.JSONAjaxLoader('sessions/' + this.ID + "/groupmembers" , this.currentGroupMembers, this.saveGroupSessionsToServerStageCompare.bind(this), OnError);
 };
 
 ITSCandidateSession.prototype.saveGroupSessionsToServerStageCompare = function () {
     // this.currentGroupMembers this.PluginData.GroupMembers
     this.saveGroupSessionsCount = 0;
     for (var i=0; i < this.PluginData.GroupMembers.length; i++) {
-        if ( InArray(this.currentGroupMembers, "ID", this.PluginData.GroupMembers.ID, "==") > -1 ) {
+        var sessionIndex = InArray(this.currentGroupMembers, "ID", this.PluginData.GroupMembers.ID, "==");
+        if ( sessionIndex > -1 ) {
             // update
             // first load the session so we can validate it
             var tempSession = new ITSCandidateSession(this, this.ITSSession);
-            tempSession.loadSession(this.PluginData.GroupMembers.sessionid, this.saveGroupSessionsToServerStageCheckSession.bind(this, tempSession),
-                this.saveGroupSessionsToServerStageUpdateError.bind(this, tempSession) )
+            tempSession.loadSession(this.currentGroupMembers[sessionIndex].sessionid, this.saveGroupSessionsToServerStageCheckSession.bind(this, tempSession, i),
+                this.saveGroupSessionsToServerStageUpdateError.bind(this, tempSession, i) )
         } else {
             // create
             var newSession = new ITSCandidateSession(this, this.ITSSession);
-            newSession.Person.EMail = this.PluginData.GroupMembers.EMail;
+            newSession.Person.EMail = this.PluginData.GroupMembers[i].EMail;
+            newSession.Person.ID = this.PluginData.GroupMembers[i].ID;
+            newSession.Person.Active = true;
             newSession.GroupSessionID = this.ID;
             newSession.Description = this.Description;
             newSession.AllowedStartDateTime = this.AllowedStartDateTime;
@@ -194,10 +198,14 @@ ITSCandidateSession.prototype.saveGroupSessionsToServerStageCompare = function (
             newSession.EnforceSessionEndDateTime = this.EnforceSessionEndDateTime;
             newSession.EmailNotificationIncludeResults = this.EmailNotificationIncludeResults;
             newSession.EMailNotificationAdresses = this.EMailNotificationAdresses;
-            for (var st=0; st < this.SessionTests.count; st++) {
+            newSession.PersonID = newSession.Person.ID;
+            for (var st=0; st < this.SessionTests.length; st++) {
                 var tempTestSession = new ITSCandidateSessionTest(this, this.ITSSession);
+                tempTestSession.OldID = tempTestSession.ID;
                 newSession.SessionTests.push(tempTestSession);
                 shallowCopy(this.SessionTests[st], tempTestSession);
+                tempTestSession.ID = tempTestSession.OldID;
+                tempTestSession.PersID = newSession.Person.ID;
                 tempTestSession.SessionID = newSession.ID;
             }
             newSession.saveToServerIncludingTestsAndPerson(this.saveGroupSessionsToServerStageUpdateOK.bind(this),
@@ -215,8 +223,10 @@ ITSCandidateSession.prototype.saveGroupSessionsToServerStageCompare = function (
     }
 };
 
-ITSCandidateSession.prototype.saveGroupSessionsToServerStageCheckSession = function (tempSession) {
-    tempSession.Person.EMail = this.PluginData.GroupMembers.EMail;
+ITSCandidateSession.prototype.saveGroupSessionsToServerStageCheckSession = function (tempSession, groupMemberIndex) {
+    tempSession.Person.EMail = this.PluginData.GroupMembers[groupMemberIndex].EMail;
+    tempSession.Person.ID = this.PluginData.GroupMembers[groupMemberIndex].ID;
+    tempSession.Person.Active = true;
     // update
     for (var st = tempSession.SessionTests.count-1; st>=0; st++) {
         // check if the session is not in tempSession yet

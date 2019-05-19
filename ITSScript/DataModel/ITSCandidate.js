@@ -129,6 +129,15 @@ ITSCandidate.prototype.checkForDuplicateLogins = function (Login, OnNoDuplicateF
         , ITSCandidate, 0, 5, "", "N", "N", "Y", "EMail = '" + Login + "'");
 };
 
+ITSCandidate.prototype.loadByLogin = function (Login, OnSuccess, OnFailure) {
+    // load the candidate. The Login may not contain wildcards.
+    // please note that the candidates found are NOT loaded in the current object but as an array in the current object.
+    // shallowcopy the candidate you want in the current candidate
+    if (Login.trim() != "") {
+        ITSInstance.JSONAjaxLoader('persons', this, OnSuccess, OnFailure, "ITSCandidate", 0, 1, "", "", "N", "Y", "EMail = '" + Login + "'");
+    }
+};
+
 ITSCandidates = function (session) {
     this.ITSSession = session;
     this.currentCandidate = new ITSCandidate(this, session);
