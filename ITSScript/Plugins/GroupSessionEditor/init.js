@@ -34,6 +34,7 @@ ITSGroupSessionEditor.prototype.hide = function () {
 ITSGroupSessionEditor.prototype.show = function () {
     $('#AdminInterfaceGroupSessionCandidateFor').tagsManager();
     if (getUrlParameterValue('SessionID')) {
+        this.newSession = false;
         this.SessionID = getUrlParameterValue('SessionID');
     } else {
         // this is a new session because a session id is not given
@@ -49,14 +50,18 @@ ITSGroupSessionEditor.prototype.show = function () {
     ITSInstance.UIController.initNavBar();
 
     // load the session
-    if ( (!this.currentSession) || (this.currentSession.ID != this.SessionID)) {
-        this.currentSession = ITSInstance.candidateSessions.newGroupSession();
-        $('#AdminInterfaceGroupSessionCandidateFor').tagsManager('empty');
-        this.currentSession.loadSession(this.SessionID, this.sessionLoadingSucceeded.bind(this), this.sessionLoadingFailed.bind(this));
-        ITSInstance.UIController.showInterfaceAsWaitingOn();
-    } else {
-        this.sessionLoadingSucceeded();
-    }
+//    if ( (!this.currentSession) || (this.currentSession.ID != this.SessionID)) {
+     if (this.newSession) {
+         this.sessionLoadingSucceeded();
+     } else {
+         this.currentSession = ITSInstance.candidateSessions.newGroupSession();
+         $('#AdminInterfaceGroupSessionCandidateFor').tagsManager('empty');
+         this.currentSession.loadSession(this.SessionID, this.sessionLoadingSucceeded.bind(this), this.sessionLoadingFailed.bind(this));
+         ITSInstance.UIController.showInterfaceAsWaitingOn();
+     }
+//    } else {
+//        this.sessionLoadingSucceeded();
+//    }
 };
 
 ITSGroupSessionEditor.prototype.sessionLoadingSucceeded = function () {
@@ -440,14 +445,18 @@ ITSGroupSessionEditor.prototype.validateGroupMembers = function (afterValidate) 
     var selectedCandidates = $('#AdminInterfaceGroupSessionCandidateFor').tagsManager('tags');
     this.currentSession.PluginData.GroupMembersCount = 0;
     for (var i=0; i < selectedCandidates.length; i++) {
-        var newEntry = {};
-        newEntry.ID = "00000000-0000-0000-0000-000000000000";
-        newEntry.EMail = selectedCandidates[i];
-        newEntry.candidate = new ITSCandidate(this, ITSInstance);
-        // now validate if this email address is already known
-        newEntry.candidate.loadByLogin( newEntry.EMail, this.validateGroupMemberFound.bind(this, newEntry), this.validateGroupMemberNotFound.bind(this, newEntry) );
-        this.currentSession.PluginData.GroupMembers.push(newEntry);
+        this.validateGroupMembersLoad(selectedCandidates[i]);
     }
+};
+
+ITSGroupSessionEditor.prototype.validateGroupMembersLoad = function (selectedCandidate) {
+    var newEntry = {};
+    newEntry.ID = "00000000-0000-0000-0000-000000000000";
+    newEntry.EMail = selectedCandidate;
+    newEntry.candidate = new ITSCandidate(this, ITSInstance);
+    // now validate if this email address is already known
+    newEntry.candidate.loadByLogin( newEntry.EMail, this.validateGroupMemberFound.bind(this, newEntry), this.validateGroupMemberNotFound.bind(this, newEntry) );
+    this.currentSession.PluginData.GroupMembers.push(newEntry);
 };
 
 ITSGroupSessionEditor.prototype.validateGroupMemberFound = function (newEntry) {
@@ -474,6 +483,26 @@ ITSGroupSessionEditor.prototype.saveSessionsDone = function () {
     ITSInstance.UIController.showInterfaceAsWaitingOff();
     $('#AdminInterfaceGroupSessionDeleteButton').show();
     if (this.savecurrentSessionCallback) this.savecurrentSessionCallback();
+};
+
+ITSGroupSessionEditor.prototype.emailPaste = function () {
+    setTimeout(this.emailPasteProcess.bind(this), 250);
+};
+
+ITSGroupSessionEditor.prototype.emailPasteProcess = function () {
+    var pasteText = $('#AdminInterfaceGroupSessionCandidateFor')[0].value;
+    if ( (pasteText.indexOf(',')>= 0) ||  (pasteText.indexOf('.')>= 0) || (pasteText.indexOf('\t')>= 0)) {
+     pasteText = pasteText.replace( new RegExp(';','g'), ',');
+     pasteText = pasteText.replace( new RegExp('\t','g'), ',');
+     var pasteArray = pasteText.split(',');
+     for (var i=0; i < pasteArray.length; i++) {
+         var pasteStr = pasteArray[i].trim();
+         if (pasteStr != "") {
+             $('#AdminInterfaceGroupSessionCandidateFor').tagsManager("pushTag",pasteStr);
+         }
+     }
+    }
+    $('#AdminInterfaceGroupSessionCandidateFor')[0].value = "";
 };
 
 ITSGroupSessionEditor.prototype.sendInvitations = function () {

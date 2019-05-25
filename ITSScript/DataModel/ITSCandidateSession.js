@@ -202,7 +202,6 @@ ITSCandidateSession.prototype.saveGroupSessionsToServerStageCompareLoad = functi
     var tempSession = new ITSCandidateSession(this, this.ITSSession);
     tempSession.loadSession(sessionid, this.saveGroupSessionsToServerStageCheckSession.bind(this, tempSession, i),
         this.saveGroupSessionsToServerStageCheckSession.bind(this, tempSession, i));
-        //this.saveGroupSessionsToServerStageUpdateError.bind(this, tempSession, i) )
 };
 
 ITSCandidateSession.prototype.saveGroupSessionToServerCreateNew = function (GroupMembersIndex) {

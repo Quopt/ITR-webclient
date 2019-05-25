@@ -210,6 +210,7 @@ ITSUIController = function () {
         // show the progress indicator and block the interface
         modalRequired = true;
         modalShows = false;
+        $('#waitModalProgress').hide();
         if (!alternativeTimeout) {
             setTimeout(this.showInterfaceAsWaitingOnForceShow, 1000);
         } else {
