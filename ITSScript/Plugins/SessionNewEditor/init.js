@@ -353,7 +353,7 @@ ITSInviteNewCandidateEditor.prototype.saveNewSession = function ( onSuccessCallb
         }.bind(this), function (errorText) {
             $('#AdminInterfaceSessionNewSession-saveIcon')[0].outerHTML = "<i id='AdminInterfaceSessionNewSession-saveIcon' class='fa fa-fw fa-thumbs-up'></i>";
             ITSInstance.UIController.showDialog("ITSSessionNewEditorSaveError", "Session cannot be saved", "The session could not be saved. Please try again." , [{btnCaption: "OK"}], [errorText]);
-        });
+        }, true);
     } else {
         ITSInstance.UIController.showWarning('SessionNewEditor.SessionValidationFailed', 'The session could not be saved because information is missing', ValidationMessage);
     }

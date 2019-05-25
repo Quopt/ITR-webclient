@@ -91,6 +91,7 @@ ITSLoginToken.prototype.get = function () {
     } else {
         if (cookieHelper.getCookie("ITSLoginToken") != "") {
             this.IssuedToken = cookieHelper.getCookie("ITSLoginToken");
+            cookieHelper.setCookie("ITSLoginToken", this.IssuedToken, 6); // refresh
             return this.IssuedToken;
         }
         else {

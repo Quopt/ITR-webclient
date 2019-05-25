@@ -168,7 +168,7 @@ ITSUIController = function () {
 
     this.scan_for_default_office_plugin_paths = function (Path) {
         if (ITSInstance.UIController.registeredEditors.length == 0) {
-            setTimeout(this.scan_for_default_office_plugin_paths.bind(this, Path), 250); // the list of plugins is not registered yet, give the browser some time to register
+            setTimeout(this.scan_for_default_office_plugin_paths.bind(this, Path), 1500); // the list of plugins is not registered yet, give the browser some time to register
         } else {
             ITSInstance.UIController.registeredEditors.forEach(
                 function (currentValue, index, arr) {

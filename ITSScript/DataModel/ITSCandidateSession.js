@@ -138,87 +138,135 @@ ITSCandidateSession.prototype.saveToServer = function (OnSuccess, OnError) {
     this.ITSSession.MessageBus.publishMessage("Session.Update", this);
 };
 
-ITSCandidateSession.prototype.saveToServerIncludingTests = function (OnSuccess, OnError) {
-    this.lastSavedJSON = ITSJSONStringify(this);
-    this.newSession = false;
-    ITSInstance.genericAjaxUpdate('sessions/' + this.ID, this.lastSavedJSON, function () {
-            for (var i=0; i < this.SessionTests.length; i ++) {
-                this.SessionTests[i].saveToServer(function () {} , function () {} );
-            }
-            if (OnSuccess) OnSuccess(); }.bind(this, OnSuccess)
-        , OnError, false, true);
-    this.ITSSession.MessageBus.publishMessage("Session.Update", this);
+ITSCandidateSession.prototype.saveToServerIncludingTests = function (OnSuccess, OnError, deleteAllUnstartedTests) {
+    if (deleteAllUnstartedTests) {
+        ITSInstance.genericAjaxDelete('sessions/' + this.ID + "/deletealltests",
+             this.saveToServerIncludingTests.bind(this,OnSuccess,OnError), OnError );
+    } else {
+        this.lastSavedJSON = ITSJSONStringify(this);
+        this.newSession = false;
+        ITSInstance.genericAjaxUpdate('sessions/' + this.ID, this.lastSavedJSON, function () {
+                for (var i = 0; i < this.SessionTests.length; i++) {
+                    this.SessionTests[i].saveToServer(function () {
+                    }, function () {
+                    });
+                }
+                if (OnSuccess) OnSuccess();
+            }.bind(this, OnSuccess)
+            , OnError, false, true);
+        this.ITSSession.MessageBus.publishMessage("Session.Update", this);
+    }
 };
 
-ITSCandidateSession.prototype.saveToServerIncludingTestsAndPerson = function (OnSuccess, OnError) {
-    this.lastSavedJSON = ITSJSONStringify(this);
-    this.newSession = false;
-    ITSInstance.genericAjaxUpdate('sessions/' + this.ID, this.lastSavedJSON, function () {
-        for (var i=0; i < this.SessionTests.length; i ++) {
-            this.SessionTests[i].saveToServer(function () {} , function () {} );
-        }
+ITSCandidateSession.prototype.saveToServerIncludingTestsAndPerson = function (OnSuccess, OnError, deleteAllUnstartedTests) {
+    if (deleteAllUnstartedTests) {
+        ITSInstance.genericAjaxDelete('sessions/' + this.ID + "/deletealltests",
+            this.saveToServerIncludingTestsAndPerson.bind(this,OnSuccess,OnError), OnError );
+    } else {
+        this.lastSavedJSON = ITSJSONStringify(this);
+        this.newSession = false;
+        ITSInstance.genericAjaxUpdate('sessions/' + this.ID, this.lastSavedJSON, function () {
+                for (var i = 0; i < this.SessionTests.length; i++) {
+                    this.SessionTests[i].saveToServer(function () {
+                    }, function () {
+                    });
+                }
 
-        this.Person.saveToServer(function () {} , function () {} );
+                this.Person.saveToServer(function () {
+                }, function () {
+                });
 
-        if (OnSuccess) OnSuccess(); }.bind(this, OnSuccess)
-        , OnError, false, true);
-    this.ITSSession.MessageBus.publishMessage("Session.Update", this);
+                if (OnSuccess) OnSuccess();
+            }.bind(this, OnSuccess)
+            , OnError, false, true);
+        this.ITSSession.MessageBus.publishMessage("Session.Update", this);
+    }
 };
 
-ITSCandidateSession.prototype.saveGroupSessionsToServer = function (OnSuccess, OnError) {
+ITSCandidateSession.prototype.saveGroupSessionsToServer = function (OnSuccess, OnError, progressElement) {
     // saves all group sessions to server
     this.saveGroupSessionsToServerOnSuccess = OnSuccess;
     this.saveGroupSessionsToServerOnError = OnError;
     this.currentGroupMembers = [];
+    this.progressElement = "";
+    if (progressElement) {
+        this.progressElement = progressElement;
+        $('#'+this.progressElement).show();
+        this.progressElementCounter = 0;
+    }
 
     ITSInstance.JSONAjaxLoader('sessions/' + this.ID + "/groupmembers" , this.currentGroupMembers, this.saveGroupSessionsToServerStageCompare.bind(this), OnError);
 };
 
+ITSCandidateSession.prototype.saveGroupSessionsToServerStageCompareLoad = function (sessionid,  i) {
+    var tempSession = new ITSCandidateSession(this, this.ITSSession);
+    tempSession.loadSession(sessionid, this.saveGroupSessionsToServerStageCheckSession.bind(this, tempSession, i),
+        this.saveGroupSessionsToServerStageCheckSession.bind(this, tempSession, i));
+        //this.saveGroupSessionsToServerStageUpdateError.bind(this, tempSession, i) )
+};
+
+ITSCandidateSession.prototype.saveGroupSessionToServerCreateNew = function (GroupMembersIndex) {
+    var newSession = new ITSCandidateSession(this, this.ITSSession);
+    newSession.Person.EMail = this.PluginData.GroupMembers[GroupMembersIndex].EMail;
+    newSession.Person.ID = this.PluginData.GroupMembers[GroupMembersIndex].ID;
+    newSession.Person.Active = true;
+    newSession.GroupSessionID = this.ID;
+    newSession.Description = this.Description;
+    newSession.AllowedStartDateTime = this.AllowedStartDateTime;
+    newSession.AllowedEndDateTime = this.AllowedEndDateTime;
+    newSession.EnforceSessionEndDateTime = this.EnforceSessionEndDateTime;
+    newSession.EmailNotificationIncludeResults = this.EmailNotificationIncludeResults;
+    newSession.EMailNotificationAdresses = this.EMailNotificationAdresses;
+    newSession.PersonID = newSession.Person.ID;
+    for (var st=0; st < this.SessionTests.length; st++) {
+        var tempTestSession = new ITSCandidateSessionTest(this, this.ITSSession);
+        tempTestSession.OldID = tempTestSession.ID;
+        newSession.SessionTests.push(tempTestSession);
+        shallowCopy(this.SessionTests[st], tempTestSession);
+        tempTestSession.ID = tempTestSession.OldID;
+        tempTestSession.PersID = newSession.Person.ID;
+        tempTestSession.SessionID = newSession.ID;
+    }
+    newSession.saveToServerIncludingTestsAndPerson(this.saveGroupSessionsToServerStageUpdateOK.bind(this),
+        this.saveGroupSessionsToServerStageUpdateError.bind(this));
+};
+ITSCandidateSession.prototype.saveGroupSessionsToServerUpdateCounter = function () {
+    if (this.progressElement != "") {
+        $('#'+this.progressElement)[0].innerHTML = this.progressElementCounter + '/'+ this.PluginData.GroupMembers.length;
+        $('#'+this.progressElement).attr('aria-valuenow' , Math.round(this.progressElementCounter / this.PluginData.GroupMembers.length) * 100 );
+        if (this.progressElementCounter >= this.PluginData.GroupMembers.length) {
+            $('#'+this.progressElement).hide();
+        }
+    }
+};
+
 ITSCandidateSession.prototype.saveGroupSessionsToServerStageCompare = function () {
     // this.currentGroupMembers this.PluginData.GroupMembers
+    this.saveGroupSessionsToServerUpdateCounter();
     this.saveGroupSessionsCount = 0;
     for (var i=0; i < this.PluginData.GroupMembers.length; i++) {
-        var sessionIndex = InArray(this.currentGroupMembers, "ID", this.PluginData.GroupMembers.ID, "==");
+        var sessionIndex = InArray(this.currentGroupMembers, "ID", this.PluginData.GroupMembers[i].ID, "==");
         if ( sessionIndex > -1 ) {
             // update
             // first load the session so we can validate it
-            var tempSession = new ITSCandidateSession(this, this.ITSSession);
-            tempSession.loadSession(this.currentGroupMembers[sessionIndex].sessionid, this.saveGroupSessionsToServerStageCheckSession.bind(this, tempSession, i),
-                this.saveGroupSessionsToServerStageUpdateError.bind(this, tempSession, i) )
+
+            this.saveGroupSessionsToServerStageCompareLoad(this.currentGroupMembers[sessionIndex].sessionid,  i);
         } else {
             // create
-            var newSession = new ITSCandidateSession(this, this.ITSSession);
-            newSession.Person.EMail = this.PluginData.GroupMembers[i].EMail;
-            newSession.Person.ID = this.PluginData.GroupMembers[i].ID;
-            newSession.Person.Active = true;
-            newSession.GroupSessionID = this.ID;
-            newSession.Description = this.Description;
-            newSession.AllowedStartDateTime = this.AllowedStartDateTime;
-            newSession.AllowedEndDateTime = this.AllowedEndDateTime;
-            newSession.EnforceSessionEndDateTime = this.EnforceSessionEndDateTime;
-            newSession.EmailNotificationIncludeResults = this.EmailNotificationIncludeResults;
-            newSession.EMailNotificationAdresses = this.EMailNotificationAdresses;
-            newSession.PersonID = newSession.Person.ID;
-            for (var st=0; st < this.SessionTests.length; st++) {
-                var tempTestSession = new ITSCandidateSessionTest(this, this.ITSSession);
-                tempTestSession.OldID = tempTestSession.ID;
-                newSession.SessionTests.push(tempTestSession);
-                shallowCopy(this.SessionTests[st], tempTestSession);
-                tempTestSession.ID = tempTestSession.OldID;
-                tempTestSession.PersID = newSession.Person.ID;
-                tempTestSession.SessionID = newSession.ID;
-            }
-            newSession.saveToServerIncludingTestsAndPerson(this.saveGroupSessionsToServerStageUpdateOK.bind(this),
-                                                           this.saveGroupSessionsToServerStageUpdateError.bind(this));
+            this.saveGroupSessionToServerCreateNew(i);
         }
     }
     // now check for deletions
     for (var i=0; i < this.currentGroupMembers.length; i++) {
-        if ( InArray(this.PluginData.GroupMembers, "ID", this.currentGroupMembers.ID, "==") > -1) {
+        if ( InArray(this.PluginData.GroupMembers, "ID", this.currentGroupMembers[i].ID, "==") > -1) {
             // it exists and will already be in the update process
         } else {
-            // delete. Deletes will be fired and we will not wait for them.
-            ITSInstance.genericAjaxDelete('sessions/' + this.ID, function () {}, function () {}, false, true);
+            // delete. Deletes will be fired and we will not wait for them. but we can ONLY delete when the session is not in progress!
+            if (this.currentGroupMembers[i].sessionstatus <= 10) {
+                ITSInstance.genericAjaxDelete('sessions/' + this.currentGroupMembers[i].sessionid, function () {
+                }, function () {
+                }, false, true);
+            }
         }
     }
 };
@@ -227,13 +275,32 @@ ITSCandidateSession.prototype.saveGroupSessionsToServerStageCheckSession = funct
     tempSession.Person.EMail = this.PluginData.GroupMembers[groupMemberIndex].EMail;
     tempSession.Person.ID = this.PluginData.GroupMembers[groupMemberIndex].ID;
     tempSession.Person.Active = true;
+
+    // delete all unstarted tests
+    var counter = tempSession.SessionTests.length;
+    for (var st = counter -1; st>=0; st--) {
+        if (!tempSession.SessionTests[st] || !tempSession.SessionTests[st].Status) {
+            console.log("tempSession.SessionTests[st].Status does not exist");
+        } else {
+            if (tempSession.SessionTests[st].Status <= 10) {
+                tempSession.SessionTests.splice(st,1);
+            }
+        }
+    }
+
     // update
-    for (var st = tempSession.SessionTests.count-1; st>=0; st++) {
+    for (var st = tempSession.SessionTests.length -1; st >= 0; st--) {
         // check if the session is not in tempSession yet
         var index = InArray( this.SessionTests , "TestID", tempSession.SessionTests[st].TestID, "==" );
         if ( index > -1  ) {
             if (tempSession.SessionTests[st].Status <= 10) {
+                tempSession.SessionTests[st].oldID = tempSession.SessionTests[st].ID;
+                tempSession.SessionTests[st].oldSessionID = tempSession.SessionTests[st].SessionID;
+                tempSession.SessionTests[st].oldPersonID = tempSession.SessionTests[st].PersID;
                 shallowCopy( this.SessionTests[index] , tempSession.SessionTests[st]);
+                tempSession.SessionTests[st].SessionID = tempSession.SessionTests[st].oldSessionID;
+                tempSession.SessionTests[st].PersID = tempSession.SessionTests[st].oldPersonID;
+                tempSession.SessionTests[st].ID = tempSession.SessionTests[st].oldID;
             }
         }
     }
@@ -244,27 +311,26 @@ ITSCandidateSession.prototype.saveGroupSessionsToServerStageCheckSession = funct
     tempSession.EnforceSessionEndDateTime = this.EnforceSessionEndDateTime;
     tempSession.EmailNotificationIncludeResults = this.EmailNotificationIncludeResults;
     tempSession.EMailNotificationAdresses = this.EMailNotificationAdresses;
-    // delete
-    for (var st = tempSession.SessionTests.count-1; st>=0; st++) {
-        // check if the session is not in tempSession yet
-        if (! (InArray( this.SessionTests , "TestID", tempSession.SessionTests[st].TestID, "==" ) > -1) ) {
-            if (tempSession.SessionTests[st].Status <= 10) {
-                tempSession.SessionTests = tempSession.SessionTests.splice(st);
-            }
-        }
-    }
+
     // add
-    for (var st=0; st < this.SessionTests.count; st++) {
+    for (var st=this.SessionTests.length-1; st >=0; st--) {
         // check if the session is not in tempSession yet
-        if (! (InArray( tempSession.SessionTests , "TestID", this.SessionTests[st].TestID, "==" ) > -1) ) {
+        if (InArray( tempSession.SessionTests , "TestID", this.SessionTests[st].TestID, "==" ) == -1) {
             var tempTestSession = new ITSCandidateSessionTest(this, this.ITSSession);
-            tempSession.SessionTests.push(tempTestSession);
+            tempTestSession.oldID = tempTestSession.ID;
             shallowCopy(this.SessionTests[st], tempTestSession);
             tempTestSession.SessionID = tempSession.ID;
+            tempTestSession.PersID = tempSession.PersonID;
+            tempTestSession.ID = tempTestSession.oldID;
+            tempSession.SessionTests.push(tempTestSession);
         }
     }
+
     tempSession.saveToServerIncludingTestsAndPerson(this.saveGroupSessionsToServerStageUpdateOK.bind(this),
-        this.saveGroupSessionsToServerStageUpdateError.bind(this));
+        this.saveGroupSessionsToServerStageUpdateError.bind(this), true);
+    this.progressElementCounter++;
+    this.saveGroupSessionsToServerUpdateCounter();
+
 };
 
 ITSCandidateSession.prototype.saveGroupSessionsToServerStageUpdateOK = function () {

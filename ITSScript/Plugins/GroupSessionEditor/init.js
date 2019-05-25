@@ -20,6 +20,8 @@ function ITSGroupSessionEditor (session) {
     this.currentSession = ITSInstance.candidateSessions.newGroupSession(); // the session we are changing with this object
     this.path = "GroupSession";
     $('#AdminInterfaceGroupSessionWarningExistsLabel').hide();
+    $('#AdminInterfaceGroupSessionsBusy').hide();
+
     //$('#AdminInterfaceGroupSessionDeleteButton').hide();
 };
 
@@ -49,6 +51,7 @@ ITSGroupSessionEditor.prototype.show = function () {
     // load the session
     if ( (!this.currentSession) || (this.currentSession.ID != this.SessionID)) {
         this.currentSession = ITSInstance.candidateSessions.newGroupSession();
+        $('#AdminInterfaceGroupSessionCandidateFor').tagsManager('empty');
         this.currentSession.loadSession(this.SessionID, this.sessionLoadingSucceeded.bind(this), this.sessionLoadingFailed.bind(this));
         ITSInstance.UIController.showInterfaceAsWaitingOn();
     } else {
@@ -70,6 +73,9 @@ ITSGroupSessionEditor.prototype.groupMemberLoadingSucceeded = function () {
     this.currentSession.PluginData.GroupMembers.sort( function (a,b) { return a.EMail.localeCompare(b.EMail); } );
     for (var i=0; i < this.currentSession.PluginData.GroupMembers.length; i++) {
         $('#AdminInterfaceGroupSessionCandidateFor').tagsManager('pushTag', this.currentSession.PluginData.GroupMembers[i].EMail);
+        if (this.currentSession.PluginData.GroupMembers[i].sessionstatus > 10) {
+            $('#AdminInterfaceGroupSessionsBusy').show();
+        }
     }
 };
 
@@ -403,11 +409,12 @@ ITSGroupSessionEditor.prototype.saveCurrentSession = function ( onSuccessCallbac
 
         // update on the server
         $('#AdminInterfaceGroupSession-saveIcon')[0].outerHTML = "<i id='AdminInterfaceGroupSession-saveIcon' class='fa fa-fw fa-life-ring fa-spin fa-lg'></i>";
+        ITSInstance.UIController.showInterfaceAsWaitingOn();
         this.currentSession.saveToServerIncludingTests(function () {
             this.expandGroupSessionsForCandidates();
         }.bind(this), function (errorText) {
             this.saveSessionsError();
-        });
+        }, true);
     } else {
         ITSInstance.UIController.showWarning('GroupSessionEditor.SessionValidationFailed', 'The session could not be saved because information is missing', ValidationMessage);
     }
@@ -415,13 +422,14 @@ ITSGroupSessionEditor.prototype.saveCurrentSession = function ( onSuccessCallbac
 
 ITSGroupSessionEditor.prototype.saveSessionsError = function () {
     $('#AdminInterfaceGroupSession-saveIcon')[0].outerHTML = "<i id='AdminInterfaceGroupSession-saveIcon' class='fa fa-fw fa-thumbs-up'></i>";
-    ITSInstance.UIController.showDialog("ITSGroupSessionEditorSaveError", "Session cannot be saved", "The session could not be saved. Please try again." , [{btnCaption: "OK"}], [errorText]);
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+    ITSInstance.UIController.showError("ITSGroupSessionEditorSaveError", "The session could not be saved. Please try again.");
 };
 
 ITSGroupSessionEditor.prototype.expandGroupSessionsForCandidates = function () {
    this.validateGroupMembers( function() {
        // if there are group members expand the sessions
-       this.currentSession.saveGroupSessionsToServer(this.saveSessionsDone.bind(this), this.saveSessionsError.bind(this));
+       this.currentSession.saveGroupSessionsToServer(this.saveSessionsDone.bind(this), this.saveSessionsError.bind(this), 'waitModalProgress');
    }.bind(this) );
 };
 
@@ -446,6 +454,7 @@ ITSGroupSessionEditor.prototype.validateGroupMemberFound = function (newEntry) {
     this.currentSession.PluginData.GroupMembersCount++;
     if (newEntry.candidate[0]) { newEntry.ID = newEntry.candidate[0].ID; } // always select the first even when there are multiple
     else { newEntry.ID = newEntry.candidate.ID; } //unknown = new id
+    newEntry.candidate = undefined; // do not keep the link to the object
     if (this.currentSession.PluginData.GroupMembersCount == this.currentSession.PluginData.GroupMembers.length){
         if (this.validateGroupMembersAfterValidate) { this.validateGroupMembersAfterValidate();}
     }
@@ -454,6 +463,7 @@ ITSGroupSessionEditor.prototype.validateGroupMemberFound = function (newEntry) {
 ITSGroupSessionEditor.prototype.validateGroupMemberNotFound = function (newEntry) {
     this.currentSession.PluginData.GroupMembersCount++;
     newEntry.ID = newEntry.candidate.ID ;
+    newEntry.candidate = undefined; // do not keep the link to the object
     if (this.currentSession.PluginData.GroupMembersCount == this.currentSession.PluginData.GroupMembers.length){
         if (this.validateGroupMembersAfterValidate) { this.validateGroupMembersAfterValidate();}
     }
@@ -461,6 +471,7 @@ ITSGroupSessionEditor.prototype.validateGroupMemberNotFound = function (newEntry
 
 ITSGroupSessionEditor.prototype.saveSessionsDone = function () {
     $('#AdminInterfaceGroupSession-saveIcon')[0].outerHTML = "<i id='AdminInterfaceGroupSession-saveIcon' class='fa fa-fw fa-thumbs-up'</i>";
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
     $('#AdminInterfaceGroupSessionDeleteButton').show();
     if (this.savecurrentSessionCallback) this.savecurrentSessionCallback();
 };

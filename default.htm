@@ -359,7 +359,11 @@
             <div class="modal-header bg-faded">
                 <h5 class="modal-title" id="waitModalHeader">Processing</h5>
             </div>
-            <div class="modal-body"><center><i id="waitModalIcon" class="fa fa-spinner fa-spin fa-5x"></i></center></div>
+            <div class="modal-body">
+                <center><i id="waitModalIcon" class="fa fa-spinner fa-spin fa-5x"></i>
+                </center><br/>
+                <div id="waitModalProgress" notranslate class="progress-bar progress-bar-striped progress-bar-animated w-100" style="display: none;" aria-valuemin="0" aria-valuemax="100">&nbsp;</div>
+            </div>
         </div>
     </div>
 </div>
