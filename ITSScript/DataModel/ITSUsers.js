@@ -52,6 +52,7 @@ function ITSUser (usersParent, ITSSession) {
     this.Active=true;
     this.UserCulture="";
     this.MayWorkWithOwnObjectsOnly=false;
+    this.IsPasswordManager = false;
     this.SecurityTemplateID="00000000-0000-0000-0000-000000000000";
     this.HasPersonalCreditPool=false;
     this.CurrentPersonalCreditLevel=0;
@@ -69,7 +70,7 @@ function ITSUser (usersParent, ITSSession) {
         'InformationAddress','Remarks','PasswordExpirationDate',
         'StartDateLicense','EndDateLicense','LastLoginDateTime','LastRefreshDateTime','IsMasterUser','IsTestTakingUser',
         'IsOrganisationSupervisor', "IsOfficeUser", "IsTestAuthor", "IsReportAuthor", "IsTestScreenTemplateAuthor",'IsTranslator','MayOrderCredits','MayWorkWithBatteriesOnly','DoNotRenewLicense',
-        'Active','UserCulture','MayWorkWithOwnObjectsOnly','SecurityTemplateID','HasPersonalCreditPool','CurrentPersonalCreditLevel','PluginData'
+        'Active','UserCulture','MayWorkWithOwnObjectsOnly','SecurityTemplateID','HasPersonalCreditPool','CurrentPersonalCreditLevel','PluginData', 'IsPasswordManager'
     ];
 
     this.lastSavedJSON = "";

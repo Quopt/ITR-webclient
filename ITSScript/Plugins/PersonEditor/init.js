@@ -58,6 +58,11 @@
     };
 
     ITSPersonEditor.prototype.personLoaded=function () {
+        $('#PersonInterfaceEditButtonBar_ViewPassword').hide();
+        if (ITSInstance.users.currentUser.IsPasswordManager) {
+            $('#PersonInterfaceEditButtonBar_ViewPassword').show();
+        }
+
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         // bind the persons data to this interface
         DataBinderTo('PersonInterfaceSessionEdit', ITSInstance.candidates.currentCandidate );
@@ -79,6 +84,14 @@
         ITSInstance.candidates.currentCandidate.saveToServer(function () {}, function () {});
         ITSInstance.SessionMailerSessionController.currentPerson = ITSInstance.candidates.currentCandidate;
         ITSRedirectPath("SessionMailer&Template=defaultPassword&PersonID=" + this.personID);
+    };
+
+    ITSPersonEditor.prototype.viewPassword=function () {
+        ITSInstance.candidates.currentCandidate.requestPassword( function( ) {
+            ITSInstance.UIController.showInfo('ITSPersonEditorShowPassword', 'The password of this user is : ', ITSInstance.candidates.currentCandidate.Password);
+        }, function () {
+            ITSInstance.UIController.showError('ITSPersonEditorShowPasswordError', 'The password cannot be shown.') ;
+        })
     };
 
     ITSPersonEditor.prototype.deleteCurrentPersonWarning = function () {

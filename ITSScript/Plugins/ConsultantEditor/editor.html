@@ -173,6 +173,18 @@
                id="ConsultantEditorInterfaceMayWorkWithOwnObjectsOnlyHeader"
                for="ConsultantEditorInterfaceMayWorkWithOwnObjectsOnly">May work with own objects only</label>
     </div>
+
+    <div class="col-3" id="ConsultantEditorInterfaceMayViewPasswordsDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="IsPasswordManager"
+                   onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"
+                   class="form-check-input form-check-input-sm"
+                   id="ConsultantEditorInterfaceMayViewPasswords"/>
+        </div>
+        <label class="col-sm-11"
+               id="ConsultantEditorInterfaceMayViewPasswordsHeader"
+               for="ConsultantEditorInterfaceMayViewPasswords">May view candidate passwords</label>
+    </div>
 </div>
 
 <div class="bg-dark text-white well row col-12"><label id="ConsultantEditorEditAPIKeyHeader">External API key</label></div>

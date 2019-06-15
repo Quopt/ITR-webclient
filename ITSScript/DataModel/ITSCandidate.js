@@ -138,6 +138,11 @@ ITSCandidate.prototype.loadByLogin = function (Login, OnSuccess, OnFailure) {
     }
 };
 
+ITSCandidate.prototype.requestPassword = function (OnSuccess, OnFailure) {
+    ITSInstance.JSONAjaxLoader('persons/' + this.ID + '/password', this, OnSuccess, OnFailure, "ITSCandidate", 0, 1, "", "", "N", "Y");
+};
+
+
 ITSCandidates = function (session) {
     this.ITSSession = session;
     this.currentCandidate = new ITSCandidate(this, session);

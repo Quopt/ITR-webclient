@@ -69,7 +69,33 @@ ITSGroupSessionEditor.prototype.sessionLoadingSucceeded = function () {
     DataBinderTo("AdminInterfaceGroupSession", this.currentSession);
     this.repopulateTestsLists(true);
     this.loadTestAndBatteriesList();
-    this.currentSession.loadRelatedGroupMembers(this.groupMemberLoadingSucceeded.bind(this), this.groupMemberLoadingFailed.bind(this))
+    this.currentSession.loadRelatedGroupMembers(this.groupMemberLoadingSucceeded.bind(this), this.groupMemberLoadingFailed.bind(this));
+    this.switchUIState();
+};
+
+ITSGroupSessionEditor.prototype.switchUIState = function () {
+    $('#AdminInterfaceGroupSessionUnArchiveTest').hide();
+    $('#AdminInterfaceGroupSessionDeleteTest').hide();
+    $('#AdminInterfaceGroupSessionArchiveTest').hide();
+    $('#AdminInterfaceGroupSessionShowRelatedButton').hide();
+    $('#AdminInterfaceGroupSessionOverviewButton').hide();
+    $('#AdminInterfaceGroupSessionInviteButton').hide();
+    $('#AdminInterfaceGroupSessionSaveButton').hide();
+    $('#AdminInterfaceGroupSessionsBusy').hide();
+    if (this.currentSession.Active) {
+        $('#AdminInterfaceGroupSessionSaveButton').show();
+        $('#AdminInterfaceGroupSessionShowRelatedButton').show();
+        $('#AdminInterfaceGroupSessionArchiveTest').show();
+        $('#AdminInterfaceGroupSessionDeleteTest').show();
+        $('#AdminInterfaceGroupSessionInviteButton').show();
+        if (ITSInstance.users.currentUser.IsPasswordManager) {
+            $('#AdminInterfaceGroupSessionOverviewButton').show();
+        }
+    } else {
+        $('#AdminInterfaceGroupSessionShowRelatedButton').show();
+        $('#AdminInterfaceGroupSessionUnArchiveTest').show();
+        $('#AdminInterfaceGroupSessionDeleteTest').show();
+    }
 };
 
 ITSGroupSessionEditor.prototype.groupMemberLoadingSucceeded = function () {
@@ -438,6 +464,44 @@ ITSGroupSessionEditor.prototype.expandGroupSessionsForCandidates = function () {
    }.bind(this) );
 };
 
+ITSGroupSessionEditor.prototype.getPasswordsForCandidatesOverview = function () {
+    ITSInstance.UIController.showInterfaceAsWaitingOn();
+    this.validateGroupMembers( this.getPasswordsForCandidatesOverviewStageLoad.bind(this) );
+};
+
+ITSGroupSessionEditor.prototype.getPasswordsForCandidatesOverviewStageLoad = function () {
+    this.passwordsLoaded = 0;
+    for (var i=0; i < this.currentSession.PluginData.GroupMembers.length; i++) {
+        this.currentSession.PluginData.GroupMembers[i].tempCandidate = new ITSCandidate(this, ITSInstance);
+        this.currentSession.PluginData.GroupMembers[i].tempCandidate.ID = this.currentSession.PluginData.GroupMembers[i].ID;
+        this.currentSession.PluginData.GroupMembers[i].tempCandidate.requestPassword( this.getPasswordsForCandidatesOverviewStageLoadOK.bind(this, i),
+             this.getPasswordsForCandidatesOverviewStageLoadError.bind(this) );
+    }
+};
+
+ITSGroupSessionEditor.prototype.getPasswordsForCandidatesOverviewStageLoadOK = function (index) {
+    this.passwordsLoaded++;
+    //this.currentSession.PluginData.GroupMembers[index].Password = this.currentSession.PluginData.GroupMembers[index].tempCandidate.Password;
+    if (this.currentSession.PluginData.GroupMembers.length == this.passwordsLoaded) {
+        ITSInstance.UIController.showInterfaceAsWaitingOff();
+        var overview = "";
+        for (var i=0; i < this.currentSession.PluginData.GroupMembers.length; i++) {
+            overview += this.currentSession.PluginData.GroupMembers[i].EMail + "\t" + this.currentSession.PluginData.GroupMembers[i].tempCandidate.Password + "\r\n";
+            this.currentSession.PluginData.GroupMembers[i].tempCandidate = undefined;
+        }
+        $('#AdminInterfaceGroupSessionLoginOverview-dialog').modal("show");
+        $('#AdminInterfaceGroupSessionLoginOverview-All').val(overview);
+    }
+};
+
+ITSGroupSessionEditor.prototype.getPasswordsForCandidatesOverviewStageLoadError = function () {
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+    ITSInstance.UIController.showError("ITSGroupSessionEditor.LoadPasswordsError","The passwords for some users could not be loaded. Please save the session first.");
+    for (var i=0; i < this.currentSession.PluginData.GroupMembers.length; i++) {
+        this.currentSession.PluginData.GroupMembers[i].tempCandidate = undefined;
+    }
+};
+
 ITSGroupSessionEditor.prototype.validateGroupMembers = function (afterValidate) {
     this.currentSession.PluginData.GroupMembers = [];
     this.validateGroupMembersAfterValidate = afterValidate;
@@ -472,11 +536,13 @@ ITSGroupSessionEditor.prototype.validateGroupMemberFound = function (newEntry) {
 ITSGroupSessionEditor.prototype.validateGroupMemberNotFound = function (newEntry) {
     this.currentSession.PluginData.GroupMembersCount++;
     newEntry.ID = newEntry.candidate.ID ;
+    newEntry.password = newEntry.candidate.password;
     newEntry.candidate = undefined; // do not keep the link to the object
     if (this.currentSession.PluginData.GroupMembersCount == this.currentSession.PluginData.GroupMembers.length){
         if (this.validateGroupMembersAfterValidate) { this.validateGroupMembersAfterValidate();}
     }
 };
+
 
 ITSGroupSessionEditor.prototype.saveSessionsDone = function () {
     $('#AdminInterfaceGroupSession-saveIcon')[0].outerHTML = "<i id='AdminInterfaceGroupSession-saveIcon' class='fa fa-fw fa-thumbs-up'</i>";
@@ -510,12 +576,82 @@ ITSGroupSessionEditor.prototype.sendInvitations = function () {
 };
 
 ITSGroupSessionEditor.prototype.showUserAndPasswordOverview = function () {
-
+    this.getPasswordsForCandidatesOverview();
 };
 
 ITSGroupSessionEditor.prototype.showGroupSessions = function () {
-
+    ITSRedirectPath('GroupSessionLister&GroupSessionID=' + this.currentSession.ID);
 };
+
+ITSGroupSessionEditor.prototype.archiveGroupSessionNow = function (archiveStatus) {
+    ITSInstance.UIController.showInterfaceAsWaitingOn();
+    this.archiveStatus = archiveStatus;
+
+    if ($('#AdminInterfaceGroupSessionArchive-All:checked').val() == "all") {
+        this.currentSession.archiveGroupSessionsOnServer(function () {
+            this.currentSession.Active = this.archiveStatus;
+            this.currentSession.saveToServer(this.archiveSessionsDone.bind(this), this.archiveSessionsError.bind(this));
+        }.bind(this), this.archiveSessionsError.bind(this), 'waitModalProgress', false, this.archiveStatus);
+    }
+    else if ($('#AdminInterfaceGroupSessionArchive-Unstarted:checked').val() == "unstarted") {
+        this.currentSession.archiveGroupSessionsOnServer(function () {
+            this.currentSession.Active = this.archiveStatus;
+            this.currentSession.saveToServer(this.archiveSessionsDone.bind(this), this.archiveSessionsError.bind(this));
+        }.bind(this), this.archiveSessionsError.bind(this), 'waitModalProgress', true, this.archiveStatus);
+    }
+    else if ($('#AdminInterfaceGroupSessionArchive-OnlyThis:checked').val() == "onlygroup") {
+        this.currentSession.Active = this.archiveStatus;
+        this.currentSession.saveToServer(this.archiveSessionsDone.bind(this), this.archiveSessionsError.bind(this));
+    }
+};
+ITSGroupSessionEditor.prototype.archiveSessionsDone = function () {
+    this.switchUIState();
+    if (this.archiveStatus) {
+        // process the save session logic completely so that all logins are created again as well
+        this.currentSession.Active = true;
+        this.saveCurrentSession(function () {
+            ITSInstance.UIController.showInterfaceAsWaitingOff();
+            ITSInstance.UIController.showInfo("ITSGroupSessionEditor.ArchiveSessionOK", "The session has been successfully (un)archived. Please review the session and the save it.");
+        });
+    } else {
+        ITSInstance.UIController.showInterfaceAsWaitingOff();
+        ITSInstance.UIController.showInfo("ITSGroupSessionEditor.ArchiveSessionOK", "The session has been successfully (un)archived. Please review the session and the save it.");
+    }
+};
+ITSGroupSessionEditor.prototype.archiveSessionsError = function () {
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+    ITSInstance.UIController.showError("ITSGroupSessionEditor.ArchiveSessionFailed", "The session could not be (un)archived at this moment.");
+    this.switchUIState();
+};
+
+ITSGroupSessionEditor.prototype.deleteGroupSessionNow = function () {
+    ITSInstance.UIController.showInterfaceAsWaitingOn();
+
+    if ($('#AdminInterfaceGroupSessionDelete-All:checked').val() == "all") {
+        this.currentSession.deleteGroupSessionsOnServer(function () {
+            this.currentSession.deleteFromServer(this.deleteSessionsDone.bind(this), this.deleteSessionsError.bind(this));
+          }.bind(this), this.deleteSessionsError.bind(this), 'waitModalProgress', false);
+    }
+    else if ($('#AdminInterfaceGroupSessionDelete-Unstarted:checked').val() == "unstarted") {
+        this.currentSession.deleteGroupSessionsOnServer(function () {
+            this.currentSession.deleteFromServer(this.deleteSessionsDone.bind(this), this.deleteSessionsError.bind(this));
+        }.bind(this), this.deleteSessionsError.bind(this), 'waitModalProgress', true);
+    }
+    else if ($('#AdminInterfaceGroupSessionDelete-OnlyThis:checked').val() == "onlygroup") {
+        this.currentSession.deleteFromServer(this.deleteSessionsDone.bind(this), this.deleteSessionsError.bind(this));
+    }
+};
+ITSGroupSessionEditor.prototype.deleteSessionsDone = function () {
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+    ITSInstance.UIController.showInfo("ITSGroupSessionEditor.DeleteSessionOK", "The session has been successfully deleted.", '',
+        'window.history.back();');
+};
+ITSGroupSessionEditor.prototype.deleteSessionsError = function () {
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+    ITSInstance.UIController.showError("ITSGroupSessionEditor.DeleteSessionFailed", "The session could not be deleted at this moment.", '',
+        'window.history.back();');
+};
+
 
 ITSGroupSessionEditor.prototype.emailAddressChangedFound = function () {
     var tempUser = $('#AdminInterfaceGroupSessionCandidateFor')[0].value;

@@ -472,6 +472,110 @@ ITSCandidateSession.prototype.loadRelatedGroupMembers = function (OnSuccess, OnE
     ITSInstance.JSONAjaxLoader('sessions/' + this.ID + "/groupmembers" , this.PluginData.GroupMembers, OnSuccess, OnError);
 };
 
+ITSCandidateSession.prototype.deleteGroupSessionsOnServer = function (OnSuccess, OnError, progressElement, excludeStartedSessions) {
+    // saves all group sessions to server
+    this.todeleteGroupSessionsToServerOnSuccess = OnSuccess;
+    this.todeleteGroupSessionsToServerOnError = OnError;
+    this.todeleteGroupMembers = [];
+    this.todeleteProgressElement = "";
+    this.todeleteExcludeStarted = excludeStartedSessions;
+    this.todeleteErrorCount = 0;
+    if (progressElement) {
+        this.todeleteProgressElement = progressElement;
+        $('#'+this.todeleteProgressElement).show();
+        this.todeleteProgressElementCounter = 0;
+    }
+
+    ITSInstance.JSONAjaxLoader('sessions/' + this.ID + "/groupmembers" , this.todeleteGroupMembers, this.deleteGroupSessionsOnServerProceed.bind(this), OnError);
+};
+
+ITSCandidateSession.prototype.deleteGroupSessionsOnServerProceed = function () {
+    this.todeleteGroupSessionsCount = 0;
+    var proceed = true;
+    for (var i=0; i < this.todeleteGroupMembers.length; i++) {
+        // now delete this session
+        proceed = true;
+        this.todeleteGroupSessionsCount ++;
+        this.todeleteGroupSessionsToServerUpdateCounter();
+        if (this.todeleteExcludeStarted) { proceed = this.todeleteGroupMembers[i].sessionstatus == 10; }
+        if (proceed) {
+            ITSInstance.genericAjaxDelete('sessions/' + this.todeleteGroupMembers[i].sessionid ,
+                function () {},
+                function () { this.todeleteErrorCount ++; this.todeleteGroupSessionsToServerOnError(); }.bind(this), false, true);
+            this.ITSSession.MessageBus.publishMessage("Session.Delete.RelatedGroupSession", this.todeleteGroupMembers[i]);
+        }
+    }
+    if (this.todeleteErrorCount == 0) {
+        this.todeleteGroupSessionsToServerOnSuccess();
+    }
+};
+
+ITSCandidateSession.prototype.todeleteGroupSessionsToServerUpdateCounter = function () {
+    if (this.todeleteProgressElementCounter != "") {
+        $('#'+this.todeleteProgressElement)[0].innerHTML = this.todeleteProgressElementCounter + '/'+ this.todeleteGroupMembers.length;
+        $('#'+this.todeleteProgressElement).attr('aria-valuenow' , Math.round(this.todeleteProgressElementCounter / this.todeleteGroupMembers.length) * 100 );
+        if (this.todeleteProgressElementCounter >=  this.todeleteGroupMembers.length) {
+            $('#'+this.todeleteProgressElement).hide();
+        }
+    }
+};
+
+ITSCandidateSession.prototype.archiveGroupSessionsOnServer = function (OnSuccess, OnError, progressElement, excludeStartedSessions, newArchiveStatus) {
+    // saves all group sessions to server
+    this.toarchiveGroupSessionsToServerOnSuccess = OnSuccess;
+    this.toarchiveGroupSessionsToServerOnError = OnError;
+    this.toarchiveGroupMembers = [];
+    this.toarchiveProgressElement = "";
+    this.toarchiveExcludeStarted = excludeStartedSessions;
+    this.toarchiveStatus = newArchiveStatus;
+    this.toarchiveErrorCount = 0;
+    if (progressElement) {
+        this.toarchiveProgressElement = progressElement;
+        $('#'+this.toarchiveProgressElement).show();
+        this.toarchiveProgressElementCounter = 0;
+    }
+
+    ITSInstance.JSONAjaxLoader('sessions/' + this.ID + "/groupmembers" , this.toarchiveGroupMembers, this.archiveGroupSessionsOnServerProceed.bind(this), OnError);
+};
+
+ITSCandidateSession.prototype.archiveGroupSessionsOnServerProceed = function () {
+    this.toarchiveGroupSessionsCount = 0;
+    var proceed = true;
+    for (var i=0; i < this.toarchiveGroupMembers.length; i++) {
+        // now delete this session
+        proceed = true;
+
+        if (this.toarchiveExcludeStarted) { proceed = this.toarchiveGroupMembers[i].sessionstatus == 10; }
+        if (proceed) {
+            this.toarchiveGroupMembers[i].session = new ITSCandidateSession(this, this.ITSSession);
+            ITSInstance.JSONAjaxLoader('sessions/' + this.toarchiveGroupMembers[i].sessionid , this.toarchiveGroupMembers[i].session,
+                function (i) {
+                              this.toarchiveGroupSessionsToServerUpdateCounter();
+                              this.toarchiveGroupSessionsCount ++;
+                              if (this.toarchiveGroupMembers[i].session.Active != this.toarchiveStatus) {
+                                  this.toarchiveGroupMembers[i].session.Active = this.toarchiveStatus;
+                                  this.toarchiveGroupMembers[i].session.saveToServer( function () {}, this.toarchiveGroupSessionsToServerOnError );
+                              }
+                            }.bind(this,i),
+                function () { this.toarchiveErrorCount ++; this.toarchiveGroupSessionsToServerOnError(); } , false, true);
+            this.ITSSession.MessageBus.publishMessage("Session.Delete.RelatedGroupSession", this.toarchiveGroupMembers[i]);
+        }
+    }
+    if (this.toarchiveErrorCount == 0) {
+        this.toarchiveGroupSessionsToServerOnSuccess();
+    }
+};
+
+ITSCandidateSession.prototype.toarchiveGroupSessionsToServerUpdateCounter = function () {
+    if (this.toarchiveProgressElementCounter != "") {
+        $('#'+this.toarchiveProgressElement)[0].innerHTML = this.toarchiveProgressElementCounter + '/'+ this.toarchiveGroupMembers.length;
+        $('#'+this.toarchiveProgressElement).attr('aria-valuenow' , Math.round(this.toarchiveProgressElementCounter / this.toarchiveGroupMembers.length) * 100 );
+        if (this.toarchiveProgressElementCounter >=  this.toarchiveGroupMembers.length) {
+            $('#'+this.toarchiveProgressElement).hide();
+        }
+    }
+};
+
 // the test definition belonging to the sessions
  ITSCandidateSessionTest = function (parent, ITSSession) {
      this.myParent = parent;

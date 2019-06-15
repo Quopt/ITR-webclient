@@ -154,16 +154,176 @@
     <button  type="button" class="btn btn-default btn-success" id="AdminInterfaceGroupSessionSaveButton" onclick="ITSInstance.groupSessionController.saveCurrentSession();">
         <i id="AdminInterfaceGroupSession-saveIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="AdminInterfaceGroupSessionSaveButtonLabel">Save session</span>
     </button>&nbsp;
-    <button  style="display:none;" type="button" class="btn btn-default btn-success" id="AdminInterfaceGroupSessionInviteButton" onclick="ITSInstance.groupSessionController.sendInvitations();">
+    <button type="button" class="btn btn-default btn-success" id="AdminInterfaceGroupSessionInviteButton" onclick="ITSInstance.groupSessionController.sendInvitations();">
         <i id="AdminInterfaceGroupSessionInviteButton-saveIcon" class="fa fa-fw fa-mail-bulk"></i> <span id="AdminInterfaceGroupSessionInviteButton-Label">Send e-mail invitations</span>
     </button>&nbsp;
-    <button  style="display:none;" type="button" class="btn btn-default btn-success" id="AdminInterfaceGroupSessionOverviewButton" onclick="ITSInstance.groupSessionController.showUserAndPasswordOverview();">
+    <button type="button" class="btn btn-default btn-success" id="AdminInterfaceGroupSessionOverviewButton" onclick="ITSInstance.groupSessionController.showUserAndPasswordOverview();">
         <i id="AdminInterfaceGroupSessionOverviewButton-saveIcon" class="fa fa-fw fa-notes-medical"></i> <span id="AdminInterfaceGroupSessionOverviewButton-Label">Show user id and password overview</span>
     </button>&nbsp;
-    <button  style="display:none;" type="button" class="btn btn-default btn-success" id="AdminInterfaceGroupSessionShowRelatedButton" onclick="ITSInstance.groupSessionController.showGroupSessions();">
+    <button type="button" class="btn btn-default btn-success" id="AdminInterfaceGroupSessionShowRelatedButton" onclick="ITSInstance.groupSessionController.showGroupSessions();">
         <i id="AdminInterfaceGroupSessionShowRelatedButton-saveIcon" class="fa fa-fw fa-tasks"></i> <span id="AdminInterfaceGroupSessionShowRelatedButton">Show related person sessions</span>
     </button>&nbsp;
-    <button id="AdminInterfaceGroupSessionArchiveTest" style="display:none;" type="button" onclick="ITSInstance.editSessionController.archiveSession();" class="btn btn-warning"><i id="AdminInterfaceGroupSessionArchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceGroupSessionArchive">Archive this session</span></button>
-    <button id="AdminInterfaceGroupSessionDeleteTest"  style="display:none;" type="button" onclick="ITSInstance.editSessionController.deleteSession();" class="btn btn-warning"><i id="AdminInterfaceGroupSessionDeleteTestIcon" class="fa fa-fw fa-trash"></i><span id="AdminInterfaceGroupSessionDelete">Delete this session</span></button>
+    <button id="AdminInterfaceGroupSessionArchiveTest" type="button" data-toggle="modal" data-target="#AdminInterfaceGroupSessionArchive-dialog" class="btn btn-warning">
+        <i id="AdminInterfaceGroupSessionArchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceGroupSessionArchive">Archive this session</span></button>
+    <button id="AdminInterfaceGroupSessionDeleteTest" type="button" data-toggle="modal" data-target="#AdminInterfaceGroupSessionDelete-dialog" class="btn btn-warning">
+        <i id="AdminInterfaceGroupSessionDeleteTestIcon" class="fa fa-fw fa-trash"></i><span id="AdminInterfaceGroupSessionDelete">Delete this session</span></button>
+    <button id="AdminInterfaceGroupSessionUnArchiveTest" type="button" data-toggle="modal" data-target="#AdminInterfaceGroupSessionUnArchive-dialog" class="btn btn-warning">
+        <i id="AdminInterfaceGroupSessionUnArchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceGroupSessionUnArchive">Unarchive this session</span></button>
+</div>
 
+<div class="modal fade" id="AdminInterfaceGroupSessionDelete-dialog" tabindex="-1" role="dialog" aria-labelledby="AdminInterfaceGroupSessionDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AdminInterfaceGroupSessionDeleteLabel">What do you want to delete?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="AdminInterfaceGroupSessionDelete-All" name="AdminInterfaceGroupSessionDelete-list" value="all" checked>
+                        <label class="form-check-label" for="AdminInterfaceGroupSessionDelete-All">
+                            Delete this group session and all related person sessions
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="AdminInterfaceGroupSessionDelete-Unstarted" name="AdminInterfaceGroupSessionDelete-list" value="unstarted" >
+                        <label class="form-check-label" for="AdminInterfaceGroupSessionDelete-Unstarted">
+                            Delete this group session and all related UNSTARTED person sessions
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="AdminInterfaceGroupSessionDelete-OnlyThis" name="AdminInterfaceGroupSessionDelete-list" value="onlygroup">
+                        <label class="form-check-label" for="AdminInterfaceGroupSessionDelete-OnlyThis">
+                            Delete only this group sessions
+                        </label>
+                    </div>
+            </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfaceGroupSessionDelete-CloseButton">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="AdminInterfaceGroupSessionDelete-DeleteButton" onclick="ITSInstance.groupSessionController.deleteGroupSessionNow();" notranslate>
+                    <i id="AdminInterfaceGroupSessionDeleteTestIcon2" class="fa fa-fw fa-trash"></i>
+                    <span id="AdminInterfaceGroupSessionDelete-buttonlabel" >Delete group sessions</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="AdminInterfaceGroupSessionArchive-dialog" tabindex="-1" role="dialog" aria-labelledby="AdminInterfaceGroupSessionArchiveLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AdminInterfaceGroupSessionArchiveLabel">What do you want to archive?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="AdminInterfaceGroupSessionArchive-All" name="AdminInterfaceGroupSessionArchive-list" value="all" checked>
+                        <label class="form-check-label" for="AdminInterfaceGroupSessionArchive-All">
+                            Archive this group session and all related person sessions
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="AdminInterfaceGroupSessionArchive-Unstarted" name="AdminInterfaceGroupSessionArchive-list" value="unstarted" >
+                        <label class="form-check-label" for="AdminInterfaceGroupSessionArchive-Unstarted">
+                            Archive this group session and all related UNSTARTED person sessions
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="AdminInterfaceGroupSessionArchive-OnlyThis" name="AdminInterfaceGroupSessionArchive-list" value="onlygroup">
+                        <label class="form-check-label" for="AdminInterfaceGroupSessionArchive-OnlyThis">
+                            Archive only this group sessions
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfaceGroupSessionArchive-CloseButton">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="AdminInterfaceGroupSessionArchive-ArchiveButton" onclick="ITSInstance.groupSessionController.archiveGroupSessionNow(false);" notranslate>
+                    <i id="AdminInterfaceGroupSessionArchiveTestIcon2" class="fa fa-fw fa-archive"></i>
+                    <span id="AdminInterfaceGroupSessionArchive-buttonlabel" >Archive group sessions</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AdminInterfaceGroupSessionUnArchive-dialog" tabindex="-1" role="dialog" aria-labelledby="AdminInterfaceGroupSessionUnArchiveLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AdminInterfaceGroupSessionUnArchiveLabel">What do you want to unarchive?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="AdminInterfaceGroupSessionUnArchive-All" name="AdminInterfaceGroupSessionUnArchive-list" value="all" checked>
+                        <label class="form-check-label" for="AdminInterfaceGroupSessionUnArchive-All">
+                            Unarchive this group session and all related person sessions
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="AdminInterfaceGroupSessionUnArchive-Unstarted" name="AdminInterfaceGroupSessionUnArchive-list" value="unstarted" >
+                        <label class="form-check-label" for="AdminInterfaceGroupSessionUnArchive-Unstarted">
+                            Unarchive this group session and all related UNSTARTED person sessions
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="AdminInterfaceGroupSessionUnArchive-OnlyThis" name="AdminInterfaceGroupSessionUnArchive-list" value="onlygroup">
+                        <label class="form-check-label" for="AdminInterfaceGroupSessionUnArchive-OnlyThis">
+                            Unarchive only this group sessions
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfaceGroupSessionUnArchive-CloseButton">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="AdminInterfaceGroupSessionUnArchive-UnArchiveButton" onclick="ITSInstance.groupSessionController.archiveGroupSessionNow(true);" notranslate>
+                    <i id="AdminInterfaceGroupSessionUnArchiveTestIcon2" class="fa fa-fw fa-archive"></i>
+                    <span id="AdminInterfaceGroupSessionUnArchive-buttonlabel" >Unarchive group sessions</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AdminInterfaceGroupSessionLoginOverview-dialog" tabindex="-1" role="dialog" aria-labelledby="AdminInterfaceGroupSessionLoginOverviewLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AdminInterfaceGroupSessionLoginOverviewLabel">User id and password overview for this group session</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-check">
+                        <textarea class="form-control" type="text" id="AdminInterfaceGroupSessionLoginOverview-All" rows="10" name="AdminInterfaceGroupSessionLoginOverview-list" readonly>
+                        </textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfaceGroupSessionLoginOverview-CloseButton">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
