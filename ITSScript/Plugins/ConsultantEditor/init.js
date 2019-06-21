@@ -104,6 +104,13 @@
             //if (ITSInstance.users.currentUser.MayWorkWithOwnObjectsOnly) $('#ConsultantEditorInterfaceMayWorkWithOwnObjectsOnlyDiv').show();
             //if (ITSInstance.users.currentUser.MayWorkWithBatteriesOnly) $('#ConsultantEditorInterfaceMayWorkWithBatteriesOnlyDiv').show();
         }
+
+        $('#ConsultantEditorEditAPIKeyDiv').hide();
+        $('#ConsultantEditorEditAPIKeyDiv2').hide();
+        if (ITSInstance.users.currentUser.IsPasswordManager) {
+            $('#ConsultantEditorEditAPIKeyDiv').show();
+            $('#ConsultantEditorEditAPIKeyDiv2').show();
+        }
     };
     ITSConsultantEditor.prototype.currentUserLoadedError = function () {
         ITSInstance.UIController.showError('ITSConsultantEditor.NotFound', 'This consultant cannot be found.');
@@ -152,8 +159,8 @@
         });
     };
     ITSConsultantEditor.prototype.generateAPIKey= function () {
-        this.currentConsultant.PluginData.ExternalAPIKey = "" + newGuid() + "-" + newGuid() + "-" + newGuid() + "-" + newGuid();
-        $('#ConsultantEditorInterfaceExternalAPIKey').val(this.currentConsultant.PluginData.ExternalAPIKey);
+        this.currentConsultant.APIKey = "" + newGuid() + "-" + newGuid() + "-" + newGuid() + "-" + newGuid();
+        $('#ConsultantEditorInterfaceExternalAPIKey').val(this.currentConsultant.APIKey);
     };
     ITSConsultantEditor.prototype.showSessions = function () {
         ITSRedirectPath("SessionLister&SessionType=0&ConsultantID=" + this.currentConsultant.ID);

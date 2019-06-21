@@ -58,6 +58,7 @@ function ITSUser (usersParent, ITSSession) {
     this.CurrentPersonalCreditLevel=0;
     this.PluginData = {};
     this.PluginData.persistentProperties = "*ALL*";
+    this.APIKey = "";
     //this.PluginData.MailSettings = {};
     //this.PluginData.MailSettings.persistentProperties = "*ALL*";
     //this.PluginData.MailSettings._objectType = "ITSObject";
@@ -70,7 +71,7 @@ function ITSUser (usersParent, ITSSession) {
         'InformationAddress','Remarks','PasswordExpirationDate',
         'StartDateLicense','EndDateLicense','LastLoginDateTime','LastRefreshDateTime','IsMasterUser','IsTestTakingUser',
         'IsOrganisationSupervisor', "IsOfficeUser", "IsTestAuthor", "IsReportAuthor", "IsTestScreenTemplateAuthor",'IsTranslator','MayOrderCredits','MayWorkWithBatteriesOnly','DoNotRenewLicense',
-        'Active','UserCulture','MayWorkWithOwnObjectsOnly','SecurityTemplateID','HasPersonalCreditPool','CurrentPersonalCreditLevel','PluginData', 'IsPasswordManager'
+        'Active','UserCulture','MayWorkWithOwnObjectsOnly','SecurityTemplateID','HasPersonalCreditPool','CurrentPersonalCreditLevel','PluginData', 'IsPasswordManager', 'APIKey'
     ];
 
     this.lastSavedJSON = "";

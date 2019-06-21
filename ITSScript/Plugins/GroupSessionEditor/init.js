@@ -87,8 +87,8 @@ ITSGroupSessionEditor.prototype.switchUIState = function () {
         $('#AdminInterfaceGroupSessionShowRelatedButton').show();
         $('#AdminInterfaceGroupSessionArchiveTest').show();
         $('#AdminInterfaceGroupSessionDeleteTest').show();
-        $('#AdminInterfaceGroupSessionInviteButton').show();
         if (ITSInstance.users.currentUser.IsPasswordManager) {
+            $('#AdminInterfaceGroupSessionInviteButton').show();
             $('#AdminInterfaceGroupSessionOverviewButton').show();
         }
     } else {
