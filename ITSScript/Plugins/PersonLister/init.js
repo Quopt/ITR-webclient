@@ -81,6 +81,7 @@
 
             this.sortField = "EMail";
             this.archived = "N"; // N No Y Yes
+            $('#PersonListerTableDelete').hide();
 
             // fields to show in the list for a session : Description, StartedAt, EndedAt, AllowedStartDateTime, AllowedEndDateTime
             $('#PersonListerTable').empty();
@@ -109,11 +110,61 @@
             $('#PersonListerInterfaceEditSessionEditHeaderStatus').show();
             $('#PersonListerInterfaceEditSessionEditHeaderStatus')[0].innerText =
                 ITSInstance.translator.translate("PersonListerController.PersonStatusArchived", "(archived)");
+            $('#PersonListerTableDelete').show();
         }
 
         if (fireRequest) {
             this.fireRequest();
         }
+    };
+
+    ITSPersonListerEditor.prototype.deleteArchived = function () {
+        ITSInstance.UIController.showInterfaceAsWaitingOn();
+
+        if ($('#PersonListerDelete-All:checked').val() == "all") {
+            ITSInstance.UIController.showInterfaceAsWaitingOn();
+            this.deleteCounter = this.personsList.length;
+            for (var i=0; i < this.personsList.length; i++) {
+                ITSInstance.genericAjaxDelete('persons/' + this.personsList[i].ID, this.deleteCheckLoadingOK.bind(this), this.deleteCheckLoadingFailed.bind(this), false, true);
+                ITSInstance.MessageBus.publishMessage("Person.Delete", this);
+
+            }
+        }
+        else if ($('#PersonListerDelete-OnlyThis:checked').val() == "onlywithoutsession") {
+            ITSInstance.UIController.showInterfaceAsWaitingOn();
+            this.deleteCounter = this.personsList.length;
+            for (var i=0; i < this.personsList.length; i++) {
+                this.deleteCheck(this.personsList[i].ID, true);
+            }
+        }
+    };
+
+    ITSPersonListerEditor.prototype.deleteCheck = function (pID, withSessions) {
+        var tempSessionCheck = new ITSObject(this, ITSInstance);
+        tempSessionCheck.sessionsList = {};
+        ITSInstance.JSONAjaxLoader('sessionsview' , tempSessionCheck.sessionsList, this.deleteCheckLoaded.bind(this, tempSessionCheck, pID), this.deleteCheckLoadingFailed.bind(this), 'ITSObject', 0, 2,
+            "", "", "N", "Y", "PersonID=" + pID);
+    };
+
+    ITSPersonListerEditor.prototype.deleteCheckLoaded = function (tempSessionCheck, pID) {
+        if (tempSessionCheck.sessionsList.length == 0) {
+            ITSInstance.genericAjaxDelete('persons/' + pID, this.deleteCheckLoadingOK.bind(this), this.deleteCheckLoadingFailed.bind(this), false, true);
+            ITSInstance.MessageBus.publishMessage("Person.Delete", this);
+        } else {
+            this.deleteCheckLoadingOK();
+        }
+    };
+
+    ITSPersonListerEditor.prototype.deleteCheckLoadingOK = function () {
+        this.deleteCounter --;
+        if (this.deleteCounter <= 0) {
+            ITSInstance.UIController.showInterfaceAsWaitingOff();
+            setTimeout(this.search.bind(this), 2000);
+        }
+    };
+
+    ITSPersonListerEditor.prototype.deleteCheckLoadingFailed = function () {
+        ITSInstance.UIController.showError("ITSPersonLister.LoadListFailed", "The candidates or some of the candidates could not be deleted at this moment.")
     };
 
     ITSPersonListerEditor.prototype.fireRequest = function () {
@@ -160,6 +211,7 @@
         // if returned data is less than 25 records then hide the load more button
         $('#PersonListerTableFindMoreButton').hide();
         if (this.personsList.length >= 25) { $('#PersonListerTableFindMoreButton').show(); };
+        if (this.personsList.length == 0) { $('#PersonListerTableDelete').hide(); }
 
         // replace the div contents with the generated table
         $('#PersonListerTable').empty();

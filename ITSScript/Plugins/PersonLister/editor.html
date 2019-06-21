@@ -28,4 +28,45 @@
                 class="fa fa-fw fa-layer-group"></i> Show more information
         </button>
     </div>
+    <div class="row align-items-center justify-content-center col-12" style="display:none" id="PersonListerTableDelete">
+        <button id="PersonListerDelete" type="button" data-toggle="modal" data-target="#PersonListerDelete-dialog" class="btn btn-warning">
+            <i id="PersonListerDeleteIcon" class="fa fa-fw fa-trash"></i><span id="PersonListerDeleteButtonLabel">Delete persons</span></button>
+    </div>
+</div>
+
+<div class="modal fade" id="PersonListerDelete-dialog" tabindex="-1" role="dialog" aria-labelledby="PersonListerDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="PersonListerDeleteLabel">What do you want to delete?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="PersonListerDelete-OnlyThis" name="PersonListerDelete-list" value="onlywithoutsession" checked>
+                        <label class="form-check-label" id="PersonListerDelete-Alllabel" for="PersonListerDelete-All">
+                            Delete all archived persons that do NOT have a linked session
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="PersonListerDelete-All" name="PersonListerDelete-list" value="all">
+                        <label class="form-check-label" id="PersonListerDelete-OnlyThislabel" for="PersonListerDelete-OnlyThis">
+                            Delete all archived persons including ALL their session data (IRREVERSIBLE! ALL DATA WILL BE PERMANENTLY DELETED.)
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="PersonListerDelete-CloseButton">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="PersonListerDelete-DeleteButton" onclick="ITSInstance.PersonListerController.deleteArchived();" notranslate>
+                    <i id="PersonListerDeleteTestIcon2" class="fa fa-fw fa-trash"></i>
+                    <span id="PersonListerDelete-buttonlabel" >Delete persons</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
