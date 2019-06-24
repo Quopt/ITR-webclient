@@ -580,7 +580,7 @@ ITSGroupSessionEditor.prototype.showUserAndPasswordOverview = function () {
 };
 
 ITSGroupSessionEditor.prototype.showGroupSessions = function () {
-    ITSRedirectPath('GroupSessionLister&GroupSessionID=' + this.currentSession.ID);
+    ITSRedirectPath('SessionLister&SessionType=0&GroupSessionID=' + this.currentSession.ID);
 };
 
 ITSGroupSessionEditor.prototype.archiveGroupSessionNow = function (archiveStatus) {

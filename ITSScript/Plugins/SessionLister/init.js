@@ -112,6 +112,9 @@
                 if (getUrlParameterValue('GroupID')) {
                     this.groupID = getUrlParameterValue('GroupID');
                 }
+                if (getUrlParameterValue('GroupSessionID')) {
+                    this.groupSessionID = getUrlParameterValue('GroupSessionID');
+                }
                 if (getUrlParameterValue('PersonID')) {
                     this.personID = getUrlParameterValue('PersonID');
                 }
@@ -164,6 +167,7 @@
         this.filter = this.filter == "" ? "SessionType=" + this.sessionType : this.filter + ",SessionType=" + this.sessionType
         if ( this.personID.trim() != "") this.filter = this.filter == "" ? "PersonID=" + this.personID : this.filter + ",PersonID=" + this.personID;
         if ( this.groupID.trim() != "") this.filter = this.filter == "" ? "GroupID=" + this.groupID : this.filter + ",GroupID=" + this.groupID;
+        if ( this.groupSessionID.trim() != "") this.filter = this.filter == "" ? "GroupSessionID=" + this.groupSessionID : this.filter + ",GroupSessionID=" + this.groupSessionID;
         if ( this.consultantID.trim() != "") this.filter = this.filter == "" ? "ManagedByUserID=" + this.consultantID : this.filter + ",ManagedByUserID=" + this.consultantID
         if (fireRequest) {
             this.fireRequest();
