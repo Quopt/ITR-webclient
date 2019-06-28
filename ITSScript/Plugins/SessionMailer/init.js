@@ -268,8 +268,10 @@
 
             // disable the editor (it will only be an example) for the group session editor
             tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").getBody().setAttribute('contenteditable', true);
+            $('#SessionMailerInterfaceSessionEditMailToDiv').show();
             if (this.GroupSessionID) {
                 tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").getBody().setAttribute('contenteditable', false);
+                $('#SessionMailerInterfaceSessionEditMailToDiv').hide();
             }
         }
     };
@@ -444,6 +446,7 @@
             // now send the e-mails
             this.mailsToSend = this.currentSession.PluginData.GroupMembers.length;
             for (var i=0; i < this.currentSession.PluginData.GroupMembers.length; i++) {
+                this.currentSession.PluginData.GroupMembers[i].tempCandidate.EMail = this.currentSession.PluginData.GroupMembers[i].EMail;
                 this.sendGroupMailNow( this.currentSession.PluginData.GroupMembers[i].tempCandidate);
             }
             ITSInstance.UIController.showInterfaceAsWaitingOff();
