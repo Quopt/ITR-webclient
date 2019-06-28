@@ -596,8 +596,20 @@
     };
 
     ITSSessionEditor.prototype.resendInvitation = function (passwordReset) {
+        if (ITSInstance.users.currentUser.IsPasswordManager) {
+            this.currentSession.Person.requestPassword(this.resendInvitationContinue.bind(this,passwordReset),
+                function () { ITSInstance.UIController.showError("SessionEditor", "GettingPasswordFailed", "The users password could not be retrieved. Please refresh your browser page and try again."); }
+                );
+        } else {
+            this.resendInvitationContinue(passwordReset);
+        }
+    };
+
+    ITSSessionEditor.prototype.resendInvitationContinue = function (passwordReset) {
         ITSInstance.SessionMailerSessionController.currentSession = this.currentSession;
-        this.currentSession.Person.Password = "";
+        if (!ITSInstance.users.currentUser.IsPasswordManager) {
+            this.currentSession.Person.Password = "";
+        }
         if (passwordReset) {
             this.currentSession.Person.regeneratePassword();
             this.currentSession.Person.saveToServer(function () {}, function () {});

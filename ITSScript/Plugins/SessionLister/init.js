@@ -100,6 +100,7 @@
                 // personid
                 this.sessionType = "0";
                 this.groupID = "";
+                this.groupSessionID = "";
                 this.personID = "";
                 this.consultantID = "";
                 this.sortField = "EndedAt desc, Description";
