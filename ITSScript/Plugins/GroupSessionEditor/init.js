@@ -572,7 +572,7 @@ ITSGroupSessionEditor.prototype.emailPasteProcess = function () {
 };
 
 ITSGroupSessionEditor.prototype.sendInvitations = function () {
-
+    ITSRedirectPath('SessionMailer&GroupSessionID=' + this.currentSession.ID);
 };
 
 ITSGroupSessionEditor.prototype.showUserAndPasswordOverview = function () {

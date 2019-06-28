@@ -43,11 +43,14 @@
     };
 
     ITSSessionMailerEditor.prototype.show = function () {
-        if ((getUrlParameterValue('SessionID')) || (getUrlParameterValue('PersonID')) || (getUrlParameterValue('ConsultantID')) ) {
-            if (getUrlParameterValue('SessionID')) this.SessionID = getUrlParameterValue('SessionID');
-            if (getUrlParameterValue('PersonID')) this.PersonID = getUrlParameterValue('PersonID');
-            if (getUrlParameterValue('Template')) this.Template = (getUrlParameterValue('Template'));
-            if (getUrlParameterValue('ConsultantID')) this.ConsultantID = (getUrlParameterValue('ConsultantID'));
+        if ((getUrlParameterValue('SessionID')) || (getUrlParameterValue('GroupSessionID')) || (getUrlParameterValue('PersonID')) || (getUrlParameterValue('ConsultantID')) ) {
+            this.SessionID="";
+            this.GroupSessionID="";
+            if (getUrlParameterValue('SessionID')) { this.SessionID = getUrlParameterValue('SessionID');}
+            if (getUrlParameterValue('GroupSessionID')) { this.GroupSessionID = getUrlParameterValue('GroupSessionID');}
+            if (getUrlParameterValue('PersonID')) {this.PersonID = getUrlParameterValue('PersonID');}
+            if (getUrlParameterValue('Template')) {this.Template = (getUrlParameterValue('Template'));}
+            if (getUrlParameterValue('ConsultantID')) {this.ConsultantID = (getUrlParameterValue('ConsultantID'));}
 
             $('#NavbarsAdmin').show();
             $('#NavbarsAdmin').visibility = 'visible';
@@ -78,6 +81,13 @@
             if ((getUrlParameterValue('SessionID'))) {
                 if ( (!this.currentSession) || (this.currentSession.ID != this.SessionID)) {
                     this.currentSession.loadSession(this.SessionID, this.sessionLoadingSucceeded.bind(this), this.sessionLoadingFailed.bind(this));
+                } else {
+                    this.sessionLoadingSucceeded();
+                }
+            } else
+            if ((getUrlParameterValue('GroupSessionID'))) {
+                if ( (!this.currentSession) || (this.currentSession.ID != this.SessionID)) {
+                    this.currentSession.loadSession(this.GroupSessionID, this.sessionLoadingSucceeded.bind(this), this.sessionLoadingFailed.bind(this));
                 } else {
                     this.sessionLoadingSucceeded();
                 }
@@ -255,6 +265,12 @@
                     this.selectTemplateInEditor(index);
                 }
             }
+
+            // disable the editor (it will only be an example) for the group session editor
+            tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").getBody().setAttribute('contenteditable', true);
+            if (this.GroupSessionID) {
+                tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").getBody().setAttribute('contenteditable', false);
+            }
         }
     };
     ITSSessionMailerEditor.prototype.sessionLoadingFailed = function () {
@@ -374,24 +390,89 @@
     };
 
     ITSSessionMailerEditor.prototype.sendMail = function () {
-        ITSInstance.UIController.showInterfaceAsWaitingOn();
-        // store the defaults in the users data and save the user
-        if (!ITSInstance.users.currentUser.PluginData.MailSettings) ITSInstance.users.currentUser.PluginData.MailSettings = {};
-        ITSInstance.users.currentUser.PluginData.MailSettings['CopyMe'] = $('#SessionMailerInterfaceSessionEditMailCopyMe').is(':checked');
-        ITSInstance.users.currentUser.PluginData.MailSettings['CC'] = $('#SessionMailerInterfaceSessionEditMailCc').val();
-        ITSInstance.users.currentUser.PluginData.MailSettings['From'] = $('#SessionMailerInterfaceSessionEditMailFrom').val();
-        ITSInstance.users.saveCurrentUser();
+        if (this.GroupSessionID) {
+            this.sendMailForGroups();
+        } else {
+            ITSInstance.UIController.showInterfaceAsWaitingOn();
+            // store the defaults in the users data and save the user
+            if (!ITSInstance.users.currentUser.PluginData.MailSettings) ITSInstance.users.currentUser.PluginData.MailSettings = {};
+            ITSInstance.users.currentUser.PluginData.MailSettings['CopyMe'] = $('#SessionMailerInterfaceSessionEditMailCopyMe').is(':checked');
+            ITSInstance.users.currentUser.PluginData.MailSettings['CC'] = $('#SessionMailerInterfaceSessionEditMailCc').val();
+            ITSInstance.users.currentUser.PluginData.MailSettings['From'] = $('#SessionMailerInterfaceSessionEditMailFrom').val();
+            ITSInstance.users.saveCurrentUser();
 
+            // send the mail
+            var newMail = new ITSMail();
+            newMail.ReplyTo = $('#SessionMailerInterfaceSessionEditMailFrom').val();
+            newMail.To = $('#SessionMailerInterfaceSessionEditMailTo').val();
+            newMail.CC = $('#SessionMailerInterfaceSessionEditMailCc').val();
+            if (ITSInstance.users.currentUser.PluginData.MailSettings.CopyMe) {
+                newMail.BCC = ITSInstance.users.currentUser.Email;
+            }
+            newMail.Subject = $('#SessionMailerInterfaceSessionEditMailSubject').val();
+            newMail.Body = tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").getContent().toString();
+
+            newMail.sendMail(this.mailOK.bind(this), this.mailFailed.bind(this));
+        }
+    };
+
+    ITSSessionMailerEditor.prototype.sendMailForGroups = function () {
+        // get a list of all candidates in this group
+        // get the password for the candidate
+        // send a mail to each candidate
+        ITSInstance.UIController.showInterfaceAsWaitingOn();
+        this.currentSession.loadRelatedGroupMembers(this.getPasswordsForCandidatesOverviewStageLoad.bind(this), this.groupMemberLoadingFailed.bind(this));
+    };
+    ITSSessionMailerEditor.prototype.groupMemberLoadingFailed = function () {
+        ITSInstance.UIController.showInterfaceAsWaitingOff();
+        ITSInstance.UIController.showError("ITSSessionMailerEditor.LoadSessionFailed", "The session group members could not be loaded at this moment.", '',
+            'window.history.back();');
+    };
+    ITSSessionMailerEditor.prototype.getPasswordsForCandidatesOverviewStageLoad = function () {
+        this.passwordsLoaded = 0;
+        for (var i=0; i < this.currentSession.PluginData.GroupMembers.length; i++) {
+            this.currentSession.PluginData.GroupMembers[i].tempCandidate = new ITSCandidate(this, ITSInstance);
+            this.currentSession.PluginData.GroupMembers[i].tempCandidate.ID = this.currentSession.PluginData.GroupMembers[i].ID;
+            this.currentSession.PluginData.GroupMembers[i].tempCandidate.requestPassword( this.getPasswordsForCandidatesOverviewStageLoadOK.bind(this, i),
+                this.getPasswordsForCandidatesOverviewStageLoadError.bind(this) );
+        }
+    };
+    ITSSessionMailerEditor.prototype.getPasswordsForCandidatesOverviewStageLoadOK = function (index) {
+        this.passwordsLoaded++;
+        //this.currentSession.PluginData.GroupMembers[index].Password = this.currentSession.PluginData.GroupMembers[index].tempCandidate.Password;
+        if (this.currentSession.PluginData.GroupMembers.length == this.passwordsLoaded) {
+            // now send the e-mails
+            this.mailsToSend = this.currentSession.PluginData.GroupMembers.length;
+            for (var i=0; i < this.currentSession.PluginData.GroupMembers.length; i++) {
+                this.sendGroupMailNow( this.currentSession.PluginData.GroupMembers[i].tempCandidate);
+            }
+            ITSInstance.UIController.showInterfaceAsWaitingOff();
+            ITSInstance.UIController.showInfo("ITSSessionMailerEditor.MailsSent","The e-mails have been sent. ", '',
+                'window.history.back();');
+        }
+    };
+    ITSSessionMailerEditor.prototype.getPasswordsForCandidatesOverviewStageLoadError = function () {
+        ITSInstance.UIController.showInterfaceAsWaitingOff();
+        ITSInstance.UIController.showError("ITSSessionMailerEditor.LoadPasswordsError","The passwords for some users could not be loaded. The e-mails have not been sent. ", '',
+            'window.history.back();');
+        for (var i=0; i < this.currentSession.PluginData.GroupMembers.length; i++) {
+            this.currentSession.PluginData.GroupMembers[i].tempCandidate = undefined;
+        }
+    };
+    ITSSessionMailerEditor.prototype.sendGroupMailNow = function (candidate) {
         // send the mail
         var newMail = new ITSMail();
         newMail.ReplyTo = $('#SessionMailerInterfaceSessionEditMailFrom').val();
-        newMail.To = $('#SessionMailerInterfaceSessionEditMailTo').val();
+        newMail.To = candidate.EMail;
         newMail.CC = $('#SessionMailerInterfaceSessionEditMailCc').val();
         if (ITSInstance.users.currentUser.PluginData.MailSettings.CopyMe) {
             newMail.BCC = ITSInstance.users.currentUser.Email;
         }
-        newMail.Subject = $('#SessionMailerInterfaceSessionEditMailSubject').val();
-        newMail.Body = tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").getContent().toString();
+
+        newMail.Subject = envSubstitute(this.templateList[this.selectedTemplateIndex].subject, this, false);
+        newMail.Body = envSubstitute(this.templateList[this.selectedTemplateIndex].body, this, false);
+
+        this.candidate = candidate;
 
         newMail.sendMail(this.mailOK.bind(this), this.mailFailed.bind(this));
     };
