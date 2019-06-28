@@ -472,10 +472,9 @@
             newMail.BCC = ITSInstance.users.currentUser.Email;
         }
 
+        this.candidate = candidate;
         newMail.Subject = envSubstitute(this.templateList[this.selectedTemplateIndex].subject, this, false);
         newMail.Body = envSubstitute(this.templateList[this.selectedTemplateIndex].body, this, false);
-
-        this.candidate = candidate;
 
         newMail.sendMail(this.mailOK.bind(this), this.mailFailed.bind(this));
     };
