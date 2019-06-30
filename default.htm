@@ -78,54 +78,51 @@
 <div class="fixed-top" id="NavBarsAdminSidebar"
      style="display: none;color:white;background-color: #331a00;top:35px; z-index:1;min-width: 300px;max-width: 300px;">
     <br/>
-    <div id="NavBarsAdminSidebarMenu" class="d-md-flex pt-2">
-        <ul class="nav flex-column">
-            <li NoTranslate class="nav-item"><a class="nav-link" style="color:white;" id="NavBarsAdminSidebarSwitchboard" onclick="ITSRedirectPath('Switchboard');"><label id="NavBarsAdminSidebarSwitchboardLabel">Switchboard</label></a>
+    <div id="NavBarsAdminSidebarMenu" class="d-md-flex pt-2 nav flex-column">
+            <li NoTranslate class="nav-item"><a class="nav-link" style="color:white;" id="NavBarsAdminSidebarSwitchboard" onclick="$('div[MainMenu]').collapse('hide'); ITSRedirectPath('Switchboard');"><label id="NavBarsAdminSidebarSwitchboardLabel">Switchboard</label></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" data-toggle="collapse" data-target="#submenuCandidates"
+                <a class="nav-link collapsed" data-toggle="collapse" data-target="#submenuCandidates" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
                    style="color:white;" id="NavBarsAdminSidebarUsers"><label id="NavBarsAdminSidebarUsersLabel">Candidates</label></a>
-                <div NoTranslate class="collapse small" id="submenuCandidates" aria-expanded="false">
+                <div NoTranslate class="collapse small" id="submenuCandidates" aria-expanded="false" MainMenu>
                     <ul NoTranslate class="flex-column pl-4 nav" id="submenuCandidatesLI">
                     </ul>
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" data-toggle="collapse"
+                <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
                    data-target="#submenuSessions" style="color:white;" id="NavBarsAdminSidebarSessions"><label id="NavBarsAdminSidebarSessionsLabel">Sessions</label></a>
-                <div NoTranslate class="collapse small" id="submenuSessions" aria-expanded="false">
+                <div NoTranslate class="collapse small" id="submenuSessions" aria-expanded="false" MainMenu>
                     <ul NoTranslate class="flex-column pl-4 nav" id="submenuSessionsLI">
                         </ul>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" data-toggle="collapse"
-                       data-target="#submenuTestsAndReports" style="color:white;" id="NavBarsAdminSidebarSettings"><label id="NavBarsAdminSidebarTestAndReportsLabel">Tests and Reports</label></a>
-                    <div NoTranslate class="collapse small" id="submenuTestsAndReports" aria-expanded="false">
+                    <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
+                       data-target="#submenuTestsAndReports" style="color:white;" id="NavBarsAdminSidebarTestAndReports"><label id="NavBarsAdminSidebarTestAndReportsLabel">Tests and Reports</label></a>
+                    <div NoTranslate class="collapse small" id="submenuTestsAndReports" aria-expanded="false" MainMenu>
                         <ul NoTranslate class="flex-column pl-4 nav" id="submenuTestsAndReportsLI">
-
                         </ul>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="#submenuSettings" data-toggle="collapse"
+                    <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
                        data-target="#submenuSettings" style="color:white;" id="NavBarsAdminSidebarSettings"><label id="NavBarsAdminSidebarSettingsLabel">Settings</label></a>
-                    <div NoTranslate class="collapse small" id="submenuSettings" aria-expanded="false">
+                    <div NoTranslate class="collapse small" id="submenuSettings" aria-expanded="false" MainMenu>
                         <ul NoTranslate class="flex-column pl-4 nav" id="submenuSettingsLI">
                         </ul>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" style="color:white;" data-toggle="collapse"
+                    <a class="nav-link collapsed" style="color:white;" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
                        data-target="#submenuCompanies" id="NavBarsAdminSidebarCompanies"><label id="NavBarsAdminSidebarCompaniesLabel">Organisation</label></a>
-                    <div NoTranslate class="collapse small" id="submenuCompanies" aria-expanded="false">
+                    <div NoTranslate class="collapse small" id="submenuCompanies" aria-expanded="false" MainMenu>
                         <ul NoTranslate class="flex-column pl-4 nav" id="submenuCompaniesLI">
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item"><a class="nav-link" style="color:white;" onclick="ITSInstance.logoutController.logout();"
+                <li class="nav-item"><a class="nav-link" style="color:white;" onclick="$('div[MainMenu]').collapse('hide'); ITSInstance.logoutController.logout();"
                                         id="NavBarsAdminSidebarLogout"><label id="NavBarsAdminSidebarLogoutLabel">Logout</label></a></li>
-            </ul>
         </div>
     </div>
 
