@@ -131,8 +131,8 @@
 
                 // fields to show in the list for a session : Description, StartedAt, EndedAt, AllowedStartDateTime, AllowedEndDateTime
                 $('#SessionListerTable').empty();
-                this.buildFilter(true);
                 this.searchField = "";
+                this.buildFilter(true);
             }
         }
         else // no parameter will not work for this screen
