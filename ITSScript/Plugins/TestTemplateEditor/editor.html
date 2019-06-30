@@ -135,10 +135,15 @@
             </div><div class="col-sm-4 form-check">&nbsp</div><div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasScreenDynamics" id="AdminInterfaceTestTemplateEditorTestCapHasScreenDynamicsLabel">Test has screen dynamics</label>
                 <input  id="AdminInterfaceTestTemplateEditorTestCapHasScreenDynamics" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.PluginData.testHasScreenDynamics" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController ); ITSInstance.newITSTestEditorController.processTestCapabilities();"/>
-            </div><div class="col-sm-4 form-check">&nbsp</div><div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </div><div class="col-sm-4 form-check">&nbsp</div>
+            <div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapProtectTest" id="AdminInterfaceTestTemplateEditorTestCapProtectTestScreenLabel">Remove the test scoring & norms during test taking</label>
+                <input  id="AdminInterfaceTestTemplateEditorTestCapProtectTest" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.TestDefinitionIsProtected" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );"/>
+            </div><div class="col-sm-4 form-check">&nbsp</div>
+            <div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapShowTestClosureScreen" id="AdminInterfaceTestTemplateEditorTestCapShowTestClosureScreenLabel">Show the test closure screen after the test</label>
             <input  id="AdminInterfaceTestTemplateEditorTestCapShowTestClosureScreen" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.ShowTestClosureScreen" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );"/>
-        </div>
+            </div>
         </div>
         <div id="AdminInterfaceTestTemplateEditorTestCopyrightsDiv" class="form-group row col-12">
             <label class="col-sm-4 col-form-label" id="AdminInterfaceTestTemplateEditorTestCopyrightsLabel"

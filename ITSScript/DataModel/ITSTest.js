@@ -30,6 +30,7 @@ function ITSTest(par, session) {
     this.TestEndDate = "2100-01-01";
     this.TestDefinitionFrozen = false;
     this.TestDefinitionIsReleased = false;
+    this.TestDefinitionIsProtected = true;
     this.Active = false;
     this.SupportsTestTaking = true;
     this.SupportsTestScoring = true;
@@ -121,7 +122,8 @@ function ITSTest(par, session) {
         'ScoringScript',
         'Pre360',
         'Per360',
-        'Post360'
+        'Post360',
+        'TestDefinitionIsProtected'
         ];
 
     // process information
