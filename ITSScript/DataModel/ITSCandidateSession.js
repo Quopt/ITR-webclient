@@ -322,6 +322,9 @@ ITSCandidateSession.prototype.saveGroupSessionsToServerStageCheckSession = funct
             tempTestSession.PersID = tempSession.PersonID;
             tempTestSession.ID = tempTestSession.oldID;
             tempSession.SessionTests.push(tempTestSession);
+
+            // if session is already done then switch it back to in progress
+            if (tempSession.Status >= 30) { tempSession.Status = 20; }
         }
     }
 
@@ -329,7 +332,6 @@ ITSCandidateSession.prototype.saveGroupSessionsToServerStageCheckSession = funct
         this.saveGroupSessionsToServerStageUpdateError.bind(this), true);
     this.progressElementCounter++;
     this.saveGroupSessionsToServerUpdateCounter();
-
 };
 
 ITSCandidateSession.prototype.saveGroupSessionsToServerStageUpdateOK = function () {
