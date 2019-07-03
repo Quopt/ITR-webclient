@@ -123,7 +123,7 @@
         oneday.setHours(oneday.getHours() + 24);
         if ( (this.currentSession.SessionTests[this.currentTestIndex].TestEnd < new Date(2001,1,1) ) ||
             (this.currentSession.SessionTests[this.currentTestIndex].testDefinition.Costs <= 0) ||
-            (this.currentSession.SessionTests[this.currentTestIndex].TestEnd < oneday) ) {
+            (this.currentSession.SessionTests[this.currentTestIndex].TestEnd >= oneday) ) {
                 // this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results);
                 this.currentSession.SessionTests[this.currentTestIndex].testDefinition.updateResultsStorageFromQuestionOverview("SessionViewAnswersInterfaceEditTestAnswers",
                     this.currentSession.SessionTests[this.currentTestIndex].Results, true, "_" + this.checkAnswers + this.genNumber);
