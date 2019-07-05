@@ -123,18 +123,18 @@
 
         if ($('#PersonListerDelete-All:checked').val() == "all") {
             ITSInstance.UIController.showInterfaceAsWaitingOn();
-            this.deleteCounter = this.personsList.length;
-            for (var i=0; i < this.personsList.length; i++) {
-                ITSInstance.genericAjaxDelete('persons/' + this.personsList[i].ID, this.deleteCheckLoadingOK.bind(this), this.deleteCheckLoadingFailed.bind(this), false, true);
+            this.deleteCounter = this.totalPersonsList.length;
+            for (var i=0; i < this.totalPersonsList.length; i++) {
+                ITSInstance.genericAjaxDelete('persons/' + this.totalPersonsList[i].ID, this.deleteCheckLoadingOK.bind(this), this.deleteCheckLoadingFailed.bind(this), false, true);
                 ITSInstance.MessageBus.publishMessage("Person.Delete", this);
 
             }
         }
         else if ($('#PersonListerDelete-OnlyThis:checked').val() == "onlywithoutsession") {
             ITSInstance.UIController.showInterfaceAsWaitingOn();
-            this.deleteCounter = this.personsList.length;
-            for (var i=0; i < this.personsList.length; i++) {
-                this.deleteCheck(this.personsList[i].ID, true);
+            this.deleteCounter = this.totalPersonsList.length;
+            for (var i=0; i < this.totalPersonsList.length; i++) {
+                this.deleteCheck(this.totalPersonsList[i].ID, true);
             }
         }
     };
@@ -170,6 +170,7 @@
     ITSPersonListerEditor.prototype.fireRequest = function () {
         // ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, DefaultObjectType, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter) {
         this.personsList = {};
+        if (this.currentPage == 0) { this.totalPersonsList = []; }
         ITSInstance.UIController.showInterfaceAsWaitingOn();
         ITSInstance.JSONAjaxLoader('persons' , this.personsList, this.listLoaded.bind(this), this.listLoadingFailed.bind(this), 'ITSObject', this.currentPage, 25,
             this.sortField, this.archived, "N", "Y", this.filter, this.searchField);
@@ -180,6 +181,9 @@
         if (this.currentPage ==0) {
             // generate table header
             this.generatedTable = this.tablePart1;
+        }
+        for (var i=0; i < this.personsList.length; i++) {
+            this.totalPersonsList.push(this.personsList[i]);
         }
 
         // generate the records for the returned data
