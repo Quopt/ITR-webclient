@@ -172,11 +172,14 @@ ITSCandidateSession.prototype.saveToServerIncludingTestsAndPerson = function (On
                     });
                 }
 
-                this.Person.saveToServer(function () {
-                }, function () {
+                this.Person.saveToServer(
+                    function () {
+                        if (OnSuccess) { OnSuccess(); }
+                }.bind(this, OnSuccess),
+                    function () {
                 });
 
-                if (OnSuccess) OnSuccess();
+                //if (OnSuccess) OnSuccess();
             }.bind(this, OnSuccess)
             , OnError, false, true);
         this.ITSSession.MessageBus.publishMessage("Session.Update", this);
@@ -229,11 +232,11 @@ ITSCandidateSession.prototype.saveGroupSessionToServerCreateNew = function (Grou
     newSession.saveToServerIncludingTestsAndPerson(this.saveGroupSessionsToServerStageUpdateOK.bind(this),
         this.saveGroupSessionsToServerStageUpdateError.bind(this));
 };
-ITSCandidateSession.prototype.saveGroupSessionsToServerUpdateCounter = function () {
-    if (this.progressElement != "") {
-        $('#'+this.progressElement)[0].innerHTML = this.progressElementCounter + '/'+ this.PluginData.GroupMembers.length;
-        $('#'+this.progressElement).attr('aria-valuenow' , Math.round(this.progressElementCounter / this.PluginData.GroupMembers.length) * 100 );
-        if (this.progressElementCounter >= this.PluginData.GroupMembers.length) {
+ITSCandidateSession.prototype.saveGroupSessionsToServerUpdateCounter = function (progressElementCounter) {
+    if ((this.progressElement != "") && (progressElementCounter)) {
+        $('#'+this.progressElement)[0].innerHTML = progressElementCounter + '/'+ this.PluginData.GroupMembers.length;
+        $('#'+this.progressElement).attr('aria-valuenow' , Math.round(progressElementCounter / this.PluginData.GroupMembers.length) * 100 );
+        if (progressElementCounter >= this.PluginData.GroupMembers.length) {
             $('#'+this.progressElement).hide();
         }
     }
@@ -331,13 +334,15 @@ ITSCandidateSession.prototype.saveGroupSessionsToServerStageCheckSession = funct
     tempSession.saveToServerIncludingTestsAndPerson(this.saveGroupSessionsToServerStageUpdateOK.bind(this),
         this.saveGroupSessionsToServerStageUpdateError.bind(this), true);
     this.progressElementCounter++;
-    this.saveGroupSessionsToServerUpdateCounter();
+    this.saveGroupSessionsToServerUpdateCounter(this.progressElementCounter);
 };
 
 ITSCandidateSession.prototype.saveGroupSessionsToServerStageUpdateOK = function () {
     this.saveGroupSessionsCount ++;
     if (this.saveGroupSessionsCount >= this.PluginData.GroupMembers.length) {
         this.saveGroupSessionsToServerOnSuccess();
+    } else {
+        this.saveGroupSessionsToServerUpdateCounter(this.saveGroupSessionsCount);
     }
 };
 

@@ -480,8 +480,11 @@
     };
 
     ITSSessionMailerEditor.prototype.mailOK = function () {
-        ITSInstance.UIController.showInterfaceAsWaitingOff();
-        ITSInstance.UIController.showInfo('ITSSessionMailerEditor.MailOK', 'The e-mail has been sent.', "", "window.history.back();");
+        this.mailsToSend--;
+        if (this.mailsToSend <= 0) {
+            ITSInstance.UIController.showInterfaceAsWaitingOff();
+            ITSInstance.UIController.showInfo('ITSSessionMailerEditor.MailOK', 'The e-mail has been sent.', "", "window.history.back();");
+        }
     };
 
     ITSSessionMailerEditor.prototype.mailFailed = function (thrownError, xhr, ajaxOptions) {
