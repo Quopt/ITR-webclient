@@ -120,7 +120,7 @@
 
     ITSSessionViewAnswersEditor.prototype.saveTestResults = function () {
         var oneday = new Date();
-        oneday.setHours(oneday.getHours() + 24);
+        oneday.setHours(oneday.getHours() - 24);
         if ( (this.currentSession.SessionTests[this.currentTestIndex].TestEnd < new Date(2001,1,1) ) ||
             (this.currentSession.SessionTests[this.currentTestIndex].testDefinition.Costs <= 0) ||
             (this.currentSession.SessionTests[this.currentTestIndex].TestEnd >= oneday) ) {
