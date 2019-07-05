@@ -664,7 +664,7 @@ ITSCandidateSessionTest.prototype.updateConsentSettings = function () {
         this.PluginData.DataGathering.Allowed = true; // set to false to prevent posting of this sessions data to the anonimised data store
         this.PluginData.DataGathering.Location = {};
     }
-    $.getJSON('http://api.petabyet.com/geoip/').done (
+/*    $.getJSON('http://api.petabyet.com/geoip/').done (
         function(Location) {
             this.PluginData.DataGathering.Location = {};
             this.PluginData.DataGathering.Location._objectType = "ITSObject";
@@ -677,7 +677,7 @@ ITSCandidateSessionTest.prototype.updateConsentSettings = function () {
             this.PluginData.DataGathering.Location.ITRzip = Location.postal_code;
             if (!this.PluginData.DataGathering.Test)  this.PluginData.DataGathering.Test = "";
         }.bind(this)
-    );
+    ); */
 } ;
 
 ITSCandidateSessionTest.prototype.saveToServer = function (OnSuccess, OnError, InTestTaking) {

@@ -436,7 +436,7 @@
         if (this.currentSession.SessionTests.length > testIndex) {
             var testSessionID = this.currentSession.SessionTests[testIndex].ID;
             var oneday = new Date();
-            oneday.setHours(oneday.getHours() + 24);
+            oneday.setHours(oneday.getHours() - 24);
             if ( (this.currentSession.SessionTests[testIndex].TestEnd < new Date(2001,1,1) ) ||
                  (this.currentSession.SessionTests[testIndex].testDefinition.Costs <= 0) ||
                  (this.currentSession.SessionTests[testIndex].TestEnd >= oneday) ) {
