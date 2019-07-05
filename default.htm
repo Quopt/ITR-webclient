@@ -295,7 +295,7 @@
                     Cancel
                 </button>
                 <button class="btn btn-primary" id="ForgotWindowResetButton"
-                        onclick="ITSInstance.UIController.activateScreenPath('Login');">
+                        onclick="ITSInstance.passwordResetController.sendPasswordReset();">
                     Send password reset mail
                 </button>
                 <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightText3" NoTranslate></label></p></div>
@@ -303,13 +303,18 @@
         </div>
     </div>
 
-    <div class="form-check-inline" id="PasswordResetWindow" style="display: none; width:390px;">
+    <div class="form-check" id="PasswordResetWindow" style="display: none;">
         <!-- Token=X&Path=PasswordReset -->
-    <div class="row">
-        <div class="col-lg-12">
+        <div class="row d-flex align-items-center">
+            <div class="mx-auto" style="max-width:390px;min-width:190px;">
             <h3 style="vertical-align:text-bottom;"><img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>Password
                 reset</h3>
             <div class="form-group">
+                <div class="form-group">
+                    <label id="ForgotWindowInstructionReset">Please enter your email address to reset the password for your account.</label> <br/><br/>
+                    <label for="ForgotWindowinputUsernameReset" id="UserNameReset">E-mail</label>
+                    <input type="text" class="form-control" id="ForgotWindowinputUsernameReset"/>
+                </div>
                 <br/>Please enter your new password below <br/><br/>
                 <label for="inputUsername" id="UserName">New password</label>
                 <input type="text" class="form-control" id="PasswordResetWindow1"/>
@@ -322,13 +327,13 @@
                 Cancel
             </button>
             <button class="btn btn-primary" id="PasswordResetWindowButton"
-                    onclick="ITSInstance.UIController.activateScreenPath('Login');">
+                    onclick="ITSInstance.passwordResetController.tryPasswordReset();">
                 Reset password
             </button>
             <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightText4" NoTranslate></label></p></div>
+            </div>
         </div>
     </div>
-</div>
 
 <!-- system service components -->
 <!-- modal dialog box -->

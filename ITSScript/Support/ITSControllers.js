@@ -13,6 +13,44 @@
  *  limitations under the License.
  */
 
+
+// Password reset controller
+ITSPasswordResetController = function () {};
+ITSPasswordResetController.prototype.sendPasswordReset = function () {
+    if ($('#ForgotWindowinputUsername').val().trim() == "") {
+        ITSInstance.UIController.showError('ITSResetPassword.NoMail', 'Please enter a valid email address. If your login is NOT an email address contact your support person to reset it.');
+    } else {
+        tempHeaders = {};
+        tempHeaders['Username'] = $('#ForgotWindowinputUsername').val();
+        tempHeaders['BaseURL'] = ITSInstance.baseURL;
+        tempHeaders['ITRLang'] = ITSLanguage;
+        $.ajax({url: ITSInstance.baseURLAPI + 'sendresetpassword', headers: tempHeaders, type: 'POST'});
+        //ITSRedirectPath('Login');
+        ITSInstance.UIController.activateScreenPath('Login');
+    }
+};
+ITSPasswordResetController.prototype.tryPasswordReset = function () {
+    var newPW = $('#PasswordResetWindow1').val();
+    var newPW2 = $('#PasswordResetWindow2').val();
+    var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{10,})");
+
+    if (newPW != newPW2) {
+        ITSInstance.UIController.showError('ITSResetPasswordEditor.PasswordsNoMatch', 'The new password and the retyped new password do not match. Please type them again and make sure that the new passwords are the same.');
+    } else
+    if (!strongRegex.test(newPW)) {
+        ITSInstance.UIController.showError('ITSResetPasswordEditor.PasswordTooShort', 'The new password is not good. The password needs to be at least 10 characters long and contain upper and lowercase letters, at least one digit and at least one special character.');
+    } else {
+        tempHeaders = {};
+        tempHeaders['Username'] = $('#ForgotWindowinputUsernameReset').val();
+        tempHeaders['Password'] = $('#PasswordResetWindow1').val();
+        tempHeaders['BaseURL'] = ITSInstance.baseURL;
+        tempHeaders['ITRLang'] = ITSLanguage;
+        tempHeaders['SessionID'] = getUrlParameterValue('Token');
+        $.ajax({url: ITSInstance.baseURLAPI + 'resetpassword', headers: tempHeaders, type: 'POST'});
+        ITSRedirectPath('');
+    }
+};
+
 // Login controller
 // facilitates login to the back end and supply the login token
 var redirectURLITSLoginController = '';

@@ -40,6 +40,7 @@ ITSSession = function () {
     this.initializePortletsController = new ITSInitializePortlets(this);
     this.portletSelectCompany = new ITSPortletSelectCompany(this);
     this.portletSelectSession = new ITSPortletSelectSession(this);
+    this.passwordResetController = new ITSPasswordResetController();
 
     // runtime object
     this.currentTest = {}; // the test currently being viewed, calculated, taken etc
