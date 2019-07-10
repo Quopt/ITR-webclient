@@ -1408,7 +1408,7 @@
     function setOpacity(id, start, end) {
         $('#'+id).css('opacity', start);
         if (start < end) {
-            setTimeout(setOpacity.bind(this, id, start + 0.01, end), 100);
+            setTimeout(setOpacity.bind(this, id, start + 0.002, end), 10);
         }
     }
     loginWindowLoadImage();
