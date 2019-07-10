@@ -409,6 +409,8 @@
 <!-- sizing etc for this screen -->
 <script>
     // generic user initialization functions
+    ITSBackgroundImage = "background.png";
+
     function getUrlVars() {
         var vars = {};
         var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
@@ -1396,7 +1398,6 @@
 
 <script>
     opacity = 0;
-    ITSBackgroundImage = "background.png";
     function loginWindowLoadImage() {
         var img = new Image(),
             x = $('#LoginWindowBackground')[0];
