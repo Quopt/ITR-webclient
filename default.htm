@@ -1396,6 +1396,7 @@
 
 <script>
     opacity = 0;
+    ITSBackgroundImage = "background.png";
     function loginWindowLoadImage() {
         var img = new Image(),
             x = $('#LoginWindowBackground')[0];
@@ -1403,7 +1404,7 @@
             x.src = img.src;
             setOpacity('LoginWindowBackgroundDiv', 0, 0.25);
         };
-        img.src = "background.png";
+        img.src = ITSBackgroundImage;
     };
     function setOpacity(id, start, end) {
         $('#'+id).css('opacity', start);

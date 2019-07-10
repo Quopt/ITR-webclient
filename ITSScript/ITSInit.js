@@ -402,6 +402,23 @@ function getCopyrightMessage() {
         },
         type: 'GET'
     });
+    var req = $.ajax({
+        url: ITSInstance.baseURLAPI + 'companylogo',
+        context: this,
+        headers: {
+            'CompanyID': companyID
+        },
+        error: function () {
+            console.log('Retrieving company logo failed.');
+        },
+        success: function (data, textStatus, xhr) {
+            if (data != ""){
+                ITSBackgroundImage = data;
+            }
+            loginWindowLoadImage();
+        },
+        type: 'GET'
+    });
 }
 
 OldURLparseURLandTakeAction = '';

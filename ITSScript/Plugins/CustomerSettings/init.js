@@ -49,10 +49,13 @@
         this.SMTP_UseTLS = "";
         this.SMTP_User = "";
         this.SMTP_Password = "";
+        this.companyLogo = "";
 
         ITSInstance.UIController.showInterfaceAsWaitingOn();
 
         ITSInstance.JSONAjaxLoader('systemsettings/MAXNUMBEROFCONSULTANTS', this.maxNumberOfConsultants, this.maxConsultantsLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
+            0, 999, "", "N", "N", "Y");
+        ITSInstance.JSONAjaxLoader('systemsettings/COMPANYLOGO', this.companyLogo, this.companyLogoLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
             0, 999, "", "N", "N", "Y");
         ITSInstance.JSONAjaxLoader('systemsettings/SMTP_SENDER', this.SMTP_Sender,  this.SMTPSenderLoaded.bind(this),this.ParsLoadedError.bind(this), ITSObject,
             0, 999, "", "N", "N", "Y");
@@ -71,6 +74,11 @@
         if (ITSInstance.users.currentUser.IsMasterUser) {
             $('#CustomerSettingsDiv').children().prop('disabled',false);
         }
+    };
+
+    ITSCustomerSettingsEditor.prototype.companyLogoLoaded = function (newValue) {
+        this.companyLogo = newValue;
+        this.ParsLoaded();
     };
 
     ITSCustomerSettingsEditor.prototype.maxConsultantsLoaded = function (newValue) {
@@ -122,6 +130,9 @@
         $('#CustomerSettingsDiv-TranslateKey-val').val(this.Translate_Azure_Key);
 
         $('#CustomerSettingsDiv-MaxNumberOfConsulants-val').val(this.maxNumberOfConsultants);
+
+        $('#CustomerSettingsDiv-CompanyLogo-val').val(this.companyLogo);
+
     };
 
     ITSCustomerSettingsEditor.prototype.ParsLoadedError = function (xhr) {
@@ -138,6 +149,10 @@
 
     ITSCustomerSettingsEditor.prototype.changeMaxNumberOfConsulantsParameter= function (newVal) {
         ITSInstance.genericAjaxUpdate('systemsettings/MAXNUMBEROFCONSULTANTS', newVal, function () {}, function () {}, "N", "Y");
+    };
+
+    ITSCustomerSettingsEditor.prototype.changeCompanyLogoParameter= function (newVal) {
+        ITSInstance.genericAjaxUpdate('systemsettings/COMPANYLOGO', newVal, function () {}, function () {}, "N", "Y");
     };
 
     ITSCustomerSettingsEditor.prototype.changeTranslateKeyParameter= function (newVal) {

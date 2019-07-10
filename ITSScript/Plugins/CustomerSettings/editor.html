@@ -83,4 +83,14 @@
         </div>
     </div>
 
+    <div class="bg-dark text-white well"><label id="CustomerSettingsDiv-ITSPreferences">Company preferences</label></div>
+    <div class="">
+        <div id="CustomerSettingsDiv-CompanyLogo" class="form-group row">
+            <label for="CustomerSettingsDiv-CompanyLogo-val" id="CustomerSettingsDiv-CompanyLogo-lbl" class="col-sm-4 col-form-label">Company logo URL</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" placeholder="Company logo URL " value=""
+                       id="CustomerSettingsDiv-CompanyLogo-val" onchange="ITSInstance.CustomerSettingsController.changeCompanyLogoParameter(this.value);">
+            </div>
+        </div>
+    </div>
 </div>
