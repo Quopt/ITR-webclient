@@ -409,7 +409,7 @@
 <!-- sizing etc for this screen -->
 <script>
     // generic user initialization functions
-    ITSBackgroundImage = "background.png";
+    if (!ITSBackgroundImage) { ITSBackgroundImage = "background.png";} 
 
     function getUrlVars() {
         var vars = {};
