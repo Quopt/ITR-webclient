@@ -379,7 +379,6 @@
         </div>
 </footer>
 
-<script>ITSBackgroundImage = "background.png";</script>
 <script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>-->
 <script src="js/jquery-3.2.1.js"></script>
 <!--
@@ -1394,14 +1393,14 @@
 
 <script>
     opacity = 0;
-    function loginWindowLoadImage() {
+    function loginWindowLoadImage(newImage) {
         var img = new Image(),
             x = $('#LoginWindowBackground')[0];
         img.onload = function() {
             x.src = img.src;
             setOpacity('LoginWindowBackgroundDiv', 0, 0.25);
         };
-        img.src = ITSBackgroundImage;
+        img.src = newImage;
     };
     function setOpacity(id, start, end) {
         $('#'+id).css('opacity', start);
@@ -1409,7 +1408,7 @@
             setTimeout(setOpacity.bind(this, id, start + 0.002, end), 10);
         }
     }
-    loginWindowLoadImage();
+    loginWindowLoadImage("background.png");
 </script>
 </body>
 </html>

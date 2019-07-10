@@ -408,7 +408,7 @@ function getCopyrightMessage() {
         success: function (data, textStatus, xhr) {
             if (data != ""){
                 ITSBackgroundImage = data;
-                loginWindowLoadImage();
+                loginWindowLoadImage(data);
             }
         },
         type: 'GET'
