@@ -85,7 +85,7 @@
     };
 
     ITSCustomerSettingsEditor.prototype.companyCopyrightLoaded = function (newValue) {
-        this.Copyright = newValue;
+        this.companyCopyright = newValue;
         this.ParsLoaded();
     };
 
