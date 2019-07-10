@@ -50,12 +50,15 @@
         this.SMTP_User = "";
         this.SMTP_Password = "";
         this.companyLogo = "";
+        this.companyCopyright = "";
 
         ITSInstance.UIController.showInterfaceAsWaitingOn();
 
         ITSInstance.JSONAjaxLoader('systemsettings/MAXNUMBEROFCONSULTANTS', this.maxNumberOfConsultants, this.maxConsultantsLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
             0, 999, "", "N", "N", "Y");
         ITSInstance.JSONAjaxLoader('systemsettings/COMPANYLOGO', this.companyLogo, this.companyLogoLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
+            0, 999, "", "N", "N", "Y");
+        ITSInstance.JSONAjaxLoader('systemsettings/COPYRIGHT', this.companyCopyright, this.companyCopyrightLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
             0, 999, "", "N", "N", "Y");
         ITSInstance.JSONAjaxLoader('systemsettings/SMTP_SENDER', this.SMTP_Sender,  this.SMTPSenderLoaded.bind(this),this.ParsLoadedError.bind(this), ITSObject,
             0, 999, "", "N", "N", "Y");
@@ -78,6 +81,11 @@
 
     ITSCustomerSettingsEditor.prototype.companyLogoLoaded = function (newValue) {
         this.companyLogo = newValue;
+        this.ParsLoaded();
+    };
+
+    ITSCustomerSettingsEditor.prototype.companyCopyrightLoaded = function (newValue) {
+        this.Copyright = newValue;
         this.ParsLoaded();
     };
 
@@ -132,6 +140,7 @@
         $('#CustomerSettingsDiv-MaxNumberOfConsulants-val').val(this.maxNumberOfConsultants);
 
         $('#CustomerSettingsDiv-CompanyLogo-val').val(this.companyLogo);
+        $('#CustomerSettingsDiv-CompanyCopyright-val').val(this.companyCopyright);
 
     };
 
@@ -153,6 +162,10 @@
 
     ITSCustomerSettingsEditor.prototype.changeCompanyLogoParameter= function (newVal) {
         ITSInstance.genericAjaxUpdate('systemsettings/COMPANYLOGO', newVal, function () {}, function () {}, "N", "Y");
+    };
+
+    ITSCustomerSettingsEditor.prototype.changeCompanyCopyrightParameter= function (newVal) {
+        ITSInstance.genericAjaxUpdate('systemsettings/COPYRIGHT', newVal, function () {}, function () {}, "N", "Y");
     };
 
     ITSCustomerSettingsEditor.prototype.changeTranslateKeyParameter= function (newVal) {
