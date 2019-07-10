@@ -206,8 +206,8 @@
     </div>
 
     <div class="form-check" id="LoginWindow">
-        <div style="position:fixed; top:0; left:0; height:100%; width:100%; z-index:-100; opacity: 0.2;">
-        <img id="LoginWindowBackground" style="width:100%; min-height: 100vh;  object-fit: cover;"/>
+        <div id="LoginWindowBackgroundDiv" style="position:fixed; top:0; left:0; height:100%; width:100%; z-index:-100; opacity: 0;">
+        <img id="LoginWindowBackground" style="width:100%; min-height: 100vh; object-fit: cover;"/>
         </div>
         <div class="row d-flex align-items-center">
                 <div class="mx-auto" style="max-width:390px;min-width:190px;">
@@ -1395,13 +1395,21 @@
 <script src="js/tagmanager.js" type="text/javascript" charset="utf-8"></script>
 
 <script>
+    opacity = 0;
     function loginWindowLoadImage() {
         var img = new Image(),
             x = $('#LoginWindowBackground')[0];
         img.onload = function() {
             x.src = img.src;
+            setOpacity('LoginWindowBackgroundDiv', 0, 0.25);
         };
         img.src = "background.png";
+    };
+    function setOpacity(id, start, end) {
+        $('#'+id).css('opacity', start);
+        if (start < end) {
+            setTimeout(setOpacity.bind(this, id, start + 0.01, end), 100);
+        }
     }
     loginWindowLoadImage();
 </script>
