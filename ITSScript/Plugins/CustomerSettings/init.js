@@ -50,6 +50,7 @@
         this.SMTP_User = "";
         this.SMTP_Password = "";
         this.companyLogo = "";
+        this.companyName = "";
         this.companyCopyright = "";
 
         ITSInstance.UIController.showInterfaceAsWaitingOn();
@@ -57,6 +58,8 @@
         ITSInstance.JSONAjaxLoader('systemsettings/MAXNUMBEROFCONSULTANTS', this.maxNumberOfConsultants, this.maxConsultantsLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
             0, 999, "", "N", "N", "Y");
         ITSInstance.JSONAjaxLoader('systemsettings/COMPANYLOGO', this.companyLogo, this.companyLogoLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
+            0, 999, "", "N", "N", "Y");
+        ITSInstance.JSONAjaxLoader('systemsettings/COMPANYNAME', this.companyName, this.companyNameLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
             0, 999, "", "N", "N", "Y");
         ITSInstance.JSONAjaxLoader('systemsettings/COPYRIGHT', this.companyCopyright, this.companyCopyrightLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
             0, 999, "", "N", "N", "Y");
@@ -81,6 +84,12 @@
 
     ITSCustomerSettingsEditor.prototype.companyLogoLoaded = function (newValue) {
         this.companyLogo = newValue;
+        this.ParsLoaded();
+    };
+
+
+    ITSCustomerSettingsEditor.prototype.companyNameLoaded = function (newValue) {
+        this.companyName = newValue;
         this.ParsLoaded();
     };
 
@@ -126,6 +135,11 @@
 
     ITSCustomerSettingsEditor.prototype.ParsLoaded = function () {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
+
+        if ( (ITSInstance.users.currentUser.IsMasterUser) && (!ITSInstance.users.currentUser.IsOrganisationSupervisor)) {
+            $('#CustomerSettingsDiv-MaxNumberOfConsulants-val').prop("readonly", true);
+        }
+
         $('#CustomerSettingsOrderByMailAddress').val(this.emailPar);
 
         $('#CustomerSettingsDiv-SMTPSender-val').val(this.SMTP_Sender);
@@ -140,6 +154,7 @@
         $('#CustomerSettingsDiv-MaxNumberOfConsulants-val').val(this.maxNumberOfConsultants);
 
         $('#CustomerSettingsDiv-CompanyLogo-val').val(this.companyLogo);
+        $('#CustomerSettingsDiv-CompanyName-val').val(this.companyName);
         $('#CustomerSettingsDiv-CompanyCopyright-val').val(this.companyCopyright);
 
     };
@@ -162,6 +177,10 @@
 
     ITSCustomerSettingsEditor.prototype.changeCompanyLogoParameter= function (newVal) {
         ITSInstance.genericAjaxUpdate('systemsettings/COMPANYLOGO', newVal, function () {}, function () {}, "N", "Y");
+    };
+
+    ITSCustomerSettingsEditor.prototype.changeCompanyNameParameter= function (newVal) {
+        ITSInstance.genericAjaxUpdate('systemsettings/COMPANYNAME', newVal, function () {}, function () {}, "N", "Y");
     };
 
     ITSCustomerSettingsEditor.prototype.changeCompanyCopyrightParameter= function (newVal) {

@@ -83,7 +83,16 @@
         </div>
     </div>
 
-    <div class="bg-dark text-white well"><label id="CustomerSettingsDiv-ITSPreferences">Company preferences</label></div>
+    <div class="bg-dark text-white well"><label id="CustomerSettingsDiv-ITSPreferences">Company preferences (only for dedicated server customers) </label></div>
+    <div class="">
+        <div id="CustomerSettingsDiv-CompanyName" class="form-group row">
+            <label for="CustomerSettingsDiv-CompanyLogo-val" id="CustomerSettingsDiv-CompanyName-lbl" class="col-sm-4 col-form-label">Company name</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" placeholder="Company name" value=""
+                       id="CustomerSettingsDiv-CompanyName-val" onchange="ITSInstance.CustomerSettingsController.changeCompanyNameParameter(this.value);">
+            </div>
+        </div>
+    </div>
     <div class="">
         <div id="CustomerSettingsDiv-CompanyLogo" class="form-group row">
             <label for="CustomerSettingsDiv-CompanyLogo-val" id="CustomerSettingsDiv-CompanyLogo-lbl" class="col-sm-4 col-form-label">Company logo URL</label>

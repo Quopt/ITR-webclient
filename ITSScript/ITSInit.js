@@ -332,6 +332,9 @@ function setCopyrightMessage(CopyrightString) {
     $('#CopyrightText4').text(CopyrightString);
     $('#CopyrightText5').text(CopyrightString);
     $('#CopyrightTextSession').text(CopyrightString);
+
+    $('#LoginWindowWelcomeDiv').show();
+    $('#LoginWindowCompanyName').text(CompanyName);
 };
 
 function ITSTranslateInterface() {
