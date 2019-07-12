@@ -333,8 +333,8 @@ function setCopyrightMessage(CopyrightString) {
     $('#CopyrightText5').text(CopyrightString);
     $('#CopyrightTextSession').text(CopyrightString);
 
-    $('#LoginWindowWelcomeDiv').show();
     $('#LoginWindowCompanyName').text(CompanyName);
+    $('#LoginWindowWelcomeDiv').css("visibility", "visible");
 };
 
 function ITSTranslateInterface() {
