@@ -136,7 +136,7 @@
     ITSCustomerSettingsEditor.prototype.ParsLoaded = function () {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
 
-        if ( (ITSInstance.users.currentUser.IsMasterUser) && (!ITSInstance.users.currentUser.IsOrganisationSupervisor)) {
+        if ( (!ITSInstance.users.currentUser.IsMasterUser) && (ITSInstance.users.currentUser.IsOrganisationSupervisor)) {
             $('#CustomerSettingsDiv-MaxNumberOfConsulants-val').prop("readonly", true);
         }
 
