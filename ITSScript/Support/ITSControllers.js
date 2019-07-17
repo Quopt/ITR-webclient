@@ -423,6 +423,7 @@ ITSTestTakingController.prototype.renderTestPage = function () {
     } else {
         if (this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].show) {
             this.generateScreenID = "__" + newGuid();
+            console.log(this.generateScreenID);
             var currentScreen = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage];
             // now run the pre screen script and register that we need to run the post screen script
             try {
