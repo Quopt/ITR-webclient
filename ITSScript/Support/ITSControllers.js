@@ -366,7 +366,7 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
         setTimeout(this.checkScreenDynamics.bind(this), 350);
 
         var currentScreen = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage];
-        if (!screenNotRenderedYet) currentScreen.updateResultsStorageFromDivs(this.currentSessionTest.Results);
+        if (!screenNotRenderedYet) currentScreen.updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID);
 
         if (this.checkScreenDynamicsLastResultsChecked != JSON.stringify(this.currentSessionTest.Results)) {
 
@@ -400,8 +400,8 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
             }
 
             $('#ITSTestTakingDiv').empty();
-            currentScreen.generateScreenInDiv('ITSTestTakingDiv');
-            currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results);
+            currentScreen.generateScreenInDiv('ITSTestTakingDiv', 'TT', this.generateScreenID);
+            currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results, this.generateScreenID);
 
             this.checkScreenDynamicsLastResultsChecked = JSON.stringify(this.currentSessionTest.Results);
         }
@@ -434,9 +434,10 @@ ITSTestTakingController.prototype.renderTestPage = function () {
             if (this.checkScreenDynamicsForChanges) {
                 this.checkScreenDynamics(true);
             } else {
-                currentScreen.generateScreenInDiv('ITSTestTakingDiv');
+                this.generateScreenID = newGuid();
+                currentScreen.generateScreenInDiv('ITSTestTakingDiv', 'TT', this.generateScreenID);
                 // load the current present values from the currentSessionTest.results into the screen
-                currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results);
+                currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results, this.generateScreenID);
             }
         } else {
             this.currentSessionTest.CurrentPage++;
@@ -592,7 +593,7 @@ ITSTestTakingController.prototype.autoStore = function (InTestTaking) {
     if ((Math.abs(dateNow.getTime() - this.AutoStoreLastTimestamp.getTime()) ) > 60000) {
         this.AutoStoreLastTimestamp = new Date();
         if (InTestTaking) {
-            this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results);
+            this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID);
             this.saveCurrentTest();
         } else {
             if (this.autoStoreSessionTest) {
@@ -617,7 +618,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
     // save the results from the current screen into the Results object if the current session test
     if (this.currentTestDefinition && this.currentSessionTest) {
         // save the results
-        this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results);
+        this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID);
         if ((eventName!="Store") && (eventName != "AutoStore")) {
             // check the screen validations
             var validationMessage = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].checkValidations(this.currentSessionTest.Results, "");
@@ -651,7 +652,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
     switch(eventName) {
         case "Store" :
             // results are only stored. do nothing else
-            this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results);
+            this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID);
             this.saveCurrentTest();
             break;
         case "AutoStore" :
