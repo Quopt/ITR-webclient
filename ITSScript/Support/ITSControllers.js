@@ -621,7 +621,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
         this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID);
         if ((eventName!="Store") && (eventName != "AutoStore")) {
             // check the screen validations
-            var validationMessage = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].checkValidations(this.currentSessionTest.Results, "");
+            var validationMessage = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].checkValidations(this.currentSessionTest.Results, "", this.generateScreenID);
             if ( (validationMessage != '') && (eventName != 'EndTestTimeOut') && (eventName != 'Logout')  && (eventName != 'PreviousScreen') ) {
                 if (!this.suppressWarnings) ITSInstance.UIController.showError('',validationMessage);
                 eventName = "";
