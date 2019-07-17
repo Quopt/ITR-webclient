@@ -422,6 +422,7 @@ ITSTestTakingController.prototype.renderTestPage = function () {
         setTimeout(this.endTest.bind(this),100);
     } else {
         if (this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].show) {
+            this.generateScreenID = "__" + newGuid();
             var currentScreen = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage];
             // now run the pre screen script and register that we need to run the post screen script
             try {
@@ -434,7 +435,6 @@ ITSTestTakingController.prototype.renderTestPage = function () {
             if (this.checkScreenDynamicsForChanges) {
                 this.checkScreenDynamics(true);
             } else {
-                this.generateScreenID = newGuid();
                 currentScreen.generateScreenInDiv('ITSTestTakingDiv', 'TT', this.generateScreenID);
                 // load the current present values from the currentSessionTest.results into the screen
                 currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results, this.generateScreenID);
