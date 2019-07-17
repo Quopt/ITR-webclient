@@ -224,7 +224,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
     eval("emptyfunc = function () {};");
     var func = emptyfunc;
     try {
-        eval("func = function(id, num_blocks) { " + this.get_value_snippet + " }; ");
+        eval("func = function(id, num_blocks, template_values) { " + this.get_value_snippet + " }; ");
     } catch (err) {
         console.log("get_value_snippet contains error " + this.Description + " " + err.message );
     }
@@ -232,7 +232,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
 
     var func = emptyfunc;
     try {
-        eval("func = function(id, num_blocks, varvalue) { " + this.set_value_snippet + " }; ");
+        eval("func = function(id, num_blocks, varvalue, template_values) { " + this.set_value_snippet + " }; ");
     } catch (err) {
         console.log("set_value_snippet contains error " + this.Description + " " + err.message );
     }

@@ -1432,7 +1432,7 @@ ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, 
             ComponentResults.Visible = this.screenComponents[j].show;
             if (ComponentResults.Visible) {
                 try {
-                    ComponentResults.Value = template.runtime_get_values('X' + j + 'Y' + postfix, this.screenComponents[j].templateValues.RepeatBlockCount);
+                    ComponentResults.Value = template.runtime_get_values('X' + j + 'Y' + postfix, this.screenComponents[j].templateValues.RepeatBlockCount, this.screenComponents[j].templateValues);
                 }
                 catch (err) {
                     console.log("runtime_get_values failed for " +  this.screenComponents[j].varComponentName + " " + err.message );
@@ -1455,7 +1455,7 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
         var template =  this.ITSSession.screenTemplates.screenTemplates[templateIndex];
         template.generateTemplateFunctions();
         try {
-            template.runtime_set_values('X' + j + 'Y' + postFix, this.screenComponents[j].templateValues.RepeatBlockCount, ComponentResults.Value);
+            template.runtime_set_values('X' + j + 'Y' + postFix, this.screenComponents[j].templateValues.RepeatBlockCount, ComponentResults.Value, this.screenComponents[j].templateValues);
         } catch (err) { console.log("Runtime set values failed " + err.message); }
         try {
             if (ComponentResults.Visible) {

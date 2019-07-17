@@ -228,7 +228,7 @@ ITSScreenTemplateEditor.prototype.showTestEditorPreviewJSon = function () {
 };
 
 ITSScreenTemplateEditor.prototype.showTestTakingPreviewJSon = function () {
-    alert(JSON.stringify(this.currentTemplate.runtime_get_values(this.testTakingID, this.currentTemplate.RepeatBlockCount)));
+    alert(JSON.stringify(this.currentTemplate.runtime_get_values(this.testTakingID, this.currentTemplate.RepeatBlockCount, this.currentTemplate)));
     valMess = this.currentTemplate.runtime_validate(this.testTakingID, this.currentTemplate.RepeatBlockCount, 'ST',
             this.currentTemplate.extract_test_editor_view_templatevalues('AdminInterfaceScreenTemplate-TEPreview', this.testEditorID, false));
     if (valMess != "") {
@@ -237,7 +237,7 @@ ITSScreenTemplateEditor.prototype.showTestTakingPreviewJSon = function () {
 };
 
 ITSScreenTemplateEditor.prototype.showTestTakingPnPPreviewJSon = function () {
-    alert(JSON.stringify(this.currentTemplate.runtime_get_values(this.testTakingPnPID, this.currentTemplate.RepeatBlockCount)));
+    alert(JSON.stringify(this.currentTemplate.runtime_get_values(this.testTakingPnPID, this.currentTemplate.RepeatBlockCount, this.currentTemplate)));
 };
 
 ITSScreenTemplateEditor.prototype.generatePreviews = function () {
@@ -267,17 +267,17 @@ ITSScreenTemplateEditor.prototype.generatePreviews = function () {
 };
 
 ITSScreenTemplateEditor.prototype.updatePreviews = function () {
-    var tempval = this.currentTemplate.runtime_get_values(this.testTakingID, this.currentTemplate.RepeatBlockCount);
+    var tempval = this.currentTemplate.runtime_get_values(this.testTakingID, this.currentTemplate.RepeatBlockCount, this.currentTemplate);
     this.currentTemplate.generate_test_taking_view('AdminInterfaceScreenTemplate-TTPreview', false, this.testTakingID,
         this.currentTemplate.extract_test_editor_view_templatevalues('AdminInterfaceScreenTemplate-TEPreview', this.testEditorID, false), false, true, 'ST');
     //this.currentTemplate.runtime_init_values(this.testTakingID, this.currentTemplate.RepeatBlockCount, 'ST');
-    this.currentTemplate.runtime_set_values(this.testTakingID, this.currentTemplate.RepeatBlockCount, tempval );
+    this.currentTemplate.runtime_set_values(this.testTakingID, this.currentTemplate.RepeatBlockCount, tempval, this.currentTemplate );
 
-    var tempval = this.currentTemplate.runtime_get_values(this.testTakingPnPID, this.currentTemplate.RepeatBlockCount);
+    var tempval = this.currentTemplate.runtime_get_values(this.testTakingPnPID, this.currentTemplate.RepeatBlockCount, this.currentTemplate);
     this.currentTemplate.generate_test_taking_view('AdminInterfaceScreenTemplate-PnPPreview', false, this.testTakingPnPID,
         this.currentTemplate.extract_test_editor_view_templatevalues('AdminInterfaceScreenTemplate-TEPreview', this.testEditorID, false), true, true, 'ST');
     //this.currentTemplate.runtime_init_values(this.testTakingPnPID, this.currentTemplate.RepeatBlockCount, 'ST');
-    this.currentTemplate.runtime_set_values(this.testTakingPnPID, this.currentTemplate.RepeatBlockCount, tempval );
+    this.currentTemplate.runtime_set_values(this.testTakingPnPID, this.currentTemplate.RepeatBlockCount, tempval, this.currentTemplate );
 };
 
 ITSScreenTemplateEditor.prototype.addRepeatBlock = function () {
