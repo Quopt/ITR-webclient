@@ -297,7 +297,7 @@ ITSTest.prototype.preloadTestImages = function () {
       //      canvas.getContext('2d').drawImage(this, 0, 0);
       //      tempImg.dataURL = canvas.toDataURL('image/png');
       //  }.bind(tempImg);
-
+      var tempSrc = this.createLinkForFile(i);
       if (ITSInstance.baseURL.indexOf("localhost") > 0) tempSrc = this.createLinkForFile(i).replace('/api/', ITSInstance.baseURL + '/api/');
       tempImg.src = tempSrc;
       this.files_images.push(tempImg);
