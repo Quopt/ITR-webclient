@@ -58,7 +58,6 @@
                 if ((!this.currentSession) || (this.currentSession.ID != this.SessionID)) {
                     // load the session
                     this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
-                    ITSInstance.UIController.showInterfaceAsWaitingOn();
                     this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadError.bind(this));
                 } else {
                     this.sessionLoaded();
@@ -104,9 +103,11 @@
             if (this.checkAnswers != "") {PnPchecker = true;}
             this.genNumber = "" + getNewSimpleGeneratorNumber('SessionViewAnswersInterfaceEdit_gen', 9999)
 
+            ITSInstance.UIController.showInterfaceAsWaitingOnForceShow();
             $("#SessionViewAnswersInterfaceEditTestAnswers").empty();
             this.currentSession.SessionTests[found].testDefinition.generateQuestionOverview( "SessionViewAnswersInterfaceEditTestAnswers",
                 this.currentSession.SessionTests[found].Results, true, "_" + this.checkAnswers + this.genNumber);
+            ITSInstance.UIController.showInterfaceAsWaitingOff();
 
             // disable all controls
             if (!PnPchecker) {
