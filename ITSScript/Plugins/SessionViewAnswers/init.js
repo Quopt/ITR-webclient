@@ -103,7 +103,7 @@
             if (this.checkAnswers != "") {PnPchecker = true;}
             this.genNumber = "" + getNewSimpleGeneratorNumber('SessionViewAnswersInterfaceEdit_gen', 9999)
 
-            ITSInstance.UIController.showInterfaceAsWaitingOnForceShow();
+            ITSInstance.UIController.showInterfaceAsWaitingOn(0);
             $("#SessionViewAnswersInterfaceEditTestAnswers").empty();
             this.currentSession.SessionTests[found].testDefinition.generateQuestionOverview( "SessionViewAnswersInterfaceEditTestAnswers",
                 this.currentSession.SessionTests[found].Results, true, "_" + this.checkAnswers + this.genNumber);
