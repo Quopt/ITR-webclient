@@ -106,7 +106,7 @@
             $("#SessionViewAnswersInterfaceEditTestAnswers").empty();
             this.currentSession.SessionTests[found].testDefinition.generateQuestionOverview( "SessionViewAnswersInterfaceEditTestAnswers",
                 this.currentSession.SessionTests[found].Results, true, "_" + this.checkAnswers + this.genNumber);
-            ITSInstance.UIController.showInterfaceAsWaitingOffForceShow();
+            ITSInstance.UIController.showInterfaceAsWaitingOffForceShow(); $("#waitModal").modal('hide');
 
             // disable all controls
             if (!PnPchecker) {
