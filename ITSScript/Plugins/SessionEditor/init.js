@@ -441,6 +441,7 @@
                  (this.currentSession.SessionTests[testIndex].testDefinition.Costs <= 0) ||
                  (this.currentSession.SessionTests[testIndex].TestEnd >= oneday) ) {
                 ITSInstance.SessionViewAnswersSessionController.currentSession = this.currentSession;
+                ITSInstance.UIController.showInterfaceAsWaitingOn(0);
                 ITSRedirectPath('SessionViewAnswers&SessionID=' + this.currentSession.ID + '&SessionTestID=' + testSessionID + "&checkAnswers=1");
             } else {
                 ITSInstance.UIController.showError("ITSSessionEditor.NoEditTest", "You cannot edit these results any more. Paid test results can only be edited for 24 hours.");
