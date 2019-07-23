@@ -223,7 +223,7 @@ ITSUIController = function () {
     } ;
     this.showInterfaceAsWaitingOnForceShow= function () {
         //console.log('showInterfaceAsWaitingOnForceShow ' + modalRequired);
-        modalRequired = true;
+        //modalRequired = true;
         if (modalRequired == true) { $("#waitModal").modal('show'); modalShows = true; };
     } ;
     this.showInterfaceAsWaitingOff = function () {
