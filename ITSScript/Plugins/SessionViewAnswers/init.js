@@ -106,7 +106,7 @@
             $("#SessionViewAnswersInterfaceEditTestAnswers").empty();
             this.currentSession.SessionTests[found].testDefinition.generateQuestionOverview( "SessionViewAnswersInterfaceEditTestAnswers",
                 this.currentSession.SessionTests[found].Results, true, "_" + this.checkAnswers + this.genNumber);
-            ITSInstance.UIController.showInterfaceAsWaitingOffForceShow(); $("#waitModal").modal('hide');
+           
 
             // disable all controls
             if (!PnPchecker) {
@@ -116,6 +116,7 @@
                 $("#SessionViewAnswersInterfaceEditTestAnswers").append ('<button type="button" class="btn btn-default btn-success" id="SessionViewAnswersInterfaceEditTestAnswers_saveButton" onclick="ITSInstance.SessionViewAnswersSessionController.saveTestResults();"><i id="SessionViewAnswersInterfaceEditTestAnswers-saveIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="SessionViewAnswersInterfaceEditTestAnswers-saveButtonLabel">Save changes</span></button>')
             }
         }
+        ITSInstance.UIController.showInterfaceAsWaitingOff(); $("#waitModal").modal('hide');
     };
 
     ITSSessionViewAnswersEditor.prototype.saveTestResults = function () {
