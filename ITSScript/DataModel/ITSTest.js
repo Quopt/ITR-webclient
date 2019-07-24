@@ -1309,7 +1309,6 @@ ITSTest.prototype.scoreTest = function (session, sessionTest, candidate, results
                     if (TargetScaleValue.indexOf('=') == 0) {
                         try {
                             TargetScaleValue = TargetScaleValue.substring(1);
-//                            if ($.isNumeric(target.Score) && $.isNumeric(TargetScaleValue)) {
                             if (thisScale.scaleType == "N") {
                                 eval("target.Score = Number(target.Score) " + TargetScaleValue)
                             } else {
@@ -1318,7 +1317,6 @@ ITSTest.prototype.scoreTest = function (session, sessionTest, candidate, results
                         } catch (err) { console.log("Calculate scale failed for "  + this.TestName + "(" + i + ")"  + err);  }
                     } else {
                         try {
-//                            if ($.isNumeric(target.Score) && $.isNumeric(TargetScaleValue)) {
                             if (thisScale.scaleType == "N") {
                                 eval("target.Score = Number(target.Score) + Number(" + TargetScaleValue + ")");
                             } else {
@@ -1335,6 +1333,19 @@ ITSTest.prototype.scoreTest = function (session, sessionTest, candidate, results
         eval("var func = function(session, sessiontest, candidate, testdefinition, scores, scales, itsinstance) { " + this.ScoringScript + " }; ");
         func(session, sessionTest, candidate, this, results, scores, ITSInstance);
     } catch (err) { console.log("Calculate scores script failed for "  + this.TestName + " "  + err);  }
+
+    // and now round the scales when required
+    try {
+        for (var i = 0; i < this.scales.length; i++) {
+            var s = scores;
+            var target = s["__" + this.scales[i].ID];
+
+            if ((this.scales[i].scaleType == "N") && (this.scalePrecision >= 0)) {
+                target.Score = precise_round(Number(target.Score), this.scalePrecision);
+            }
+
+        }
+    } catch (err) { console.log("Rounding scores failed for "  + this.TestName + " "  + err);  }
 };
 
 ITSTest.prototype.prepareScalesStorage = function (storageObject, overwriteAllValues) {

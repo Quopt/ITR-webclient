@@ -362,8 +362,8 @@
                         <label class="col-2 col-form-label col-form-label-sm"
                                id="AdminInterfaceTestTemplateEditorScalePrecisionHeader"
                                for="AdminInterfaceTestTemplateEditorScalePrecision">Scale precision</label>
-                        <div class="col-1"><input type="number" id="AdminInterfaceTestTemplateEditorScalePrecision"  data-field="currentScale.scalePrecision" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"
-                                                  min="0" step="1" max="5" placeholder="">
+                        <div class="col-1"><input type="number" id="AdminInterfaceTestTemplateEditorScalePrecision"  data-field="currentScale.scalePrecision" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"
+                                                  min="-1" step="1" max="8" placeholder="">
                         </div>
                     </div>
                     <div class="row">

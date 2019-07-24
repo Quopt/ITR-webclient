@@ -1130,12 +1130,12 @@ ITSTestTemplateEditor.prototype.loadNormMatrixSub = function (setValue) {
                         newScreenElement = newScreenElement.replace(this.normMatrixNr, i + "_" + k);
                         newScreenElement = newScreenElement.replace(this.normMatrixNrPlusOne, k + 1);
                         newScreenElement = newScreenElement.replace(this.normMatrixNrPlusTwo, i + "_" + k);
-                        if (this.currentTest.scales.scaleType == "N") {
+                        if (this.currentTest.scales[i].scaleType == "N") {
                             newScreenElement = newScreenElement.replace(this.normMatrixNrCheckScale, this.normMatrixLineCheckNumber);
                         } else {
                             newScreenElement = newScreenElement.replace(this.normMatrixNrCheckScale, "");
                         }
-                        if (this.currentNorm.normIsNumeric) {
+                        if (this.currentNorm.normIsNumeric()) {
                             newScreenElement = newScreenElement.replace(this.normMatrixNrCheckNorm, this.normMatrixLineCheckNumber);
                         } else {
                             newScreenElement = newScreenElement.replace(this.normMatrixNrCheckNorm, "");
