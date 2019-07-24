@@ -1338,7 +1338,7 @@ ITSTest.prototype.scoreTest = function (session, sessionTest, candidate, results
     try {
         for (var i = 0; i < this.scales.length; i++) {
             var s = scores;
-            var target = s["__" + this.scales[i].ID];
+            var target = s["__" + this.scales[i].id];
 
             if ((this.scales[i].scaleType == "N") && (this.scales[i].scalePrecision >= 0)) {
                 target.Score = precise_round(Number(target.Score), this.scales[i].scalePrecision);
