@@ -55,12 +55,13 @@
                 ITSInstance.UIController.showError('OutOfCredits', 'You have no credit units left. Please order new credit units.', '',
                     "ITSRedirectPath('CreditsOrderByMail');");
             } else {
+                ITSInstance.UIController.showInterfaceAsWaitingOn(-1);
                 if ((!this.currentSession) || (this.currentSession.ID != this.SessionID)) {
                     // load the session
                     this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
                     this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadError.bind(this));
                 } else {
-                    this.sessionLoaded();
+                    setTimeout(this.sessionLoaded.bind(this), 200);
                 }
 
 
@@ -77,7 +78,6 @@
     };
 
     ITSSessionViewAnswersEditor.prototype.sessionLoaded =function () {
-        ITSInstance.UIController.showInterfaceAsWaitingOff();
         // try to locate the test id in the session
         var ct = {};
         var found = -1;
@@ -103,11 +103,10 @@
             if (this.checkAnswers != "") {PnPchecker = true;}
             this.genNumber = "" + getNewSimpleGeneratorNumber('SessionViewAnswersInterfaceEdit_gen', 9999)
 
-            ITSInstance.UIController.showInterfaceAsWaitingOnForceShow();
             $("#SessionViewAnswersInterfaceEditTestAnswers").empty();
             this.currentSession.SessionTests[found].testDefinition.generateQuestionOverview( "SessionViewAnswersInterfaceEditTestAnswers",
                 this.currentSession.SessionTests[found].Results, true, "_" + this.checkAnswers + this.genNumber);
-            ITSInstance.UIController.showInterfaceAsWaitingOff();
+           
 
             // disable all controls
             if (!PnPchecker) {
@@ -117,6 +116,7 @@
                 $("#SessionViewAnswersInterfaceEditTestAnswers").append ('<button type="button" class="btn btn-default btn-success" id="SessionViewAnswersInterfaceEditTestAnswers_saveButton" onclick="ITSInstance.SessionViewAnswersSessionController.saveTestResults();"><i id="SessionViewAnswersInterfaceEditTestAnswers-saveIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="SessionViewAnswersInterfaceEditTestAnswers-saveButtonLabel">Save changes</span></button>')
             }
         }
+        ITSInstance.UIController.showInterfaceAsWaitingOff(); $("#waitModal").modal('hide');
     };
 
     ITSSessionViewAnswersEditor.prototype.saveTestResults = function () {
