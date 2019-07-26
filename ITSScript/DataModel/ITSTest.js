@@ -1426,7 +1426,8 @@ ITSTestScreen.prototype.screenTemplatesLoaded = function () {
     return allLoaded;
 };
 
-ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, postfix, PnP) {
+ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, postfix, PnP, sessionStorageObject) {
+    var saveSessionNeeded = false;
     var TestResults = {};
     TestResults = storageObject["__" + this.id] ;
 
@@ -1441,9 +1442,16 @@ ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, 
         template.generateTemplateFunctions();
         try {
             ComponentResults.Visible = this.screenComponents[j].show;
+
             if (ComponentResults.Visible) {
                 try {
                     ComponentResults.Value = template.runtime_get_values('X' + j + 'Y' + postfix, this.screenComponents[j].templateValues.RepeatBlockCount, this.screenComponents[j].templateValues);
+
+                    if (sessionStorageObject && this.screenComponents[j].storeAtSessionLevel) {
+                        if (!sessionStorageObject.sessionStorage) sessionStorageObject.sessionStorage = {};
+                        sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName] = ComponentResults.Value;
+                        saveSessionNeeded = true;
+                    }
                 }
                 catch (err) {
                     console.log("runtime_get_values failed for " +  this.screenComponents[j].varComponentName + " " + err.message );
@@ -1451,9 +1459,10 @@ ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, 
             }
         } catch (err) {};
     }
+    return saveSessionNeeded;
 };
 
-ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, postFix) {
+ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, postFix, sessionStorageObject) {
     var TestResults = {};
     TestResults = storageObject["__" + this.id] ;
 
@@ -1465,6 +1474,13 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
         var templateIndex = this.ITSSession.screenTemplates.findTemplateById(this.ITSSession.screenTemplates.screenTemplates, this.screenComponents[j].templateID);
         var template =  this.ITSSession.screenTemplates.screenTemplates[templateIndex];
         template.generateTemplateFunctions();
+        if (sessionStorageObject && this.screenComponents[j].storeAtSessionLevel) {
+            if (!sessionStorageObject.sessionStorage) sessionStorageObject.sessionStorage = {};
+            if (sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]) {
+                // use the varComponentName instead of the id so it can be re-used over questions and tests in the session
+                if (ComponentResults.Value == "") ComponentResults.Value = sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName];
+            }
+        }
         try {
             template.runtime_set_values('X' + j + 'Y' + postFix, this.screenComponents[j].templateValues.RepeatBlockCount, ComponentResults.Value, this.screenComponents[j].templateValues);
         } catch (err) { console.log("Runtime set values failed " + err.message); }
@@ -1537,6 +1553,7 @@ function ITSTestScreenComponent(par, session) {
     this.id = newGuid();
     this.varComponentName = ""; // variable name of this screen component
     this.excludeFromAnonimisedTestResults = false; // set to true to exclude from the
+    this.storeAtSessionLevel = false; // this variable is not only stored in the sessiontest but also in the session (in the PluginData)
 
     this.templateID = ""; // the link to the test template id
     this.templateValues = {}; // the values use to initialize this template with
@@ -1545,7 +1562,7 @@ function ITSTestScreenComponent(par, session) {
 
     this.show = true; // persistent property to indicate whether this component should be rendered or not. Used only by screen dynamics or scripting. This is the initial value from the test definition
 
-    this.persistentProperties = ["id", "varComponentName", "templateValues", "excludeFromAnonimisedTestResults", "templateID", "show", "placeholderName"];
+    this.persistentProperties = ["id", "varComponentName", "templateValues", "excludeFromAnonimisedTestResults", "storeAtSessionLevel", "templateID", "show", "placeholderName"];
 }
 
 ITSTestScreenComponent.prototype.getColumnName = function () {

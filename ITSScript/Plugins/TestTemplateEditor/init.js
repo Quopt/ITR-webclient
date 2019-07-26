@@ -35,9 +35,12 @@ function ITSTestTemplateEditor(session) {
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.editScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-edit\"></i></button>\n" +
         "&nbsp;<div id=\"AdminInterfaceTestTemplateEditorScreenComponentRow\" NoTranslate><input type=\"text\" id=\"TestTemplateEditorSCREENCOMPONENT%%NR%%\" onkeyup=\"ITSInstance.newITSTestEditorController.editScreenComponentDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" /></div>\n" +
         "&nbsp;<button type=\"button\" class=\"btn-xs btn-warning\" onclick=\"ITSInstance.newITSTestEditorController.deleteScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-trash\"></i></button>\n" +
-        "<nobr>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" class=\"form-check-input form-check-input-sm\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_Privacy%%NR%%\" %%PRIVACY%% onchange=\"ITSInstance.newITSTestEditorController.changeScreenComponentPrivacy(%%NR%%, this.checked);\">\n" +
-        "<label class=\"col-sm-4 col-form-label\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_PrivacyLabel\" for=\"AdminInterfaceTestTemplateEditorScreenComponentRow_Privacy%%NR%%\">Exclude from anonimised</label>" +
-        "</nobr><hr/>\n" +
+        "&nbsp;&nbsp;&nbsp;&nbsp;<div class=\"form-control-sm\"><input type=\"checkbox\" class=\"form-check-input form-check-input-sm\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_Privacy%%NR%%\" %%PRIVACY%% onchange=\"ITSInstance.newITSTestEditorController.changeScreenComponentPrivacy(%%NR%%, this.checked);\">\n" +
+        "<label id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_PrivacyLabel\" for=\"AdminInterfaceTestTemplateEditorScreenComponentRow_Privacy%%NR%%\">Exclude from anonimised</label>" +
+        "</div>"+
+        "&nbsp;&nbsp;&nbsp;&nbsp;<div class=\"form-control-sm\"><input type=\"checkbox\" class=\"form-check-input form-check-input-sm\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_SessionStore%%NR%%\" %%SESSIONSTORE%% onchange=\"ITSInstance.newITSTestEditorController.changeScreenComponentSessionStore(%%NR%%, this.checked);\">\n" +
+        "<label id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_SessionStoreLabel\" for=\"AdminInterfaceTestTemplateEditorScreenComponentRow_SessionStore%%NR%%\">Store at session level</label>" +
+        "</div><hr/>\n" +
         "</div>\n" +
         "<div id=\"AdminInterfaceTestTemplateEditorScreenContentsPreview%%NR%%\" NoTranslate class=\"row\">\n" +
         "%%PREVIEW%%\n" +
@@ -48,6 +51,7 @@ function ITSTestTemplateEditor(session) {
     this.screenComponentListElementPreviewID = /%%PREVIEW%%/g;
     this.screenComponentListElementRowID = /%%ROW%%/g;
     this.screenComponentListElementPrivacyStatus = /%%PRIVACY%%/g;
+    this.screenComponentListElementSessionStoreStatus = /%%SESSIONSTORE%%/g;
 
     this.screenDynamics = "<tr>\n" +
         "<th scope=\"row\">%%NR1%%</th>\n" +
@@ -517,6 +521,7 @@ ITSTestTemplateEditor.prototype.setCurrentScreenIndex = function (screenNum, tes
             newScreenComponent = newScreenComponent.replace(this.screenComponentListElementPreviewID, '<div NoTranslate id="' + newDivID + '"></div>');
             newScreenComponent = newScreenComponent.replace(this.screenComponentListElementRowID, x.varComponentName);
             newScreenComponent = newScreenComponent.replace(this.screenComponentListElementPrivacyStatus, x.excludeFromAnonimisedTestResults ? "checked" : "")
+            newScreenComponent = newScreenComponent.replace(this.screenComponentListElementSessionStoreStatus, x.storeAtSessionLevel ? "checked" : "")
             template = ITSInstance.screenTemplates.findTemplateById(ITSInstance.screenTemplates.screenTemplates, x.templateID);
             if (template >= 0) {
                 template = ITSInstance.screenTemplates.screenTemplates[template];
@@ -613,10 +618,10 @@ ITSTestTemplateEditor.prototype.focusOnScreen = function (index) {
 ITSTestTemplateEditor.prototype.highlightScreen = function (index) {
     for (var i = 0; i < this.currentTest.screens.length; i++) {
         //$('#TestTemplateEditorSCREEN' + i).removeClass("bg-light");
-        $('#AdminInterfaceTestTemplateEditorScreenList' + i).removeClass("bg-light");
+        $('#AdminInterfaceTestTemplateEditorScreenList' + i).removeClass("bg-secondary");
     }
     //$('#TestTemplateEditorSCREEN' + index).addClass("bg-light");
-    $('#AdminInterfaceTestTemplateEditorScreenList' + index).addClass("bg-light");
+    $('#AdminInterfaceTestTemplateEditorScreenList' + index).addClass("bg-secondary");
 };
 
 
@@ -629,6 +634,7 @@ ITSTestTemplateEditor.prototype.focusOnScreenComponent = function (index) {
 };
 
 ITSTestTemplateEditor.prototype.highlightScreenComponent = function (index) {
+    // bg-light bg-secondary
     for (var i = 0; i < this.currentScreen.screenComponents.length; i++) {
         $('#AdminInterfaceTestTemplateEditorScreenContents' + i).removeClass("bg-light");
         $('#AdminInterfaceTestTemplateEditorScreenContentsPreview' + i).removeClass("bg-light");
@@ -878,6 +884,10 @@ ITSTestTemplateEditor.prototype.removeScreenDynamics = function (nr) {
 
 ITSTestTemplateEditor.prototype.changeScreenComponentPrivacy = function (nr, value) {
     this.currentScreen.screenComponents[nr].excludeFromAnonimisedTestResults = value;
+};
+
+ITSTestTemplateEditor.prototype.changeScreenComponentSessionStore = function (nr, value) {
+    this.currentScreen.screenComponents[nr].storeAtSessionLevel = value;
 };
 
 //////////////////////////////////////////////////////////////////////////// end of screen functions

@@ -486,12 +486,14 @@ ITSChangeExistingSessionEditor.prototype.deletecurrentSession = function () {
 
 ITSChangeExistingSessionEditor.prototype.startNowSession = function () {
     this.currentSession.Person.regeneratePassword();
-    this.currentSession.saveCurrentSession(this.startNowSessionCallback.bind(this),
+    $('#AdminInterfaceChangeSessionCandidatePassword').val(this.currentSession.Person.Password);
+    this.existingUserFound = false; // make sure the password is updated
+    this.saveCurrentSession(this.startNowSessionCallback.bind(this),
         function () { ITSInstance.UIController.showError("SessionEditor", "SessionStartFailed", "The session could not be started, please refresh your browser page and try again."); } );
 };
 ITSChangeExistingSessionEditor.prototype.startNowSessionCallback = function () {
     // redirect to login screen
-    ITSInstance.logoutController.logout("UserID=" + $('#AdminInterfaceChangeSessionCandidateFor').val() + "&Password=" + $('#AdminInterfaceChangeSessionCandidatePassword').val());
+    ITSInstance.logoutController.logout("UserID=" + $('#AdminInterfaceChangeSessionCandidateFor').val() + "&Password=" + this.currentSession.Person.Password);
 };
 
 (function() { // iife to prevent pollution of the global memspace
