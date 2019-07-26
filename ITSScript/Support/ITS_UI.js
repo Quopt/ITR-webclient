@@ -116,6 +116,7 @@ ITSUIController = function () {
             $('#NavbarsAdmin').visibility = 'visible';
             $('#NavBarsFooter').show();
             this.initNavBar();
+            ITSInstance.UIController.prepareOfficeSession();
             //ITSTranslateInterface();
         };
 
