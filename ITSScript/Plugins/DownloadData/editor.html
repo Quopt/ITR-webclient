@@ -1,0 +1,111 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://opensource.org/licenses/Artistic-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div class="row col-12">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="DownloadDataInterfaceEditHeader">Download data</h4>
+    <br/><br/>
+</div>
+
+<div class="bg-dark text-white well row col-12"><label id="DownloadDataInfoHeader">What information do you want to download</label></div>
+
+<div class="col-sm-12">
+    <div class="form-group row col-sm-12">
+        <label for="DownloadDataSessionFilter"
+               id="DownloadDataSessionFilterLabel" class="col-sm-2 col-form-label">Session name filter</label>
+        <input class="form-control col-sm-6" type="text" maxlength="200" placeholder="" novalidate value="" id="DownloadDataSessionFilter">
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="DownloadDataTestNameFilter"
+               id="DownloadDataTestNameFilterLabel" class="col-sm-2 col-form-label">Test name filter</label>
+        <input class="form-control col-sm-6" type="text" maxlength="200" placeholder="" novalidate value="" id="DownloadDataTestNameFilter">
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="DownloadDataStartDate" id="DownloadDataStartDateLabel" class="col-sm-2 col-form-label">First date to download</label>
+        <input class="form-control col-sm-2" type="text" placeholder="" value="" novalidate NoTranslate name="datePicker" id="DownloadDataStartDate">
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="DownloadDataEndDate" id="DownloadDataEndDateLabel" class="col-sm-2 col-form-label">Last date to download</label>
+        <input class="form-control col-sm-2" type="text" placeholder="" value="" novalidate NoTranslate name="datePicker" id="DownloadDataEndDate">
+    </div>
+</div>
+
+<div id="DownloadDataMasterDiv" class="col-sm-12">
+    <div class="form-group row col-sm-12">
+        <input id="DownloadDataMaster" novalidate type="checkbox">
+        <label id="DownloadDataLabel">Include master records</label>
+    </div>
+</div>
+
+<div id="DownloadDataFirstButtonBar" class="row col-12">
+    <div class="row col-12"></div>
+    <button NoTranslate id="DownloadDataShowSample" type="button" class="btn btn-success"
+            onclick="ITSInstance.DownloadDataController.downloadSample();"><i id="DownloadDataShowSample_icon" class="fa fa-fw fa-thumbs-up"></i>
+        <span id="DownloadDataShowSample_buttonlabel">Download sample</span>
+    </button>&nbsp;
+</div>
+
+
+<div class="bg-dark text-white well row col-12"><label id="DownloadDataHeader">Data example for downloading</label></div>
+
+<div id="DownloadDataSampleTable" class="row col-12">
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Dummy col A</th>
+            <th scope="col">Dummy col B</th>
+            <th scope="col">Dummy col C</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>Dummy data 1</td>
+            <td>Dummy data 1</td>
+            <td>Dummy data 1</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="bg-dark text-white well row col-12"><label id="DownloadDataHeaderMain">Data download</label></div>
+<div id="DownloadDataMainButtonBar" class="row col-12">
+    <div class="row col-12"></div>
+    <button NoTranslate id="DownloadDataAll" type="button" class="btn btn-success"
+            onclick="ITSInstance.DownloadDataController.downloadAll();"><i
+            id="DownloadDataAll_icon" class="fa fa-fw fa-download"></i>
+        <span id="DownloadDataAll_buttonlabel">Download all data</span>
+    </button>&nbsp;
+</div>
+
+<div class="modal fade" id="AdminInterfaceGroupSessionLoginOverview-dialog" tabindex="-1" role="dialog" aria-labelledby="DataDownloading" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DataDownloading-Label">Downloading data</h5>
+            </div>
+            <div class="modal-body">
+                <label id="DataDownloading-LabelProgress" notranslate>Processed #1</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="DataDownloading-CloseButton">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

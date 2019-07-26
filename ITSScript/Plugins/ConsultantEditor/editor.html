@@ -114,6 +114,18 @@
                for="ConsultantEditorInterfaceIsTestAuthor">Test author</label>
     </div>
 
+    <div class="col-3" id="ConsultantEditorInterfaceIsDataResearcherDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="IsResearcher"
+                   onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"
+                   class="form-check-input form-check-input-sm"
+                   id="ConsultantEditorInterfaceIsDataResearcher"/>
+        </div>
+        <label class="col-sm-11"
+               id="ConsultantEditorInterfaceIsDataResearcherHeader"
+               for="ConsultantEditorInterfaceIsDataResearcher">Test researcher</label>
+    </div>
+
     <div class="col-3" id="ConsultantEditorInterfaceIsReportAuthorDiv">
         <div class="col-1">
             <input type="checkbox" data-field="IsReportAuthor"

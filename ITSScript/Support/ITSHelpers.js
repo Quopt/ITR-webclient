@@ -815,9 +815,9 @@ function RGBstringToNumber(rgb) {
 
 // convert it back again (to a string)
 function RGBnumberToColour(number) {
-    const r = (number & 0xff0000) >> 16;
-    const g = (number & 0x00ff00) >> 8;
-    const b = (number & 0x0000ff);
+    var r = (number & 0xff0000) >> 16;
+    var g = (number & 0x00ff00) >> 8;
+    var b = (number & 0x0000ff);
 
     return(RGBconvert(r) + RGBconvert(g) + RGBconvert(b)).toUpperCase();
 }
@@ -869,11 +869,11 @@ var PasswordGenerator = {
 };
 
 function format(source, params) {
-    $.each(params,function (i, n) {
+    $.each(params, function (i, n) {
         source = source.replace(new RegExp("\\{" + i + "\\}", "g"), n);
-    })
+    });
     return source;
-};
+}
 
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
@@ -922,7 +922,7 @@ var binArrayToString = function(binArrayi)
         str += String.fromCharCode(binArray[i]);
     }
     return str;
-}
+};
 
 function InArray( arrayToSearch, propertyToFind, ValueToFind, comparisonOperator ) {
     for (var i = 0; i < arrayToSearch.length; i++) {
@@ -931,7 +931,7 @@ function InArray( arrayToSearch, propertyToFind, ValueToFind, comparisonOperator
         }
     }
     return -1;
-};
+}
 
 function precise_round(num, dec){
 

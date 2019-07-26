@@ -46,6 +46,7 @@ function ITSUser (usersParent, ITSSession) {
     this.IsReportAuthor=false;
     this.IsTestScreenTemplateAuthor=false;
     this.IsTranslator=false;
+    this.IsResearcher=false;
     this.MayOrderCredits=false;
     this.MayWorkWithBatteriesOnly=false;
     this.DoNotRenewLicense= false;
@@ -69,7 +70,7 @@ function ITSUser (usersParent, ITSSession) {
     this.persistentProperties = [
         'ID','CompanyID','Email', 'Password', 'UserOpeningsScreen','UserName','PreferredLanguage','MailAddress','VisitingAddress','InvoiceAddress',
         'InformationAddress','Remarks','PasswordExpirationDate',
-        'StartDateLicense','EndDateLicense','LastLoginDateTime','LastRefreshDateTime','IsMasterUser','IsTestTakingUser',
+        'StartDateLicense','EndDateLicense','LastLoginDateTime','LastRefreshDateTime','IsMasterUser','IsTestTakingUser', 'IsResearcher',
         'IsOrganisationSupervisor', "IsOfficeUser", "IsTestAuthor", "IsReportAuthor", "IsTestScreenTemplateAuthor",'IsTranslator','MayOrderCredits','MayWorkWithBatteriesOnly','DoNotRenewLicense',
         'Active','UserCulture','MayWorkWithOwnObjectsOnly','SecurityTemplateID','HasPersonalCreditPool','CurrentPersonalCreditLevel','PluginData', 'IsPasswordManager', 'APIKey'
     ];
