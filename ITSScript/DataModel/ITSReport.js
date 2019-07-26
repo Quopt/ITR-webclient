@@ -179,6 +179,10 @@ ITSReport.prototype.generateTestReport = function (candidateSession, candidateSe
     this.sessiontest = candidateSessionTest;
     this.test = candidateSessionTest.testDefinition;
     this.candidate = candidateSession.Person;
+    this.scales = {};
+    for (var i = 0; i < this.test.scales.length; i++) {
+        this.scales[this.test.scales[i].scaleVarName] = this.test.scales[i];
+    }
     this[candidateSessionTest.testDefinition.TestName] = this.session.SessionTests[i];
     this[candidateSessionTest.testDefinition.ID] = this.session.SessionTests[i];
     // run the script before the report

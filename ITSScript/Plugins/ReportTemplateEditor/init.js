@@ -488,7 +488,7 @@
             resStr +=  "%%sessiontest.getMaxNormScore()%%\n";
             resStr +=  "%%sessiontest.getMaxNormScore2()%%\n";
             resStr +=  "%%sessiontest.getMaxNormScore3()%%\n";
-
+            resStr +=  "%%scales%%\n";
 
             for (var i=0; i < report.length; i++) { resStr +=  "%%" + report[i] + "%%\n";  }
             $('#ReportTemplateInterfaceEdit_ReportWriterFields').text(resStr);
