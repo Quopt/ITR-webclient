@@ -313,16 +313,6 @@ ITSSession.prototype.downloadImageSuccess = function (image, OnSuccess, data) {
     if (OnSuccess) { OnSuccess(); }
 };
 
-// init the ITS session and all the other required GLOBALS
-function ITSInitSession() {
-    console.log('Init ITS session');
-    ITSInstance = new ITSSession(); // this object is always present in the global context
-
-    setCopyrightMessage(CopyrightString);
-
-    ITSTranslateInterface();
-}
-
 function setCopyrightMessage(CopyrightString) {
     // change the standard stuff in the interface
     $('#CompanyName').text(CompanyName);
@@ -484,9 +474,11 @@ if (!ITSInstance) {
     }
 }
 
-Global_OriginalURL = document.location.toString();
-if (Global_OriginalURL.indexOf("?") > 0) {
-    Global_OriginalURL = Global_OriginalURL.substr(0, Global_OriginalURL.indexOf("?"));
+function calcGlobalOriginalUrl() {
+    Global_OriginalURL = document.location.toString();
+    if (Global_OriginalURL.indexOf("?") > 0) {
+        Global_OriginalURL = Global_OriginalURL.substr(0, Global_OriginalURL.indexOf("?"));
+    }
 }
 
 // now check if there are parameters on the command line we need to parse
@@ -504,3 +496,19 @@ if (getUrlParameterValue('Token')) {
 
 parseURLandTakeAction();
 
+// init the ITS session and all the other required GLOBALS
+function ITSInitSession() {
+    console.log('Init ITS session');
+    calcGlobalOriginalUrl();
+    ITSInstance = new ITSSession(); // this object is always present in the global context
+    if (getUrlParameterValue('Path') != 'Login' || getUrlParameterValue('Path') != 'Switchboard' || getUrlParameterValue('Path') != undefined) {
+        if (getUrlParameterValue('Path') == 'Login' || getUrlParameterValue('Path') == undefined) {
+        } else {
+            //OldURLparseURLandTakeAction = '';
+            //ITSRedirectPath('Switchboard');
+        }
+    }
+    setCopyrightMessage(CopyrightString);
+
+    ITSTranslateInterface();
+}

@@ -216,7 +216,7 @@
         if (! ITSInstance.users.currentUser.MayWorkWithBatteriesOnly) {
             ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#BatteryListerController.ListMenu", ITSInstance.translator.translate("#BatteryListerController.ListMenu", "Edit test batteries"), "fa-battery-three-quarters", "ITSRedirectPath(\'BatteryLister\');");
         }
-    });
+    }, true);
 
 //    ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", function () {
 //        ITSInstance.batteries.loadAvailableBatteries(function () {

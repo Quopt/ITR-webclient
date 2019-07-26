@@ -225,5 +225,5 @@
         if (ITSInstance.users.currentUser.IsMasterUser) {
             ITSInstance.UIController.registerMenuItem('#submenuCompaniesLI', "#ServerSettingsController.Menu", ITSInstance.translator.translate("#ServerSettingsController.Menu", "Server settings"), "fa-wrench", "ITSRedirectPath(\'ServerSettings\');");
         }
-    });
+    }, true);
 })()// IIFE

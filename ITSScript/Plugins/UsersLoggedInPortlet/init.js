@@ -82,7 +82,7 @@
                     ITSInstance.UIController.showWarning("passwordExpired", "Your password has expired. Please change your password now.", "", "ITSRedirectPath('ResetPassword');" )
                 }
             }
-        });
+        }, true);
         ITSInstance.UIController.registerPortlet(ITSInstance.portletLoggedInUsers);
 
         // make sure the list is reloaded every 5 minutes

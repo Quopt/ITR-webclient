@@ -1684,7 +1684,7 @@ ITSTestTemplateEditor.prototype.translateError = function () {
                     ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#AdminInterfaceTestTemplateEditor.EditMenu", ITSInstance.translator.translate("#AdminInterfaceTestTemplateEditor.EditMenu", "Edit test definitions"), "fa-book-reader", "ITSRedirectPath(\'TestTemplateEditor\');");
                 }, 10 );
             }
-        });
+        }, true);
         // init the view
         $('#AdminInterfaceTestTemplateEditorEdit').hide();
         $('#AdminInterfaceTestTemplateEditorSelect').show();

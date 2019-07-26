@@ -83,6 +83,6 @@
     // register the menu items if applicable
     ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
         ITSInstance.UIController.registerMenuItem('#submenuSettingsLI', "#ITSResetPasswordEditor.Menu", ITSInstance.translator.translate("#ITSResetPasswordEditor.Menu", "Reset password"), "fa-key", "ITSRedirectPath(\'ResetPassword\');");
-    });
+    }, true);
 
 })()// IIFE

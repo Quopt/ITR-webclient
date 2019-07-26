@@ -54,7 +54,7 @@
 
         ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
             ITSInstance.portletUserPreferences.loadMenu();
-        });
+        }, true);
     })
 
 })() // iife

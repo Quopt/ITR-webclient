@@ -14,13 +14,18 @@
  */
 ITSMessageBus = function () {
     this.subscriptions = {} ;
+    this.eventsFired = {};
 };
 
-ITSMessageBus.prototype.subscribe = function (MessageType, functionToCall) {
+ITSMessageBus.prototype.subscribe = function (MessageType, functionToCall, checkIfAlreadyFired) {
     if (!this.subscriptions[MessageType]) {
         this.subscriptions[MessageType] = [];
     }
     this.subscriptions[MessageType].push(functionToCall);
+    if (checkIfAlreadyFired) {
+        // check if the event is already fired and if so call the function
+        if (this.eventsFired[MessageType]) functionToCall();
+    }
 };
 
 ITSMessageBus.prototype.unsubscribe = function (MessageType, functionToCall) {
@@ -37,9 +42,11 @@ ITSMessageBus.prototype.unsubscribe = function (MessageType, functionToCall) {
 };
 
 ITSMessageBus.prototype.publishMessage = function (MessageType, MessageParameters) {
+    //console.log("publishMessage " + MessageType + "(" + MessageParameters + ")");
+    this.eventsFired[MessageType] = true;
     if (this.subscriptions[MessageType]) {
         for (var i=0; i < this.subscriptions[MessageType].length; i++ ) {
-            setTimeout(this.subscriptions[MessageType][i].bind(this.subscriptions[MessageType][i], MessageParameters) , 100);
+            setTimeout(this.subscriptions[MessageType][i].bind(this.subscriptions[MessageType][i], MessageParameters) , 1);
         }
     };
 };

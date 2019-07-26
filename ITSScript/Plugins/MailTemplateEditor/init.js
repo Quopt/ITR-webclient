@@ -328,7 +328,7 @@
             ITSInstance.UIController.registerMenuItem('#submenuCompaniesLI', '#MailTemplateEditorController.ServerMailTemplatesMenu', ITSInstance.translator.translate("#MailTemplateEditorController.ServerMailTemplatesMenu", "Manage server e-mail templates"), "fa-wrench", "ITSRedirectPath(\'MailTemplateEditor&Scope=master\');");
         }
         ITSInstance.UIController.registerMenuItem('#submenuSettingsLI', '#MailTemplateEditorController.MyMailTemplatesMenu', ITSInstance.translator.translate("#MailTemplateEditorController.MyMailTemplatesMenu", "My e-mail templates"), "fa-mail-bulk", "ITSRedirectPath(\'MailTemplateEditor&Scope=personal\');");
-    });
+    }, true);
 
     // translate the portlet
     ITSInstance.translator.translateDiv("#MailTemplateEditorInterfaceSessionEdit");

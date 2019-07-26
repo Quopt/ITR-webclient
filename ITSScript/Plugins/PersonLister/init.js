@@ -261,7 +261,7 @@
     ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
         ITSInstance.UIController.registerMenuItem('#submenuCandidatesLI', "#PersonListerController.PersonMenu" ,ITSInstance.translator.translate("#PersonListerController.PersonMenu", "Show active candidates"), "fa-user", "ITSRedirectPath(\'PersonLister\');");
         ITSInstance.UIController.registerMenuItem('#submenuCandidatesLI', "#PersonListerController.PersonArchivedMenu", ITSInstance.translator.translate("#PersonListerController.PersonArchivedMenu", "Show archived candidates"), "fa-archive", "ITSRedirectPath(\'PersonLister&Status=Archived\');");
-    });
+    }, true);
 
     // messagebus subscriptions
     ITSInstance.MessageBus.subscribe("Person.Delete", function () { ITSInstance.PersonListerController.alreadyLoaded = false; ITSInstance.PersonListerController.currentPage =0; } );

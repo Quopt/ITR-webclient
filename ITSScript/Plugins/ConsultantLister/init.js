@@ -204,7 +204,7 @@
         if ( (ITSInstance.users.currentUser.IsOrganisationSupervisor) || (ITSInstance.users.currentUser.IsMasterUser) ) {
             ITSInstance.UIController.registerMenuItem('#submenuCompaniesLI', "#ConsultantListerController.ConsultantsMenu", ITSInstance.translator.translate("#ConsultantListerController.ConsultantsMenu", "Manage consultants"), "fa-users", "ITSRedirectPath(\'ConsultantLister\');");
         }
-    });
+    }, true);
 
     // messagebus subscriptions
     ITSInstance.MessageBus.subscribe("User.Delete", function () { ITSInstance.ConsultantListerController.alreadyLoaded = false; ITSInstance.ConsultantListerController.currentPage =0; } );

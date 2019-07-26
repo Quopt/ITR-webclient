@@ -105,6 +105,18 @@
             },
             creditUsagesError: function () {
                 console.log('Portlet credit usages loading gives error');
+            },
+            loadPortletWhenCompanyKnown : function () {
+                $('#AdminInterfaceCreditManagementOrderButton').hide();
+                $('#AdminInterfaceCreditManagementViewButton').hide();
+                if ((ITSInstance.users.currentUser.IsOrganisationSupervisor) || (ITSInstance.users.currentUser.IsMasterUser) || (ITSInstance.users.currentUser.MayOrderCredits)) {
+                    ITSInstance.UIController.registerPortlet(ITSInstance.portletCreditManagement);
+                    $('#AdminInterfaceCreditManagementViewButton').show();
+                    if (ITSInstance.users.currentUser.MayOrderCredits) $('#AdminInterfaceCreditManagementOrderButton').show();
+                }
+                ITSInstance.portletCreditManagement.show();
+                ITSInstance.portletCreditManagement.init_after_load();
+                ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletCreditManagement.init_after_load);
             }
         }
 
@@ -113,18 +125,9 @@
         $('#AdminInterfaceCreditManagement').hide();
 
         ITSInstance.MessageBus.subscribe("CurrentCompany.Loaded", function () {
-            $('#AdminInterfaceCreditManagementOrderButton').hide();
-            $('#AdminInterfaceCreditManagementViewButton').hide();
-            if ((ITSInstance.users.currentUser.IsOrganisationSupervisor) || (ITSInstance.users.currentUser.IsMasterUser) || (ITSInstance.users.currentUser.MayOrderCredits)) {
-                ITSInstance.UIController.registerPortlet(ITSInstance.portletCreditManagement);
-                $('#AdminInterfaceCreditManagementViewButton').show();
-                if (ITSInstance.users.currentUser.MayOrderCredits) $('#AdminInterfaceCreditManagementOrderButton').show();
-            }
-            ITSInstance.portletCreditManagement.show();
-            ITSInstance.portletCreditManagement.init_after_load();
-            ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletCreditManagement.init_after_load);
-        });
-
+            ITSInstance.portletCreditManagement.loadPortletWhenCompanyKnown();
+        }, true);
+        //if (ITSInstance.companies.currentCompanyAvailable) ITSInstance.portletCreditManagement.loadPortletWhenCompanyKnown();
 
     })
 

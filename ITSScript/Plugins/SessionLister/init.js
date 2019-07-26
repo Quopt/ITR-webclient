@@ -265,7 +265,7 @@
         ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#SessionListerController.SessionInProgressMenu", ITSInstance.translator.translate("#SessionListerController.SessionInProgressMenu", "Show in progress sessions"), "fa-tasks", "ITSRedirectPath(\'SessionLister&SessionType=0&Status=Busy\');");
         ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#SessionListerController.SessionDoneMenu", ITSInstance.translator.translate("#SessionListerController.SessionDoneMenu", "Show report ready sessions"), "fa-check", "ITSRedirectPath(\'SessionLister&SessionType=0&Status=Done\');");
         ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#SessionListerController.SessionArchivedMenu", ITSInstance.translator.translate("#SessionListerController.SessionArchivedMenu", "Show archived sessions"), "fa-archive", "ITSRedirectPath(\'SessionLister&SessionType=0&Status=Archived\');");
-    });
+    }, true);
 
 
     // messagebus subscriptions

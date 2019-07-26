@@ -227,5 +227,5 @@ g
         if ( (ITSInstance.users.currentUser.IsMasterUser) || (ITSInstance.users.currentUser.IsOrganisationSupervisor)) {
             ITSInstance.UIController.registerMenuItem('#submenuCompaniesLI', "#CustomerSettingsController.Menu", ITSInstance.translator.translate("#CustomerSettingsController.Menu", "Customer settings"), "fa-building", "ITSRedirectPath(\'CustomerSettings\');");
         }
-    });
+    }, true);
 })()// IIFE

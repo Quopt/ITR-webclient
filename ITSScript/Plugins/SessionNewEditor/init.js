@@ -467,7 +467,7 @@ ITSInviteNewCandidateEditor.prototype.mailSessionInvitation = function () {
         ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
             ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#AdminInterfaceNewSessionEditorDiv.NewSessionMenu", ITSInstance.translator.translate("#AdminInterfaceNewSessionEditorDiv.NewSessionMenu", "New session"), "fa-thermometer-half", "ITSInstance.newCandidateSessionController.createNewSession(\'\'); ITSRedirectPath(\'NewSession\');");
             //ITSInstance.UIController.registerMenuItem('#submenuCandidatesLI', "#AdminInterfaceNewSessionEditorDiv.NewSessionMenu2", ITSInstance.translator.translate("#AdminInterfaceNewSessionEditorDiv.NewSessionMenu2", "New session"), "fa-thermometer-half", "ITSInstance.newCandidateSessionController.createNewSession(\'\'); ITSRedirectPath(\'NewSession\');");
-        });
+        }, true);
     })
 
 })() //iife

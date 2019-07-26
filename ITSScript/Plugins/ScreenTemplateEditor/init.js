@@ -387,7 +387,7 @@ ITSScreenTemplateEditor.prototype.uploadCurrentTemplate_process = function (file
             if (ITSInstance.users.currentUser.IsTestScreenTemplateAuthor) {
                 ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#AdminInterfaceScreenTemplateEditor.EditMenu", ITSInstance.translator.translate("#AdminInterfaceScreenTemplateEditor.EditMenu", "Edit test screen templates"), "fa-object-group", "ITSRedirectPath(\'ScreenTemplateEditor\');");
             }
-        });
+        }, true);
 
         // init the view
         $('#AdminInterfaceScreenTemplateEdit').hide();

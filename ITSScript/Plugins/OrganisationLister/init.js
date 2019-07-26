@@ -208,7 +208,7 @@
         if (ITSInstance.users.currentUser.IsMasterUser) {
             ITSInstance.UIController.registerMenuItem('#submenuCompaniesLI', "#OrganisationListerController.OrganisationsMenu",  ITSInstance.translator.translate("#OrganisationListerController.OrganisationsMenu", "Manage organisations"), "fa-cubes", "ITSRedirectPath(\'OrganisationLister\');");
         }
-    });
+    }, true);
 
     // messagebus subscriptions
     ITSInstance.MessageBus.subscribe("Company.Delete", function () { ITSInstance.OrganisationListerController.alreadyLoaded = false; ITSInstance.OrganisationListerController.currentPage =0; } );

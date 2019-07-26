@@ -250,7 +250,7 @@
         if ( (ITSInstance.users.currentUser.IsReportAuthor) && (ITSInstance.users.currentUser.IsMasterUser) ) {
             ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#ReportTemplateLocalPublisherController.LocalPublisherMenu", ITSInstance.translator.translate("#ReportTemplateLocalPublisherController.LocalPublisherMenu", "Publish report templates"), "fa-door-open", "ITSRedirectPath(\'ReportTemplateLocalPublisher\');");
         }
-    });
+    }, true);
 
     // messagebus subscriptions
     ITSInstance.MessageBus.subscribe("ReportTemplate.Delete", function () { ITSInstance.ReportTemplateLocalPublisherController.alreadyLoaded = false; ITSInstance.ReportTemplateLocalPublisherController.currentPage =0; } );

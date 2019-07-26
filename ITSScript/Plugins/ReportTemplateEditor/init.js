@@ -507,6 +507,6 @@
             if (ITSInstance.users.currentUser.IsReportAuthor) {
                 ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#ReportTemplateInterfaceSessionEdit.EditMenu", ITSInstance.translator.translate("#ReportTemplateInterfaceSessionEdit.EditMenu", "Edit report definitions"), "fa-newspaper", "ITSRedirectPath(\'ReportTemplateEditor&ReportType=0\');");
             }
-        });
+        }, true);
     }
 )()// IIFE

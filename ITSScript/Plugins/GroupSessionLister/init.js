@@ -260,7 +260,7 @@
     ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
         ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', '#GroupSessionListerController.GroupSessionMenu', ITSInstance.translator.translate("#GroupSessionListerController.GroupSessionReadyMenu", "Group sessions"), "fa-user-plus", "ITSRedirectPath(\'GroupSessionLister&SessionType=100\');");
         ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#GroupSessionListerController.GroupSessionArchivedMenu", ITSInstance.translator.translate("#GroupSessionListerController.GroupSessionArchivedMenu", "Group sessions archive"), "fa-archive", "ITSRedirectPath(\'GroupSessionLister&SessionType=100&Status=Archived\');");
-    });
+    }, true);
 
 
     // messagebus subscriptions

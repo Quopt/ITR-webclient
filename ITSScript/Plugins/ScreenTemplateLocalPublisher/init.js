@@ -241,7 +241,7 @@
         if ( (ITSInstance.users.currentUser.IsTestScreenTemplateAuthor) && (ITSInstance.users.currentUser.IsMasterUser) ) {
             ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#ScreenTemplateLocalPublisherController.LocalPublisherMenu", ITSInstance.translator.translate("#ScreenTemplateLocalPublisherController.LocalPublisherMenu", "Publish screen templates"), "fa-door-open", "ITSRedirectPath(\'ScreenTemplateLocalPublisher\');");
         }
-    });
+    }, true);
 
     // messagebus subscriptions
     ITSInstance.MessageBus.subscribe("ScreenTemplate.Delete", function () { ITSInstance.ScreenTemplateLocalPublisherController.alreadyLoaded = false; ITSInstance.ScreenTemplateLocalPublisherController.currentPage =0; } );
