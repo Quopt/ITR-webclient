@@ -38,9 +38,8 @@
                         //<button class="dropdown-item" type="button">Test 1</button>
                         for (i = 0; i < ITSInstance.tests.testList.length; i++) {
                             $('#AdminInterfaceInviteTCatalogdropdownMenuItems').append('<button class="dropdown-item" type="button" onclick="ITSRedirectPath(\'Catalog&TestID=' + ITSInstance.tests.testList[i].ID + '\');">' +
-                                ITSInstance.tests.testList[i].TestName + '</button>');
+                                ITSInstance.tests.testList[i].Description + '</button>');
                         }
-
                     },
                     function () {
                     }
