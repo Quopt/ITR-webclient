@@ -661,20 +661,25 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             this.autoStore(true); // this is a global function since it can also be called from editors
             break;
         case "EndTest" :
+     		$('#NavbarsTestTaking').show();
             setTimeout(this.endTest.bind(this, false),100);
             break;
         case "EndTestTimeOut" :
+     		$('#NavbarsTestTaking').show();
             setTimeout(this.endTest.bind(this, true),100);
             break;
         case "EndSession" :
+     		$('#NavbarsTestTaking').show();
             this.endSession();
             break;
         case "NextScreen" :
+     		$('#NavbarsTestTaking').show();
             this.currentSessionTest.CurrentPage++;
             this.saveCurrentTest();
             setTimeout(this.renderTestPage.bind(this),100);
             break;
         case "PreviousScreen" :
+     		$('#NavbarsTestTaking').show();
             var oldCurrentPage = this.currentSessionTest.CurrentPage;
             if (this.currentSessionTest.CurrentPage > 0) { this.currentSessionTest.CurrentPage--; }
             while ( (! this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].show) && this.currentSessionTest.CurrentPage > 0 ) {
@@ -687,6 +692,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             this.renderTestPage();
             break;
         case "GotoScreen" :
+     		$('#NavbarsTestTaking').show();
             try {
                 this.currentSessionTest.CurrentPage = parseInt( eventParameters);
             } catch (err) { console.log("Setting currentpage failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
@@ -694,6 +700,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             this.renderTestPage();
             break;
         case "Logout" :
+     		$('#NavbarsTestTaking').show();
             this.saveSession();
             this.saveCurrentTest();
             ITSInstance.logoutController.logout();
