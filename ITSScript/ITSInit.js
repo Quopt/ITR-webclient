@@ -111,7 +111,7 @@ ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuc
                 //console.log(data);
                 //var checkForArray = JSON.parse(data);
                 if ($.isArray(data)) {
-                    // this is an array, process it, objectToPutDataIn will be ignored in this case
+                    // this is an array, process it, objectToPutDataIn will be ignored in this cases
                     for (var i = 0; i < data.length; i++) {
                         // get an object to store the data in
                         if (OnNewChild !== undefined) {

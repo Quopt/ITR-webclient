@@ -295,7 +295,7 @@ ITSTestTakingController.prototype.sessionLoader = function () {
             ITSInstance.UIController.showInterfaceAsWaitingOff();
             ITSInstance.UIController.showError('ITSTestTakingController.LoadingSessionFailed', 'There are no tests in the session for you to take.', '',
                 'ITSInstance.logoutController.logout();');
-            if (endTestFunction) endTestFunction();
+            if (typeof endTestFunction !== "undefined") endTestFunction();
         }
     }
 };
@@ -320,7 +320,7 @@ ITSTestTakingController.prototype.sessionLoadingSucceeded = function () {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         ITSInstance.UIController.showError('ITSTestTakingController.LoadingSessionFailed', 'There are no tests in the session for you to take at this moment.','',
             'ITSInstance.logoutController.logout();');
-        if (endTestFunction) endTestFunction();
+        if (typeof endTestFunction !== "undefined") endTestFunction();
     }
 };
 
@@ -351,7 +351,7 @@ ITSTestTakingController.prototype.sessionLoadingFailed = function () {
     ITSInstance.UIController.showInterfaceAsWaitingOff();
     ITSInstance.UIController.showError('ITSTestTakingController.LoadingSessionFailed', 'There are no tests in the session for you to take.','',
         'ITSInstance.logoutController.logout();');
-    if (endTestFunction) endTestFunction();
+    if (typeof endTestFunction !== "undefined") endTestFunction();
 };
 
 ITSTestTakingController.prototype.setSessionID = function (id) {
@@ -508,7 +508,7 @@ ITSTestTakingController.prototype.endTest = function (forcedEnding) {
         this.currentTestIndex = nextTestIndex;
         $('#ITSTestTakingDiv').hide();
         $('#ITSTestTakingDivTestEnded').show();
-        if (ITREndTestFunction) ITREndTestFunction();
+        if (typeof ITREndTestFunction !== "undefined") ITREndTestFunction();
         if (window.parent) window.parent.postMessage("ITREndTestFunction", this.currentSession, "*")
     } else {
         if (nextTestIndex > -1) {

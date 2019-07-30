@@ -1449,6 +1449,7 @@ ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, 
 
                     if (sessionStorageObject && this.screenComponents[j].storeAtSessionLevel) {
                         if (!sessionStorageObject.sessionStorage) sessionStorageObject.sessionStorage = {};
+                        sessionStorageObject.sessionStorage._objectType = "ITSObject";
                         sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName] = ComponentResults.Value;
                         saveSessionNeeded = true;
                     }
