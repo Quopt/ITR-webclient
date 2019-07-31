@@ -164,7 +164,7 @@ ITSUIController = function () {
                 if ((token == "") || (token=="empty")) this.ActivateScreenPath("Login");
                 this.scan_for_default_office_plugin_paths(Path);
         }
-        if (resizeFunction)  { resizeFunction(); }
+        if (typeof resizeFunction !== "undefined" )  { resizeFunction(); }
     } ;
 
     this.scan_for_default_office_plugin_paths = function (Path) {

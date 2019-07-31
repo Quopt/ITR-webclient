@@ -1144,9 +1144,9 @@
         }
     });
     function onResize() {
+        $('#NavbarsAdminSearchButtonBlock').css("left", ( $(window).width() - 75 - Math.round($('#NavbarsAdminLogoutButton').outerWidth()) ) + "px" );
         if ($(window).width() > 400) {
             $('#NavbarsAdminSearchButtonBlock').show();
-            $('#NavbarsAdminSearchButtonBlock').css("left", ( $(window).width() - 5 - Math.round($('#NavbarsAdminSearchButtonBlock').outerWidth()) ) + "px" );
         }
         else {
             $('#NavbarsAdminSearchButtonBlock').hide();

@@ -116,7 +116,7 @@ ITSLoginController = function () {
             },
             success: function (data) {
                 var checkLogin = JSON.parse(data);
-                console.log(data, checkLogin);
+                //console.log(data, checkLogin);
                 ITSInstance.token.set(checkLogin.SessionID);
                 ITSInstance.loginController.loginOK();
             }
