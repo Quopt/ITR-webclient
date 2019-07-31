@@ -1146,12 +1146,12 @@
     function onResize() {
         if ($(window).width() > 400) {
             $('#NavbarsAdminSearchButtonBlock').show();
-            $('#NavbarsAdminSearchButtonBlock').css("left", $(window).width() - 150 );
+            $('#NavbarsAdminSearchButtonBlock').css("left", $(window).width() - 55 - Math.round($('#NavbarsAdminSearchButtonBlock').width()) );
         }
         else {
             $('#NavbarsAdminSearchButtonBlock').hide();
         }
-        $('#NavbarsAdminSearchButtonBlockTT').css("left", $(window).width() - 100 );
+        $('#NavbarsAdminSearchButtonBlockTT').css("left", $(window).width() - 55 - Math.round($('#NavbarsAdminSearchButtonBlock').width()) );
         if ($(window).width() > 750) {
             $('#welcomeCompany').show();
             $('#welcomeCompanyTT').show();

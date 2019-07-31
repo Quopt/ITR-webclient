@@ -449,7 +449,7 @@ ITSTestTakingController.prototype.renderTestPage = function () {
 
 ITSTestTakingController.prototype.startTest = function () {
     this.InTestTaking = true;
-    
+
     if (this.currentSessionTest.Status == 10) {
         // init the session test information
         this.currentSessionTest.Results.testTimeLeft = this.currentTestDefinition.TotalTimeAvailableForThisTest; // in seconds
