@@ -79,241 +79,241 @@
      style="display: none;color:white;background-color: #331a00;top:35px; z-index:1;min-width: 300px;max-width: 300px;">
     <br/>
     <div id="NavBarsAdminSidebarMenu" class="d-md-flex pt-2 nav flex-column">
-            <li NoTranslate class="nav-item"><a class="nav-link" style="color:white;" id="NavBarsAdminSidebarSwitchboard" onclick="$('div[MainMenu]').collapse('hide'); ITSRedirectPath('Switchboard');"><label id="NavBarsAdminSidebarSwitchboardLabel">Switchboard</label></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-toggle="collapse" data-target="#submenuCandidates" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
-                   style="color:white;" id="NavBarsAdminSidebarUsers"><label id="NavBarsAdminSidebarUsersLabel">Candidates</label></a>
-                <div NoTranslate class="collapse small" id="submenuCandidates" aria-expanded="false" MainMenu>
-                    <ul NoTranslate class="flex-column pl-4 nav" id="submenuCandidatesLI">
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
-                   data-target="#submenuSessions" style="color:white;" id="NavBarsAdminSidebarSessions"><label id="NavBarsAdminSidebarSessionsLabel">Sessions</label></a>
-                <div NoTranslate class="collapse small" id="submenuSessions" aria-expanded="false" MainMenu>
-                    <ul NoTranslate class="flex-column pl-4 nav" id="submenuSessionsLI">
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
-                       data-target="#submenuTestsAndReports" style="color:white;" id="NavBarsAdminSidebarTestAndReports"><label id="NavBarsAdminSidebarTestAndReportsLabel">Tests and Reports</label></a>
-                    <div NoTranslate class="collapse small" id="submenuTestsAndReports" aria-expanded="false" MainMenu>
-                        <ul NoTranslate class="flex-column pl-4 nav" id="submenuTestsAndReportsLI">
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
-                       data-target="#submenuSettings" style="color:white;" id="NavBarsAdminSidebarSettings"><label id="NavBarsAdminSidebarSettingsLabel">Settings</label></a>
-                    <div NoTranslate class="collapse small" id="submenuSettings" aria-expanded="false" MainMenu>
-                        <ul NoTranslate class="flex-column pl-4 nav" id="submenuSettingsLI">
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" style="color:white;" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
-                       data-target="#submenuCompanies" id="NavBarsAdminSidebarCompanies"><label id="NavBarsAdminSidebarCompaniesLabel">Organisation</label></a>
-                    <div NoTranslate class="collapse small" id="submenuCompanies" aria-expanded="false" MainMenu>
-                        <ul NoTranslate class="flex-column pl-4 nav" id="submenuCompaniesLI">
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item"><a class="nav-link" style="color:white;" onclick="$('div[MainMenu]').collapse('hide'); ITSInstance.logoutController.logout();"
-                                        id="NavBarsAdminSidebarLogout"><label id="NavBarsAdminSidebarLogoutLabel">Logout</label></a></li>
-        </div>
-    </div>
-
-
-    <div class="container-fluid" id="ITSTestTakingDiv"  style="display: none;">
-        <label>...</label>
-    </div>
-
-
-    <div class="container-fluid" id="ITSTestTakingDivTestEnded"  style="display: none;">
-        <label id="ITSTestTakingDivTestEndedTest">You have completed this test ! Please click the button below to proceed to the next test.</label><br/>
-        <button class="btn btn-primary" id="ITSTestTakingDivTestEndedButton"
-                onclick="ITSInstance.testTakingController.nextTest();">
-            Start the next test
-        </button>&nbsp;&nbsp;
-    </div>
-
-    <div class="container-fluid" id="ITSTestTakingDivSessionEnded"  style="display: none;">
-        <label id="ITSTestTakingDivSessionEndedText">You have completed all the tests. The results have been send to your test institute. Many thanks for using the Internet Test Room system. </label><br/>
-        <button class="btn btn-primary" id="ITSTestTakingDivSessionEndedButton"
-                onclick="ITSInstance.logoutController.logout();">
-            Return to the login screen
-        </button>&nbsp;&nbsp;
-    </div>
-
-    <div class="container-fluid" id="ITSMainDiv">
-
-        <div class="starter-template" id="AdminInterface" style="display: none;">
-            <div class="container">
-                <div class="row" id="AdminInterfacePortlets">
-                    <div class="col-lg-12">
-                        <h1 class="page-header" id="AdminInterfaceCompanyHailing" NoTranslate>
-                            <label id="AdminInterfaceCompanyHailingHeading">Welcome to&nbsp;</label><label id="CompanyName" NoTranslate>...</label>!
-                        </h1><br/>
-                    </div>
-                </div>
+        <li NoTranslate class="nav-item"><a class="nav-link" style="color:white;" id="NavBarsAdminSidebarSwitchboard" onclick="$('div[MainMenu]').collapse('hide'); ITSRedirectPath('Switchboard');"><label id="NavBarsAdminSidebarSwitchboardLabel">Switchboard</label></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-toggle="collapse" data-target="#submenuCandidates" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
+               style="color:white;" id="NavBarsAdminSidebarUsers"><label id="NavBarsAdminSidebarUsersLabel">Candidates</label></a>
+            <div NoTranslate class="collapse small" id="submenuCandidates" aria-expanded="false" MainMenu>
+                <ul NoTranslate class="flex-column pl-4 nav" id="submenuCandidatesLI">
+                </ul>
             </div>
-        </div>
-
-        <div class="container-fluid" id="AdminInterfaceSessions" style="display: none;">
-            <div class="row">
-                <h1 id="AdminInterfaceSessionsHeader">Sessions overview</h1>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
+               data-target="#submenuSessions" style="color:white;" id="NavBarsAdminSidebarSessions"><label id="NavBarsAdminSidebarSessionsLabel">Sessions</label></a>
+            <div NoTranslate class="collapse small" id="submenuSessions" aria-expanded="false" MainMenu>
+                <ul NoTranslate class="flex-column pl-4 nav" id="submenuSessionsLI">
+                </ul>
             </div>
-            <div class="row">
-                <div class="panel-body">
-                    <p id="AdminInterfaceSettingsBody">Select the session from the list below to view the details. If your
-                        session is not in the list enter a part of any text in the session in the Filter box below. </p>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="AdminInterfaceSessionsFilter">Filter</span>
-                        <input type="text" class="form-control" placeholder="Enter filter text ..."
-                               id="AdminInterfaceSessionsFilterText" aria-describedby="AdminInterfaceSessionsFilter">
-                    </div>
-                    <table class="table table-sm table-striped table-hover" style="text-align: left"
-                           id="AdminInterfaceSessionsTable">
-                        <thead>
-                        <tr>
-                            <td>A</td>
-                            <td>B</td>
-                            <td>C</td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                        </tr>
-                        </tbody>
-                    </table>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
+               data-target="#submenuTestsAndReports" style="color:white;" id="NavBarsAdminSidebarTestAndReports"><label id="NavBarsAdminSidebarTestAndReportsLabel">Tests and Reports</label></a>
+            <div NoTranslate class="collapse small" id="submenuTestsAndReports" aria-expanded="false" MainMenu>
+                <ul NoTranslate class="flex-column pl-4 nav" id="submenuTestsAndReportsLI">
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
+               data-target="#submenuSettings" style="color:white;" id="NavBarsAdminSidebarSettings"><label id="NavBarsAdminSidebarSettingsLabel">Settings</label></a>
+            <div NoTranslate class="collapse small" id="submenuSettings" aria-expanded="false" MainMenu>
+                <ul NoTranslate class="flex-column pl-4 nav" id="submenuSettingsLI">
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" style="color:white;" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
+               data-target="#submenuCompanies" id="NavBarsAdminSidebarCompanies"><label id="NavBarsAdminSidebarCompaniesLabel">Organisation</label></a>
+            <div NoTranslate class="collapse small" id="submenuCompanies" aria-expanded="false" MainMenu>
+                <ul NoTranslate class="flex-column pl-4 nav" id="submenuCompaniesLI">
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item"><a class="nav-link" style="color:white;" onclick="$('div[MainMenu]').collapse('hide'); ITSInstance.logoutController.logout();"
+                                id="NavBarsAdminSidebarLogout"><label id="NavBarsAdminSidebarLogoutLabel">Logout</label></a></li>
+    </div>
+</div>
+
+
+<div class="container-fluid" id="ITSTestTakingDiv"  style="display: none;">
+    <label>...</label>
+</div>
+
+
+<div class="container-fluid" id="ITSTestTakingDivTestEnded"  style="display: none;">
+    <label id="ITSTestTakingDivTestEndedTest">You have completed this test ! Please click the button below to proceed to the next test.</label><br/>
+    <button class="btn btn-primary" id="ITSTestTakingDivTestEndedButton"
+            onclick="ITSInstance.testTakingController.nextTest();">
+        Start the next test
+    </button>&nbsp;&nbsp;
+</div>
+
+<div class="container-fluid" id="ITSTestTakingDivSessionEnded"  style="display: none;">
+    <label id="ITSTestTakingDivSessionEndedText">You have completed all the tests. The results have been send to your test institute. Many thanks for using the Internet Test Room system. </label><br/>
+    <button class="btn btn-primary" id="ITSTestTakingDivSessionEndedButton"
+            onclick="ITSInstance.logoutController.logout();">
+        Return to the login screen
+    </button>&nbsp;&nbsp;
+</div>
+
+<div class="container-fluid" id="ITSMainDiv">
+
+    <div class="starter-template" id="AdminInterface" style="display: none;">
+        <div class="container">
+            <div class="row" id="AdminInterfacePortlets">
+                <div class="col-lg-12">
+                    <h1 class="page-header" id="AdminInterfaceCompanyHailing" NoTranslate>
+                        <label id="AdminInterfaceCompanyHailingHeading">Welcome to&nbsp;</label><label id="CompanyName" NoTranslate>...</label>!
+                    </h1><br/>
                 </div>
             </div>
         </div>
-
     </div>
 
-
-    <div class="starter-template" id="TestTakingInterface" style="display: none;">
-        <h1>Bootstrap starter template TEST TAKING</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a
-            mostly barebones HTML document.</p>
+    <div class="container-fluid" id="AdminInterfaceSessions" style="display: none;">
+        <div class="row">
+            <h1 id="AdminInterfaceSessionsHeader">Sessions overview</h1>
+        </div>
+        <div class="row">
+            <div class="panel-body">
+                <p id="AdminInterfaceSettingsBody">Select the session from the list below to view the details. If your
+                    session is not in the list enter a part of any text in the session in the Filter box below. </p>
+                <div class="input-group">
+                    <span class="input-group-addon" id="AdminInterfaceSessionsFilter">Filter</span>
+                    <input type="text" class="form-control" placeholder="Enter filter text ..."
+                           id="AdminInterfaceSessionsFilterText" aria-describedby="AdminInterfaceSessionsFilter">
+                </div>
+                <table class="table table-sm table-striped table-hover" style="text-align: left"
+                       id="AdminInterfaceSessionsTable">
+                    <thead>
+                    <tr>
+                        <td>A</td>
+                        <td>B</td>
+                        <td>C</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <div class="form-check" id="LoginWindow">
-        <div id="LoginWindowBackgroundDiv" style="position:fixed; top:0; left:0; height:100%; width:100%; z-index:-100; opacity: 0;">
+</div>
+
+
+<div class="starter-template" id="TestTakingInterface" style="display: none;">
+    <h1>Bootstrap starter template TEST TAKING</h1>
+    <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a
+        mostly barebones HTML document.</p>
+</div>
+
+<div class="form-check" id="LoginWindow">
+    <div id="LoginWindowBackgroundDiv" style="position:fixed; top:0; left:0; height:100%; width:100%; z-index:-100; opacity: 0;">
         <img id="LoginWindowBackground" style="width:100%; min-height: 100vh; object-fit: cover;"/>
-        </div>
-        <div class="row align-items-center col-12">
-                <div class="mx-auto" style="max-width:390px;min-width:190px;">
-                <h3 style="vertical-align:text-bottom;"><img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/><label id="LoginWindowHeading">Login</label></h3>
-                <div id="LoginWindowWelcomeDiv" style="visibility:hidden" class="form-group text-nowrap font-weight-bold">
-                    <label id="LoginWindowWelcomeTo">Welcome to</label>
-                    <label id="LoginWindowCompanyName" notranslate></label>
-                </div>
-                <div class="form-group">
-                    <label for="LoginWindowinputUsername" id="LoginWindowUserName">User name</label>
-                    <input type="text" class="form-control" id="LoginWindowinputUsername" NoTranslate/>
-                </div>
-                <div class="form-group">
-                    <label for="LoginWindowinputPassword" id="LoginWindowPassword">Password</label>
-                    <input type="password" class="form-control" id="LoginWindowinputPassword" NoTranslate/>
-                </div>
-                <span id="LoginWindowIEWarning" class="badge badge-danger" style="display: none">Internet Explorer is <B>NOT</B> supported for this website. <br/>Please use a recent version of Microsoft Edge,<br/>Google Chrome, Mozilla Firefox, Apple Safari or Opera.</span>
-                <span id="LoginWindowUnknownBrowserWarning" class="badge badge-warning" style="display: none;">Your browser could not be detected and <br/>may not work with this website.<br/>Please use a recent version of Microsoft Edge,<br/>Google Chrome, Mozilla Firefox, Apple Safari or Opera.</span>
-                <button class="btn btn-primary" id="LoginWindowLoginButton"
-                        onclick="ITSInstance.loginController.login( $('#LoginWindowinputUsername').val(), $('#LoginWindowinputPassword').val());">
-                    Login
-                </button>
-                <span class="pull-right nav-link" href="#" id="LoginWindowPasswordForgotten"
-                   onclick="ITSInstance.UIController.activateScreenPath('PasswordForgotten');">Have you forgotten your
+    </div>
+    <div class="row align-items-center col-12">
+        <div class="mx-auto" style="max-width:390px;min-width:190px;">
+            <h3 style="vertical-align:text-bottom;"><img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/><label id="LoginWindowHeading">Login</label></h3>
+            <div id="LoginWindowWelcomeDiv" style="visibility:hidden" class="form-group text-nowrap font-weight-bold">
+                <label id="LoginWindowWelcomeTo">Welcome to</label>
+                <label id="LoginWindowCompanyName" notranslate></label>
+            </div>
+            <div class="form-group">
+                <label for="LoginWindowinputUsername" id="LoginWindowUserName">User name</label>
+                <input type="text" class="form-control" id="LoginWindowinputUsername" NoTranslate/>
+            </div>
+            <div class="form-group">
+                <label for="LoginWindowinputPassword" id="LoginWindowPassword">Password</label>
+                <input type="password" class="form-control" id="LoginWindowinputPassword" NoTranslate/>
+            </div>
+            <span id="LoginWindowIEWarning" class="badge badge-danger" style="display: none">Internet Explorer is <B>NOT</B> supported for this website. <br/>Please use a recent version of Microsoft Edge,<br/>Google Chrome, Mozilla Firefox, Apple Safari or Opera.</span>
+            <span id="LoginWindowUnknownBrowserWarning" class="badge badge-warning" style="display: none;">Your browser could not be detected and <br/>may not work with this website.<br/>Please use a recent version of Microsoft Edge,<br/>Google Chrome, Mozilla Firefox, Apple Safari or Opera.</span>
+            <button class="btn btn-primary" id="LoginWindowLoginButton"
+                    onclick="ITSInstance.loginController.login( $('#LoginWindowinputUsername').val(), $('#LoginWindowinputPassword').val());">
+                Login
+            </button>
+            <span class="pull-right nav-link" href="#" id="LoginWindowPasswordForgotten"
+                  onclick="ITSInstance.UIController.activateScreenPath('PasswordForgotten');">Have you forgotten your
                     password?</span>
 
-                <div class="form-group" id="LoginWindowSelectLangGroup" style="display: none;">
-                    <br/>
-                    <label for="LoginWindowSelectLanguage" id="LoginWindowSelectLanguageLabel">Select other language</label>
-                    <select NoTranslate class="form-control" id="LoginWindowSelectLanguage" onchange="ITSInstance.loginController.changeLanguage($('#LoginWindowSelectLanguage').val());"></select>
-                </div>
-
-                <div id="NavBarsCopyright" style="z-index: -1;" NoTranslate><br/><p style="line-height: 0.3; text-align: center;"><label id="CopyrightText1" NoTranslate></label><br/><label style="font-size: 8px" id="ITR365" NoTranslate>Powered by <a href="http://www.itr365.com">itr365</a></label></p></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-check" id="LoginWindowSelectCompany" style="display: none;">
-        <div class="row d-flex align-items-center">
-            <div class="mx-auto" style="max-width:390px;min-width:190px;">
-
-                <h3 id="LoginWindowSelectCompanyHeader" style="vertical-align:text-bottom;">
-                    <img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>
-                    Select the company you want to work with </h3>
-                <table class="table table-sm table-striped table-hover" style="text-align: center"
-                       id="LoginWindowSelectCompanyTable">
-                    <tbody>
-                    <tr>
-                        <td>-</td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div class="form-group" id="LoginWindowSelectLangGroup" style="display: none;">
                 <br/>
-                <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightText2" NoTranslate></label></p></div>
+                <label for="LoginWindowSelectLanguage" id="LoginWindowSelectLanguageLabel">Select other language</label>
+                <select NoTranslate class="form-control" id="LoginWindowSelectLanguage" onchange="ITSInstance.loginController.changeLanguage($('#LoginWindowSelectLanguage').val());"></select>
             </div>
+
+            <div id="NavBarsCopyright" style="z-index: -1;" NoTranslate><br/><p style="line-height: 0.3; text-align: center;"><label id="CopyrightText1" NoTranslate></label><br/><label style="font-size: 8px" id="ITR365" NoTranslate>Powered by <a href="http://www.itr365.com">itr365</a></label></p></div>
         </div>
     </div>
+</div>
 
-    <div class="form-check" id="LoginWindowSelectSession" style="display: none;">
-        <div class="row d-flex align-items-center">
-            <div class="mx-auto" style="max-width:390px;min-width:190px;">
+<div class="form-check" id="LoginWindowSelectCompany" style="display: none;">
+    <div class="row d-flex align-items-center">
+        <div class="mx-auto" style="max-width:390px;min-width:190px;">
 
-                <h3 id="LoginWindowSelectSessionHeader" style="vertical-align:text-bottom;">
-                    <img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>
-                    Select the session you want to take</h3>
-                <table class="table table-sm table-striped table-hover" style="text-align: center"
-                       id="LoginWindowSelectSessionTable">
-                    <tbody>
-                    <tr>
-                        <td>-</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <br/>
-                <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightTextSession" NoTranslate></label></p></div>
-            </div>
+            <h3 id="LoginWindowSelectCompanyHeader" style="vertical-align:text-bottom;">
+                <img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>
+                Select the company you want to work with </h3>
+            <table class="table table-sm table-striped table-hover" style="text-align: center"
+                   id="LoginWindowSelectCompanyTable">
+                <tbody>
+                <tr>
+                    <td>-</td>
+                </tr>
+                </tbody>
+            </table>
+            <br/>
+            <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightText2" NoTranslate></label></p></div>
         </div>
     </div>
+</div>
 
-    <div class="form-check" id="ForgotWindow" style="display: none;">
-        <div class="row d-flex align-items-center">
-            <div class="mx-auto" style="max-width:390px;min-width:190px;">
-                <h3 style="vertical-align:text-bottom;"><img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>Password
-                    forgotten</h3>
-                <div class="form-group">
-                    <label id="ForgotWindowInstruction">Please enter your email address below and we will send you a link to reset your password.</label> <br/><br/>
-                    <label for="inputUsername" id="UserName">E-mail</label>
-                    <input type="text" class="form-control" id="ForgotWindowinputUsername"/>
-                </div>
-                <button class="btn btn-primary" id="ForgotWindowBackButton"
-                        onclick="ITSInstance.UIController.activateScreenPath('Login');">
-                    Cancel
-                </button>
-                <button class="btn btn-primary" id="ForgotWindowResetButton"
-                        onclick="ITSInstance.passwordResetController.sendPasswordReset();">
-                    Send password reset mail
-                </button>
-                <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightText3" NoTranslate></label></p></div>
-            </div>
+<div class="form-check" id="LoginWindowSelectSession" style="display: none;">
+    <div class="row d-flex align-items-center">
+        <div class="mx-auto" style="max-width:390px;min-width:190px;">
+
+            <h3 id="LoginWindowSelectSessionHeader" style="vertical-align:text-bottom;">
+                <img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>
+                Select the session you want to take</h3>
+            <table class="table table-sm table-striped table-hover" style="text-align: center"
+                   id="LoginWindowSelectSessionTable">
+                <tbody>
+                <tr>
+                    <td>-</td>
+                </tr>
+                </tbody>
+            </table>
+            <br/>
+            <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightTextSession" NoTranslate></label></p></div>
         </div>
     </div>
+</div>
 
-    <div class="form-check" id="PasswordResetWindow" style="display: none;">
-        <!-- Token=X&Path=PasswordReset -->
-        <div class="row d-flex align-items-center">
-            <div class="mx-auto" style="max-width:390px;min-width:190px;">
+<div class="form-check" id="ForgotWindow" style="display: none;">
+    <div class="row d-flex align-items-center">
+        <div class="mx-auto" style="max-width:390px;min-width:190px;">
+            <h3 style="vertical-align:text-bottom;"><img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>Password
+                forgotten</h3>
+            <div class="form-group">
+                <label id="ForgotWindowInstruction">Please enter your email address below and we will send you a link to reset your password.</label> <br/><br/>
+                <label for="inputUsername" id="UserName">E-mail</label>
+                <input type="text" class="form-control" id="ForgotWindowinputUsername"/>
+            </div>
+            <button class="btn btn-primary" id="ForgotWindowBackButton"
+                    onclick="ITSInstance.UIController.activateScreenPath('Login');">
+                Cancel
+            </button>
+            <button class="btn btn-primary" id="ForgotWindowResetButton"
+                    onclick="ITSInstance.passwordResetController.sendPasswordReset();">
+                Send password reset mail
+            </button>
+            <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightText3" NoTranslate></label></p></div>
+        </div>
+    </div>
+</div>
+
+<div class="form-check" id="PasswordResetWindow" style="display: none;">
+    <!-- Token=X&Path=PasswordReset -->
+    <div class="row d-flex align-items-center">
+        <div class="mx-auto" style="max-width:390px;min-width:190px;">
             <h3 style="vertical-align:text-bottom;"><img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>Password
                 reset</h3>
             <div class="form-group">
@@ -338,9 +338,9 @@
                 Reset password
             </button>
             <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightText4" NoTranslate></label></p></div>
-            </div>
         </div>
     </div>
+</div>
 
 <!-- system service components -->
 <!-- modal dialog box -->
@@ -378,9 +378,9 @@
 </div>
 
 <footer class="bd-footer text-muted" id="NavBarsFooter" style="display:none; position: absolute; width:100%; z-index: -1;">
-        <div class="container" id="NavBarsCopyright" style="width:100%;text-align:center;">
-            <p><br/><label id="CopyrightText5" NoTranslate></label></p>
-        </div>
+    <div class="container" id="NavBarsCopyright" style="width:100%;text-align:center;">
+        <p><br/><label id="CopyrightText5" NoTranslate></label></p>
+    </div>
 </footer>
 
 
@@ -1146,12 +1146,12 @@
     function onResize() {
         if ($(window).width() > 400) {
             $('#NavbarsAdminSearchButtonBlock').show();
-            $('#NavbarsAdminSearchButtonBlock').css("left", $(window).width() - 55 - Math.round($('#NavbarsAdminSearchButtonBlock').width()) );
+            $('#NavbarsAdminSearchButtonBlock').css("left", ( $(window).width() - 5 - Math.round($('#NavbarsAdminSearchButtonBlock').outerWidth()) ) + "px" );
         }
         else {
             $('#NavbarsAdminSearchButtonBlock').hide();
         }
-        $('#NavbarsAdminSearchButtonBlockTT').css("left", $(window).width() - 55 - Math.round($('#NavbarsAdminSearchButtonBlock').width()) );
+        $('#NavbarsAdminSearchButtonBlockTT').css("left", ( $(window).width() - 5 - Math.round($('#NavbarsAdminLogoutButtonTT').outerWidth()) ) + "px"  );
         if ($(window).width() > 750) {
             $('#welcomeCompany').show();
             $('#welcomeCompanyTT').show();
@@ -1233,7 +1233,7 @@
             ITSDateSeparator = dsp;
         } else
         {
-          setTimeout(setDatePickerFormats , 100);
+            setTimeout(setDatePickerFormats , 100);
         }
     }
     setDatePickerFormats();
@@ -1285,9 +1285,9 @@
             // cascade onkeyup event to embedded element
             init_instance_callback: function (editor) {
                 editor.on('KeyUp', function (e) {
-                   if ($('#'+this.id)[0].onkeyup) {
-                       $('#'+this.id)[0].onkeyup() ;
-                   }
+                    if ($('#'+this.id)[0].onkeyup) {
+                        $('#'+this.id)[0].onkeyup() ;
+                    }
                 });
             }
         });
