@@ -265,7 +265,7 @@ ITSTestTakingController = function (parentInstance) {
     this.myInstance = parentInstance;
     this.sessionList = {};
     this.currentSession = {};
-
+    this.InTestTaking = false;
 };
 
 ITSTestTakingController.prototype.startSession = function () {
@@ -309,7 +309,7 @@ ITSTestTakingController.prototype.sessionLoadingSucceeded = function () {
         $('#LoginWindow').hide();
         $('#LoginWindowSelectSession').hide();
         $('#LoginWindowSelectCompany').hide();
-        $('#NavbarsTestTaking').show();
+        if (this.InTestTaking) $('#NavbarsTestTaking').show();
         this.prepareTest(this.currentTestIndex);
         setTimeout(this.updateHeaders.bind(this), 200);
 
@@ -448,6 +448,8 @@ ITSTestTakingController.prototype.renderTestPage = function () {
 };
 
 ITSTestTakingController.prototype.startTest = function () {
+    this.InTestTaking = true;
+    
     if (this.currentSessionTest.Status == 10) {
         // init the session test information
         this.currentSessionTest.Results.testTimeLeft = this.currentTestDefinition.TotalTimeAvailableForThisTest; // in seconds
@@ -661,25 +663,25 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             this.autoStore(true); // this is a global function since it can also be called from editors
             break;
         case "EndTest" :
-     		$('#NavbarsTestTaking').show();
+     		if (this.InTestTaking) $('#NavbarsTestTaking').show();
             setTimeout(this.endTest.bind(this, false),100);
             break;
         case "EndTestTimeOut" :
-     		$('#NavbarsTestTaking').show();
+     		if (this.InTestTaking) $('#NavbarsTestTaking').show();
             setTimeout(this.endTest.bind(this, true),100);
             break;
         case "EndSession" :
-     		$('#NavbarsTestTaking').show();
+     		if (this.InTestTaking) $('#NavbarsTestTaking').show();
             this.endSession();
             break;
         case "NextScreen" :
-     		$('#NavbarsTestTaking').show();
+     		if (this.InTestTaking) $('#NavbarsTestTaking').show();
             this.currentSessionTest.CurrentPage++;
             this.saveCurrentTest();
             setTimeout(this.renderTestPage.bind(this),100);
             break;
         case "PreviousScreen" :
-     		$('#NavbarsTestTaking').show();
+     		if (this.InTestTaking) $('#NavbarsTestTaking').show();
             var oldCurrentPage = this.currentSessionTest.CurrentPage;
             if (this.currentSessionTest.CurrentPage > 0) { this.currentSessionTest.CurrentPage--; }
             while ( (! this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].show) && this.currentSessionTest.CurrentPage > 0 ) {
@@ -692,7 +694,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             this.renderTestPage();
             break;
         case "GotoScreen" :
-     		$('#NavbarsTestTaking').show();
+     		if (this.InTestTaking) $('#NavbarsTestTaking').show();
             try {
                 this.currentSessionTest.CurrentPage = parseInt( eventParameters);
             } catch (err) { console.log("Setting currentpage failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
@@ -700,7 +702,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             this.renderTestPage();
             break;
         case "Logout" :
-     		$('#NavbarsTestTaking').show();
+     		if (this.InTestTaking) $('#NavbarsTestTaking').show();
             this.saveSession();
             this.saveCurrentTest();
             ITSInstance.logoutController.logout();

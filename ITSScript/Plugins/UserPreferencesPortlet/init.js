@@ -33,14 +33,14 @@
             loadMenu: function () {
                 if (ITSInstance.users.currentUser) {
                     $('#AdminInterfaceAdminInterfaceSettingsDropdownButtonItems').empty();
-                    var tempButton = "<button class=\"dropdown-item\" id='AdminInterfaceAdminInterfaceSettingsDropdownButtonItemsResetPassword' type=\"button\" onclick='ITSRedirectPath(\"ResetPassword\");'>Change my password</button>";
+                    var tempButton = "<button class=\"dropdown-item\" id='AdminInterfaceAdminInterfaceSettingsDropdownButtonItemsResetPassword' type=\"button\" onclick='ITSRedirectPath(\"ResetPassword\");'>"+ITSInstance.translator.getTranslatedString('UserPreferencesPortlet', 'ChangePassword', 'Change my password')+"</button>";
                     $('#AdminInterfaceAdminInterfaceSettingsDropdownButtonItems').append(tempButton);
                     if ((ITSInstance.users.currentUser.IsOrganisationSupervisor) || (ITSInstance.users.currentUser.IsMasterUser)) {
-                        tempButton = "<button class=\"dropdown-item\" id='AdminInterfaceAdminInterfaceSettingsDropdownButtonItemsManageConsultants' type=\"button\" onclick='ITSRedirectPath(\"ConsultantLister\");'>Manage consultants</button>";
+                        tempButton = "<button class=\"dropdown-item\" id='AdminInterfaceAdminInterfaceSettingsDropdownButtonItemsManageConsultants' type=\"button\" onclick='ITSRedirectPath(\"ConsultantLister\");'>"+ITSInstance.translator.getTranslatedString('UserPreferencesPortlet', 'ManageConsultants', 'Manage consultants')+"</button>";
                         $('#AdminInterfaceAdminInterfaceSettingsDropdownButtonItems').append(tempButton);
                     }
                     if (ITSInstance.users.currentUser.IsMasterUser) {
-                        tempButton = "<button class=\"dropdown-item\" id='AdminInterfaceAdminInterfaceSettingsDropdownButtonItemsManageOrganisations' type=\"button\" onclick='ITSRedirectPath(\"OrganisationLister\");'>Manage organisations</button>";
+                        tempButton = "<button class=\"dropdown-item\" id='AdminInterfaceAdminInterfaceSettingsDropdownButtonItemsManageOrganisations' type=\"button\" onclick='ITSRedirectPath(\"OrganisationLister\");'>"+ITSInstance.translator.getTranslatedString('UserPreferencesPortlet', 'ManageOrganisations', 'Manage organisations')+"</button>";
                         $('#AdminInterfaceAdminInterfaceSettingsDropdownButtonItems').append(tempButton);
                     }
                 }
