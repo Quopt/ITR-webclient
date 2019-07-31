@@ -339,6 +339,7 @@ function ITSTranslateInterface() {
     ITSInstance.translator.translateDiv('#ForgotWindow');
     ITSInstance.translator.translateDiv('#PasswordResetWindow');
     ITSInstance.translator.translateDiv('#AdminInterface');
+    ITSInstance.translator.translateDiv('#NavbarsTestTaking');
 }
 
 function moveFooterToRightPosition() {

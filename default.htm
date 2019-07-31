@@ -39,7 +39,7 @@
     <link href="css/tagmanager.css" rel="stylesheet">
 </head>
 
-<body onresize="if (resizeFunction)  { resizeFunction(); }">
+<body>
 
 <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top" id="NavbarsAdmin"
      style="left:64px;background-color: #331a00;display: none;max-height:49px;min-height:49px;">
@@ -61,7 +61,7 @@
     </div>
 </nav>
 
-<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top" id="NavbarsTestTaking"
+<div class="navbar navbar-toggleable-md navbar-inverse fixed-top" id="NavbarsTestTaking"
      style="background-color: #D3D3D3;display: none;max-height:49px;min-height:49px;">
     <img src="images\its.png" style="width:32px;height:32px;position:absolute; left:2px;top:2px;z-index: 1;"/>
     <div class="form-inline col-8" id="NavbarsAdminLoginBlockTT" style="width:100%;color:white;vertical-align: bottom; left:10px;"><label
@@ -73,7 +73,7 @@
                 onclick="processEvent('Logout');">Logout
         </button>
     </div>
-</nav>
+</div>
 
 <div class="fixed-top" id="NavBarsAdminSidebar"
      style="display: none;color:white;background-color: #331a00;top:35px; z-index:1;min-width: 300px;max-width: 300px;">
