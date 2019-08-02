@@ -198,6 +198,10 @@ function convertDateToITR(js_date) {
     return temp;
 }
 
+function convertDateToISO(js_date) {
+    return ITSDateTimeToProgressDateTime(js_date);
+}
+
 function nformat (n, numberOfDigits, numberOfDecimals) {
     if (!numberOfDigits) NumberOfDigits = 1;
     if (!numberOfDecimals) numberOfDecimals=1;
@@ -905,6 +909,29 @@ function makeHTMLTable(myArray, headers) {
     return result;
 }
 
+function makeHTMLTableBasedOnObjects(headerObject, valueObjects, objectLimit) {
+    var result = "<table class=\"table table-striped\">";
+    result += "<thead class=\"thead-dark\">";
+    for (var propertyHeader in headerObject) {
+            result += "<th>"+propertyHeader+"</th>";
+    }
+    result += "</thead>";
+    result += "<tbody>";
+    for (var i=0; i < Math.min(valueObjects.length, objectLimit); i++) {
+        result += "<tr>"
+        for (var propertyHeader in headerObject) {
+            if (typeof valueObjects[i][propertyHeader] !== "undefined") {
+                result += "<td>" + valueObjects[i][propertyHeader] + "</td>";
+            } else {
+                result += "<td></td>";
+            }
+        }
+        result += "</tr>"
+    }
+    result += "</tbody></table>";
+    return result;
+};
+
 var stringToBinArray = function(inStr)
 {
     var ret = new Uint8Array(inStr.length);
@@ -941,4 +968,50 @@ function precise_round(num, dec){
     var num_sign = num >= 0 ? 1 : -1;
 
     return (Math.round((num*Math.pow(10,dec))+(num_sign*0.0001))/Math.pow(10,dec)).toFixed(dec);
+}
+
+function ConvertToSV(headerRow, dataRow, fieldConversionFunction, separator) {
+    var firstField = true;
+    var result = "";
+    for (var headerLine in headerRow) {
+        if (!firstField) {
+            result += separator;
+        }
+        firstField = false;
+        result += '"' + fieldConversionFunction(headerLine) + '"';
+    }
+    result += "\n";
+    for (var i=0; i < dataRow.length; i++) {
+        firstField = true;
+        for (var propertyHeader in headerRow) {
+            if (!firstField) {
+                result += separator;
+            }
+            firstField = false;
+            if (typeof dataRow[i][propertyHeader] !== "undefined") {
+                result += '"' + fieldConversionFunction(dataRow[i][propertyHeader]) + '"';
+            } else {
+                result += '""';
+            }
+        }
+        result += "\n"
+    }
+    return result;
+};
+
+function ConvertFieldToCSVSafe(field) {
+    return String(field).replaceAll('"','""').replaceAll('\n','');
+};
+function ConvertFieldToTSVSafe(field) {
+    return String(field).replaceAll('\t','');
+};
+
+// Polyfills for backward compatibility
+if (!String.prototype.endsWith) {
+    String.prototype.endsWith = function(search, this_len) {
+        if (this_len === undefined || this_len > this.length) {
+            this_len = this.length;
+        }
+        return this.substring(this_len - search.length, this_len) === search;
+    };
 }

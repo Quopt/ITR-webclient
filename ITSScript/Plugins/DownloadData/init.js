@@ -26,6 +26,7 @@
     var ITSDownloadDataEditor = function () {
         this.info = new ITSPortletAndEditorRegistrationInformation('ff17b35b-f3d5-4134-be88-ee430afccc32', 'DownloadData editor', '1.0', 'Copyright 2019 Quopt IT Services BV', 'Download test session data for research purposes');
         this.path = "DownloadData";
+
     };
 
     ITSDownloadDataEditor.prototype.init =function () {
@@ -43,7 +44,14 @@
         ITSInstance.UIController.initNavBar();
         $('#DownloadDataMasterDiv').hide();
         if (ITSInstance.users.currentUser.IsMasterUser) $('#DownloadDataMasterDiv').show();
-
+        this.cancelDownloads = false;
+        setTimeout( function () {
+            var today = new Date();
+            this.calendar1 = flatpickr('#DownloadDataStartDate');
+            this.calendar2 = flatpickr('#DownloadDataEndDate');
+            this.calendar1.setDate(new Date(today.getFullYear(), 0, 1));
+            this.calendar2.setDate(new Date(today.getFullYear(), 11, 31));
+        }.bind(this), 1000) ;
     };
 
     ITSDownloadDataEditor.prototype.downloadSample=function () {
@@ -52,26 +60,51 @@
         this.datagathering = [];
         if (this.checkFields()) {
             this.loadAll = false;
+
+            $('#DownloadDataSampleTable').html('...');
+            this.buildFilter();
+
+            ITSInstance.UIController.showInterfaceAsWaitingOn(-1);
+
             ITSInstance.JSONAjaxLoader('datagathering', this.datagathering, this.loadDataSucces.bind(this), this.loadDataError.bind(this),
-                undefined, 0, 25, '','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y" );
+                undefined, 0, 3, '','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y", this.filter );
         } else {
             ITSInstance.UIController.showError('ITSDownloadEditor.FieldsMissing', 'Please fill all fields to start the download');
         }
     };
 
+    ITSDownloadDataEditor.prototype.buildFilter = function () {
+        this.filter = "";
+        // SessionDescription, TestDescription, CompanyDescription, GroupDescription
+        this.filter = "SessionEndData>=" + convertDateToISO(this.calendar1.latestSelectedDateObj);
+        if ($('#DownloadDataSessionFilter').val().trim() != "") {
+            this.filter += ',SessionDescription%=' + $('#DownloadDataSessionFilter').val() ;
+        }
+        this.filter += ',TestDescription%=' + $('#DownloadDataTestNameFilter').val();
+        if ($('#DownloadDataGroupNameFilter').val().trim() != "") {
+            this.filter += ',GroupDescription%=' + $('#DownloadDataSessionFilter').val();
+        }
+        if ($('#DownloadDataTestCompanyNameFilter').val().trim() != "") {
+            this.filter += ',CompanyDescription%=' + $('#DownloadDataTestCompanyNameFilter').val();
+        }
+        this.filter += ",SessionEndData<=" + convertDateToISO(this.calendar2.latestSelectedDateObj);
+    }
+
     ITSDownloadDataEditor.prototype.loadDataSucces = function () {
         var recCount = this.datagathering.length;
         if (recCount > 0) {
             this.flattenDataSet();
-            if (this.loadAll) {
+            if ((this.loadAll) && (!this.cancelDownloads)) {
                 this.pageNumber++;
+
+                this.buildFilter();
+
                 ITSInstance.JSONAjaxLoader('datagathering', this.datagathering, this.loadDataSucces.bind(this), this.loadDataError.bind(this),
-                    undefined, this.pageNumber, 25, '','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y" );
+                    undefined, this.pageNumber, 5, '','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y", this.filter );
             } else {
                 this.showPreview();
             }
         } else {
-            $('#AdminInterfaceGroupSessionLoginOverview-dialog').modal("show");
             if (this.loadAll) {
                 this.allDataLoaded();
             }
@@ -83,38 +116,79 @@
         for (var i=0; i < this.datagathering.length; i++) {
             var myRec = this.datagathering[i];
             var flatRec = {};
+            var includeResults = false;
+            var includeResultsValues = false;
 
             // now flatten the record
-            this.flattenDataSetRecursed("",myRec, this.headers, flatRec);
+            if ($('#DownloadDataResultsB').prop('checked')) {
+                includeResultsValues = true;
+            }
+            if ($('#DownloadDataResultsC').prop('checked')) {
+                includeResults = true;
+            }
+
+            //console.log("Flattening " + i);
+            this.updateCounter(i);
+            this.flattenDataSetRecursed("",myRec, this.headers, flatRec, includeResults, includeResultsValues, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'));
             this.flatteneddataset.push(flatRec);
         }
     };
 
-    ITSDownloadDataEditor.prototype.flattenDataSetRecursed = function ( fieldLead, myObject, myHeaders, myRec ) {
+    ITSDownloadDataEditor.prototype.flattenDataSetRecursed = function ( fieldLead, myObject, myHeaders, myRec, includeFullResults, includeLimitedResults, fieldEndFilter, removeEmptyColumns ) {
         var fieldDot = "";
+        var Continue = true;
         if (fieldLead != "") {
             fieldDot = ".";
         }
         for (var property1 in myObject) {
-            if (property1.indexOf("__") == 0) {
+            if ((property1.indexOf("__") == 0) || (property1 == "_objectType") || (property1 == "persistentProperties")) {
                 // do nothing with __ properties
             } else if (myObject[property1] instanceof Object) {
-                this.flattenDataSetRecursed(fieldLead + fieldDot + property1, myObject[property1], myHeaders, myRec)
+                this.flattenDataSetRecursed(fieldLead + fieldDot + property1, myObject[property1], myHeaders, myRec, includeFullResults, includeLimitedResults, fieldEndFilter, removeEmptyColumns)
             } else if ( ["PersonData","GroupData","SessionData","TestData","PluginData"].includes(property1) ) {
                 var tempObject = {};
-                ITSJSONLoad(tempObject, myObject[property1], ITSInstance, ITSObject, "ITSObject");
-                this.flattenDataSetRecursed(fieldLead + fieldDot + property1, tempObject, myHeaders, myRec);
-            } else {
-                if (!myHeaders[fieldLead + fieldDot + property1]) {
-                    myHeaders[fieldLead + fieldDot + property1] = "";
+                if (property1 == "TestData") {
+                    if (includeFullResults || includeLimitedResults) {
+                        ITSJSONLoad(tempObject, myObject[property1], ITSInstance, ITSObject, "ITSObject");
+                        if (includeLimitedResults) {
+                            // remove all fields not ending with .value
+                            this.flattenDataSetRecursed(fieldLead + fieldDot + property1, tempObject.Results, myHeaders, myRec, includeFullResults, includeLimitedResults, 'Value', removeEmptyColumns);
+                            for (var tempProp in tempObject) {
+                                if (tempProp != "Results") {
+                                    this.flattenDataSetRecursed(fieldLead + fieldDot + property1, tempObject[tempProp], myHeaders, myRec, includeFullResults, includeLimitedResults, '', removeEmptyColumns);
+                                }
+                            }
+                        } else {
+                            this.flattenDataSetRecursed(fieldLead + fieldDot + property1, tempObject, myHeaders, myRec, includeFullResults, includeLimitedResults, fieldEndFilter, removeEmptyColumns);
+                        }
+                    }
+                } else {
+                    ITSJSONLoad(tempObject, myObject[property1], ITSInstance, ITSObject, "ITSObject");
+                    this.flattenDataSetRecursed(fieldLead + fieldDot + property1, tempObject, myHeaders, myRec, includeFullResults, includeLimitedResults, fieldEndFilter, removeEmptyColumns);
                 }
-                myRec[fieldLead + fieldDot + property1] = myObject[property1];
+            } else {
+                Continue = true;
+                if ((fieldEndFilter != "") && (property1 != fieldEndFilter)  && (fieldLead.indexOf( '.'+fieldEndFilter) < 0)) {
+                    // do nothing with properties that do not match the field end filter
+                    Continue = false;
+                }
+                if (removeEmptyColumns && ((typeof myObject[property1] === "undefined") || (String(myObject[property1]).trim() == ""))) Continue = false;
+                if (Continue)
+                {
+                    if (!myHeaders[fieldLead + fieldDot + property1]) {
+                        myHeaders[fieldLead + fieldDot + property1] = "";
+                    }
+                    myRec[fieldLead + fieldDot + property1] = myObject[property1];
+                }
             }
         }
     };
 
     ITSDownloadDataEditor.prototype.showPreview = function () {
-        $('#DownloadDataSampleTable').html(makeHTMLTableBasedOnObjects(this.flatteneddataset, this.headers ));
+        var newTable = makeHTMLTableBasedOnObjects(this.headers, this.flatteneddataset, 3);
+        //console.log(newTable);
+        ITSInstance.UIController.showInterfaceAsWaitingOff();
+        $('#DownloadDataSampleTable').html(newTable);
     };
 
     ITSDownloadDataEditor.prototype.loadDataError=function () {
@@ -122,11 +196,7 @@
     };
 
     ITSDownloadDataEditor.prototype.checkFields=function () {
-        // check all fields, all are required
-        // $('#DownloadDataStartDate').val()
-        // convertITRToDate($('#DownloadDataStartDate').val())
-        if ( $('#DownloadDataSessionFilter').val().trim() == "" ||
-            $('#DownloadDataTestNameFilter').val().trim() == "" ||
+        if ( $('#DownloadDataTestNameFilter').val().trim() == "" ||
             $('#DownloadDataStartDate').val().trim() == "" ||
             $('#DownloadDataEndDate').val().trim() == "" ) {
             return false;
@@ -142,17 +212,32 @@
         if (this.checkFields()) {
             this.loadAll = true;
             this.pageNumber = 0;
-            $('#AdminInterfaceGroupSessionLoginOverview-dialog').modal("show");
+            this.cancelDownloads = false;
+            $('#DownloadData-dialog').modal("show");
+            this.updateCounter(0);
             ITSInstance.JSONAjaxLoader('datagathering', this.datagathering, this.loadDataSucces.bind(this), this.loadDataError.bind(this),
-                undefined, 0, 25, '','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y" );
+                undefined, 0, 5, '','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y" );
         } else {
             ITSInstance.UIController.showError('ITSDownloadEditor.FieldsMissing', 'Please fill all fields to start the download');
         }
     };
 
+    ITSDownloadDataEditor.prototype.updateCounter  = function (counter) {
+        $('#DataDownloading-LabelProgress').text(((this.pageNumber * 5) ) + " " + ITSInstance.translator.translate("#AdminInterfaceDataDownload.DownloadCounter", "records processed"));
+    };
+
     ITSDownloadDataEditor.prototype.allDataLoaded = function () {
         // now start the download from the browser to the client
-
+        var temp="";
+        if ($('#DownloadDataResultsCSV').prop('checked') ) {
+            temp = ConvertToSV(this.headers, this.flatteneddataset, ConvertFieldToCSVSafe, ",");
+            $('#DownloadData-dialog').modal("hide");
+            saveFileLocally("itr_data_download.csv", temp);
+        } else {
+            temp = ConvertToSV(this.headers, this.flatteneddataset, ConvertFieldToTSVSafe, "\t");
+            $('#DownloadData-dialog').modal("hide");
+            saveFileLocally("itr_data_download.tsv", temp);
+        }
     };
 
     // register the portlet

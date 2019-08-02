@@ -1369,7 +1369,7 @@ ITSTestTemplateEditor.prototype.downloadCurrentTemplate = function () {
         setTimeout(this.downloadCurrentTemplate.bind(this), 250);
     } else {
         this.binariesLoading = false;
-        this.downloadCurrentTemplateProcess()
+        this.downloadCurrentTemplateProcess();
     }
 }
 

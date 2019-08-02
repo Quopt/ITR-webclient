@@ -31,8 +31,15 @@
     <div class="form-group row col-sm-12">
         <label for="DownloadDataTestNameFilter"
                id="DownloadDataTestNameFilterLabel" class="col-sm-2 col-form-label">Test name filter</label>
-        <input class="form-control col-sm-6" type="text" maxlength="200" placeholder="" novalidate value="" id="DownloadDataTestNameFilter">
+        <input class="form-control col-sm-6" type="text" maxlength="200" placeholder="" novalidate value="%" id="DownloadDataTestNameFilter">
     </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="DownloadDataGroupNameFilter"
+               id="DownloadDataGroupNameFilterLabel" class="col-sm-2 col-form-label">Group name filter</label>
+        <input class="form-control col-sm-6" type="text" maxlength="200" placeholder="" novalidate value="" id="DownloadDataGroupNameFilter">
+    </div>
+
 
     <div class="form-group row col-sm-12">
         <label for="DownloadDataStartDate" id="DownloadDataStartDateLabel" class="col-sm-2 col-form-label">First date to download</label>
@@ -45,10 +52,32 @@
     </div>
 </div>
 
+<div id="DownloadDataResultsDiv" class="col-sm-12">
+    <div class="form-group row col-sm-12">
+        <label for="DownloadDataResultsA"
+               id="DownloadDataTestCompanyNameResultsFilterLabel" class="col-sm-2 col-form-label">Results filtering</label>
+        <input id="DownloadDataResultsA" novalidate type="radio" name="optradio">
+        <label id="DownloadDataLabelResultsA" for="DownloadDataResultsA">Do not include results records</label>
+        <input id="DownloadDataResultsB" novalidate type="radio" checked name="optradio">
+        <label id="DownloadDataLabelResultsB" for="DownloadDataResultsB">Include results records, but only fields ending with .value</label>
+        <input id="DownloadDataResultsC" novalidate type="radio" name="optradio">
+        <label id="DownloadDataLabelResultsC" for="DownloadDataResultsC">Include all results records (slow!)</label>
+    </div>
+    <div class="form-group row col-sm-12">
+        <div class="col-sm-2"></div>
+        <input id="DownloadDataRemoveEmptyColumns" novalidate type="checkbox" checked>
+        <label id="DownloadDataRemoveEmptyColumnsLabel" for="DownloadDataRemoveEmptyColumns">Remove empty columns</label>
+    </div>
+</div>
+
 <div id="DownloadDataMasterDiv" class="col-sm-12">
     <div class="form-group row col-sm-12">
+        <label for="DownloadDataTestCompanyNameFilter"
+               id="DownloadDataTestCompanyNameFilterLabel" class="col-sm-2 col-form-label">Company name filter</label>
+        <input class="form-control col-sm-6" type="text" maxlength="200" placeholder="" novalidate value="" id="DownloadDataTestCompanyNameFilter">
+        &nbsp;&nbsp;&nbsp;&nbsp;
         <input id="DownloadDataMaster" novalidate type="checkbox">
-        <label id="DownloadDataLabel">Include master records</label>
+        <label id="DownloadDataLabel" for="DownloadDataMaster" >Search master records</label>
     </div>
 </div>
 
@@ -92,9 +121,13 @@
             id="DownloadDataAll_icon" class="fa fa-fw fa-download"></i>
         <span id="DownloadDataAll_buttonlabel">Download all data</span>
     </button>&nbsp;
+    <input id="DownloadDataResultsCSV" novalidate type="radio" name="optradioSV" checked>
+    <label id="DownloadDataLabelResultsCSV" for="DownloadDataResultsCSV">Download format = Comma Separated Fields</label>
+    <input id="DownloadDataResultsTSV" novalidate type="radio" name="optradioSV">
+    <label id="DownloadDataLabelResultsTSV" for="DownloadDataResultsTSV">Download format = Tab Separated Fields</label>
 </div>
 
-<div class="modal fade" id="AdminInterfaceGroupSessionLoginOverview-dialog" tabindex="-1" role="dialog" aria-labelledby="DataDownloading" aria-hidden="true">
+<div class="modal fade" id="DownloadData-dialog" tabindex="-1" role="dialog" aria-labelledby="DataDownloading" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -104,7 +137,7 @@
                 <label id="DataDownloading-LabelProgress" notranslate>Processed #1</label>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="DataDownloading-CloseButton">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="ITSInstance.DownloadDataController.cancelDownloads = true; " id="DataDownloading-CloseButton">Cancel</button>
             </div>
         </div>
     </div>
