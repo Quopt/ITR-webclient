@@ -422,6 +422,12 @@ ITSTranslator.prototype.switchToEnglish = function () {
     }
 };
 
+ITSTranslator.prototype.retranslateInterface = function () {
+    for (var i = 0; i < this.divsToTranslate.length; i++) {
+        this.translateDiv(this.divsToTranslate[i]);
+    }
+};
+
 ITSTranslator.prototype.getTranslatedString = function (module, stringid, originalString) {
     if (stringid == "")
     {
@@ -548,7 +554,7 @@ ITSTranslator.prototype.listNewTranslations = function () {
             }
         }
     )
-    tempVal = JSON.stringify(newStrings, null, 1);
+    var tempVal = JSON.stringify(newStrings, null, 1);
     //console.log(tempVal);
     return tempVal;
 };
@@ -563,7 +569,7 @@ ITSTranslator.prototype.postNewTranslations = function (langCode) {
             tempLangCode = langCode;
         }
         if (tempLangCode != "en") {
-            if (to_translate.length > 0) {
+            if (to_translate.trim().length > 3) {
                 console.log('New translations found for the current language. Posting for machine translation : ' + to_translate);
                 ITSInstance.genericAjaxUpdate('translations/' + tempLangCode, to_translate, function () {
                     },

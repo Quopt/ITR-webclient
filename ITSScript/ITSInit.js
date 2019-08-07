@@ -197,7 +197,7 @@ ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSucces
     });
 };
 
-ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSuccess, OnError, IncludeMaster, IncludeClient, dataType) {
+ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSuccess, OnError, IncludeMaster, IncludeClient, dataType, ForceTranslation) {
     console.log('ajax update or create : ' + this.baseURLAPI + URL + ' - ' + ITSInstance.token.IssuedToken);
     tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
     tempHeaders['IncludeMaster'] = "N";
@@ -207,6 +207,9 @@ ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSucces
     }
     if (IncludeClient) {
         tempHeaders['IncludeClient'] = IncludeClient ;
+    }
+    if (ForceTranslation){
+        tempHeaders['ForceTranslation'] = ForceTranslation
     }
     tempHeaders['TimeZoneOffset'] = "" + moment().utcOffset() / 60; //(new Date()).getTimezoneOffset()/60;
 
