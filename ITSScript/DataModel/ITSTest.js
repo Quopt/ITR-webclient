@@ -1635,6 +1635,7 @@ function ITSTestScreenDynamics(par, session) {
     this.sourceVariableID = ""; // the link to the source variable id
 
     this.sourceValue = "";
+    this.comparison = "==";
 
     this.targetScreenID = ""; // the link to the target screen
     this.targetVariableID = ""; // the link to the source variable id
@@ -1642,7 +1643,7 @@ function ITSTestScreenDynamics(par, session) {
     this.targetVisible = false; // if sourceScreenID.sourceVariableID == SourceValue then targetScreenID.targetVariableID.visible = targetVisible
     this.targetScript = ""; // if targetscript is set then the targetVisible property is ignored and the script is executed
 
-    this.persistentProperties = ["id", "sourceScreenID", "sourceVariableID", "sourceValue", "targetScreenID", "targetVariableID" , "targetVisible"];
+    this.persistentProperties = ["id", "sourceScreenID", "sourceVariableID", "sourceValue", "targetScreenID", "targetVariableID" , "targetVisible", "comparison"];
 };
 
 // graphs

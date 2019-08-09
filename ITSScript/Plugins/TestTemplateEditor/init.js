@@ -59,6 +59,15 @@ function ITSTestTemplateEditor(session) {
         "  id=\"AdminInterfaceTestTemplateEditorScreenDynamics_sourcecomponentlist_%%NR%%\"\n" +
         "  onchange=\"ITSInstance.newITSTestEditorController.changeScreenDynamicsSource(%%NR%%, this.value);\"></select>\n" +
         " </td>\n" +
+        " <td><select notranslate class=\"form-control form-control-sm\"\n" +
+        "  id=\"AdminInterfaceTestTemplateEditorScreenDynamics_sourcecomparison_%%NR%%\"\n" +
+        "  onchange=\"ITSInstance.newITSTestEditorController.changeScreenDynamicsComparison(%%NR%%, this.value);\">"+
+        "  <option value=\"==\">=</option>" +
+        "  <option value=\"!=\">!=</option>" +
+        "  <option value=\">\">&gt;</option>" +
+        "  <option value=\"<\">&lt;</option>" +
+        "  </select>\n" +
+        " </td>\n" +
         " <td><input type=\"text\" class=\"form-control form-control-sm\"\n" +
         "  id=\"AdminInterfaceTestTemplateEditorScreenDynamics_sourcevalue_%%NR%%\"\n" +
         "  onkeyup=\"ITSInstance.newITSTestEditorController.changeScreenDynamicsSourceValue(%%NR%%, this.value);\">\n" +
@@ -804,13 +813,12 @@ ITSTestTemplateEditor.prototype.fillScreenDynamicsTable = function () {
         // fill the values
         $('#AdminInterfaceTestTemplateEditorScreenDynamics_sourcevalue_' + i)[0].value = tempSD.sourceValue;
         $('#AdminInterfaceTestTemplateEditorScreenDynamics_visible_' + i)[0].checked = tempSD.targetVisible;
+        $('#AdminInterfaceTestTemplateEditorScreenDynamics_sourcecomparison_' + i).val(tempSD.comparison);
 
         var listID = "'" + tempSDSourceScreen.id + '.' + tempSDSourceComponent.id + "'";
         $('#AdminInterfaceTestTemplateEditorScreenDynamics_sourcecomponentlist_' + i)[0].innerHTML = optionList.replace(listID, listID + ' selected ');
         var listID = "'" + tempSDTargetScreen.id + '.' + tempSDTargetComponent.id + "'";
         $('#AdminInterfaceTestTemplateEditorScreenDynamics_targetcomponentlist_' + i)[0].innerHTML = optionList.replace(listID, listID + ' selected ');
-        ;
-
     }
 
     // finally bind the scripts
@@ -840,6 +848,10 @@ ITSTestTemplateEditor.prototype.changeScreenDynamicsSource = function (nr, newIn
 
 ITSTestTemplateEditor.prototype.changeScreenDynamicsSourceValue = function (nr, newVal) {
     this.currentScreen.screenDynamics[nr].sourceValue = newVal;
+};
+
+ITSTestTemplateEditor.prototype.changeScreenDynamicsComparison = function (nr, newVal) {
+    this.currentScreen.screenDynamics[nr].comparison = newVal;
 };
 
 ITSTestTemplateEditor.prototype.changeScreenDynamicsTarget = function (nr, newIndex) {

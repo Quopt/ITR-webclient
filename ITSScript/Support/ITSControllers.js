@@ -375,7 +375,7 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
             var sourceComponent = {};
             var targetComponent = {};
             var results = this.currentSessionTest.Results;
-            var updateCompIonent = {};
+            var updateComponent = {};
             for (var j=0; j < currentScreen.screenDynamics.length; j++) {
                 checkScreenDynamic = currentScreen.screenDynamics[j];
                 try {
@@ -383,7 +383,16 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
                     sourceComponent = sourceComponent[ "__" + checkScreenDynamic.sourceVariableID ];
                     targetComponent = results[ "__" + checkScreenDynamic.targetScreenID];
                     targetComponent = targetComponent[ "__" + checkScreenDynamic.targetVariableID ];
-                    if (String(sourceComponent.Value) == String(checkScreenDynamic.sourceValue)) {
+                    var comp = false;
+                    if (checkScreenDynamic.comparison == "=") { checkScreenDynamic.comparison = "==";}
+                    try {
+                        comp = eval("sourceComponent.Value " + checkScreenDynamic.comparison + " checkScreenDynamic.sourceValue");
+                    } catch(err) {
+                        console.log("Evaluating rule failed for  "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + "," + j + ")"  + err);
+                        console.log(""+ sourceComponent.Value + checkScreenDynamic.comparison + checkScreenDynamic.sourceValue + "=" + comp);
+                    }
+                    console.log(""+ sourceComponent.Value + checkScreenDynamic.comparison + checkScreenDynamic.sourceValue + "=" + comp);
+                    if (comp) {
                         if (checkScreenDynamic.targetScript != "") {
                             eval("var func = function(sourceComponent, targetComponent, checkScreenDynamic, session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance) { " + checkScreenDynamic.targetScript + " }; ");
                             func(sourceComponent, targetComponent, checkScreenDynamic, this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, this.currentSessionTest.CurrentPage );
