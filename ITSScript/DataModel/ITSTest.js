@@ -1269,9 +1269,9 @@ ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, P
         if (PnP) {
             // execute the screen pre script for PnP view initialisation
             try {
-                eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + currentScreen.beforeScreenScript + " }; ");
+                eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + this.screens[i].beforeScreenScript + " }; ");
                 func(currentSession, currentSessionTest, candidate, this, undefined, ITSInstance, currentSessionTest.CurrentPage, "PnPView" );
-            } catch (err) { console.log("Screen pre script failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
+            } catch (err) { console.log("Screen pre script failed for "  + this.TestName + "(" + i + ")"  + err);  }
             this.screens[i].generateScreenInDiv(hostDiv, "PnPView", "_" + i + additionalText, PnP);
         }
         else {
