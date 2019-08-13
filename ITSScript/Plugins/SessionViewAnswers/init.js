@@ -4,7 +4,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *    https://opensource.org/licenses/Artistic-2.0
+ *    https://raw.githubusercontent.com/Quopt/ITR-webclient/master/LICENSE
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -105,7 +105,8 @@
 
             $("#SessionViewAnswersInterfaceEditTestAnswers").empty();
             this.currentSession.SessionTests[found].testDefinition.generateQuestionOverview( "SessionViewAnswersInterfaceEditTestAnswers",
-                this.currentSession.SessionTests[found].Results, true, "_" + this.checkAnswers + this.genNumber);
+                this.currentSession.SessionTests[found].Results, true, "_" + this.checkAnswers + this.genNumber,
+                this.currentSession, this.currentSession.SessionTests[found], this.currentSession.Person);
            
 
             // disable all controls
@@ -116,7 +117,8 @@
                 $("#SessionViewAnswersInterfaceEditTestAnswers").append ('<button type="button" class="btn btn-default btn-success" id="SessionViewAnswersInterfaceEditTestAnswers_saveButton" onclick="ITSInstance.SessionViewAnswersSessionController.saveTestResults();"><i id="SessionViewAnswersInterfaceEditTestAnswers-saveIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="SessionViewAnswersInterfaceEditTestAnswers-saveButtonLabel">Save changes</span></button>')
             }
         }
-        ITSInstance.UIController.showInterfaceAsWaitingOff(); $("#waitModal").modal('hide');
+        ITSInstance.UIController.showInterfaceAsWaitingOff();
+        $("#waitModal").modal('hide');
     };
 
     ITSSessionViewAnswersEditor.prototype.saveTestResults = function () {

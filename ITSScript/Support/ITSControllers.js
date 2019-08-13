@@ -4,7 +4,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *    https://opensource.org/licenses/Artistic-2.0
+ *    https://raw.githubusercontent.com/Quopt/ITR-webclient/master/LICENSE
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -394,8 +394,12 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
                     console.log(""+ sourceComponent.Value + checkScreenDynamic.comparison + checkScreenDynamic.sourceValue + "=" + comp);
                     if (comp) {
                         if (checkScreenDynamic.targetScript != "") {
-                            eval("var func = function(sourceComponent, targetComponent, checkScreenDynamic, session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance) { " + checkScreenDynamic.targetScript + " }; ");
-                            func(sourceComponent, targetComponent, checkScreenDynamic, this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, this.currentSessionTest.CurrentPage );
+                            try {
+                                eval("var func = function(sourceComponent, targetComponent, checkScreenDynamic, session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + checkScreenDynamic.targetScript + " }; ");
+                                func(sourceComponent, targetComponent, checkScreenDynamic, this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, this.currentSessionTest.CurrentPage, "TT" );
+                            } catch(err) {
+                                console.log("Evaluating targetscript failed for  "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + "," + j + ")"  + err);
+                            }
                         } else {
                             targetComponent.Visible = checkScreenDynamic.targetVisible;
                         }
@@ -436,8 +440,8 @@ ITSTestTakingController.prototype.renderTestPage = function () {
             var currentScreen = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage];
             // now run the pre screen script and register that we need to run the post screen script
             try {
-                eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance) { " + currentScreen.beforeScreenScript + " }; ");
-                func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, this.currentSessionTest.CurrentPage );
+                eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + currentScreen.beforeScreenScript + " }; ");
+                func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, this.currentSessionTest.CurrentPage, "TT" );
             } catch (err) { console.log("Screen pre script failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
             this.screenNeedsFinalisation = true;
             // check if this screen has screen dynamics
@@ -469,21 +473,21 @@ ITSTestTakingController.prototype.startTest = function () {
     this.currentSessionTest.updateConsentSettings();
     // eval the pre test script.
     try {
-        eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance) { " + this.currentTestDefinition.BeforeScript + " }; ");
-        func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance );
+        eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + this.currentTestDefinition.BeforeScript + " }; ");
+        func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, "TT" );
     } catch (err) { console.log("Test pre script failed for "  + this.currentTestDefinition.TestName + " "  + err);  }
     // for 360 start the 360 testing
     if (this.currentTestDefinition.Supports360Degrees) {
         if (this.currentSession.Status == 10) {
             try {
-                eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance) { " + this.currentTestDefinition.Pre360 + " }; ");
-                func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance );
+                eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + this.currentTestDefinition.Pre360 + " }; ");
+                func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, "TT" );
             } catch (err) { console.log("Session Pre360 script failed for "  + this.currentTestDefinition.TestName + " "  + err);  }
             this.currentSession.StartedAt = new Date();
         }
         try {
-            eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance) { " + this.currentTestDefinition.Per360 + " }; ");
-            func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance );
+            eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + this.currentTestDefinition.Per360 + " }; ");
+            func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, "TT" );
         } catch (err) { console.log("Test Per360 script failed for "  + this.currentTestDefinition.TestName + " "  + err);  }
     }
     // make sure the test session is started
@@ -504,8 +508,8 @@ ITSTestTakingController.prototype.endTest = function (forcedEnding) {
     // ShowTestClosureScreen
     // this.currentTestDefinition.PostTestScript
     try {
-        eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance) { " + this.currentTestDefinition.AfterScript + " }; ");
-        func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance );
+        eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + this.currentTestDefinition.AfterScript + " }; ");
+        func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, "TT" );
     } catch (err) { console.log("Test post script failed for "  + this.currentTestDefinition.TestName + " "  + err);  }
     this.currentSessionTest.Status = 30;
     this.currentSessionTest.TestEnd = Date.now();
@@ -558,8 +562,8 @@ ITSTestTakingController.prototype.endSessionChecker = function () {
     } else {
         if (this.currentTestDefinition.Supports360Degrees) {
             try {
-                eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance) { " + this.currentTestDefinition.Post360 + " }; ");
-                func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance);
+                eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + this.currentTestDefinition.Post360 + " }; ");
+                func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, "TT");
             } catch (err) {
                 console.log("Session post360 script failed for " + this.currentTestDefinition.TestName + " " + err);
             }
@@ -642,8 +646,8 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
                 if (this.screenNeedsFinalisation) {
                     this.screenNeedsFinalisation = false;
                     try {
-                        eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance) { " + this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].afterScreenScript + " }; ");
-                        func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, this.currentSessionTest.CurrentPage );
+                        eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].afterScreenScript + " }; ");
+                        func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, this.currentSessionTest.CurrentPage, "TT" );
                     } catch (err) { console.log("Screen post script failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
                 }
             }

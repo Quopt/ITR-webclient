@@ -4,7 +4,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *    https://opensource.org/licenses/Artistic-2.0
+ *    https://raw.githubusercontent.com/Quopt/ITR-webclient/master/LICENSE
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,6 +12,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
+// Note : when context or testmode is mentioned the options are
+//  TT for test taking
+//  TE for test editor
+//  PnPView for viewing results
+//  PnP for preparing a test list for PnP printing
 
 function ITSTest(par, session) {
     this.ITSSession = session;
@@ -1257,10 +1263,20 @@ ITSTest.prototype.findScaleByID = function (idToFind) {
     return null;
 };
 
-ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, PnP, additionalText) {
+ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, PnP, additionalText, currentSession, currentSessionTest, candidate) {
     if (! additionalText) additionalText = "";
     for (var i=0; i < this.screens.length; i ++) {
-        this.screens[i].generateScreenInDiv(hostDiv,"TE", "_" +i + additionalText ,PnP);
+        if (PnP) {
+            // execute the screen pre script for PnP view initialisation
+            try {
+                eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + currentScreen.beforeScreenScript + " }; ");
+                func(currentSession, currentSessionTest, candidate, this, undefined, ITSInstance, currentSessionTest.CurrentPage, "PnPView" );
+            } catch (err) { console.log("Screen pre script failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
+            this.screens[i].generateScreenInDiv(hostDiv, "PnPView", "_" + i + additionalText, PnP);
+        }
+        else {
+            this.screens[i].generateScreenInDiv(hostDiv, "TE", "_" + i + additionalText, PnP);
+        }
         $('#'+ hostDiv).append('<hr/>');
         if (resultsToLoad) {
             this.screens[i].updateDivsFromResultStorage(resultsToLoad, "_" + i + additionalText);
