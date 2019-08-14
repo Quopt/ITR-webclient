@@ -256,8 +256,10 @@ ITSTestTemplateEditor.prototype.populateTests = function () {
     $('#AdminInterfaceTestTemplateEditorSelectListLoading').empty();
     var newElement = "";
     for (var i = 0; i < ITSInstance.tests.testList.length; i++) {
-        newElement = "<li value='" + i + "' onclick='ITSInstance.newITSTestEditorController.redirectToTestIndex(this.value);' > <i class='fa fa-fw fa-book-reader'></i>&nbsp;&nbsp;" + ITSInstance.tests.testList[i].testNameWithDBIndicator() + "</li>";
-        $('#AdminInterfaceTestTemplateEditorSelectListLoading').append(newElement);
+        if (ITSInstance.tests.testList[i].dbsource == 0) {
+            newElement = "<li value='" + i + "' onclick='ITSInstance.newITSTestEditorController.redirectToTestIndex(this.value);' > <i class='fa fa-fw fa-book-reader'></i>&nbsp;&nbsp;" + ITSInstance.tests.testList[i].testNameWithDBIndicator() + "</li>";
+            $('#AdminInterfaceTestTemplateEditorSelectListLoading').append(newElement);
+        }
     }
 };
 

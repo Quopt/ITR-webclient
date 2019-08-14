@@ -113,6 +113,7 @@ function ITSReport(par, session) {
     this.ReportGraphs = []; // graphs belonging to this report of the ITSGraph type
     this.PluginData = {};
     this.Generation = 1;
+    this.dbsource = 0;
 
     this.persistentProperties = ['ID',
         'Description',

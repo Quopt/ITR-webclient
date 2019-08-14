@@ -98,8 +98,10 @@ ITSScreenTemplateEditor.prototype.populateTemplates = function () {
     $('#AdminInterfaceScreenTemplateSelectList').empty();
     var newElement = "";
     for (var i = 0; i < ITSInstance.screenTemplates.screenTemplates.length; i++) {
-        newElement = "<li value='" + i + "' onclick='ITSInstance.newITSScreenTemplateEditorController.redirectToTemplateIndex(this.value);' > <i class='fa fa-fw fa-object-group'></i>&nbsp;&nbsp;" + ITSInstance.screenTemplates.screenTemplates[i].descriptionWithDBIndicator() + "</li>";
-        $('#AdminInterfaceScreenTemplateSelectList').append(newElement);
+        if (ITSInstance.screenTemplates.screenTemplates[i].dbsource == 0) {
+            newElement = "<li value='" + i + "' onclick='ITSInstance.newITSScreenTemplateEditorController.redirectToTemplateIndex(this.value);' > <i class='fa fa-fw fa-object-group'></i>&nbsp;&nbsp;" + ITSInstance.screenTemplates.screenTemplates[i].descriptionWithDBIndicator() + "</li>";
+            $('#AdminInterfaceScreenTemplateSelectList').append(newElement);
+        }
     }
 };
 

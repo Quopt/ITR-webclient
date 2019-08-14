@@ -198,9 +198,11 @@
             if (testIndex > -1) $('#ReportTemplateInterfaceEditSelectReportHeader2Test')[0].innerHTML = ITSInstance.tests.testList[testIndex].TestName;
             for (var i = 0; i < ITSInstance.reports.reportsList.length; i++) {
                 if (ITSInstance.reports.reportsList[i].TestID == this.TestID) {
-                    tmpPath = "ITSRedirectPath(\"ReportTemplateEditor&ReportType=" + this.ReportType + "&TestID=" + this.TestID + "&ReportID=" + ITSInstance.reports.reportsList[i].ID + "\");";
-                    tmpDiv = "<li value='" + i + "' onclick='" + tmpPath + "' > <i class='fa fa-fw fa-newspaper'></i>&nbsp;&nbsp;" + ITSInstance.reports.reportsList[i].getReportDescriptionWithDBIndicator() + "</li>";
-                    if (! ITSInstance.reports.reportsList[i].isCentrallyManaged()) $('#ReportTemplateInterfaceEditSelectReportList').append(tmpDiv);
+                    if (ITSInstance.reports.reportsList[i].dbsource == 0) {
+                        tmpPath = "ITSRedirectPath(\"ReportTemplateEditor&ReportType=" + this.ReportType + "&TestID=" + this.TestID + "&ReportID=" + ITSInstance.reports.reportsList[i].ID + "\");";
+                        tmpDiv = "<li value='" + i + "' onclick='" + tmpPath + "' > <i class='fa fa-fw fa-newspaper'></i>&nbsp;&nbsp;" + ITSInstance.reports.reportsList[i].getReportDescriptionWithDBIndicator() + "</li>";
+                        if (!ITSInstance.reports.reportsList[i].isCentrallyManaged()) $('#ReportTemplateInterfaceEditSelectReportList').append(tmpDiv);
+                    }
                 }
             }
         };
