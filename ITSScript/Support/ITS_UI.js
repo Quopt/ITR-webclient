@@ -125,6 +125,7 @@ ITSUIController = function () {
         // check if there is a session token, if not show the login path
         //console.log("Activating path = " + Path);
         var token = ITSInstance.token.get();
+        ITSInstance.token.keepTokenFresh();
 
         this.resetAllUIElements();
         switch(Path) {

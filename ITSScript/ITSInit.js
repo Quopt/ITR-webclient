@@ -106,7 +106,7 @@ ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuc
             OnError();
         },
         success: function (data, textStatus, xhr) {
-            //console.log(ITSInstance.baseURLAPI + URL + '=' + data);
+            //console.log(ITSInstance.baseURLAPI + URL + '=' + data + ' to ' + objectToPutDataIn);
             if ( (objectToPutDataIn != '') || ($.isArray(objectToPutDataIn)) ) {
                 //console.log(data);
                 //var checkForArray = JSON.parse(data);

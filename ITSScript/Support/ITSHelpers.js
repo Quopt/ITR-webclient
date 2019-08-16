@@ -124,7 +124,7 @@ ITSLoginToken.prototype.acquire = function (userName, password, okFunction, erro
         },
         success: function (data, textStatus, xhr) {
             var checkLogin = JSON.parse(data);
-            console.log(data, checkLogin);
+            //console.log(data, checkLogin);
             this.set(checkLogin.SessionID);
             this.companyID = checkLogin.CompanyID;
             this.MultipleCompaniesFound = checkLogin.MultipleCompaniesFound;
@@ -144,7 +144,11 @@ ITSLoginToken.prototype.keepTokenFresh = function () {
         $.ajax({
             url: this.ITSInstance.baseURLAPI + 'checktoken',
             headers: {'SessionID': this.IssuedToken},
-            type: 'POST'
+            type: 'POST',
+            error: function () {
+                ITSInstance.UIController.showError('ITSLoginToken.tokenRefreshFailed', 'Your login has expired. Please login again.', '',
+                    'ITSInstance.logoutController.logout();');
+            },
         });
         cookieHelper.setCookie("ITSLoginToken", this.IssuedToken, 6);
     }

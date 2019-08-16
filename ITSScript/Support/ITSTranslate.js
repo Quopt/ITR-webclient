@@ -579,7 +579,7 @@ ITSTranslator.prototype.postNewTranslations = function (langCode) {
             this.toTranslate = []; // do not post twice
         }
     } else {
-        console.log('PLEASE NOTE : new translations can only be successfully posted when logged is as master user or translator.');
+        //console.log('PLEASE NOTE : new translations can only be successfully posted when logged is as master user or translator.');
     }
 };
 
