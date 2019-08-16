@@ -123,6 +123,7 @@ ITSUIController = function () {
     // common functions for generic usage
     this.activateScreenPath = function(Path){
         // check if there is a session token, if not show the login path
+        //console.log("Activating path = " + Path);
         var token = ITSInstance.token.get();
 
         this.resetAllUIElements();
@@ -171,11 +172,13 @@ ITSUIController = function () {
         if (ITSInstance.UIController.registeredEditors.length == 0) {
             setTimeout(this.scan_for_default_office_plugin_paths.bind(this, Path), 1500); // the list of plugins is not registered yet, give the browser some time to register
         } else {
+            //console.log("Showing " +ITSInstance.UIController.registeredEditors.length  );
             ITSInstance.UIController.registeredEditors.forEach(
                 function (currentValue, index, arr) {
                     //console.log(currentValue.path + "==" + Path);
                     if (currentValue.path) {
                         if (currentValue.path == Path) {
+                            console.log("Showing " + Path);
                             currentValue.show();
                         }
                     }
@@ -390,6 +393,7 @@ ITSUIController = function () {
                     if (typeof currentValue.afterOfficeLogin == 'function') {
                         try {
                             currentValue.afterOfficeLogin();
+                            //console.log("Init ok :  " + currentValue.path);
                         } catch (err) {
                             console.log("Init of " + currentValue.path + "failed : " + err.message);
                         }

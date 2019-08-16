@@ -277,22 +277,30 @@ ITSTestTemplateEditor.prototype.show = function () {
     $('#NavbarsAdmin').show();
     $('#NavbarsAdmin').visibility = 'visible';
     $('#NavBarsFooter').show();
+    $('#AdminInterfaceTestTemplateEditor').show();
+    this.showTab('AdminInterfaceTestTemplateEditor_TabTestInformation', 'AdminInterfaceTestTemplateEditorTabTestInformation');
     ITSInstance.UIController.initNavBar();
 
-    $('#AdminInterfaceTestTemplateEditorHeader').show();
-    $('#AdminInterfaceTestTemplateEditorEdit').hide();
-    $('#AdminInterfaceTestTemplateEditorSelect').show();
-
-    var tempID = getUrlParameterValue('id');
-    if (tempID && (tempID != "")) {
-        // try to find the tempID in the array and if found switch to editing that template
-        for (var i = 0; i < ITSInstance.tests.testList.length; i++) {
-            if (ITSInstance.tests.testList[i].ID == tempID) {
-                this.loadTest(i);
-                break;
-            }
+    // load the available tests for this company. details of the test are loaded when the template is selected by the user
+    if (!ITSInstance.tests.testListLoaded) {
+        if (!ITSInstance.tests.currentlyLoading) {
+            ITSInstance.tests.loadAvailableTests(this.populateTests.bind(this), function () {
+                console.log('ITSTestTemplateEditor : Loading screen tests failed.');
+            });
+            ITSInstance.screenTemplates.loadAvailableScreenTemplates(this.loadTestScreenTemplates.bind(this), function () {
+                console.log('ITSTestTemplateEditor : Loading screen test templates failed.');
+            });
         }
+        setTimeout(this.show.bind(this), 500);
     } else {
+        var tempID = getUrlParameterValue('id');
+        if (tempID && (tempID != "")) {
+            this.redirectUrl(tempID);
+        } else {
+            $('#AdminInterfaceTestTemplateEditorEdit').hide();
+            $('#AdminInterfaceTestTemplateEditorSelect').show();
+            this.populateTests();
+        }
     }
 };
 
@@ -348,24 +356,6 @@ ITSTestTemplateEditor.prototype.switchToTestEditView = function () {
 
 ITSTestTemplateEditor.prototype.hide = function () {
     $('#AdminInterfaceTestTemplateEditor').hide();
-};
-
-ITSTestTemplateEditor.prototype.show = function () {
-    $('#NavbarsAdmin').show();
-    $('#NavbarsAdmin').visibility = 'visible';
-    $('#NavBarsFooter').show();
-    $('#AdminInterfaceTestTemplateEditor').show();
-    this.showTab('AdminInterfaceTestTemplateEditor_TabTestInformation', 'AdminInterfaceTestTemplateEditorTabTestInformation');
-    ITSInstance.UIController.initNavBar();
-
-    var tempID = getUrlParameterValue('id');
-    if (tempID && (tempID != "")) {
-        this.redirectUrl(tempID);
-    } else {
-        $('#AdminInterfaceTestTemplateEditorEdit').hide();
-        $('#AdminInterfaceTestTemplateEditorSelect').show();
-        this.populateTests();
-    }
 };
 
 
