@@ -407,7 +407,7 @@ function getCopyrightMessage() {
                 ITSBackgroundImage = data;
                 loginWindowLoadImage(data);
             } else {
-                loginWindowLoadImage("background.png");
+                loginWindowLoadImage("images/background.png");
             }
         },
         type: 'GET'

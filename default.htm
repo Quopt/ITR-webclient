@@ -40,14 +40,11 @@
 </head>
 
 <body>
-
 <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top" id="NavbarsAdmin"
-     style="left:64px;background-color: #331a00;display: none;max-height:49px;min-height:49px;">
-    <a class="navbar-brand fixed-top"><img src="images\its.png"
-                                           style="width:64px;height:64px;position:absolute; left:0;top:0;z-index: 1;"
-                                           data-toggle="tooltip" title="User settings"
-                                           onclick="if ($('#NavBarsAdminSidebar:visible').length > 0) {$('#NavBarsAdminSidebar').hide();} else {$('#NavBarsAdminSidebar').show();}"
-                                           ;/></a>
+     style="left:48px;background-color: #331a00;display: none;max-height:49px;min-height:49px;">
+    <a class="navbar-brand fixed-top">
+        <i id="menuIcon" style="position:fixed; top:5px; left:5px; z-index:99999;" class="fa fa-bars fa-2x" onclick="if ($('#NavBarsAdminSidebar:visible').length > 0) {$('#NavBarsAdminSidebar').hide();} else {$('#NavBarsAdminSidebar').show();}"></i>
+    </a>
     <div class="form-inline col-6" id="NavbarsAdminLoginBlock" style="width:80%;color:white;vertical-align: bottom;"><label
             id="NavbarsLabelHeading" NoTranslate><label
             id="NavbarsLabelHeadingWelcome">Welcome</label>&nbsp;<label id="welcomeUserName" NoTranslate>...</label>&nbsp;<label
@@ -63,7 +60,6 @@
 
 <div class="navbar navbar-toggleable-md navbar-inverse fixed-top" id="NavbarsTestTaking"
      style="background-color: #D3D3D3;display: none;max-height:49px;min-height:49px;">
-    <img src="images\its.png" style="width:32px;height:32px;position:absolute; left:2px;top:2px;z-index: 1;"/>
     <div class="form-inline col-8" id="NavbarsAdminLoginBlockTT" style="width:100%;color:white;vertical-align: bottom; left:10px;"><label
             id="NavbarsLabelHeadingTT" NoTranslate><label
             id="NavbarsLabelHeadingWelcomeTT">Welcome</label>&nbsp;<label id="welcomeUserNameTT" NoTranslate>...</label>&nbsp;<label
@@ -76,8 +72,7 @@
 </div>
 
 <div class="fixed-top" id="NavBarsAdminSidebar"
-     style="display: none;color:white;background-color: #331a00;top:35px; z-index:1;min-width: 300px;max-width: 300px;">
-    <br/>
+     style="display: none;color:white;background-color: #331a00;top:45px; z-index:1;min-width: 300px;max-width: 300px;">
     <div id="NavBarsAdminSidebarMenu" class="d-md-flex pt-2 nav flex-column">
         <li NoTranslate class="nav-item"><a class="nav-link" style="color:white;" id="NavBarsAdminSidebarSwitchboard" onclick="$('div[MainMenu]').collapse('hide'); ITSRedirectPath('Switchboard');"><label id="NavBarsAdminSidebarSwitchboardLabel">Switchboard</label></a>
         </li>
@@ -211,7 +206,7 @@
     </div>
     <div class="row align-items-center col-12">
         <div class="mx-auto" style="max-width:390px;min-width:190px;">
-            <h3 style="vertical-align:text-bottom;"><img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/><label id="LoginWindowHeading">Login</label></h3>
+            <h3 style="vertical-align:text-bottom;"><!-- <img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>--><label id="LoginWindowHeading">Login</label></h3>
             <div id="LoginWindowWelcomeDiv" style="visibility:hidden" class="form-group text-nowrap font-weight-bold">
                 <label id="LoginWindowWelcomeTo">Welcome to</label>
                 <label id="LoginWindowCompanyName" notranslate></label>
@@ -250,7 +245,7 @@
         <div class="mx-auto" style="max-width:390px;min-width:190px;">
 
             <h3 id="LoginWindowSelectCompanyHeader" style="vertical-align:text-bottom;">
-                <img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>
+                <!-- <img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>-->
                 Select the company you want to work with </h3>
             <table class="table table-sm table-striped table-hover" style="text-align: center"
                    id="LoginWindowSelectCompanyTable">
@@ -271,7 +266,7 @@
         <div class="mx-auto" style="max-width:390px;min-width:190px;">
 
             <h3 id="LoginWindowSelectSessionHeader" style="vertical-align:text-bottom;">
-                <img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>
+                <!-- <img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>-->
                 Select the session you want to take</h3>
             <table class="table table-sm table-striped table-hover" style="text-align: center"
                    id="LoginWindowSelectSessionTable">
@@ -290,7 +285,7 @@
 <div class="form-check" id="ForgotWindow" style="display: none;">
     <div class="row d-flex align-items-center">
         <div class="mx-auto" style="max-width:390px;min-width:190px;">
-            <h3 style="vertical-align:text-bottom;"><img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>Password
+            <h3 style="vertical-align:text-bottom;"><!-- <img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>-->Password
                 forgotten</h3>
             <div class="form-group">
                 <label id="ForgotWindowInstruction">Please enter your email address below and we will send you a link to reset your password.</label> <br/><br/>
@@ -314,7 +309,7 @@
     <!-- Token=X&Path=PasswordReset -->
     <div class="row d-flex align-items-center">
         <div class="mx-auto" style="max-width:390px;min-width:190px;">
-            <h3 style="vertical-align:text-bottom;"><img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>Password
+            <h3 style="vertical-align:text-bottom;"><!-- <img src="images\its.png" style="width:64px;height:64px;vertical-align:text-bottom;"/>-->Password
                 reset</h3>
             <div class="form-group">
                 <div class="form-group">
