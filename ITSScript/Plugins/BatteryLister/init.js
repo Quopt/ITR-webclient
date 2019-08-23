@@ -33,15 +33,15 @@
             "<tr><th colspan='5' class='text-right text-nowrap'>" +
             "<input type=\"text\" maxlength=\"100\" onkeydown=\"if (event.keyCode == 13) ITSInstance.BatteryListerController.search();\"" +
             " id=\"BatteryListerTableSearchText\" /> <button type=\"button\" class=\"btn-xs btn-success\" onclick='ITSInstance.BatteryListerController.search();'><i class=\"fa fa-search\"></i></button>" +
-            "        <div class=\"form-check form-check-inline\">\n" +
+            "        <div class=\"form-check \">\n" +
             "            <input class=\"form-check-input\" type=\"radio\"  onclick='ITSInstance.BatteryListerController.search(\"All\");' name=\"inlineRadioOptions\" id=\"BatteryListerSearchAll\" value=\"All\">\n" +
             "            <label class=\"form-check-label\" for=\"BatteryListerSearchAll\">All</label>\n" +
             "        </div>\n" +
-            "        <div class=\"form-check form-check-inline\">\n" +
+            "        <div class=\"form-check \">\n" +
             "            <input class=\"form-check-input\" type=\"radio\"  onclick='ITSInstance.BatteryListerController.search(\"Archived\");' name=\"inlineRadioOptions\" id=\"BatteryListerSearchArchived\" value=\"Archived\">\n" +
             "            <label class=\"form-check-label\" for=\"BatteryListerSearchArchived\">Archived</label>\n" +
             "        </div>\n" +
-            "        <div class=\"form-check form-check-inline\">\n" +
+            "        <div class=\"form-check \">\n" +
             "            <input class=\"form-check-input\" type=\"radio\"  onclick='ITSInstance.BatteryListerController.search(\"NotArchived\");' name=\"inlineRadioOptions\" id=\"BatteryListerSearchNotArchived\" value=\"NotArchived\">\n" +
             "            <label class=\"form-check-label\" for=\"BatteryListerSearchNotArchived\">Not archived</label>\n" +
             "        </div>" +
@@ -49,7 +49,7 @@
             "  <tr>" +
             "   <th scope=\"col\">#</th>" +
             "   <th id=\"ITSBatteryListerEditor_Description\" scope=\"col\">Description</th>" +
-            "   <th id=\"ITSBatteryListerEditor_ArchivedHeader\" scope=\"col\">Archived</th>" +
+            "   <th id=\"ITSBatteryListerEditor_ArchivedHeader\" class='d-none d-sm-table-cell' scope=\"col\">Archived</th>" +
             "   <th scope=\"col\"></th>" +
             "  </tr>" +
             "  </thead>" +
@@ -57,7 +57,7 @@
         this.tablePart2 = "  <tr>" +
             "   <th scope=\"row\">%%NR%%</th>" +
             "   <td><span notranslate onclick='ITSInstance.BatteryListerController.viewThis(\"%%ID%%\");'>%%DESCRIPTION%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.BatteryListerController.viewThis(\"%%ID%%\");'>%%ARCHIVED%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.BatteryListerController.viewThis(\"%%ID%%\");'>%%ARCHIVED%%</span></td>" +
             "   <td nowrap>" +
             "   <button type=\"button\" class=\"btn-xs btn-success\"" +
             "    onclick=\'ITSInstance.BatteryListerController.viewThis(\"%%ID%%\");\'>" +
@@ -174,6 +174,10 @@
         }
 
         $('#BatteryListerTableSearchText').focus();
+
+        if (this.currentPage > 0) {
+            $('html, body').animate({scrollTop: $('html, body').get(0).scrollHeight }, 2000);
+        }
     };
 
     ITSBatteryListerEditor.prototype.listLoadingFailed = function () {

@@ -36,8 +36,8 @@
             "  <tr>" +
             "   <th scope=\"col\">#</th>" +
             "   <th id=\"ITSPersonListerEditor_DescriptionLogin\" scope=\"col\">Login</th>" +
-            "   <th id=\"ITSPersonListerEditor_DescriptionName\" scope=\"col\">Name</th>" +
-            "   <th id=\"ITSPersonListerEditor_ArchivedHeader\" scope=\"col\">Archived</th>" +
+            "   <th id=\"ITSPersonListerEditor_DescriptionName\" class='d-none d-sm-table-cell' scope=\"col\">Name</th>" +
+            "   <th id=\"ITSPersonListerEditor_ArchivedHeader\" class='d-none d-sm-table-cell' scope=\"col\">Archived</th>" +
             "   <th scope=\"col\"></th>" +
             "  </tr>" +
             "  </thead>" +
@@ -45,8 +45,8 @@
         this.tablePart2 = "  <tr>" +
             "   <th scope=\"row\">%%NR%%</th>" +
             "   <td><span notranslate onclick='ITSInstance.PersonListerController.viewPerson(\"%%PERSONID%%\");'>%%LOGIN%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.PersonListerController.viewPerson(\"%%PERSONID%%\");'>%%NAME%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.PersonListerController.viewPerson(\"%%PERSONID%%\");'>%%ARCHIVED%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.PersonListerController.viewPerson(\"%%PERSONID%%\");'>%%NAME%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.PersonListerController.viewPerson(\"%%PERSONID%%\");'>%%ARCHIVED%%</span></td>" +
             "   <td nowrap>" +
             "   <button type=\"button\" class=\"btn-xs btn-success\"" +
             "    onclick=\'ITSInstance.PersonListerController.viewPerson(\"%%PERSONID%%\");\'>" +
@@ -228,6 +228,10 @@
             this.setFocusOnSearchField = false;
         };
         $('#PersonListerTableSearchText').focus();
+
+        if (this.currentPage > 0) {
+            $('html, body').animate({scrollTop: $('html, body').get(0).scrollHeight }, 2000);
+        }
     };
 
     ITSPersonListerEditor.prototype.listLoadingFailed = function () {

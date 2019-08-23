@@ -15,7 +15,7 @@
 -->
 <div class="row col-12">
     <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
-    <h4 id="BatteryListerInterfaceEditSessionEditHeader">Overview of available batteries</h4>
+    <h4 id="BatteryListerInterfaceEditSessionEditHeader">Overview of available batteries</h4>&nbsp;&nbsp;<i class="fa fa-2x fa-angle-double-down" onclick="$('html, body').animate({scrollTop: $('html, body').get(0).scrollHeight }, 2000); "></i>
     <br/><br/>
 </div>
 
@@ -30,6 +30,6 @@
         <button id="BatteryListerTableFindMoreButton" type="button" class="btn btn-success"
                 onclick="ITSInstance.BatteryListerController.findMore();"><i
                 class="fa fa-fw fa-layer-group"></i> Show more information
-        </button>
+        </button>&nbsp;&nbsp;<i class="fa fa-2x fa-angle-double-up" onclick="$('html, body').animate({scrollTop: 0 }, 2000); "></i>
     </div>
 </div>

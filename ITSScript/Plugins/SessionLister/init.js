@@ -37,12 +37,12 @@
             "   <th scope=\"col\">#</th>" +
             "   <th id=\"ITSSessionListerEditor_DescriptionHeader\" scope=\"col\">Session description</th>" +
             "   <th id=\"ITSSessionListerEditor_DescriptionLogin\" scope=\"col\">Login</th>" +
-            "   <th id=\"ITSSessionListerEditor_DescriptionName\" scope=\"col\">Name</th>" +
-            "   <th id=\"ITSSessionListerEditor_StartedAtHeader\" scope=\"col\">Started at</th>" +
-            "   <th id=\"ITSSessionListerEditor_EndedAtHeader\" scope=\"col\">Ended at</th>" +
-            "   <th id=\"ITSSessionListerEditor_AllowedStartDateTimeHeader\" scope=\"col\">Allowed start date & time</th>" +
-            "   <th id=\"ITSSessionListerEditor_AllowedEndDateTimeHeader\" scope=\"col\">Allowed end date & time</th>" +
-            "   <th id=\"ITSSessionListerEditor_ArchivedHeader\" scope=\"col\">Archived</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSSessionListerEditor_DescriptionName\" scope=\"col\">Name</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSSessionListerEditor_StartedAtHeader\" scope=\"col\">Started at</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSSessionListerEditor_EndedAtHeader\" scope=\"col\">Ended at</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSSessionListerEditor_AllowedStartDateTimeHeader\" scope=\"col\">Allowed start date & time</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSSessionListerEditor_AllowedEndDateTimeHeader\" scope=\"col\">Allowed end date & time</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSSessionListerEditor_ArchivedHeader\" scope=\"col\">Archived</th>" +
             "   <th scope=\"col\"></th>" +
             "  </tr>" +
             "  </thead>" +
@@ -51,12 +51,12 @@
             "   <th scope=\"row\">%%NR%%</th>" +
             "   <td><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%DESCRIPTION%%</span></td>" +
             "   <td><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%LOGIN%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%NAME%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%STARTEDAT%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ENDEDAT%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ALLOWEDSTART%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ALLOWEDEND%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ARCHIVED%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%NAME%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%STARTEDAT%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ENDEDAT%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ALLOWEDSTART%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ALLOWEDEND%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ARCHIVED%%</span></td>" +
             "   <td nowrap>" +
             "   <button type=\"button\" class=\"btn-xs btn-success\"" +
             "    onclick=\'ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");\'>" +
@@ -230,6 +230,10 @@
             this.setFocusOnSearchField = false;
         };
         $('#SessionListerTableSearchText').focus();
+
+        if (this.currentPage > 0) {
+            $('html, body').animate({scrollTop: $('html, body').get(0).scrollHeight }, 2000);
+        }
     };
 
     ITSSessionListerEditor.prototype.listLoadingFailed = function () {

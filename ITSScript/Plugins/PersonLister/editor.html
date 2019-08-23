@@ -15,7 +15,7 @@
 -->
 <div class="row col-12">
     <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
-    <h4 id="PersonListerInterfaceEditSessionEditHeader">Overview of candidates</h4>&nbsp;<h4 id="PersonListerInterfaceEditSessionEditHeaderStatus"></h4>
+    <h4 id="PersonListerInterfaceEditSessionEditHeader">Overview of candidates</h4>&nbsp;<h4 id="PersonListerInterfaceEditSessionEditHeaderStatus"></h4>&nbsp;&nbsp;<i class="fa fa-2x fa-angle-double-down" onclick="$('html, body').animate({scrollTop: $('html, body').get(0).scrollHeight }, 2000); "></i>
     <br/><br/>
 </div>
 
@@ -65,7 +65,7 @@
                 <button type="button" class="btn btn-primary" data-dismiss="modal" id="PersonListerDelete-DeleteButton" onclick="ITSInstance.PersonListerController.deleteArchived();" notranslate>
                     <i id="PersonListerDeleteTestIcon2" class="fa fa-fw fa-trash"></i>
                     <span id="PersonListerDelete-buttonlabel" >Delete persons</span>
-                </button>
+                </button>&nbsp;&nbsp;<i class="fa fa-2x fa-angle-double-up" onclick="$('html, body').animate({scrollTop: 0 }, 2000); "></i>
             </div>
         </div>
     </div>

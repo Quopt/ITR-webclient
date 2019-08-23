@@ -36,9 +36,9 @@
             "  <tr>" +
             "   <th scope=\"col\">#</th>" +
             "   <th id=\"ITSConsultantListerEditor_DescriptionLogin\" scope=\"col\">Login</th>" +
-            "   <th id=\"ITSConsultantListerEditor_DescriptionName\" scope=\"col\">Name</th>" +
-            "   <th id=\"ITSConsultantListerEditor_DescriptionLastLogin\" scope=\"col\">Last login date and time</th>" +
-            "   <th id=\"ITSConsultantListerEditor_DescriptionPasswordExpiration\" scope=\"col\">Password expiration date</th>" +
+            "   <th id=\"ITSConsultantListerEditor_DescriptionName\" class='d-none d-sm-table-cell' scope=\"col\">Name</th>" +
+            "   <th id=\"ITSConsultantListerEditor_DescriptionLastLogin\" class='d-none d-sm-table-cell' scope=\"col\">Last login date and time</th>" +
+            "   <th id=\"ITSConsultantListerEditor_DescriptionPasswordExpiration\" class='d-none d-sm-table-cell' scope=\"col\">Password expiration date</th>" +
             "   <th scope=\"col\"></th>" +
             "  </tr>" +
             "  </thead>" +
@@ -46,9 +46,9 @@
         this.tablePart2 = "  <tr>" +
             "   <th scope=\"row\">%%NR%%</th>" +
             "   <td><span notranslate onclick='ITSInstance.ConsultantListerController.viewConsultant(\"%%PERSONID%%\");'>%%LOGIN%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.ConsultantListerController.viewConsultant(\"%%PERSONID%%\");'>%%NAME%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.ConsultantListerController.viewConsultant(\"%%PERSONID%%\");'>%%LASTLOGINDATE%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.ConsultantListerController.viewConsultant(\"%%PERSONID%%\");'>%%PASSWORDDATE%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.ConsultantListerController.viewConsultant(\"%%PERSONID%%\");'>%%NAME%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.ConsultantListerController.viewConsultant(\"%%PERSONID%%\");'>%%LASTLOGINDATE%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.ConsultantListerController.viewConsultant(\"%%PERSONID%%\");'>%%PASSWORDDATE%%</span></td>" +
             "   <td nowrap>" +
             "   <button type=\"button\" class=\"btn-xs btn-success\"" +
             "    onclick=\'ITSInstance.ConsultantListerController.viewConsultant(\"%%PERSONID%%\");\'>" +
@@ -157,6 +157,10 @@
             this.setFocusOnSearchField = false;
         };
         $('#ConsultantListerTableSearchText').focus();
+
+        if (this.currentPage > 0) {
+            $('html, body').animate({scrollTop: $('html, body').get(0).scrollHeight }, 2000);
+        }
     };
 
     ITSConsultantListerEditor.prototype.listLoadingFailed = function () {

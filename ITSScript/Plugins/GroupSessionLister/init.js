@@ -36,11 +36,11 @@
             "  <tr>" +
             "   <th scope=\"col\">#</th>" +
             "   <th id=\"ITSGroupSessionListerEditor_DescriptionHeader\" scope=\"col\">Session description</th>" +
-            "   <th id=\"ITSGroupSessionListerEditor_ReadyHeader\" scope=\"col\"># ready sessions</th>" +
-            "   <th id=\"ITSGroupSessionListerEditor_StartedHeader\" scope=\"col\"># started sessions</th>" +
-            "   <th id=\"ITSGroupSessionListerEditor_EndedHeader\" scope=\"col\"># done sessions</th>" +
-            "   <th id=\"ITSGroupSessionListerEditor_AllowedStartDateTimeHeader\" scope=\"col\">Allowed start date & time</th>" +
-            "   <th id=\"ITSGroupSessionListerEditor_AllowedEndDateTimeHeader\" scope=\"col\">Allowed end date & time</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSGroupSessionListerEditor_ReadyHeader\" scope=\"col\"># ready sessions</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSGroupSessionListerEditor_StartedHeader\" scope=\"col\"># started sessions</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSGroupSessionListerEditor_EndedHeader\" scope=\"col\"># done sessions</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSGroupSessionListerEditor_AllowedStartDateTimeHeader\" scope=\"col\">Allowed start date & time</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSGroupSessionListerEditor_AllowedEndDateTimeHeader\" scope=\"col\">Allowed end date & time</th>" +
             "   <th scope=\"col\"></th>" +
             "  </tr>" +
             "  </thead>" +
@@ -48,11 +48,11 @@
         this.tablePart2 = "  <tr>" +
             "   <th scope=\"row\">%%NR%%</th>" +
             "   <td><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%DESCRIPTION%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%READY%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%Started%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%Ended%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ALLOWEDSTART%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ALLOWEDEND%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%READY%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%Started%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%Ended%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ALLOWEDSTART%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ALLOWEDEND%%</span></td>" +
             "   <td nowrap>" +
             "   <button type=\"button\" class=\"btn-xs btn-success\"" +
             "    onclick=\'ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");\'>" +
@@ -222,6 +222,10 @@
             this.setFocusOnSearchField = false;
         };
         $('#GroupSessionListerTableSearchText').focus();
+
+        if (this.currentPage > 0) {
+            $('html, body').animate({scrollTop: $('html, body').get(0).scrollHeight }, 2000);
+        }
     };
 
     ITSGroupSessionListerEditor.prototype.listLoadingFailed = function () {

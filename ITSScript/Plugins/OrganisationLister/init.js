@@ -36,11 +36,11 @@
             "  <tr>" +
             "   <th scope=\"col\">#</th>" +
             "   <th id=\"ITSOrganisationListerEditor_DescriptionName\" scope=\"col\">Organisation name</th>" +
-            "   <th id=\"ITSOrganisationListerEditor_DescriptionCountry\" scope=\"col\">Country</th>" +
-            "   <th id=\"ITSOrganisationListerEditor_DescriptionContactPerson\" scope=\"col\">Contact person</th>" +
-            "   <th id=\"ITSOrganisationListerEditor_DescriptionContactMail\" scope=\"col\">Contact e-mail</th>" +
-            "   <th id=\"ITSOrganisationListerEditor_DescriptionContactPhone\" scope=\"col\">Contact phone</th>" +
-            "   <th id=\"ITSOrganisationListerEditor_DescriptionLicenseEndDate\" scope=\"col\">License end date</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSOrganisationListerEditor_DescriptionCountry\" scope=\"col\">Country</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSOrganisationListerEditor_DescriptionContactPerson\" scope=\"col\">Contact person</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSOrganisationListerEditor_DescriptionContactMail\" scope=\"col\">Contact e-mail</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSOrganisationListerEditor_DescriptionContactPhone\" scope=\"col\">Contact phone</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSOrganisationListerEditor_DescriptionLicenseEndDate\" scope=\"col\">License end date</th>" +
             "   <th scope=\"col\"></th>" +
             "  </tr>" +
             "  </thead>" +
@@ -48,11 +48,11 @@
         this.tablePart2 = "  <tr>" +
             "   <th scope=\"row\">%%NR%%</th>" +
             "   <td><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%COMPANYNAME%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%COMPANYCOUNTRY%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%CONTACTPERSON%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%CONTACTEMAIL%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%CONTACTPHONE%%</span></td>" +
-            "   <td><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%LICENSEENDDATE%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%COMPANYCOUNTRY%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%CONTACTPERSON%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%CONTACTEMAIL%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%CONTACTPHONE%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%LICENSEENDDATE%%</span></td>" +
             "   <td nowrap>" +
             "   <button type=\"button\" class=\"btn-xs btn-success\"" +
             "    onclick=\'ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");\'>" +
@@ -160,6 +160,10 @@
             this.setFocusOnSearchField = false;
         };
         $('#OrganisationListerTableSearchText').focus();
+
+        if (this.currentPage > 0) {
+            $('html, body').animate({scrollTop: $('html, body').get(0).scrollHeight }, 2000);
+        }
     };
 
     ITSOrganisationListerEditor.prototype.listLoadingFailed = function () {
