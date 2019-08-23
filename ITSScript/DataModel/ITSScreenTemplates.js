@@ -354,7 +354,7 @@ ITSScreenTemplate.prototype.generate_template_and_scan_for_repeatblocks = functi
     };
 }
 
-ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templatevalues, pnp_template, on_change_function, on_add_element_function, on_delete_element_function, placeholderlist, onplaceholderchangefunction, placeholdervalue) {
+ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templatevalues, pnp_template, on_change_function, on_add_element_function, on_delete_element_function, placeholderlist, onplaceholderchangefunction, placeholdervalue, testdefinition) {
     // div - place to generate the view in the html page
     // id - id of this template
     // templatesvalues - any already filled in values for this template (js object)
@@ -395,14 +395,14 @@ ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templ
     for (var i = 0; i < this.TemplateVariables.length; i++) {
         // is this a repeat block var? If so generate at the bottom ...
         if (repeat_block_vars.indexOf(this.TemplateVariables[i]) < 0) {
-            this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, 0, on_change_function);
+            this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, 0, on_change_function, testdefinition);
         }
     }
     for (var repeat_block_counter = 0; repeat_block_counter < this.RepeatBlockCount; repeat_block_counter++) {
         for (var i = 0; i < this.TemplateVariables.length; i++) {
             // is this a repeat block var? If so we can generate it now !
             if (repeat_block_vars.indexOf(this.TemplateVariables[i]) >= 0) {
-                this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, repeat_block_counter + 1, on_change_function);
+                this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, repeat_block_counter + 1, on_change_function, testdefinition);
             }
         }
     }
@@ -610,7 +610,7 @@ ITSScreenTemplateVariable.prototype.traceID = function (template_parent, repeat_
     return this.varTraceID + repeat_block_counter + "Y";
 };
 
-ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function (template_parent, div_to_add_to, template_values, repeat_block_counter, on_change_function) {
+ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function (template_parent, div_to_add_to, template_values, repeat_block_counter, on_change_function, testdefinition) {
     var traceID = this.traceID(template_parent, repeat_block_counter);
     var colorpicker = false;
     var bgcolor = "#FFFFFF";
@@ -685,6 +685,21 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             select = select + '</select></div></div>';
             $('#' + div_to_add_to).append(select);
             break;
+        case "I" :
+            var select = '<div NoTranslate class="row" style="background-color: '+bgcolor+'">' +
+                '<label NoTranslate for="' + traceID + '" class="col-2 col-form-label">' + this.variableName + '</label>' +
+                '<div NoTranslate class="col">' +
+                '<select NoTranslate class="form-control" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" id="' + traceID + '">';
+            // now add the options from the default settings
+            if (typeof testdefinition != "undefined") {
+                var new_option = "";
+                for (var i = 0; i < testdefinition.files.length; i++) {
+                   select = select + '<option NoTranslate value="' + testdefinition.createLinkForFile(i) + '">' + testdefinition.files[i] + '</option>';
+                }
+            }
+            select = select + '</select></div></div>';
+            $('#' + div_to_add_to).append(select);
+            break;
         case "B" :
             var select = '<div NoTranslate class="row" style="background-color: '+bgcolor+'">' +
                 '<label NoTranslate for="' + traceID + '" class="col-2 col-form-label">' + this.variableName + '</label>' +
@@ -716,6 +731,9 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
                 $('#' + traceID).val(template_values[varNameForTemplateValues]);
                 break;
             case "L" :
+                $('#' + traceID).val(template_values[varNameForTemplateValues]);
+                break;
+            case "I" :
                 $('#' + traceID).val(template_values[varNameForTemplateValues]);
                 break;
             case "B" :
@@ -758,6 +776,9 @@ ITSScreenTemplateVariable.prototype.get_variable_value_for_test_editor = functio
             return $('#' + traceID).val();
             break;
         case "L" :
+            return $('#' + traceID).val();
+            break;
+        case "I" :
             return $('#' + traceID).val();
             break;
         case "B" :

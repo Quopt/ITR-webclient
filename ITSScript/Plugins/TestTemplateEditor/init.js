@@ -560,7 +560,9 @@ ITSTestTemplateEditor.prototype.generateCurrentScreenIndexTemplateVariables = fu
                 'ITSInstance.newITSTestEditorController.templateValueChanged();',
                 'ITSInstance.newITSTestEditorController.templateAddElement();',
                 'ITSInstance.newITSTestEditorController.templateDeleteElement();',
-                placeholderlist, "ITSInstance.newITSTestEditorController.templatePlaceHolderChanged(this.value);", this.currentScreenComponent.placeholderName);
+                placeholderlist, "ITSInstance.newITSTestEditorController.templatePlaceHolderChanged(this.value);",
+                this.currentScreenComponent.placeholderName,
+                this.currentTest);
             $('#AdminInterfaceTestTemplateEditorScreenVar').append('<small>' + this.currentScreenComponent.getColumnName() + '</small>');
         }
     }
