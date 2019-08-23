@@ -31,7 +31,7 @@
     <div class="row align-items-center justify-content-center col-12" style="display:none" id="PersonListerTableDelete">
         <button id="PersonListerDelete" type="button" data-toggle="modal" data-target="#PersonListerDelete-dialog" class="btn btn-warning">
             <i id="PersonListerDeleteIcon" class="fa fa-fw fa-trash"></i><span id="PersonListerDeleteButtonLabel">Delete persons currently listed</span></button>
-    </div>
+    </div>&nbsp;&nbsp;<i class="fa fa-2x fa-angle-double-up" onclick="$('html, body').animate({scrollTop: 0 }, 2000); "></i>
 </div>
 
 <div class="modal fade" id="PersonListerDelete-dialog" tabindex="-1" role="dialog" aria-labelledby="PersonListerDeleteLabel" aria-hidden="true">
@@ -65,7 +65,7 @@
                 <button type="button" class="btn btn-primary" data-dismiss="modal" id="PersonListerDelete-DeleteButton" onclick="ITSInstance.PersonListerController.deleteArchived();" notranslate>
                     <i id="PersonListerDeleteTestIcon2" class="fa fa-fw fa-trash"></i>
                     <span id="PersonListerDelete-buttonlabel" >Delete persons</span>
-                </button>&nbsp;&nbsp;<i class="fa fa-2x fa-angle-double-up" onclick="$('html, body').animate({scrollTop: 0 }, 2000); "></i>
+                </button>
             </div>
         </div>
     </div>

@@ -592,7 +592,7 @@ function ITSScreenTemplateVariable(parent, session) {
     this.description = "";
     this.defaultValue = "";
     this.varValue = null;
-    this.variableType = "T"; // T = text, A = textarea, H = HTML text, L = list, B = boolean, C = color picker, P = placeholder
+    this.variableType = "T"; // T = text, A = textarea, H = HTML text, L = list, B = boolean, C = color picker, P = placeholder I = Image
     this.varTraceID = "";
     this.translatable = false;
     this.RepeatBlockCounter = 0;
