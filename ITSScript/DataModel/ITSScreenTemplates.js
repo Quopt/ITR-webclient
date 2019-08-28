@@ -531,6 +531,8 @@ ITSScreenTemplate.prototype.replace_variables_with_actual_values = function (rep
             }
         }
     }
+    // now scan for any remaining expressions. these will start with constVarEnvelope and end with constVarEnvelope
+    template = envSubstitute(template, this, true);
     return template;
 }
 
