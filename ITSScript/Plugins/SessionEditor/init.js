@@ -171,6 +171,7 @@
     ITSSessionEditor.prototype.sessionLoaded = function () {
         // session is loaded
         $('#AdminInterfaceEditSessionEditHeaderName')[0].innerHTML = this.currentSession.Description;
+        $('#AdminInterfaceEditSessionEditHeaderCandidate')[0].innerHTML = this.currentSession.Person.createHailing()
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         // to do : check if the session type is OK to be viewed with this viewer
         this.toggleButtons();
