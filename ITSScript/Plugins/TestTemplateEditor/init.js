@@ -497,6 +497,7 @@ ITSTestTemplateEditor.prototype.loadScreensList = function () {
 };
 
 ITSTestTemplateEditor.prototype.setCurrentScreenIndex = function (screenNum, testTemplateVarGeneration) {
+    var templateIndex = -1;
     $('#AdminInterfaceTestTemplateEditorScreenContentButtons').hide();
     $('#AdminInterfaceTestTemplateEditorScreenDynamicsDiv').hide();
 
@@ -555,7 +556,10 @@ ITSTestTemplateEditor.prototype.generateCurrentScreenIndexTemplateVariables = fu
         this.currentTemplate = template;
         this.highlightScreenComponent(screenComponentNum);
         // generate_test_editor_view div, id, templatevalues, pnp_template, on_change_function, on_add_element_function, on_delete_element_function
+        $('#AdminInterfaceTestTemplateEditorScreenVarNameText').text('');
         if (template) {
+            // show screen template description
+            $('#AdminInterfaceTestTemplateEditorScreenVarNameText').text(this.currentTemplate.Description);
             template.generate_test_editor_view('AdminInterfaceTestTemplateEditorScreenVar', 'TE' + screenComponentNum + 'Y', templateValues, false,
                 'ITSInstance.newITSTestEditorController.templateValueChanged();',
                 'ITSInstance.newITSTestEditorController.templateAddElement();',
