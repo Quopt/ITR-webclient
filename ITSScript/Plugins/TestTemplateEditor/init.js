@@ -580,14 +580,14 @@ ITSTestTemplateEditor.prototype.templateValueChanged = function () {
     //var dateNow = new Date();
     //if ((dateNow.getTime() - this.nextTemplateValueChangedRefresh.getTime()) > 1000) {
         this.nextTemplateValueChangedRefresh = new Date();
-        setTimeout(this.templateValueChangedProcessTimed, 1001);
+        setTimeout(this.templateValueChangedProcessTimed, 501);
     //}
 };
 
 // this procedure does not required this but works on ITSInstance directly to avoid caching problems and memory shortage
 ITSTestTemplateEditor.prototype.templateValueChangedProcessTimed = function () {
     var dateNow = new Date();
-    if ((Math.abs(dateNow.getTime() - ITSInstance.newITSTestEditorController.nextTemplateValueChangedRefresh.getTime()) ) > 1000) {
+    if ((Math.abs(dateNow.getTime() - ITSInstance.newITSTestEditorController.nextTemplateValueChangedRefresh.getTime()) ) > 500) {
         ITSInstance.newITSTestEditorController.nextTemplateValueChangedRefresh = new Date();
         ITSInstance.newITSTestEditorController.templateValueChangedProcess();
     }
