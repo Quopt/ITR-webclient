@@ -204,8 +204,12 @@
                 <textarea class="form-control" id="AdminInterfaceScreenTemplate-genscript" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.generator_snippet = this.value;">/* no generator script needed */</textarea>
             </div>
             <div class="form-group">
-                <label id="AdminInterfaceScreenTemplate-labelGeneratorPnP" for="AdminInterfaceScreenTemplate-genscript">Generator snippet PnP (id, num_blocks, template_values)</label>
+                <label id="AdminInterfaceScreenTemplate-labelGeneratorPnP" for="AdminInterfaceScreenTemplate-genscript-PnP">Generator snippet PnP (id, num_blocks, template_values)</label>
                 <textarea class="form-control" id="AdminInterfaceScreenTemplate-genscript-PnP" rows="1"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.generator_pnp_snippet = this.value;">/* no generator script needed */</textarea>
+            </div>
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-labelGeneratorSummary" for="AdminInterfaceScreenTemplate-genscript-summary">Generator snippet summary view (id, num_blocks, template_values, current_values_array)</label>
+                <textarea class="form-control" id="AdminInterfaceScreenTemplate-genscript-summary" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.generator_summary_snippet = this.value;">/* no generator script needed */</textarea>
             </div>
         </div>
     </div>

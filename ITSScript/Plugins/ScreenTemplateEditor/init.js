@@ -90,7 +90,9 @@ ITSScreenTemplateEditor.prototype.addNewTemplate = function () {
     this.currentTemplate.validation_snippet = $('#AdminInterfaceScreenTemplate-validatescript').val();
     this.currentTemplate.isanswered_snippet = $('#AdminInterfaceScreenTemplate-isansweredscript').val();
     this.currentTemplate.generator_snippet = $('#AdminInterfaceScreenTemplate-genscript').val();
-    this.currentTemplate.generator_pnp_snippetsnippet = $('#AdminInterfaceScreenTemplate-genscript-PnP').val();
+    this.currentTemplate.generator_pnp_snippet = $('#AdminInterfaceScreenTemplate-genscript-PnP').val();
+    this.currentTemplate.generator_summary_snippet = $('#AdminInterfaceScreenTemplate-genscript-summary').val();
+
 };
 
 ITSScreenTemplateEditor.prototype.populateTemplates = function () {
@@ -164,6 +166,7 @@ ITSScreenTemplateEditor.prototype.selectTemplateShowDetails = function () {
     $('#AdminInterfaceScreenTemplate-isansweredscript').val(this.currentTemplate.isanswered_snippet);
     $('#AdminInterfaceScreenTemplate-genscript').val(this.currentTemplate.generator_snippet);
     $('#AdminInterfaceScreenTemplate-genscript-PnP').val(this.currentTemplate.generator_pnp_snippet);
+    $('#AdminInterfaceScreenTemplate-genscript-summary').val(this.currentTemplate.generator_summary_snippet);
 
     this.populateTemplateVariableList.call(this);
 

@@ -118,6 +118,7 @@ function ITSScreenTemplate(parent, session) {
     this.init_value_snippet = "";
     this.generator_snippet = "";
     this.generator_pnp_snippet = "";
+    this.generator_summary_snippet = "";
     this.validation_snippet = "";
     this.isanswered_snippet = "";
 
@@ -132,7 +133,8 @@ function ITSScreenTemplate(parent, session) {
 
     this.persistentProperties = ['ID', 'Description', 'Explanation', 'Remarks', 'TemplateVariables',
         'HTMLContent', 'HTMLContentPnP', 'get_value_snippet', 'set_value_snippet', 'TemplateType',
-        'init_value_snippet', 'generator_snippet', 'generator_pnp_snippet', 'validation_snippet', 'isanswered_snippet', 'PluginData'];
+        'init_value_snippet', 'generator_snippet', 'generator_pnp_snippet', 'generator_summary_snippet',
+        'validation_snippet', 'isanswered_snippet', 'PluginData'];
 }
 
 ITSScreenTemplate.prototype.descriptionWithDBIndicator = function () {
@@ -261,6 +263,14 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
         console.log("generator_pnp_snippet contains error " + this.Description + " " + err.message );
     }
     this['runtime_generate_pnp'] = func;
+
+    var func = emptyfunc;
+    try {
+        eval("func = function(id, num_blocks, template_values, current_values_array) { " + this.generator_summary_snippet + " }; ");
+    } catch (err) {
+        console.log("generator_summary_snippet contains error " + this.Description + " " + err.message );
+    }
+    this['runtime_generate_summary'] = func;
 
     var func = emptyfunc;
     try {
