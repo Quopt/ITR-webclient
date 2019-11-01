@@ -385,6 +385,11 @@ ITSUIController = function () {
     this.prepareOfficeSession = function () {
         // load all data that is required by the system
         ITSInstance.ITRSessionType = "office";
+        if (!loadOfficeComponentsAlreadyCalled) {
+            // this is a partially loaded session (only for test taking) trying to login in the office
+            // refresh the complete browser now to load properly
+            setTimeout(function () { location.reload(true); }, 1000);
+        };
         ITSInstance.screenTemplates.loadAvailableScreenTemplates(); // always load the screen templates
 
         // make sure the server updates periodically

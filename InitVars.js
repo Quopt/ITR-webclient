@@ -18,55 +18,66 @@
 // and now init the application
 document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/ITSBootstrap.js'><\/script>");
 
+loadOfficeComponentsAlreadyCalled = false;
+
+function loadOfficeComponents() {
+    if (! loadOfficeComponentsAlreadyCalled) {
+        loadOfficeComponentsAlreadyCalled = true;
+
+        // %OFFICEPORTLETSTART%
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionNewPortlet/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionOverviewPortlet/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/TestCatalogPortlet/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/CreditsUsedPortlet/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/UserPreferencesPortlet/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/UsersLoggedInPortlet/init.js' defer><\/script>");
+        // %OFFICEPORTLETEND%
+
+        // load all the editors and viewers
+        // %OFFICEEDITORSTART%
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionNewEditor/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionEditor/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/TestCatalogViewer/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ScreenTemplateEditor/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/TestTemplateEditor/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionMailer/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionViewAnswers/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionViewReports/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ReportTemplateEditor/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionLister/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/PersonLister/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/PersonEditor/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ResetPassword/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ConsultantLister/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ConsultantEditor/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/OrganisationLister/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/OrganisationEditor/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/GrantCredits/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ScreenTemplateLocalPublisher/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/TestTemplateLocalPublisher/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ReportTemplateLocalPublisher/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/CreditsUsedLister/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/CreditsOrderByMail/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ServerSettings/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ServerSettingsPublics/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/CustomerSettings/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/MailTemplateEditor/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionChangeEditor/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/BatteryLister/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/BatteryEditor/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/GroupSessionEditor/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/GroupSessionLister/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/DownloadData/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/TranslationEditor/init.js' defer><\/script>");
+        // %OFFICEEDITOREND%
+    }
+};
+
 if (window.location.href.indexOf('TestTakingOnly=Y') < 0 ) {
     // load all the required components for the office and test taking environment
     // load all the portlets. Do not remove the %TAG% values below this line! They are user for plugin and portlet management.
-    // %OFFICEPORTLETSTART%
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionNewPortlet/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionOverviewPortlet/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/TestCatalogPortlet/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/CreditsUsedPortlet/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/UserPreferencesPortlet/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/UsersLoggedInPortlet/init.js' defer><\/script>");
-    // %OFFICEPORTLETEND%
 
-    // load all the editors and viewers
-    // %OFFICEEDITORSTART%
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionNewEditor/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionEditor/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/TestCatalogViewer/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ScreenTemplateEditor/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/TestTemplateEditor/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionMailer/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionViewAnswers/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionViewReports/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ReportTemplateEditor/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionLister/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/PersonLister/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/PersonEditor/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ResetPassword/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ConsultantLister/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ConsultantEditor/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/OrganisationLister/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/OrganisationEditor/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/GrantCredits/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ScreenTemplateLocalPublisher/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/TestTemplateLocalPublisher/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ReportTemplateLocalPublisher/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/CreditsUsedLister/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/CreditsOrderByMail/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ServerSettings/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ServerSettingsPublics/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/CustomerSettings/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/MailTemplateEditor/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionChangeEditor/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/BatteryLister/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/BatteryEditor/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/GroupSessionEditor/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/GroupSessionLister/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/DownloadData/init.js' defer><\/script>");
-    document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/TranslationEditor/init.js' defer><\/script>");
-    // %OFFICEEDITOREND%
+    loadOfficeComponents();
 
     if (window.location.href.indexOf('DevMode=Y') >= 0 ) {
         var DebugMode=true;
