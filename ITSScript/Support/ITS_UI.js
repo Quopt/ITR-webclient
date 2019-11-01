@@ -123,7 +123,8 @@ ITSUIController = function () {
     // common functions for generic usage
     this.activateScreenPath = function(Path){
         // check if there is a session token, if not show the login path
-        //console.log("Activating path = " + Path);
+        //console.log("Activating path " + Path);
+        // if the progress bar is showing then switch if off now
         var token = ITSInstance.token.get();
         ITSInstance.token.keepTokenFresh();
 
@@ -141,6 +142,7 @@ ITSUIController = function () {
                 this.EnableLoginSelectSession();
                 break;
             case "Switchboard":
+                ITSInstance.UIController.showInterfaceAsWaitingOffForceShow();
                 if ((token == "") || (token=="empty")) this.ActivateScreenPath("Login");
                 this.EnableAdminInterface();
                 break;
@@ -163,6 +165,7 @@ ITSUIController = function () {
                 this.EnablePublicTestTakingInterface();
                 break;
             default :
+                ITSInstance.UIController.showInterfaceAsWaitingOffForceShow();
                 if ((token == "") || (token=="empty")) this.ActivateScreenPath("Login");
                 this.scan_for_default_office_plugin_paths(Path);
         }

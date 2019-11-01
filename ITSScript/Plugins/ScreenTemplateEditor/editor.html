@@ -147,7 +147,7 @@
     <!-- html and scripting section -->
     <div class="bg-dark text-white well"><label id="AdminInterfaceScreenTemplate-HTMLHeader">HTML and scripting section</label></div>
     <div class="row">
-        <div class="col-4">
+        <div class="col-3">
             <div class="form-group">
                 <label id="AdminInterfaceScreenTemplate-labelGeneratorHTML" for="AdminInterfaceScreenTemplate-htmltemplate">HTML template</label>
                 <textarea class="form-control" id="AdminInterfaceScreenTemplate-htmltemplate" rows="19"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.HTMLContent = this.value;">
@@ -167,14 +167,20 @@
                 </button>&nbsp;
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-3">
             <div class="form-group">
                 <label id="AdminInterfaceScreenTemplate-labelGeneratorHTMLPnP" for="AdminInterfaceScreenTemplate-pnptemplate">HTML template for PnP input (if different from
                     html template)</label>
                 <textarea class="form-control" id="AdminInterfaceScreenTemplate-pnptemplate" rows="19"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.HTMLContentPnP = this.value;"></textarea>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-3">
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-labelGeneratorSummary" for="AdminInterfaceScreenTemplate-summarytemplate">HTML template for summary view</label>
+                <textarea class="form-control" id="AdminInterfaceScreenTemplate-summarytemplate" rows="19"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.HTMLContentSummary = this.value;"></textarea>
+            </div>
+        </div>
+        <div class="col-3">
             <div class="form-group">
                 <label id="AdminInterfaceScreenTemplate-labelGeneratorGetValue" for="AdminInterfaceScreenTemplate-getvalue">Snippet to get value (id, num_blocks)</label>
                 <textarea class="form-control" id="AdminInterfaceScreenTemplate-getvalue" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.get_value_snippet = this.value;">return $('#'+id).val();</textarea>
@@ -208,7 +214,7 @@
                 <textarea class="form-control" id="AdminInterfaceScreenTemplate-genscript-PnP" rows="1"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.generator_pnp_snippet = this.value;">/* no generator script needed */</textarea>
             </div>
             <div class="form-group">
-                <label id="AdminInterfaceScreenTemplate-labelGeneratorSummary" for="AdminInterfaceScreenTemplate-genscript-summary">Generator snippet summary view (id, num_blocks, template_values, current_values_array)</label>
+                <label id="AdminInterfaceScreenTemplate-labelGeneratorSummary" for="AdminInterfaceScreenTemplate-genscript-summary">Generator snippet summary view (id, num_blocks, template_values, current_values_array) return { "html" : ..., "values" : ... } </label>
                 <textarea class="form-control" id="AdminInterfaceScreenTemplate-genscript-summary" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.generator_summary_snippet = this.value;">/* no generator script needed */</textarea>
             </div>
         </div>
@@ -216,7 +222,7 @@
     <!-- preview section (test editor, test taking, PnP input) -->
     <div class="bg-dark text-white well"><label id="AdminInterfaceScreenTemplate-PreviewHeader">Preview section</label></div>
     <div class="row">
-        <div class="col-4">
+        <div class="col-3">
             <div class="form-group">
                 <label id="AdminInterfaceScreenTemplate-PreviewHeaderTE">Test Editor preview</label>&nbsp;
                 <button id="AdminInterfaceScreenTemplate-showValuesTEButton" type="button" class="btn-xs btn-success" onclick="ITSInstance.newITSScreenTemplateEditorController.showTestEditorPreviewJSon();"><i class="fa fa-eye"></i> Show values</button>
@@ -225,7 +231,7 @@
 
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-3">
             <div class="form-group">
                 <label id="AdminInterfaceScreenTemplate-PreviewHeaderTT">Test Taking preview</label>
                 <button id="AdminInterfaceScreenTemplate-showValuesTTButton" type="button" class="btn-xs btn-success" onclick="ITSInstance.newITSScreenTemplateEditorController.showTestTakingPreviewJSon();"><i class="fa fa-eye"></i> Show values</button>
@@ -234,12 +240,21 @@
 
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-3">
             <div class="form-group">
                 <label id="AdminInterfaceScreenTemplate-PreviewHeaderPnP">PnP preview</label>
                 <button id="AdminInterfaceScreenTemplate-showValuesPnPButton" type="button" class="btn-xs btn-success" onclick="ITSInstance.newITSScreenTemplateEditorController.showTestTakingPnPPreviewJSon();"><i class="fa fa-eye"></i> Show values</button>
             </div>
             <div id="AdminInterfaceScreenTemplate-PnPPreview">
+
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-PreviewHeaderSummary">Summary preview</label>
+                <button id="AdminInterfaceScreenTemplate-showValuesSummaryButton" type="button" class="btn-xs btn-success" onclick="ITSInstance.newITSScreenTemplateEditorController.showTestTakingSummaryPreviewJSon();"><i class="fa fa-eye"></i> Show values</button>
+            </div>
+            <div id="AdminInterfaceScreenTemplate-SummaryPreview">
 
             </div>
         </div>

@@ -158,6 +158,7 @@ ITSScreenTemplateEditor.prototype.selectTemplateShowDetails = function () {
 
     $('#AdminInterfaceScreenTemplate-htmltemplate').val(this.currentTemplate.HTMLContent);
     $('#AdminInterfaceScreenTemplate-pnptemplate').val(this.currentTemplate.HTMLContentPnP);
+    $('#AdminInterfaceScreenTemplate-summarytemplate').val(this.currentTemplate.HTMLContentSummary);
     $('#AdminInterfaceScreenTemplate-getvalue').val(this.currentTemplate.get_value_snippet);
     $('#AdminInterfaceScreenTemplate-setvalue').val(this.currentTemplate.set_value_snippet);
     $('#AdminInterfaceScreenTemplate-initscript').val(this.currentTemplate.init_value_snippet);

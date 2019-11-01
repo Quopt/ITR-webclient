@@ -397,6 +397,7 @@ ITSGraph_editTemplate = {
         } ],
     "HTMLContent": "<div id=\"%%ID%%\" style=\"height:%%Height%%; width:%%Width%%;\"></div>\n<!--REPEATBLOCK-->\n<!-- %%Series_name%% -->\n<!--%%Series_data%%-->\n<!-- %%Series_color_start%% -->\n<!-- %%Series_color_end%% -->\n<!-- %%Series_type%% -->\n<!-- %%Series_fill%% -->\n<!-- %%StackGroup%% -->\n<!-- %%Series_line_show%% -->\n<!-- %%Series_line_curve%% -->\n<!-- %%Series_point_type%% -->\n<!-- %%Series_point_size%% -->\n<!-- %%Series_line_tension%% -->\n<!--REPEATBLOCK-->\n",
     "HTMLContentPnP": "",
+    "HTMLContentSummary" : "",
     "get_value_snippet": "",
     "set_value_snippet": "",
     "init_value_snippet": "generateGraph(\""+this.ID+"\",id, num_blocks, test_mode, template_values, ITSInstance.reports.currentReport, false)",

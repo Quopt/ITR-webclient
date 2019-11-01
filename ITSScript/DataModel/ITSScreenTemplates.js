@@ -111,6 +111,7 @@ function ITSScreenTemplate(parent, session) {
     // HTML template
     this.HTMLContent = "";
     this.HTMLContentPnP = "";
+    this.HTMLContentSummary = "";
 
     // generator and get/set value snippets
     this.get_value_snippet = "";
@@ -132,7 +133,7 @@ function ITSScreenTemplate(parent, session) {
     this.detailsLoaded = false;
 
     this.persistentProperties = ['ID', 'Description', 'Explanation', 'Remarks', 'TemplateVariables',
-        'HTMLContent', 'HTMLContentPnP', 'get_value_snippet', 'set_value_snippet', 'TemplateType',
+        'HTMLContent', 'HTMLContentPnP', 'HTMLContentSummary', 'get_value_snippet', 'set_value_snippet', 'TemplateType',
         'init_value_snippet', 'generator_snippet', 'generator_pnp_snippet', 'generator_summary_snippet',
         'validation_snippet', 'isanswered_snippet', 'PluginData'];
 }

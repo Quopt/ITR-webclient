@@ -61,7 +61,7 @@
                     this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
                     this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadError.bind(this));
                 } else {
-                    setTimeout(this.sessionLoaded.bind(this), 200);
+                    setTimeout(this.sessionLoaded.bind(this), 250);
                 }
 
 
