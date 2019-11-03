@@ -1424,6 +1424,7 @@ ITSTest.prototype.prepareResultsStorage = function (storageObject) {
             }
             TestResults[this.screens[i].screenComponents[compCounter].varComponentName] = ComponentResults;
 
+            ComponentResults.Visible = this.screens[i].show; 
             ComponentResults.Anonimise = this.screens[i].screenComponents[compCounter].excludeFromAnonimisedTestResults;
         }
     }
