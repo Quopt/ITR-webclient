@@ -442,7 +442,7 @@ ITSTestTakingController.prototype.renderTestPage = function () {
             this.screenNeedsFinalisation = true;
             try {
                 eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode, screen) { " + currentScreen.beforeScreenScript + " }; ");
-                func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, this.currentSessionTest.CurrentPage, "TT", this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage] );
+                func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, "TT", this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage] );
             } catch (err) { console.log("Screen pre script failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
             // check if we still need to show this screen after running the pre-screen script
             if (this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].show) {
@@ -653,7 +653,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
                     this.screenNeedsFinalisation = false;
                     try {
                         eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode, screen) { " + this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].afterScreenScript + " }; ");
-                        func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, this.currentSessionTest.CurrentPage, "TT", this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage] );
+                        func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, "TT", this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage] );
                     } catch (err) { console.log("Screen post script failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
                 }
             }
