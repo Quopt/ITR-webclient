@@ -12,6 +12,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+// shims
+Math.trunc = Math.trunc || function(x) {
+    if (isNaN(x)) {
+        return NaN;
+    }
+    if (x > 0) {
+        return Math.floor(x);
+    }
+    return Math.ceil(x);
+};
+
 // global functions
 function getUrlParameterValue(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -1019,3 +1030,4 @@ if (!String.prototype.endsWith) {
         return this.substring(this_len - search.length, this_len) === search;
     };
 }
+
