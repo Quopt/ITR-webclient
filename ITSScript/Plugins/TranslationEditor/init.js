@@ -110,7 +110,7 @@
         ITSInstance.translator.translatedStrings[id].value = textbox;
         // fire it off to the server
         ITSInstance.genericAjaxUpdate('translations/' + ITSInstance.translator.currentTranslatedLanguage,
-            '{"'+id+'":{"id":"'+id+'", "value": "'+textbox+'"}}'
+            '{"'+id+'":{"id":"'+id+'", "value": '+JSON.stringify(textbox)+'}}'
             , function () {}, function () {}, "N","N", undefined, "Y")
         ITSInstance.translator.retranslateInterface();
     };
