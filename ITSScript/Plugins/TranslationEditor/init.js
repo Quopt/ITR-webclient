@@ -114,7 +114,7 @@
             , function () {}, function () {}, "N","N", undefined, "Y")
         ITSInstance.translator.retranslateInterface();
     };
-
+A
     // register the portlet
     ITSInstance.TranslationEditorController = new ITSTranslationEditorEditor();
     ITSInstance.UIController.registerEditor(ITSInstance.TranslationEditorController);
