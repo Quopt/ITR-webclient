@@ -572,7 +572,26 @@ ITSGroupSessionEditor.prototype.emailPasteProcess = function () {
 };
 
 ITSGroupSessionEditor.prototype.sendInvitations = function () {
-    ITSRedirectPath('SessionMailer&GroupSessionID=' + this.currentSession.ID);
+    ITSInstance.SessionMailerSessionController.currentSession = this.currentSession;
+    ITSInstance.SessionMailerSessionController.currentPerson = undefined;
+    ITSInstance.SessionMailerSessionController.currentConsultant = undefined;
+        ITSInstance.UIController.showDialog("ITSGroupSessionEditor.SaveBeforeMail", "Send group mails", "Would you like to save your group session before sending mails?",
+        [
+        {
+            btnCaption: "No",
+            btnType: "btn-warning",
+            btnOnClick: "ITSRedirectPath('SessionMailer&GroupSessionID=' + ITSInstance.groupSessionController.currentSession.ID);"
+        },
+        {
+            btnCaption: "Yes",
+            btnType: "btn-success",
+            btnOnClick: "ITSInstance.groupSessionController.saveCurrentSession(); "
+        },
+        {
+            btnCaption: "Cancel",
+            btnType: "btn-warning"
+        }
+        ]);
 };
 
 ITSGroupSessionEditor.prototype.showUserAndPasswordOverview = function () {

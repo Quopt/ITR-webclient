@@ -83,6 +83,7 @@
         ITSInstance.candidates.currentCandidate.regeneratePassword();
         ITSInstance.candidates.currentCandidate.saveToServer(function () {}, function () {});
         ITSInstance.SessionMailerSessionController.currentPerson = ITSInstance.candidates.currentCandidate;
+        ITSInstance.SessionMailerSessionController.currentSession = undefined;
         ITSRedirectPath("SessionMailer&Template=defaultPassword&PersonID=" + this.personID);
     };
 

@@ -152,6 +152,8 @@
     ITSConsultantEditor.prototype.resetPassword = function () {
         this.currentConsultant.regeneratePassword();
         this.currentConsultant.saveToServer(function () {
+            ITSInstance.SessionMailerSessionController.currentSession = undefined;
+            ITSInstance.SessionMailerSessionController.currentPerson = undefined;
             ITSInstance.SessionMailerSessionController.currentConsultant = this.currentConsultant;
             ITSRedirectPath("SessionMailer&Template=defaultPasswordConsultant&ConsultantID=" + this.currentConsultant.ID);
         }.bind(this), function (xhr) {

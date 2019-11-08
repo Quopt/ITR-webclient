@@ -46,6 +46,7 @@
         if ((getUrlParameterValue('SessionID')) || (getUrlParameterValue('GroupSessionID')) || (getUrlParameterValue('PersonID')) || (getUrlParameterValue('ConsultantID')) ) {
             this.SessionID="";
             this.GroupSessionID="";
+            this.Template = "";
             if (getUrlParameterValue('SessionID')) { this.SessionID = getUrlParameterValue('SessionID');}
             if (getUrlParameterValue('GroupSessionID')) { this.GroupSessionID = getUrlParameterValue('GroupSessionID');}
             if (getUrlParameterValue('PersonID')) {this.PersonID = getUrlParameterValue('PersonID');}
@@ -136,12 +137,12 @@
 
     ITSSessionMailerEditor.prototype.mailTemplatesLoaded = function () {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
-        this.loadMailTemplates();
+        this.loadMailTemplates(this.selectedTemplateIndex);
     };
 
     ITSSessionMailerEditor.prototype.mailTemplatesLoadedError = function () {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
-        this.loadMailTemplates();
+        this.loadMailTemplates(this.selectedTemplateIndex);
     };
 
     ITSSessionMailerEditor.prototype.loadMailTemplates = function (defaultIndex) {
@@ -224,7 +225,7 @@
                 }
                 $('#SessionMailerInterface-TemplateSelect').append(tempSelect);
             }
-            this.selectTemplateInEditor(-1);
+            this.selectTemplateInEditor(defaultIndex);
         }
         this.templatesLoaded = true;
 
@@ -349,7 +350,8 @@
     };
 
     ITSSessionMailerEditor.prototype.selectTemplateInEditor = function (selectedIndex) {
-        if (!this.selectedTemplateIndex) this.selectedTemplateIndex = Math.max(0,selectedIndex);
+        //if (!this.selectedTemplateIndex)
+        this.selectedTemplateIndex = Math.max(0,selectedIndex);
         if (selectedIndex < 0) selectedIndex = this.selectedTemplateIndex;
 
         // generate mail using the template selected
@@ -366,7 +368,7 @@
         this.consultant = ITSInstance.users.currentUser;
 
         // set WWW var
-        if (this.templateList[selectedIndex].ID == "defaultPasswordConsultant") {
+        if (this.Template == "defaultPasswordConsultant") {
             this.WWW = configBaseURL + "?Lang="+ ITSLanguage + "&UserID=" + encodeURIComponent(this.newconsultant.Email);
         } else if ((this.templateList[selectedIndex].ID == "defaultSession") || ( this.templateList[selectedIndex].ID == "defaultPassword")) {
             this.WWW = configBaseURL + "?TestTakingOnly=Y&Lang="+ ITSLanguage + "&UserID=" + encodeURIComponent(this.candidate.EMail);
@@ -375,7 +377,7 @@
         }
 
         // set password var
-        if (this.templateList[selectedIndex].ID == "defaultPasswordConsultant") {
+        if (this.Template == "defaultPasswordConsultant") {
             this.password = this.newconsultant.Password;
             if (this.password.trim() == "") this.password = ITSInstance.translator.getTranslatedString('SessionMailer', 'PasswordUsePrevious', "* please use the previously e-mailed password *");
         } else if (this.candidate) {
@@ -450,9 +452,9 @@
                 this.currentSession.PluginData.GroupMembers[i].tempCandidate.EMail = this.currentSession.PluginData.GroupMembers[i].EMail;
                 this.sendGroupMailNow( this.currentSession.PluginData.GroupMembers[i].tempCandidate);
             }
-            ITSInstance.UIController.showInterfaceAsWaitingOff();
-            ITSInstance.UIController.showInfo("ITSSessionMailerEditor.MailsSent","The e-mails have been sent. ", '',
-                'window.history.back();');
+            //ITSInstance.UIController.showInterfaceAsWaitingOff();
+            //ITSInstance.UIController.showInfo("ITSSessionMailerEditor.MailsSent","The e-mails have been sent. ", '',
+            //    'window.history.back();');
         }
     };
     ITSSessionMailerEditor.prototype.getPasswordsForCandidatesOverviewStageLoadError = function () {

@@ -609,6 +609,7 @@
 
     ITSSessionEditor.prototype.resendInvitationContinue = function (passwordReset) {
         ITSInstance.SessionMailerSessionController.currentSession = this.currentSession;
+        ITSInstance.SessionMailerSessionController.currentPerson = undefined;
         if (!ITSInstance.users.currentUser.IsPasswordManager) {
             this.currentSession.Person.Password = "";
         }

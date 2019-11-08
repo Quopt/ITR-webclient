@@ -446,6 +446,8 @@ ITSInviteNewCandidateEditor.prototype.startNowSessionCallback = function () {
 
 ITSInviteNewCandidateEditor.prototype.mailSessionInvitation = function () {
     ITSInstance.SessionMailerSessionController.currentSession = this.newSession;
+    ITSInstance.SessionMailerSessionController.currentPerson = undefined;
+
     this.saveNewSession(function () {  ITSRedirectPath('SessionMailer', 'SessionID=' + this.newSession.ID + '&Template=defaultSession'); }.bind(this) );
 };
 
