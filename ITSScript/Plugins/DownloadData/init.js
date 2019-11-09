@@ -178,7 +178,7 @@
                     if (!myHeaders[fieldLead + fieldDot + property1]) {
                         myHeaders[fieldLead + fieldDot + property1] = "";
                     }
-                    myRec[fieldLead + fieldDot + property1] = myObject[property1];
+                    myRec[fieldLead + fieldDot + property1] = String(myObject[property1]).replace(/(\r\n|\n|\r)/gm, "");
                 }
             }
         }
