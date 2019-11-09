@@ -97,7 +97,7 @@
             if ((this.loadAll) && (!this.cancelDownloads)) {
                 this.pageNumber++;
 
-                this.buildFilter();
+                //this.buildFilter();
 
                 ITSInstance.JSONAjaxLoader('datagathering', this.datagathering, this.loadDataSucces.bind(this), this.loadDataError.bind(this),
                     undefined, this.pageNumber, 5, '','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y", this.filter );
@@ -209,6 +209,7 @@
         this.flatteneddataset = [];
         this.headers = {};
         this.datagathering = [];
+        this.buildFilter();
         if (this.checkFields()) {
             this.loadAll = true;
             this.pageNumber = 0;
@@ -216,7 +217,7 @@
             $('#DownloadData-dialog').modal("show");
             this.updateCounter(0);
             ITSInstance.JSONAjaxLoader('datagathering', this.datagathering, this.loadDataSucces.bind(this), this.loadDataError.bind(this),
-                undefined, 0, 5, '','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y" );
+                undefined, 0, 5, '','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y", this.filter  );
         } else {
             ITSInstance.UIController.showError('ITSDownloadEditor.FieldsMissing', 'Please fill all fields to start the download');
         }
