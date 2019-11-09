@@ -580,7 +580,7 @@ ITSGroupSessionEditor.prototype.sendInvitations = function () {
         {
             btnCaption: "No",
             btnType: "btn-warning",
-            btnOnClick: "ITSRedirectPath('SessionMailer&GroupSessionID=' + ITSInstance.groupSessionController.currentSession.ID);"
+            btnOnClick: "ITSRedirectPath('SessionMailer&GroupSessionID=' + ITSInstance.groupSessionController.currentSession.ID + '&Template=defaultSession');"
         },
         {
             btnCaption: "Yes",

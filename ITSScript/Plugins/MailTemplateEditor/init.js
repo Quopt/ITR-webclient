@@ -102,32 +102,6 @@
         
         if (this.templates.length == 0) {
             // load the default template
-            /*
-            var defaultTemplate = {};
-            defaultTemplate.ID = "defaultSession";
-            defaultTemplate.body = "<p>A test session is ready for you. </p><p>Please browse to %%WWW%%. You can login with the following information : <br/> User name : %%candidate.EMail%%<br/>  Password : %%candidate.Password%%</p><p></p><p>Kind regards, </p><p>%%consultant.UserName%%<br/>In case you have questions you can contact me at %%consultant.Email%%";
-            defaultTemplate.description = "Default template";
-            defaultTemplate.subject = "A test session is ready for you";
-            defaultTemplate.language = "en";
-            defaultTemplate._objectType = "ITSObject";
-            this.templates.push(defaultTemplate);
-            var defaultTemplate = {};
-            defaultTemplate.ID = "defaultPassword";
-            defaultTemplate.body = "<p>Your password has been reset. </p><p>Please browse to %%WWW%%. You can login with the new password. Please use the following information to login. <br/> User name : %%candidate.EMail%%<br/>  Password : %%candidate.Password%%</p><p></p><p>Kind regards, </p><p>%%consultant.UserName%%<br/>In case you have questions you can contact me at %%consultant.Email%%";
-            defaultTemplate.description = "Password reset template for candidates";
-            defaultTemplate.subject = "Your password has been reset";
-            defaultTemplate.language = "en";
-            defaultTemplate._objectType = "ITSObject";
-            this.templates.push(defaultTemplate);
-            var defaultTemplate = {};
-            defaultTemplate.ID = "defaultPasswordConsultant";
-            defaultTemplate.body = "<p>Your password has been reset. </p><p>Please browse to %%WWW%%. You can login with the new password. Please use the following information to login. <br/> User name : %%newconsultant.Email%%<br/>  Password : %%newconsultant.Password%%</p><p></p><p>Kind regards, </p><p>%%newconsultant.UserName%%<br/>In case you have questions you can contact me at %%consultant.Email%%";
-            defaultTemplate.description = "Password reset template for consultants";
-            defaultTemplate.subject = "Your password has been reset";
-            defaultTemplate.language = "en";
-            defaultTemplate._objectType = "ITSObject";
-            this.templates.push(defaultTemplate);
-             */
             var defaultTemplate = {};
             defaultTemplate.ID = "other";
             defaultTemplate.body = "...";
@@ -151,17 +125,11 @@
         $('#MailTemplateEditorTestDescriptionDiv').show();
         $('#MailTemplateEditorTemplateDescriptionHeaderMSDiv').hide();
 
-        if (this.templates[index].ID == "other") {
+        if ( (this.templates[index].ID == "other") || (this.templates[index].ID == "otherPassword") || (this.templates[index].ID == "otherPasswordConsultant")) {
             $('#MailTemplateEditorTestDescriptionDiv').show();
             $('#MailTemplateEditorTemplateDescriptionHeaderMSDiv').show();
         }
 
-        /*$('#MailTemplateEditorTemplateType').val(this.templates[index].ID );
-        $('#MailTemplateEditor-LanguageSelect').val(this.templates[index].language )
-        $('#MailTemplateEditorDescription').text(this.templates[index].description);
-        $('#MailTemplateEditorDescriptionMS').text(this.templates[index].description);
-        $('#MailTemplateEditorSubject').text(this.templates[index].subject);
-        $('#MailTemplateEditorMailBody').text(this.templates[index].body);*/
         DataBinderTo('MailTemplateEditorInterfaceEditDiv', ITSInstance.MailTemplateEditorController);
 
         var resStr = "%%WWW%%\n%%password%%\n";
@@ -169,7 +137,7 @@
         var session = new ITSCandidateSession(this,  ITSInstance).persistentProperties;
         var consultant = new ITSUser(this, ITSInstance).persistentProperties;
 
-        if (this.templates[index].ID == "defaultPasswordConsultant") {
+        if ((this.templates[index].ID == "defaultPasswordConsultant") || (this.templates[index].ID == "otherPasswordConsultant")) {
             for (var i=0; i < consultant.length; i++) { resStr +=  "%%consultant." + consultant[i] + "%%\n";  }
             for (var i=0; i < consultant.length; i++) { resStr +=  "%%newconsultant." + consultant[i] + "%%\n";  }
             $('#MailTemplateEditor_WriterFields').text(resStr);
@@ -183,9 +151,10 @@
         // if template type == other then load the list of other templates in the current language
         $('#MailTemplateEditorDescriptionMS').empty();
         var currentLanguage = $('#MailTemplateEditor-LanguageSelect').val();
+        var currentType = $('#MailTemplateEditorTemplateType').val();
         var tempSelect = "";
         for (var i=0; i < this.templates.length; i++) {
-            if ((this.templates[i].ID == "other") && (this.templates[i].language == currentLanguage)) {
+            if ((this.templates[i].ID == currentType) && (this.templates[i].language == currentLanguage)) {
                 tempSelect = '<option NoTranslate value=\"' + i + '\">' +
                     this.templates[i].description + '</option>';
                 $('#MailTemplateEditorDescriptionMS').append(tempSelect);
@@ -214,17 +183,17 @@
             defaultTemplate._objectType = "ITSObject";
 
             switch (defaultTemplate.ID) {
-                case 'defaultSession':
+                case 'defaultSession' || 'other':
                     defaultTemplate.body = "<p>A test session is ready for you. </p><p>Please browse to %%WWW%%. You can login with the following information : <br/> User name : %%candidate.EMail%%<br/>  Password : %%candidate.Password%%</p><p></p><p>Kind regards, </p><p>%%consultant.UserName%%<br/>In case you have questions you can contact me at %%consultant.Email%%";
                     defaultTemplate.description = "Default template";
                     defaultTemplate.subject = "A test session is ready for you";
                     break;
-                case 'defaultPassword':
+                case 'defaultPassword' || 'otherPassword':
                     defaultTemplate.body = "<p>Your password has been reset. </p><p>Please browse to %%WWW%%. You can login with the new password. Please use the following information to login. <br/> User name : %%candidate.EMail%%<br/>  Password : %%candidate.Password%%</p><p></p><p>Kind regards, </p><p>%%consultant.UserName%%<br/>In case you have questions you can contact me at %%consultant.Email%%";
                     defaultTemplate.description = "Password reset template for candidates";
                     defaultTemplate.subject = "Your password has been reset";
                     break;
-                case 'defaultPasswordConsultant':
+                case 'defaultPasswordConsultant' || 'otherPasswordConsultant':
                     defaultTemplate.body = "<p>Your password has been reset. </p><p>Please browse to %%WWW%%. You can login with the new password. Please use the following information to login. <br/> User name : %%newconsultant.Email%%<br/>  Password : %%newconsultant.Password%%</p><p></p><p>Kind regards, </p><p>%%newconsultant.UserName%%<br/>In case you have questions you can contact me at %%consultant.Email%%";
                     defaultTemplate.description = "Password reset template for consultants";
                     defaultTemplate.subject = "Your password has been reset";

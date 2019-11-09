@@ -19,6 +19,7 @@
     EditorDiv = $('<div class="container-fluid" id="SessionMailerInterfaceSessionEdit" style="display: none;">');
     $('#ITSMainDiv').append(EditorDiv);
     $('#SessionMailerInterfaceTemplateSelection').hide();
+    $('#SessionMailerInterfaceShowGroupWarning').hide();
 
     $(EditorDiv).load(ITSJavaScriptVersion + '/Plugins/SessionMailer/editor.html', function () {
         // things to do after loading the html
@@ -47,11 +48,13 @@
             this.SessionID="";
             this.GroupSessionID="";
             this.Template = "";
+            $('#SessionMailerInterfaceShowGroupWarning').hide();
             if (getUrlParameterValue('SessionID')) { this.SessionID = getUrlParameterValue('SessionID');}
             if (getUrlParameterValue('GroupSessionID')) { this.GroupSessionID = getUrlParameterValue('GroupSessionID');}
             if (getUrlParameterValue('PersonID')) {this.PersonID = getUrlParameterValue('PersonID');}
             if (getUrlParameterValue('Template')) {this.Template = (getUrlParameterValue('Template'));}
             if (getUrlParameterValue('ConsultantID')) {this.ConsultantID = (getUrlParameterValue('ConsultantID'));}
+            if (this.GroupSessionID != "") $('#SessionMailerInterfaceShowGroupWarning').show();
 
             $('#NavbarsAdmin').show();
             $('#NavbarsAdmin').visibility = 'visible';
@@ -208,6 +211,22 @@
             ITSInstance.genericAjaxUpdate('systemsettings/MailTemplates', ITSJSONStringify(tempList));
         }
         if (templateList.length > 0) {
+            // first clean the list of invalid types for this template type defaultPassword defaultSession defaultPasswordConsultant
+            var newTemplateList = [];
+            var includeTranslated = $('#SessionMailerInterfaceTemplateIncludeOtherLanguages').is(':checked');
+            for (var i = templateList.length-1; i >= 0; i--) {
+                if (( ((templateList[i].ID == 'defaultPasswordConsultant') || (templateList[i].ID == 'otherPasswordConsultant')) && ( this.Template == "defaultPasswordConsultant"))){
+                    if ( (templateList[i].language == ITSLanguage) || includeTranslated ) newTemplateList.push(templateList[i]);
+                }
+                if (( ((templateList[i].ID == 'defaultPassword') || (templateList[i].ID == 'otherPassword')) && ( this.Template == "defaultPassword"))){
+                    if ( (templateList[i].language == ITSLanguage) || includeTranslated ) newTemplateList.push(templateList[i]);
+                }
+                if (( ((templateList[i].ID == 'defaultSession') || (templateList[i].ID == 'other')) && ( this.Template == "defaultSession"))){
+                    if ( (templateList[i].language == ITSLanguage) || includeTranslated ) newTemplateList.push(templateList[i]);
+                }
+            }
+            templateList = newTemplateList;
+            this.templateList = templateList;
             $('#SessionMailerInterfaceTemplateSelection').show();
             // sort the template list, interface language templates should be on top
             //templateList.sort(this.templateSortFunction);
@@ -218,10 +237,10 @@
             for (var i = 0; i < templateList.length; i++) {
                 if (i == defaultIndex) {
                     tempSelect = '<option NoTranslate ' + defaultOption + ' value=\"' + i + '\">' +
-                        templateList[i].description + '</option>';
+                        templateList[i].description  + " (" + templateList[i].language + ")" + '</option>';
                 } else {
                     tempSelect = '<option NoTranslate value=\"' + i + '\">' +
-                        templateList[i].description + '</option>';
+                        templateList[i].description + " (" + templateList[i].language + ")" + '</option>';
                 }
                 $('#SessionMailerInterface-TemplateSelect').append(tempSelect);
             }
@@ -268,11 +287,13 @@
             }
 
             // disable the editor (it will only be an example) for the group session editor
-            tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").getBody().setAttribute('contenteditable', true);
+            //tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").getBody().setAttribute('contenteditable', true);
             $('#SessionMailerInterfaceSessionEditMailToDiv').show();
-            if (this.GroupSessionID) {
-                tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").getBody().setAttribute('contenteditable', false);
+            //$('#SessionMailerInterfaceSessionEditMailSubject').removeAttr('readonly');
+            if (this.GroupSessionID != "") {
+                //tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").getBody().setAttribute('contenteditable', false);
                 $('#SessionMailerInterfaceSessionEditMailToDiv').hide();
+                //$('#SessionMailerInterfaceSessionEditMailSubject').attr('readonly','readonly');
             }
         }
     };
@@ -371,15 +392,17 @@
         if (this.Template == "defaultPasswordConsultant") {
             this.WWW = configBaseURL + "?Lang="+ ITSLanguage + "&UserID=" + encodeURIComponent(this.newconsultant.Email);
         } else if ((this.templateList[selectedIndex].ID == "defaultSession") || ( this.templateList[selectedIndex].ID == "defaultPassword")) {
-            this.WWW = configBaseURL + "?TestTakingOnly=Y&Lang="+ ITSLanguage + "&UserID=" + encodeURIComponent(this.candidate.EMail);
+            this.WWW = configBaseURL + "?TestTakingOnly=Y&Lang="+ this.templateList[selectedIndex].language + "&UserID=" + encodeURIComponent(this.candidate.EMail);
         } else {
             this.WWW = configBaseURL;
         }
 
         // set password var
-        if (this.Template == "defaultPasswordConsultant") {
+        if ((this.Template == "defaultPasswordConsultant") || (this.Template == "otherPasswordConsultant")) {
             this.password = this.newconsultant.Password;
             if (this.password.trim() == "") this.password = ITSInstance.translator.getTranslatedString('SessionMailer', 'PasswordUsePrevious', "* please use the previously e-mailed password *");
+        } else if (this.GroupSessionID != "") {
+            // do nothing for group sessions
         } else if (this.candidate) {
             this.password = this.candidate.Password;
             if (this.password.trim() == "") this.password = ITSInstance.translator.getTranslatedString('SessionMailer', 'PasswordUsePrevious', "* please use the previously e-mailed password *");
@@ -387,14 +410,19 @@
             this.password = ITSInstance.translator.getTranslatedString('SessionMailer', 'PasswordUnknown', "* password cannot be used in this context *");
         }
 
-        $('#SessionMailerInterfaceSessionEditMailSubject').val(envSubstitute(this.templateList[selectedIndex].subject, this, false));
-        tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").setContent(envSubstitute(this.templateList[selectedIndex].body, this, false));
+        if (this.GroupSessionID == "") { // no live view for group sessions
+            $('#SessionMailerInterfaceSessionEditMailSubject').val(envSubstitute(this.templateList[selectedIndex].subject, this, false));
+            tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").setContent(envSubstitute(this.templateList[selectedIndex].body, this, false));
+        } else {
+            $('#SessionMailerInterfaceSessionEditMailSubject').val(this.templateList[selectedIndex].subject);
+            tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").setContent(this.templateList[selectedIndex].body);
+        }
 
         if (selectedIndex >= 0) this.selectedTemplateIndex = selectedIndex;
     };
 
     ITSSessionMailerEditor.prototype.sendMail = function () {
-        if (this.GroupSessionID) {
+        if (this.GroupSessionID != "") {
             this.sendMailForGroups();
         } else {
             ITSInstance.UIController.showInterfaceAsWaitingOn();
@@ -426,6 +454,9 @@
         // get the password for the candidate
         // send a mail to each candidate
         ITSInstance.UIController.showInterfaceAsWaitingOn();
+        // copy the text into the array for sending
+        this.templateList[this.selectedTemplateIndex].subject = $('#SessionMailerInterfaceSessionEditMailSubject').val();
+        this.templateList[this.selectedTemplateIndex].body = tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").getContent().toString();
         this.currentSession.loadRelatedGroupMembers(this.getPasswordsForCandidatesOverviewStageLoad.bind(this), this.groupMemberLoadingFailed.bind(this));
     };
     ITSSessionMailerEditor.prototype.groupMemberLoadingFailed = function () {
@@ -449,7 +480,7 @@
             // now send the e-mails
             this.mailsToSend = this.currentSession.PluginData.GroupMembers.length;
             for (var i=0; i < this.currentSession.PluginData.GroupMembers.length; i++) {
-                this.currentSession.PluginData.GroupMembers[i].tempCandidate.EMail = this.currentSession.PluginData.GroupMembers[i].EMail;
+                shallowCopy(this.currentSession.PluginData.GroupMembers[i], this.currentSession.PluginData.GroupMembers[i].tempCandidate );
                 this.sendGroupMailNow( this.currentSession.PluginData.GroupMembers[i].tempCandidate);
             }
             //ITSInstance.UIController.showInterfaceAsWaitingOff();
@@ -476,8 +507,13 @@
         }
 
         this.candidate = candidate;
+        // add password and URL for group mails
+        this.WWW = configBaseURL + "?TestTakingOnly=Y&Lang="+ this.templateList[this.selectedTemplateIndex].language + "&UserID=" + encodeURIComponent(candidate.EMail);
+        this.password = candidate.Password;
+        this.candidate = candidate;
         newMail.Subject = envSubstitute(this.templateList[this.selectedTemplateIndex].subject, this, false);
         newMail.Body = envSubstitute(this.templateList[this.selectedTemplateIndex].body, this, false);
+        this.candidate = undefined;
 
         newMail.sendMail(this.mailOK.bind(this), this.mailFailed.bind(this));
     };

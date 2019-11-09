@@ -617,7 +617,7 @@
             this.currentSession.Person.regeneratePassword();
             this.currentSession.Person.saveToServer(function () {}, function () {});
         }
-        ITSRedirectPath('SessionMailer&SessionID=' + this.currentSession.ID);
+        ITSRedirectPath('SessionMailer&SessionID=' + this.currentSession.ID + '&Template=defaultSession');
     };
 
     ITSSessionEditor.prototype.startNowSession = function () {
