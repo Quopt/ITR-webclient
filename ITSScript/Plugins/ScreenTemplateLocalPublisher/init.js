@@ -111,7 +111,7 @@
         ITSInstance.UIController.showInterfaceAsWaitingOn();
 
         //ITSInstance.screenTemplates.loadAvailableScreenTemplates(this.listLoaded.bind(this), this.listLoadingFailed.bind(this), this.searchField);
-        ITSInstance.JSONAjaxLoader('screentemplates' , this.templatesList, this.listLoaded.bind(this), this.listLoadingFailed.bind(this), 'ITSScreenTemplate', this.currentPage, 0,
+        ITSInstance.JSONAjaxLoader('screentemplates' , this.templatesList, this.listLoaded.bind(this), this.listLoadingFailed.bind(this), 'ITSScreenTemplate', this.currentPage, 99999,
             this.sortField, this.archived, "Y", "Y", this.filter, this.searchField);
     };
 

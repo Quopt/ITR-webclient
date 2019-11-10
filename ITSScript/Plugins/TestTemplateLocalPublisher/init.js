@@ -111,7 +111,7 @@
         ITSInstance.UIController.showInterfaceAsWaitingOn();
 
         //ITSInstance.TestTemplates.loadAvailableTestTemplates(this.listLoaded.bind(this), this.listLoadingFailed.bind(this), this.searchField);
-        ITSInstance.JSONAjaxLoader('tests' , this.testsList, this.listLoaded.bind(this), this.listLoadingFailed.bind(this), 'ITSTest', this.currentPage, 0,
+        ITSInstance.JSONAjaxLoader('tests' , this.testsList, this.listLoaded.bind(this), this.listLoadingFailed.bind(this), 'ITSTest', this.currentPage, 99999,
             this.sortField, this.archived, "Y", "Y", this.filter, this.searchField);
     };
 

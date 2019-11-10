@@ -111,7 +111,7 @@
         ITSInstance.UIController.showInterfaceAsWaitingOn();
 
         //ITSInstance.ReportTemplates.loadAvailableReportTemplates(this.listLoaded.bind(this), this.listLoadingFailed.bind(this), this.searchField);
-        ITSInstance.JSONAjaxLoader('reportdefinitions' , this.reportsList, this.listLoaded.bind(this), this.listLoadingFailed.bind(this), 'ITSReport', this.currentPage, 0,
+        ITSInstance.JSONAjaxLoader('reportdefinitions' , this.reportsList, this.listLoaded.bind(this), this.listLoadingFailed.bind(this), 'ITSReport', this.currentPage, 99999,
             this.sortField, this.archived, "Y", "Y", this.filter, this.searchField);
     };
 
