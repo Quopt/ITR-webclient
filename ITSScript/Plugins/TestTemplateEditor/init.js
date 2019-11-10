@@ -1635,7 +1635,9 @@ ITSTestTemplateEditor.prototype.translateScreenComponentVariable = function (com
             };
             this.translate_calls++;
             console.log(ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language);// + " " + toTranslate);
-            this.translateCall(this.translate_screen_index, this.translate_component_index,this.translate_component_variable_index,this.translate_template, postfix, tempHeaders, toTranslate);
+            if ((toTranslate != undefined) && (toTranslate != "")) {
+                this.translateCall(this.translate_screen_index, this.translate_component_index, this.translate_component_variable_index, this.translate_template, postfix, tempHeaders, toTranslate);
+            }
         }
     }
 };
