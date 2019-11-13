@@ -1551,7 +1551,7 @@ ITSTestScreen.prototype.generateScreenInDiv = function (divId, context, divPostf
             }
             if (newDivID == "") {
                 newDivID = "ITSTestTakingComponent" + i + divPostfix;
-                $('#' + divId).append("<div style='pointer-events: none;' id='" + newDivID + "'></div>");
+                $('#' + divId).append("<div style='page-break-inside: avoid; pointer-events: none;' id='" + newDivID + "'></div>");
             }
 
             var template = this.ITSSession.screenTemplates.findTemplateById(this.ITSSession.screenTemplates.screenTemplates, this.screenComponents[i].templateID);
