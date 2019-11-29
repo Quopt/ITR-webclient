@@ -1031,3 +1031,10 @@ if (!String.prototype.endsWith) {
     };
 }
 
+// string formatting function
+function format(source, params) {
+    $.each(params,function (i, n) {
+        source = source.replace(new RegExp("\\{" + i + "\\}", "g"), n);
+    })
+    return source;
+}

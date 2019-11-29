@@ -118,6 +118,12 @@
         </li>
         <li class="nav-item"><a class="nav-link" style="color:white;" onclick="$('div[MainMenu]').collapse('hide'); ITSInstance.logoutController.logout();"
                                 id="NavBarsAdminSidebarLogout"><label id="NavBarsAdminSidebarLogoutLabel">Logout</label></a></li>
+        <li class="nav-item">
+            <a class="nav-link small" id="NavBarActiveSessionsMenu"  style="color:white;">
+                <label id="NavBarActiveSessionsMenuLabel" style="display: none">There are {0} active sessions</label>
+                <label id="NavBarActiveSessionsMenuLabelDisplayed" NoTranslate>...</label>
+            </a>
+        </li>
     </div>
 </div>
 

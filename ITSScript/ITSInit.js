@@ -359,6 +359,30 @@ function resizeFunction() {
     onResize();
 };
 
+function getActiveSessions() {
+    var companyID = "";
+    if (ITSInstance.companies.currentCompany) {
+        companyID = ITSInstance.companies.currentCompany.ID;
+    }
+    var req = $.ajax({
+        url: ITSInstance.baseURLAPI + 'activesessions',
+        context: this,
+        headers: {
+            'CompanyID': companyID,
+            'SessionID' : ITSInstance.token.IssuedToken
+        },
+        error: function () {
+            console.log('Retrieving amount of active sessions failed.');
+        },
+        success: function (data, textStatus, xhr) {
+            if (data != ""){
+                $('#NavBarActiveSessionsMenuLabelDisplayed').text(format( $('#NavBarActiveSessionsMenuLabel').text(), [ data ]) );
+            }
+        },
+        type: 'GET'
+    });
+}
+
 function getCopyrightMessage() {
     var companyID = "";
     if (ITSInstance.companies.currentCompany) {
@@ -466,12 +490,15 @@ if (!ITSInstance) {
     }
 
     getCopyrightMessage();
+    getActiveSessions();
     // refresh token every minute or so
     ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.token.keepTokenFresh.bind(ITSInstance.token ));
     // make sure all new required translations are posted and machine translated
     ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.translator.postNewTranslationsNoPars.bind(ITSInstance.translator) );
     // update the copyright message if logged in
     ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", getCopyrightMessage);
+    // update the amount of active sessions
+    ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", getActiveSessions);
 
     if (cookieHelper.getCookie('ITRLanguage') != "") {
         ITSInstance.translator.switchLanguage(cookieHelper.getCookie('ITRLanguage'));
