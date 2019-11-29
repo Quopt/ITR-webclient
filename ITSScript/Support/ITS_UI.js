@@ -395,6 +395,9 @@ ITSUIController = function () {
         // make sure the server updates periodically
         ITSInstance.genericAjaxUpdate('refreshpublics', function () {}, function () {});
 
+        // get the amount of sessions
+        getActiveSessions();
+
         // now initialise the editors and portlets. The may need more data.
         ITSInstance.UIController.registeredEditors.forEach(
             function (currentValue, index, arr) {

@@ -490,7 +490,6 @@ if (!ITSInstance) {
     }
 
     getCopyrightMessage();
-    getActiveSessions();
     // refresh token every minute or so
     ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.token.keepTokenFresh.bind(ITSInstance.token ));
     // make sure all new required translations are posted and machine translated
