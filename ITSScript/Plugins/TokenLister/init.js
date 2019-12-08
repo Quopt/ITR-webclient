@@ -32,7 +32,7 @@
             "  <tr>" +
             "   <th scope=\"col\">#</th>" +
             "   <th class='d-none d-sm-table-cell' id=\"ITSTokenListerEditor_CompanyNameHeader\" scope=\"col\">Company</th>" +
-            "   <th class='d-none d-sm-table-cell' id=\"ITSTokenListerEditor_UserNameHeader\" scope=\"col\">Name</th>" +
+            "   <th id=\"ITSTokenListerEditor_UserNameHeader\" scope=\"col\">Name</th>" +
             "   <th class='d-none d-sm-table-cell' id=\"ITSTokenListerEditor_TokenValidatedHeader\" scope=\"col\">Last validation date and time</th>" +
             "   <th class='d-none d-sm-table-cell' id=\"ITSTokenListerEditor_IsTestTakingUserHeader\" scope=\"col\">Test taking user</th>" +
             "   <th scope=\"col\"></th>" +
@@ -42,7 +42,7 @@
         this.tablePart2 = "  <tr>" +
             "   <th scope=\"row\">%%NR%%</th>" +
             "   <td class='d-none d-sm-table-cell'><span notranslate>%%COMPANYNAME%%</span></td>" +
-            "   <td class='d-none d-sm-table-cell'><span notranslate>%%USERNAME%%</span></td>" +
+            "   <td><span notranslate>%%USERNAME%%</span></td>" +
             "   <td class='d-none d-sm-table-cell'><span notranslate>%%TOKENVALIDATED%%</span></td>" +
             "   <td class='d-none d-sm-table-cell'><span notranslate>%%ISTESTTAKINGUSER%%</span></td>" +
             "  </tr>";
