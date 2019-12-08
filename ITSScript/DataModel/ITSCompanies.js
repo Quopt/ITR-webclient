@@ -127,6 +127,20 @@ ITSCompanies.prototype.loadCurrentCompany = function (whenLoaded, onError, refre
     this.currentCompanyError = onError;
     this.refreshOnly = refreshOnly;
     ITSInstance.genericAjaxLoader('companies/currentcompany', ITSInstance.companies.currentCompany, this.loadCurrentCompanyOK.bind(this), this.loadCurrentCompanyError.bind(this), undefined);
+    // also load the companies this user is allowed to see
+    ITSInstance.companies.otherCompanies = [];
+    ITSInstance.genericAjaxLoader('logins/currentuser/companies', ITSInstance.companies.otherCompanies,function () {}, function () {}, undefined, -1,99999,
+        'CompanyName',"N", "Y", "N" );
+
+};
+
+ITSCompanies.prototype.findOtherCompanyByID = function (CompanyID) {
+    for (var i=0; i < ITSInstance.companies.otherCompanies.length; i ++) {
+        if (ITSInstance.companies.otherCompanies[i].ID == CompanyID) {
+            return ITSInstance.companies.otherCompanies[i];
+        }
+    }
+    return undefined;
 };
 
 ITSCompanies.prototype.loadCurrentCompanyOK = function () {
