@@ -362,14 +362,16 @@ ITSTestTakingController.prototype.setSessionID = function (id) {
 };
 
 ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRenderedYet) {
+    var visibilityState = "";
     if (this.checkScreenDynamicsForChanges) {
         setTimeout(this.checkScreenDynamics.bind(this), 350);
 
         var currentScreen = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage];
         if (!screenNotRenderedYet) this.saveSessionNeeded = currentScreen.updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID, false, this.currentSession.PluginData);
 
+        // get the visibility status of the current screen components
+        visibilityState = currentScreen.getVisibilityStatusAsString();
         if (this.checkScreenDynamicsLastResultsChecked != JSON.stringify(this.currentSessionTest.Results)) {
-
             // change the Visible property for the screencomponents we can find
             var checkScreenDynamic = {};
             var sourceComponent = {};
@@ -391,7 +393,7 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
                         console.log("Evaluating rule failed for  "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + "," + j + ")"  + err);
                         console.log(""+ sourceComponent.Value + checkScreenDynamic.comparison + checkScreenDynamic.sourceValue + "=" + comp);
                     }
-                    console.log(""+ sourceComponent.Value + checkScreenDynamic.comparison + checkScreenDynamic.sourceValue + "=" + comp);
+                    //console.log(""+ sourceComponent.Value + checkScreenDynamic.comparison + checkScreenDynamic.sourceValue + "=" + comp);
                     if (comp) {
                         if (checkScreenDynamic.targetScript != "") {
                             try {
@@ -412,9 +414,12 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
                 } catch (err) { console.log("Setting screen dynamics failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + "," + j + ")"  + err); }
             }
 
-            $('#ITSTestTakingDiv').empty();
-            currentScreen.generateScreenInDiv('ITSTestTakingDiv', 'TT', this.generateScreenID);
-            currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results, this.generateScreenID, this.currentSession.PluginData);
+            if (visibilityState != currentScreen.getVisibilityStatusAsString()) { // some visibility state has changed for a component, rerender the screen
+                //console.log("Re-render");
+                $('#ITSTestTakingDiv').empty();
+                currentScreen.generateScreenInDiv('ITSTestTakingDiv', 'TT', this.generateScreenID);
+                currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results, this.generateScreenID, this.currentSession.PluginData);
+            }
 
             this.checkScreenDynamicsLastResultsChecked = JSON.stringify(this.currentSessionTest.Results);
         }

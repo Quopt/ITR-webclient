@@ -1197,6 +1197,15 @@ ITSTestScreen.prototype.generatePlaceholderOverviewFor = function(indexToEnd, sc
     return placeholdersfound;
 };
 
+ITSTestScreen.prototype.getVisibilityStatusAsString = function() {
+    var visibilityString = "";
+
+    for (var i=0; i < this.screenComponents.length - 1; i++){
+        visibilityString += this.screenComponents[i].show ? "Y" : "N";
+    }
+    return visibilityString;
+};
+
 ITSTestScreen.prototype.checkValidations = function (storageObject, messageSeparator, postfix) {
     if (!postfix) postfix = "";
     var validationMessage = "";
