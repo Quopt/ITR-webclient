@@ -1505,7 +1505,8 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
             if (!sessionStorageObject.sessionStorage) sessionStorageObject.sessionStorage = {};
             if (sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]) {
                 // use the varComponentName instead of the id so it can be re-used over questions and tests in the session
-                if (ComponentResults.Value == "") ComponentResults.Value = sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName];
+                ComponentResults.Value = sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName];
+                console.log(this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
             }
         }
         try {
@@ -1516,6 +1517,22 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
                 this.screenComponents[j].show = ComponentResults.Visible;
             }
         } catch (err) {}
+    }
+};
+
+ITSTestScreen.prototype.updateFromSessionStorage = function (storageObject, sessionStorageObject) {
+    var TestResults = {};
+    TestResults = storageObject["__" + this.id] ;
+
+    for (var j = 0; j < this.screenComponents.length; j++) {
+        var ComponentResults = TestResults["__" + this.screenComponents[j].id];
+
+        if (sessionStorageObject && this.screenComponents[j].storeAtSessionLevel) {
+            if (!sessionStorageObject.sessionStorage) sessionStorageObject.sessionStorage = {};
+            if (sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]) {
+                ComponentResults.Value = sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName];
+            }
+        }
     }
 };
 

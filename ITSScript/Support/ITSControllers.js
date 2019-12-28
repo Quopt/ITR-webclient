@@ -646,7 +646,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
     if (this.currentTestDefinition && this.currentSessionTest) {
         // save the results
         this.saveSessionNeeded = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID, false, this.currentSession.PluginData);
-        if ((eventName!="Store") && (eventName != "AutoStore")) {
+        if ((eventName!="Store") && (eventName != "AutoStore") && (eventName != "UpdateCurrentScreenFromSessionStorage")) {
             // check the screen validations
             var validationMessage = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].checkValidations(this.currentSessionTest.Results, "", this.generateScreenID);
             if ( (validationMessage != '') && (eventName != 'EndTestTimeOut') && (eventName != 'Logout')  && (eventName != 'PreviousScreen') ) {
@@ -685,6 +685,11 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
         case "AutoStore" :
             // results are only stored, but at max once per minute
             this.autoStore(true); // this is a global function since it can also be called from editors
+            break;
+        case "UpdateCurrentScreenFromSessionStorage":
+            var currentScreen = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage];
+            currentScreen.updateFromSessionStorage(this.currentSessionTest.Results, this.currentSession.PluginData);
+            this.saveCurrentTest();
             break;
         case "EndTest" :
      		if (this.InTestTaking) $('#NavbarsTestTaking').show();
