@@ -1492,7 +1492,7 @@ ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, 
                         sessionStorageObject.sessionStorage._objectType = "ITSObject";
                         sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName] = ComponentResults.Value;
                         saveSessionNeeded = true;
-                        console.log("S" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
+                        //console.log("S" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
                     }
                 }
                 catch (err) {
@@ -1521,7 +1521,7 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
             if (sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]) {
                 // use the varComponentName instead of the id so it can be re-used over questions and tests in the session
                 ComponentResults.Value = sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName];
-                console.log("U" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
+                //console.log("U" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
             }
         }
         try {
@@ -1546,7 +1546,7 @@ ITSTestScreen.prototype.updateFromSessionStorage = function (storageObject, sess
             if (!sessionStorageObject.sessionStorage) sessionStorageObject.sessionStorage = {};
             if (sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]) {
                 ComponentResults.Value = sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName];
-                console.log(this.screenComponents[j].varComponentName + "=" + ComponentResults.Value);
+                //console.log(this.screenComponents[j].varComponentName + "=" + ComponentResults.Value);
             }
         }
     }
