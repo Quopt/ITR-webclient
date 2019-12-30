@@ -493,8 +493,20 @@ ITSTest.prototype.addNewTestScreen = function () {
 
 ITSTest.prototype.copyTestScreen = function (source, insertPos) {
     var newScreen = new ITSTestScreen(this, ITSSession);
-    var newID = newScreen.id;
     var oldScreen = this.screens[source];
+
+    return this.copyTestScreenBase(source, insertPos, oldScreen, newScreen);
+};
+
+ITSTest.prototype.copyTestScreenFromOtherTest = function (otherTest, source, insertPos) {
+    var newScreen = new ITSTestScreen(this, ITSSession);
+    var oldScreen = otherTest.screens[source];
+
+    return this.copyTestScreenBase(source, insertPos, oldScreen, newScreen);
+};
+
+ITSTest.prototype.copyTestScreenBase = function (source, insertPos, oldScreen, newScreen) {
+    var newID = newScreen.id;
 
     // insert the new screen in the array at the requested position
     if ( (insertPos < (this.screens.length -1)) && (insertPos >= 0)) {
@@ -529,7 +541,7 @@ ITSTest.prototype.copyTestScreen = function (source, insertPos) {
     }
     this.makeTestScreenVarNamesUnique();
 
-    newScreen.id = newID ;
+    newScreen.id = newID;
 
     return newScreen;
 };
@@ -1531,6 +1543,7 @@ ITSTestScreen.prototype.updateFromSessionStorage = function (storageObject, sess
             if (!sessionStorageObject.sessionStorage) sessionStorageObject.sessionStorage = {};
             if (sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]) {
                 ComponentResults.Value = sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName];
+                console.log(this.screenComponents[j].varComponentName + "=" + ComponentResults.Value);
             }
         }
     }
