@@ -872,28 +872,30 @@ ITSTestNorm.prototype.normTest = function (session, sessionTest, candidate, resu
         var score = scores["__" + this.myParent.scales[s].id];
         var saveNormScore = false;
 
-        switch (normPostFix) {
-            case 1 :
-                score.NormScore = '-';
-                score.PercentileScore = '-';
-                score.PercentileScoreSet = false;
-                score.AppliedNorm = '-';
-                score.AppliedNormDescription = '-';
-                break;
-            case 2 :
-                score.NormScore2 = '-';
-                score.PercentileScore2 = '-';
-                score.PercentileScoreSet2 = false;
-                score.AppliedNorm2 = '-';
-                score.AppliedNormDescription2 = '-';
-                break;
-            case 3 :
-                score.NormScore3 = '-';
-                score.PercentileScore3 = '-';
-                score.PercentileScoreSet3 = false;
-                score.AppliedNorm3 = '-';
-                score.AppliedNormDescription3 = '-';
-                break;
+        if (score) {
+            switch (normPostFix) {
+                case 1 :
+                    score.NormScore = '-';
+                    score.PercentileScore = '-';
+                    score.PercentileScoreSet = false;
+                    score.AppliedNorm = '-';
+                    score.AppliedNormDescription = '-';
+                    break;
+                case 2 :
+                    score.NormScore2 = '-';
+                    score.PercentileScore2 = '-';
+                    score.PercentileScoreSet2 = false;
+                    score.AppliedNorm2 = '-';
+                    score.AppliedNormDescription2 = '-';
+                    break;
+                case 3 :
+                    score.NormScore3 = '-';
+                    score.PercentileScore3 = '-';
+                    score.PercentileScoreSet3 = false;
+                    score.AppliedNorm3 = '-';
+                    score.AppliedNormDescription3 = '-';
+                    break;
+            }
         }
 
         var ncs = this.findNormColumnsWithScaleID(this.myParent.scales[s].id);
@@ -1490,6 +1492,7 @@ ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, 
                         sessionStorageObject.sessionStorage._objectType = "ITSObject";
                         sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName] = ComponentResults.Value;
                         saveSessionNeeded = true;
+                        console.log("S" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
                     }
                 }
                 catch (err) {
@@ -1518,7 +1521,7 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
             if (sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]) {
                 // use the varComponentName instead of the id so it can be re-used over questions and tests in the session
                 ComponentResults.Value = sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName];
-                console.log(this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
+                console.log("U" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
             }
         }
         try {

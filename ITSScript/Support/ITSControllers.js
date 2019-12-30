@@ -645,7 +645,9 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
     // save the results from the current screen into the Results object if the current session test
     if (this.currentTestDefinition && this.currentSessionTest) {
         // save the results
-        this.saveSessionNeeded = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID, false, this.currentSession.PluginData);
+        if (eventName != "UpdateCurrentScreenFromSessionStorage") {
+            this.saveSessionNeeded = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID, false, this.currentSession.PluginData);
+        }
         if ((eventName!="Store") && (eventName != "AutoStore") && (eventName != "UpdateCurrentScreenFromSessionStorage")) {
             // check the screen validations
             var validationMessage = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].checkValidations(this.currentSessionTest.Results, "", this.generateScreenID);

@@ -282,7 +282,7 @@
                 template = template.replace(this.testCardElementTracker, testNr);
 
                 var normIndex = currentTest.testDefinition.findNormById(currentTest.NormID2)
-                if (normIndex >= 0) {
+                if ( (normIndex >= 0) && (currentTest.Scores["__" + currentTest.testDefinition.scales[i].id])) {
                     currentTest.normScores(normIndex);
                     template = template.replace(this.testCardElementNorm2, currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].NormScore);
                     if (currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].PercentileScoreSet) {
@@ -295,7 +295,7 @@
                     template = template.replace(this.testCardElementNorm2, '-');
                 }
                 var normIndex = currentTest.testDefinition.findNormById(currentTest.NormID3)
-                if (normIndex >= 0) {
+                if ((normIndex >= 0) && (currentTest.Scores["__" + currentTest.testDefinition.scales[i].id])) {
                     currentTest.normScores(normIndex);
                     template = template.replace(this.testCardElementNorm3, currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].NormScore);
                     if (currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].PercentileScoreSet) {
@@ -309,7 +309,7 @@
                 }
                 // make sure that norm 1 is always present. In case of accidental saves this is the proper norm. Only one norm is stored.
                 var normIndex = currentTest.testDefinition.findNormById(currentTest.NormID1)
-                if (normIndex >= 0) {
+                if ((normIndex >= 0) && (currentTest.Scores["__" + currentTest.testDefinition.scales[i].id]))  {
                     currentTest.normScores(normIndex);
                     template = template.replace(this.testCardElementNorm1, currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].NormScore);
 
@@ -322,7 +322,9 @@
                 } else {
                     template = template.replace(this.testCardElementNorm1, '-');
                 }
-                template = template.replace(this.testCardElementRaw, currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].Score);
+                if (currentTest.Scores["__" + currentTest.testDefinition.scales[i].id]) {
+                    template = template.replace(this.testCardElementRaw, currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].Score);
+                }
 
                 //divElement.append(template);
                 totalToAdd += template;
