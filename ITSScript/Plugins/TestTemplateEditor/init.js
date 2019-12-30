@@ -18,11 +18,11 @@ function ITSTestTemplateEditor(session) {
     this.ITSSession = session;
     this.path = "TestTemplateEditor";
 
-    this.screenListElement = "<div id=\"AdminInterfaceTestTemplateEditorScreenList%%NR%%\" NoTranslate class=\"row\">\n" +
+    this.screenListElement = "<div id=\"AdminInterfaceTestTemplateEditorScreenList%%NR%%\" NoTranslate class=\"row mx-0 px-0\">\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenUp(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-up\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenDown(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-down\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.focusOnScreen(%%NR%%);\"><i class=\"fa fa-xs fa-edit\"></i></button>\n" +
-        "&nbsp;<div id=\"AdminInterfaceTestTemplateEditorScreenRow\"><input type=\"text\" id=\"TestTemplateEditorSCREEN%%NR%%\" onfocus=\"ITSInstance.newITSTestEditorController.focusOnScreen(%%NR%%);\" onkeyup=\"ITSInstance.newITSTestEditorController.editScreenDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" />" +
+        "&nbsp;<div id=\"AdminInterfaceTestTemplateEditorScreenRow\"><input style=\"width:120px\" type=\"text\" id=\"TestTemplateEditorSCREEN%%NR%%\" onfocus=\"ITSInstance.newITSTestEditorController.focusOnScreen(%%NR%%);\" onkeyup=\"ITSInstance.newITSTestEditorController.editScreenDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" />" +
         "<button type=\"button\" class=\"btn-xs btn-warning\" onclick=\"ITSInstance.newITSTestEditorController.deleteScreen(%%NR%%);\"><i class=\"fa fa-xs fa-trash\"></i></button></div>\n" +
         "<hr/>\n" +
         "</div>";

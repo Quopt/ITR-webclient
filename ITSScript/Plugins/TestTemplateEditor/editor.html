@@ -182,7 +182,14 @@
             <div class="row bg-dark text-white well">
                 <label id="AdminInterfaceTestTemplateEditorScreenHeaderText">Screen list</label>
             </div>
-            <div NoTranslate id="AdminInterfaceTestTemplateEditorScreenHeader"></div>
+            <div NoTranslate style="overflow-y: auto; overflow-x: hidden; min-height: 16px; max-height:800px; position:relative; left:-15px;"
+                 class="row mx-0 px-0" id="AdminInterfaceTestTemplateEditorScreenHeader"></div>
+            <div class="row">
+                <button id="AdminInterfaceTestTemplateEditorAddScreenButton" type="button" class="btn-xs btn-success"
+                        onclick="ITSInstance.newITSTestEditorController.addNewScreen();"><i
+                        class="fa fa-fw fa-plus"></i> Add new screen
+                </button>
+            </div>
         </div>
         <div id="AdminInterfaceTestTemplateEditorScreenContents" NoTranslate class="col-6">
             <div class="row bg-dark text-white well">
@@ -202,12 +209,7 @@
             </div>
         </div>
         <div class="col-2" id="AdminInterfaceTestTemplateEditorTabScreensColScreenListButtons">
-            <div class="row">
-                <button id="AdminInterfaceTestTemplateEditorAddScreenButton" type="button" class="btn-xs btn-success"
-                        onclick="ITSInstance.newITSTestEditorController.addNewScreen();"><i
-                        class="fa fa-fw fa-plus"></i> Add new screen
-                </button>
-            </div>
+
         </div>
         <div class="col-6">
             <div id="AdminInterfaceTestTemplateEditorScreenContentButtons" NoTranslate class="row">
