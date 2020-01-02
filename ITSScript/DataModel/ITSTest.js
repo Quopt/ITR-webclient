@@ -1662,6 +1662,22 @@ ITSTestScreen.prototype.prepareForRunTime = function () {
     this.myParent['screen'][this.varName] = this;
 };
 
+ITSTestScreen.prototype.copyScreenComponentToNewScreenComponent = function (sourcePos, destinationPos) {
+    if (destinationPos >= this.screenComponents.length) destinationPos = this.screenComponents.length-1;
+    if (destinationPos < 0) destinationPos = 0;
+
+    var newSC = new ITSTestScreenComponent(this, this.ITSSession);
+    var newSCID = newSC.id;
+    shallowCopy(this.screenComponents[sourcePos], newSC);
+    newSC.id = newSCID;
+
+    if (destinationPos == this.screenComponents.length - 1) {
+        this.screenComponents.push(newSC);
+    } else {
+        this.screenComponents.splice(destinationPos, 0, newSC);
+    };
+};
+
 // ITSScaleScore
 function ITSScaleScore(par, session) {
     this.ITSSession = session;

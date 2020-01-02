@@ -21,7 +21,8 @@ function ITSTestTemplateEditor(session) {
     this.screenListElement = "<div id=\"AdminInterfaceTestTemplateEditorScreenList%%NR%%\" NoTranslate class=\"row mx-0 px-0\">\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenUp(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-up\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenDown(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-down\"></i></button>\n" +
-        "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.focusOnScreen(%%NR%%);\"><i class=\"fa fa-xs fa-edit\"></i></button>\n" +
+//        "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.focusOnScreen(%%NR%%);\"><i class=\"fa fa-xs fa-edit\"></i></button>\n" +
+        "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.copyToNewScreen(%%NR%%);\"><i class=\"fa fa-xs fa-copy\"></i></button>\n" +
         "&nbsp;<div id=\"AdminInterfaceTestTemplateEditorScreenRow\"><input style=\"width:120px\" type=\"text\" id=\"TestTemplateEditorSCREEN%%NR%%\" onfocus=\"ITSInstance.newITSTestEditorController.focusOnScreen(%%NR%%);\" onkeyup=\"ITSInstance.newITSTestEditorController.editScreenDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" />" +
         "<button type=\"button\" class=\"btn-xs btn-warning\" onclick=\"ITSInstance.newITSTestEditorController.deleteScreen(%%NR%%);\"><i class=\"fa fa-xs fa-trash\"></i></button></div>\n" +
         "<hr/>\n" +
@@ -32,7 +33,8 @@ function ITSTestTemplateEditor(session) {
     this.screenComponentListElement = " <div id=\"AdminInterfaceTestTemplateEditorScreenContents%%NR%%\" NoTranslate onclick=\"ITSInstance.newITSTestEditorController.focusOnScreenComponent(%%NR%%);\" class=\"row\">\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenComponentUp(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-up\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenComponentDown(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-down\"></i></button>\n" +
-        "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.editScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-edit\"></i></button>\n" +
+//        "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.editScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-edit\"></i></button>\n" +
+        "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.copyScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-copy\"></i></button>\n" +
         "&nbsp;<div id=\"AdminInterfaceTestTemplateEditorScreenComponentRow\" NoTranslate><input type=\"text\" id=\"TestTemplateEditorSCREENCOMPONENT%%NR%%\" onkeyup=\"ITSInstance.newITSTestEditorController.editScreenComponentDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" /></div>\n" +
         "&nbsp;<button type=\"button\" class=\"btn-xs btn-warning\" onclick=\"ITSInstance.newITSTestEditorController.deleteScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-trash\"></i></button>\n" +
         "&nbsp;&nbsp;&nbsp;&nbsp;<div class=\"form-control-sm\"><input type=\"checkbox\" class=\"form-check-input form-check-input-sm\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_Privacy%%NR%%\" %%PRIVACY%% onchange=\"ITSInstance.newITSTestEditorController.changeScreenComponentPrivacy(%%NR%%, this.checked);\">\n" +
@@ -254,11 +256,17 @@ ITSTestTemplateEditor.prototype.afterOfficeLogin = function () {
 // load the tests
 ITSTestTemplateEditor.prototype.populateTests = function () {
     $('#AdminInterfaceTestTemplateEditorSelectListLoading').empty();
+    $('#AdminInterfaceTestTemplateEditor-CopyFromSelect').empty();
     var newElement = "";
     for (var i = 0; i < ITSInstance.tests.testList.length; i++) {
         if (ITSInstance.tests.testList[i].dbsource == 0) {
             newElement = "<li value='" + i + "' onclick='ITSInstance.newITSTestEditorController.redirectToTestIndex(this.value);' > <i class='fa fa-fw fa-book-reader'></i>&nbsp;&nbsp;" + ITSInstance.tests.testList[i].testNameWithDBIndicator() + "</li>";
             $('#AdminInterfaceTestTemplateEditorSelectListLoading').append(newElement);
+            newElement = "<option NoTranslate value='" + ITSInstance.tests.testList[i].ID + "'>" + ITSInstance.tests.testList[i].testNameWithDBIndicator() + "</option>";
+            $('#AdminInterfaceTestTemplateEditor-CopyFromSelect').append(newElement);
+            if (i == 0) {
+                this.selectSourceTestForCopy(ITSInstance.tests.testList[i].ID);
+            }
         }
     }
 };
@@ -759,8 +767,19 @@ ITSTestTemplateEditor.prototype.moveScreenComponentDown = function (screenCompon
     this.setCurrentScreenIndex(this.currentScreenIndex, true);
 };
 
-ITSTestTemplateEditor.prototype.copyToNewScreen = function () {
-    this.currentTest.copyTestScreen(this.currentScreenIndex, this.currentScreenIndex);
+ITSTestTemplateEditor.prototype.copyScreenComponent = function (screenComponentId) {
+    if (screenComponentId < (this.currentScreen.screenComponents.length - 1)) {
+        this.currentScreen.copyScreenComponentToNewScreenComponent(screenComponentId,screenComponentId+1);
+    }
+    this.setCurrentScreenIndex(this.currentScreenIndex, true);
+};
+
+ITSTestTemplateEditor.prototype.copyToNewScreen = function (sourceIndex) {
+    if (!sourceIndex) {
+        this.currentTest.copyTestScreen(this.currentScreenIndex, this.currentScreenIndex);
+    } else {
+        this.currentTest.copyTestScreen(sourceIndex, sourceIndex);
+    }
     this.loadScreensList();
     this.setCurrentScreenIndex(this.currentScreenIndex + 1);
 };
@@ -1682,6 +1701,43 @@ ITSTestTemplateEditor.prototype.translateSuccess = function (data, translate_scr
 ITSTestTemplateEditor.prototype.translateError = function () {
     ITSInstance.UIController.showInterfaceAsWaitingOff();
     ITSInstance.UIController.showError('TestTemplateEditor.TranslationNotFound', 'The translation failed. Please check if the azure translate string is set and if this user has the proper rights.');
+};
+
+ITSTestTemplateEditor.prototype.selectSourceTestForCopy = function (selValue) {
+    this.selectedTestIdForCopy = selValue;
+    var testIndex = ITSInstance.tests.findTestById(ITSInstance.tests.testList, selValue);
+    if (testIndex > -1) {
+        this.selectedTestForCopy = ITSInstance.tests.testList[testIndex];
+        if (ITSInstance.tests.testList[testIndex].detailsLoaded) {
+            this.selectSourceTestForCopyLoadQuestionList();
+        } else {
+            ITSInstance.tests.testList[testIndex].loadTestDetailDefinition(
+                this.selectSourceTestForCopyLoadQuestionList.bind(this)
+                ,function () {
+                    ITSInstance.UIController.showDialog("ITSTestTemplateEditorLoadTestError", "Test could not be loaded", "The test could not be loaded. Please close your browser and try again.",
+                        [{btnCaption: "OK"}]);
+                }
+             );
+        }
+    }
+};
+ITSTestTemplateEditor.prototype.selectSourceTestForCopyLoadQuestionList = function () {
+    var newScreenElement = "";
+    $('#AdminInterfaceTestTemplateEditor-CopyFromScreenSelect').empty();
+    for (var i = 0; i < this.selectedTestForCopy.screens.length; i++) {
+        this.selectedTestScreenIdForCopy = 0;
+        newScreenElement = "<option NoTranslate value='" + i + "'>" + this.selectedTestForCopy.screens[i].varName + "</option>";
+        $('#AdminInterfaceTestTemplateEditor-CopyFromScreenSelect').append(newScreenElement);
+    }
+};
+ITSTestTemplateEditor.prototype.selectSourceScreenForCopy = function (selValue) {
+    this.selectedTestScreenIdForCopy = selValue;
+};
+ITSTestTemplateEditor.prototype.copyFromTestScreen = function () {
+    this.currentTest.copyTestScreenFromOtherTest(this.selectedTestForCopy, this.selectedTestScreenIdForCopy, this.currentScreenIndex+1);
+    this.loadScreensListEmpty();
+    this.currentTest.makeTestScreenVarNamesUnique();
+    setTimeout(this.fillScreenTab.bind(this),250);
 };
 
 (function () { // iife to prevent pollution of the global memspace
