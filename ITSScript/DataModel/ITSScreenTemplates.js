@@ -385,9 +385,9 @@ ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templ
     if (placeholderlist) {
         if (placeholderlist.length > 0) {
             // there are placeholders to generate
-            var select = '<div NoTranslate class="row">' +
-                '<label NoTranslate for="PLACEHOLDER' + div + '" class="col-2 col-form-label">' + 'Generate in' + '</label>' +
-                '<div NoTranslate class="col">' +
+            var select = '<div NoTranslate class="row col-12">' +
+                '<label NoTranslate for="PLACEHOLDER' + div + '" class="col-6 col-form-label">' + 'Generate in' + '</label>' +
+                '<div NoTranslate class="col-6">' +
                 '<select NoTranslate class="form-control" onchange="' + onplaceholderchangefunction + '" onkeyup="' + onplaceholderchangefunction + '" id="PLACEHOLDER' + div + '">';
             select = select + '<option NoTranslate value="">-</option>';
             for (var i=0; i < placeholderlist.length; i++) {
@@ -638,51 +638,51 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
     // generate the variable in the div
     switch (this.variableType) { // T = text, A = textarea, H = HTML text, L = list, B = boolean, E = explanation (no controls), C = Color picker, P = Placeholder
         case "T" :
-            var select = '<div NoTranslate class="row" style="background-color: '+bgcolor+'">' +
-                '<label NoTranslate for="' + traceID + '" class="col-2 col-form-label">' + this.variableName + '</label>' +
-                '<div NoTranslate class="col">' +
+            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+                '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
+                '<div NoTranslate class="col-6 mx-0 px-0">' +
                 '<input NoTranslate class="form-control" type="text" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" placeholder="screen template default value" id="' + traceID + '">' +
                 '</div></div>';
             $('#' + div_to_add_to).append(select);
             break;
         case "P" :
-            var select = '<div NoTranslate class="row" style="background-color: '+bgcolor+'">' +
-                '<label NoTranslate for="' + traceID + '" class="col-2 col-form-label">' + this.variableName + '</label>' +
-                '<div NoTranslate class="col">' +
+            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+                '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
+                '<div NoTranslate class="col-6 mx-0 px-0">' +
                 '<input NoTranslate class="form-control" type="text" onchange="' + on_change_function + '" onkeyup="this.value = this.value.replace(/\\W/g, \'\'); ' + on_change_function + '" placeholder="screen template default value" id="' + traceID + '">' +
                 '</div></div>';
             $('#' + div_to_add_to).append(select);
             break;
         case "C" :
-            var select = '<div NoTranslate class="row" style="background-color: '+bgcolor+'">' +
-                '<label NoTranslate for="' + traceID + '" class="col-2 col-form-label">' + this.variableName + '</label>' +
-                '<div NoTranslate class="col">' +
+            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+                '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
+                '<div NoTranslate class="col-6 mx-0 px-0">' +
                 '<input NoTranslate class="form-control jscolor" type="text" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" placeholder="screen template default value" id="' + traceID + '">' +
                 '</div></div>';
             $('#' + div_to_add_to).append(select);
             colorpicker = true;
             break;
         case "A" :
-            var select = '<div NoTranslate class="row" style="background-color: '+bgcolor+'">' +
-                '<label NoTranslate for="' + traceID + '" class="col-2 col-form-label">' + this.variableName + '</label>' +
-                '<div NoTranslate class="col">' +
+            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+                '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
+                '<div NoTranslate class="col-6 mx-0 px-0">' +
                 '<textarea NoTranslate class="form-control" rows="1" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" placeholder="screen template default value" id="' + traceID + '">' +
                 '</textarea></div></div>';
             $('#' + div_to_add_to).append(select);
             break;
         case "H" :
-            var select = '<div NoTranslate class="row" style="background-color: '+bgcolor+'">' +
-                '<label NoTranslate for="' + traceID + '" class="col-2 col-form-label">' + this.variableName + '</label>' +
-                '<div NoTranslate class="col">' +
+            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+                '<label NoTranslate for="' + traceID + '" class="col-12 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
+                '<div NoTranslate class="col-12 mx-0 px-0">' +
                 '<textarea-htmledit NoTranslate class="form-control" rows="1" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" placeholder="screen template default value" id="' + traceID + '">' +
                 '</textarea-htmledit></div></div>';
             $('#' + div_to_add_to).append(select);
             tinymce.remove('textarea-htmledit');
             break;
         case "L" :
-            var select = '<div NoTranslate class="row" style="background-color: '+bgcolor+'">' +
-                '<label NoTranslate for="' + traceID + '" class="col-2 col-form-label">' + this.variableName + '</label>' +
-                '<div NoTranslate class="col">' +
+            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+                '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
+                '<div NoTranslate class="col-6 mx-0 px-0">' +
                 '<select NoTranslate class="form-control" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" id="' + traceID + '">';
             // now add the options from the default settings
             var option_array = this.defaultValue.split(',');
@@ -699,9 +699,9 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             $('#' + div_to_add_to).append(select);
             break;
         case "I" :
-            var select = '<div NoTranslate class="row" style="background-color: '+bgcolor+'">' +
-                '<label NoTranslate for="' + traceID + '" class="col-2 col-form-label">' + this.variableName + '</label>' +
-                '<div NoTranslate class="col">' +
+            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+                '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
+                '<div NoTranslate class="col-6 mx-0 px-0">' +
                 '<select NoTranslate class="form-control" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" id="' + traceID + '">';
             // now add the options from the default settings
             if (typeof testdefinition != "undefined") {
@@ -714,10 +714,10 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             $('#' + div_to_add_to).append(select);
             break;
         case "B" :
-            var select = '<div NoTranslate class="row" style="background-color: '+bgcolor+'">' +
-                '<label NoTranslate for="' + traceID + '" class="col-2 col-form-label">' + this.variableName + '</label>' +
-                '<div NoTranslate class="col">' +
-                '<input NoTranslate class="form-control" type="checkbox" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" data-toggle="toggle" id="' + traceID + '">' +
+            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+                '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
+                '<div NoTranslate class="col-6 mx-0 px-0">' +
+                '<input NoTranslate class="form-control form-check" type="checkbox" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" data-toggle="toggle" id="' + traceID + '">' +
                 '</div></div>';
             $('#' + div_to_add_to).append(select);
             break;

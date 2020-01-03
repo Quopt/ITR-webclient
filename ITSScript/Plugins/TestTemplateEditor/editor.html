@@ -177,43 +177,42 @@
         </div>
     </div>
 
-    <div id="AdminInterfaceTestTemplateEditorTabScreens" NoTranslate class="row col-12">
+    <div id="AdminInterfaceTestTemplateEditorTabScreens" NoTranslate class="row col-12  mx-0 px-0">
         <div class="col-2" id="AdminInterfaceTestTemplateEditorTabScreensColScreenList">
             <div class="row bg-dark text-white well">
                 <label id="AdminInterfaceTestTemplateEditorScreenHeaderText">Screen list</label>
             </div>
             <div NoTranslate style="overflow-y: auto; overflow-x: hidden; min-height: 16px; max-height:800px; position:relative; left:-15px;"
-                 class="row mx-0 px-0" id="AdminInterfaceTestTemplateEditorScreenHeader"></div>
-            <div class="row">
+                 class="row mx-0 px-0 col-12" id="AdminInterfaceTestTemplateEditorScreenHeader"></div>
+            <div class="row mx-0 px-0 col-12">
                 <button id="AdminInterfaceTestTemplateEditorAddScreenButton" type="button" class="btn-xs btn-success"
                         onclick="ITSInstance.newITSTestEditorController.addNewScreen();"><i
                         class="fa fa-fw fa-plus"></i> Add new screen
                 </button>
             </div>
         </div>
-        <div id="AdminInterfaceTestTemplateEditorScreenContents" NoTranslate class="col-6">
-            <div class="row bg-dark text-white well">
+        <div id="AdminInterfaceTestTemplateEditorScreenContents" NoTranslate class="col-6 mx-0 px-0">
+            <div class="row mx-0 px-0 col-12 bg-dark text-white well">
                 <label id="AdminInterfaceTestTemplateEditorScreenContentsHeaderText">Screen contents</label>
             </div>
-            <div NoTranslate id="AdminInterfaceTestTemplateEditorScreenContentsHeader"></div>
+            <div NoTranslate id="AdminInterfaceTestTemplateEditorScreenContentsHeader" class="row mx-0 px-0 col-12"></div>
         </div>
-        <div class="col-4 flex-row bg-light" id="AdminInterfaceTestTemplateEditorTabScreensColScreenItemSettings">
-            <div class="row bg-dark text-white well">
+        <div class="col-4 mx-0 px-0 bg-light" id="AdminInterfaceTestTemplateEditorTabScreensColScreenItemSettings">
+            <div class="row mx-0 px-0 col-12 bg-dark text-white well">
                 <label id="AdminInterfaceTestTemplateEditorScreenVarText">Screen item settings</label>
             </div>
-            <div id="AdminInterfaceTestTemplateEditorScreenVarName" NoTranslate class="flex-row">
+            <div id="AdminInterfaceTestTemplateEditorScreenVarName" NoTranslate class="row mx-0 px-0 col-12">
                 <label id="AdminInterfaceTestTemplateEditorScreenVarNameText" NoTranslate>-</label>
             </div>
-            <div id="AdminInterfaceTestTemplateEditorScreenVar" NoTranslate class="flex-row">
-                <hr/>
+            <div id="AdminInterfaceTestTemplateEditorScreenVar" NoTranslate class="row mx-0 px-0 col-12">
             </div>
         </div>
         <div class="col-2" id="AdminInterfaceTestTemplateEditorTabScreensColScreenListButtons">
 
         </div>
-        <div class="col-6">
-            <div id="AdminInterfaceTestTemplateEditorScreenContentButtons" NoTranslate class="row">
-                <div class="row col">
+        <div class="row col-6 m-0 p-0">
+            <div id="AdminInterfaceTestTemplateEditorScreenContentButtons" NoTranslate class="row col-12 px-0 mx-0">
+                <div class="row col-12">
                     <button id="AdminInterfaceTestTemplateEditorAddScreenComponentButton" type="button"
                             class="btn-xs btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false"><i class="fa fa-fw fa-plus"></i> Add new screen component
@@ -234,10 +233,10 @@
                     </button>
                 </div>
             </div>
-            <div id="AdminInterfaceTestTemplateEditorScreenDynamicsDiv" NoTranslate>
+            <div id="AdminInterfaceTestTemplateEditorScreenDynamicsDiv" NoTranslate class="row col-12 px-0 mx-0">
                 &nbsp;
-                <div class="bg-dark text-white well  dropdown-toggle" onclick="if ($('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility == 'hidden') { $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility = 'visible'; $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.display = 'block'; } else { $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility = 'hidden'; $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.display = 'none'; }"><label
-                        id="AdminInterfaceTestTemplateEditorScreenDynamics">Screen
+                <div class="bg-dark text-white well col-12 px-0 mx-0 dropdown-toggle" onclick="if ($('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility == 'hidden') { $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility = 'visible'; $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.display = 'block'; } else { $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.visibility = 'hidden'; $('#AdminInterfaceTestTemplateEditorScreenDynamics_section')[0].style.display = 'none'; }"><label
+                       id="AdminInterfaceTestTemplateEditorScreenDynamics">Screen
                     dynamics</label></div>
                 <div id="AdminInterfaceTestTemplateEditorScreenDynamics_section" style="visibility: hidden">
                     <table notranslate="" class="table table-sm">

@@ -18,35 +18,31 @@ function ITSTestTemplateEditor(session) {
     this.ITSSession = session;
     this.path = "TestTemplateEditor";
 
-    this.screenListElement = "<div id=\"AdminInterfaceTestTemplateEditorScreenList%%NR%%\" NoTranslate class=\"row mx-0 px-0\">\n" +
+    this.screenListElement = "<div id=\"AdminInterfaceTestTemplateEditorScreenList%%NR%%\" NoTranslate class=\"row mx-0 px-0 form-control-sm col-12\">\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenUp(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-up\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenDown(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-down\"></i></button>\n" +
-//        "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.focusOnScreen(%%NR%%);\"><i class=\"fa fa-xs fa-edit\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.copyToNewScreen(%%NR%%);\"><i class=\"fa fa-xs fa-copy\"></i></button>\n" +
-        "&nbsp;<div id=\"AdminInterfaceTestTemplateEditorScreenRow\"><input style=\"width:120px\" type=\"text\" id=\"TestTemplateEditorSCREEN%%NR%%\" onfocus=\"ITSInstance.newITSTestEditorController.focusOnScreen(%%NR%%);\" onkeyup=\"ITSInstance.newITSTestEditorController.editScreenDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" />" +
-        "<button type=\"button\" class=\"btn-xs btn-warning\" onclick=\"ITSInstance.newITSTestEditorController.deleteScreen(%%NR%%);\"><i class=\"fa fa-xs fa-trash\"></i></button></div>\n" +
-        "<hr/>\n" +
+        "<div id=\"AdminInterfaceTestTemplateEditorScreenRow\"><input style=\"width:120px\" type=\"text\" id=\"TestTemplateEditorSCREEN%%NR%%\" onfocus=\"ITSInstance.newITSTestEditorController.focusOnScreen(%%NR%%);\" onkeyup=\"ITSInstance.newITSTestEditorController.editScreenDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" />" +
+        "&nbsp;<button type=\"button\" class=\"btn-xs btn-warning\" onclick=\"ITSInstance.newITSTestEditorController.deleteScreen(%%NR%%);\"><i class=\"fa fa-xs fa-trash\"></i></button>"+
+        "</div>\n" +
         "</div>";
     this.screenListElementID = /%%NR%%/g;
     this.screenListElementTestID = /%%ROW%%/g;
 
-    this.screenComponentListElement = " <div id=\"AdminInterfaceTestTemplateEditorScreenContents%%NR%%\" NoTranslate onclick=\"ITSInstance.newITSTestEditorController.focusOnScreenComponent(%%NR%%);\" class=\"row\">\n" +
+    this.screenComponentListElement =
+        "<div id=\"AdminInterfaceTestTemplateEditorScreenContents%%NR%%\" NoTranslate onclick=\"ITSInstance.newITSTestEditorController.focusOnScreenComponent(%%NR%%);\" class=\"row m-0 p-0 col-12 form-control-sm\">\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenComponentUp(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-up\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenComponentDown(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-down\"></i></button>\n" +
-//        "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.editScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-edit\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.copyScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-copy\"></i></button>\n" +
-        "&nbsp;<div id=\"AdminInterfaceTestTemplateEditorScreenComponentRow\" NoTranslate><input type=\"text\" id=\"TestTemplateEditorSCREENCOMPONENT%%NR%%\" onkeyup=\"ITSInstance.newITSTestEditorController.editScreenComponentDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" /></div>\n" +
-        "&nbsp;<button type=\"button\" class=\"btn-xs btn-warning\" onclick=\"ITSInstance.newITSTestEditorController.deleteScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-trash\"></i></button>\n" +
-        "&nbsp;&nbsp;&nbsp;&nbsp;<div class=\"form-control-sm\"><input type=\"checkbox\" class=\"form-check-input form-check-input-sm\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_Privacy%%NR%%\" %%PRIVACY%% onchange=\"ITSInstance.newITSTestEditorController.changeScreenComponentPrivacy(%%NR%%, this.checked);\">\n" +
-        "<label id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_PrivacyLabel\" for=\"AdminInterfaceTestTemplateEditorScreenComponentRow_Privacy%%NR%%\">Exclude from anonimised</label>" +
-        "</div>"+
-        "&nbsp;&nbsp;&nbsp;&nbsp;<div class=\"form-control-sm\"><input type=\"checkbox\" class=\"form-check-input form-check-input-sm\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_SessionStore%%NR%%\" %%SESSIONSTORE%% onchange=\"ITSInstance.newITSTestEditorController.changeScreenComponentSessionStore(%%NR%%, this.checked);\">\n" +
-        "<label id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_SessionStoreLabel\" for=\"AdminInterfaceTestTemplateEditorScreenComponentRow_SessionStore%%NR%%\">Store at session level</label>" +
-        "</div><hr/>\n" +
-        "</div>\n" +
-        "<div id=\"AdminInterfaceTestTemplateEditorScreenContentsPreview%%NR%%\" NoTranslate class=\"row\">\n" +
+        "<div id=\"AdminInterfaceTestTemplateEditorScreenRow\"><input style=\"width:200px\"  type=\"text\" id=\"TestTemplateEditorSCREENCOMPONENT%%NR%%\" onkeyup=\"ITSInstance.newITSTestEditorController.editScreenComponentDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" />\n" +
+        "<button type=\"button\" class=\"btn-xs btn-warning\" onclick=\"ITSInstance.newITSTestEditorController.deleteScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-trash\"></i></button>\n" +
+        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" class=\"form-check-input\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_Privacy%%NR%%\" %%PRIVACY%% onchange=\"ITSInstance.newITSTestEditorController.changeScreenComponentPrivacy(%%NR%%, this.checked);\">\n" +
+        "<label class=\"form-check-label\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_PrivacyLabel\" for=\"AdminInterfaceTestTemplateEditorScreenComponentRow_Privacy%%NR%%\">Exclude from anonimised</label>" +
+        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" class=\"form-check-input\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_SessionStore%%NR%%\" %%SESSIONSTORE%% onchange=\"ITSInstance.newITSTestEditorController.changeScreenComponentSessionStore(%%NR%%, this.checked);\">\n" +
+        "<label class=\"form-check-label\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_SessionStoreLabel\" for=\"AdminInterfaceTestTemplateEditorScreenComponentRow_SessionStore%%NR%%\">Store at session level</label>" +
+        "</div></div>\n" +
+        "<div id=\"AdminInterfaceTestTemplateEditorScreenContentsPreview%%NR%%\" NoTranslate class=\"row mx-0 px-0 col-12\">\n" +
         "%%PREVIEW%%\n" +
-        "<hr/>\n" +
         "</div>" +
         "%%PREVIEW%%\n";
     this.screenComponentListElementID = /%%NR%%/g;
@@ -528,7 +524,7 @@ ITSTestTemplateEditor.prototype.setCurrentScreenIndex = function (screenNum, tes
             newScreenComponent = newScreenComponent.replace(this.screenComponentListElementID, i);
             // now generate the screen component with the default template values
             var newDivID = "ITSTestTemplateEditorQuestionComponent" + i;
-            newScreenComponent = newScreenComponent.replace(this.screenComponentListElementPreviewID, '<div NoTranslate id="' + newDivID + '"></div>');
+            newScreenComponent = newScreenComponent.replace(this.screenComponentListElementPreviewID, '<div class="col-12 row" NoTranslate id="' + newDivID + '"></div>');
             newScreenComponent = newScreenComponent.replace(this.screenComponentListElementRowID, x.varComponentName);
             newScreenComponent = newScreenComponent.replace(this.screenComponentListElementPrivacyStatus, x.excludeFromAnonimisedTestResults ? "checked" : "")
             newScreenComponent = newScreenComponent.replace(this.screenComponentListElementSessionStoreStatus, x.storeAtSessionLevel ? "checked" : "")
