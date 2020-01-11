@@ -302,7 +302,7 @@ ITSUIController = function () {
             $('#basicModalFooter').append('<button type="button" onclick="'+bclick+'" id="basicModalButtonClose'+i+'" class="btn '+btype+'" data-dismiss="modal">'+bcaption+'</button>');
         }
 
-        $('#basicModalHeader').text(  ITSInstance.translator.getTranslatedString( 'dialogMessages', 'Header', dialogHeader) );
+        $('#basicModalHeader').text(  ITSInstance.translator.getTranslatedString( 'dialogMessages', dialogID + 'Header', dialogHeader) );
         tempText = ITSInstance.translator.getTranslatedString( 'dialogMessages', dialogID, dialogMessage);
         if (additionalStrings) {
             tempText = format(tempText,additionalStrings);
