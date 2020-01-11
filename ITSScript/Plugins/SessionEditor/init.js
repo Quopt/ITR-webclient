@@ -147,25 +147,9 @@
                 });
                 return;
             }
-            if (ITSInstance.companies.currentCompany.outOfCredits()) {
-                ITSInstance.UIController.showDialog("OutOfCredits", "Out of credits", "You have no credit units left. Please order new credit units.",
-                    [
-                        {
-                            btnCaption: "Try to view session",
-                            btnType: "btn-success",
-                            btnOnClick: "ITSInstance.editSessionController.loadSession();"
-                        },
-                        {
-                            btnCaption: "Order credits now",
-                            btnType: "btn-success",
-                            btnOnClick: "ITSRedirectPath('CreditsOrderByMail');"
-                        }
-                    ]);
-            } else {
 
-                // load the session
-                this.loadSession();
-            }
+            // load the session
+            this.loadSession();
         }
         else // no session id will not work for this screen
         {
@@ -193,7 +177,23 @@
     ITSSessionEditor.prototype.sessionLoadingFailed = function () {
         // go back to the previous page and show error
         ITSInstance.UIController.showInterfaceAsWaitingOff();
-        ITSInstance.UIController.showError("SessionEditor.SessionLoadingFailed", "The session could not be loaded, please refresh your browser page and try again. Please check your credit level. If you are out of credits then loading uninvoiced sessions will fail.");
+        if (ITSInstance.companies.currentCompany.outOfCredits()) {
+            ITSInstance.UIController.showDialog("OutOfCredits", "Out of credits", "You have no credit units left. Please order new credit units.",
+                [
+                    {
+                        btnCaption: "Order credits later",
+                        btnType: "btn-success",
+                        btnOnClick: ""
+                    },
+                    {
+                        btnCaption: "Order credits now",
+                        btnType: "btn-success",
+                        btnOnClick: "ITSRedirectPath('CreditsOrderByMail');"
+                    }
+                ]);
+        } else {
+            ITSInstance.UIController.showError("SessionEditor.SessionLoadingFailed", "The session could not be loaded, please refresh your browser page and try again.");
+        }
         history.back();
     };
 
