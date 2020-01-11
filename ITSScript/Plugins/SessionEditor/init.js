@@ -148,19 +148,23 @@
                 return;
             }
             if (ITSInstance.companies.currentCompany.outOfCredits()) {
-                ITSInstance.UIController.showError('OutOfCredits', 'You have no credit units left. Please order new credit units.', '',
-                    "ITSRedirectPath('CreditsOrderByMail');" );
+                ITSInstance.UIController.showDialog("OutOfCredits", "Out of credits", "You have no credit units left. Please order new credit units.",
+                    [
+                        {
+                            btnCaption: "Try to view session",
+                            btnType: "btn-success",
+                            btnOnClick: "ITSInstance.editSessionController.loadSession();"
+                        },
+                        {
+                            btnCaption: "Order credits now",
+                            btnType: "btn-success",
+                            btnOnClick: "ITSRedirectPath('CreditsOrderByMail');"
+                        }
+                    ]);
             } else {
 
                 // load the session
-//                if ((!this.currentSession) || (this.currentSession.ID != this.SessionID)) {
-                    this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
-                    ITSInstance.UIController.showInterfaceAsWaitingOn();
-                    this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this));
-//                } else {
-//                    this.sessionLoaded();
-//                }
-                this.loadAvailableTestsToAdd();
+                this.loadSession();
             }
         }
         else // no session id will not work for this screen
@@ -168,6 +172,14 @@
             ITSInstance.UIController.activateScreenPath('Switchboard');
         }
     };
+
+    ITSSessionEditor.prototype.loadSession = function() {
+        this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
+        ITSInstance.UIController.showInterfaceAsWaitingOn();
+        this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this));
+        this.loadAvailableTestsToAdd();
+    };
+
     ITSSessionEditor.prototype.sessionLoaded = function () {
         // session is loaded
         $('#AdminInterfaceEditSessionEditHeaderName')[0].innerHTML = this.currentSession.Description;
