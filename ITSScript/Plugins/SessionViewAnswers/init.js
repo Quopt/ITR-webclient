@@ -51,25 +51,21 @@
             ITSInstance.UIController.initNavBar();
 
             if (!ITSInstance.companies.currentCompany.detailsLoaded) { setTimeout(this.show.bind(this),1000); return; }
-            if (ITSInstance.companies.currentCompany.outOfCredits()) {
-                ITSInstance.UIController.showError('OutOfCredits', 'You have no credit units left. Please order new credit units.', '',
-                    "ITSRedirectPath('CreditsOrderByMail');");
+            
+            ITSInstance.UIController.showInterfaceAsWaitingOn(-1);
+            if ((!this.currentSession) || (this.currentSession.ID != this.SessionID)) {
+                // load the session
+                this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
+                this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadError.bind(this));
             } else {
-                ITSInstance.UIController.showInterfaceAsWaitingOn(-1);
-                if ((!this.currentSession) || (this.currentSession.ID != this.SessionID)) {
-                    // load the session
-                    this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
-                    this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadError.bind(this));
-                } else {
-                    setTimeout(this.sessionLoaded.bind(this), 250);
-                }
-
-
-                $(window).off('popstate');
-                $(window).on('popstate', function (e) {
-                    $("#SessionViewAnswersInterfaceEditTestAnswers").empty();
-                });
+                setTimeout(this.sessionLoaded.bind(this), 250);
             }
+
+
+            $(window).off('popstate');
+            $(window).on('popstate', function (e) {
+                $("#SessionViewAnswersInterfaceEditTestAnswers").empty();
+            });
         }
         else // no parameter will not work for this screen
         {
