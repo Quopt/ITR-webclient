@@ -51,7 +51,7 @@
             ITSInstance.UIController.initNavBar();
 
             if (!ITSInstance.companies.currentCompany.detailsLoaded) { setTimeout(this.show.bind(this),1000); return; }
-            
+
             ITSInstance.UIController.showInterfaceAsWaitingOn(-1);
             if ((!this.currentSession) || (this.currentSession.ID != this.SessionID)) {
                 // load the session
