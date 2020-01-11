@@ -193,7 +193,7 @@
     ITSSessionEditor.prototype.sessionLoadingFailed = function () {
         // go back to the previous page and show error
         ITSInstance.UIController.showInterfaceAsWaitingOff();
-        ITSInstance.UIController.showError("SessionEditor", "SessionLoadingFailed", "The session could not be loaded, please refresh your browser page and try again.");
+        ITSInstance.UIController.showError("SessionEditor.SessionLoadingFailed", "The session could not be loaded, please refresh your browser page and try again. Please check your credit level. If you are out of credits then loading uninvoiced sessions will fail.");
         history.back();
     };
 
