@@ -40,6 +40,7 @@ ITSCandidateSession = function (session, ITSSession) {
     this.UsedBatteryIDs = "";
     this.UserDefinedFields = "";
     this.Remarks = "";
+    this.CreateDate = new Date();
     this.AllowedStartDateTime = new Date();
     this.AllowedEndDateTime = new Date();
     this.AllowedEndDateTime.addMonths(12);
@@ -73,7 +74,7 @@ ITSCandidateSession = function (session, ITSSession) {
 
     this.persistentProperties = [
         'ID', 'GroupSessionID', 'GroupID', 'PersonID', 'SessionType', 'Description', 'Goal', 'UsedBatteryIDs', 'UserDefinedFields',
-        'Remarks', 'AllowedStartDateTime', 'AllowedEndDateTime', 'StartedAt', 'EndedAt', 'Status', 'SessionState', 'Active', 'EMailNotificationAdresses',
+        'Remarks', 'AllowedStartDateTime', 'AllowedEndDateTime', 'StartedAt', 'EndedAt', 'CreateDate', 'Status', 'SessionState', 'Active', 'EMailNotificationAdresses',
         'EnforceSessionEndDateTime', 'ManagedByUserID', 'EmailNotificationIncludeResults', "PluginData"
     ];
 

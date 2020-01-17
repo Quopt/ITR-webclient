@@ -124,6 +124,12 @@
                     if (this.status == "Busy") {
                         this.sortField = "StartedAt desc, Description";
                     }
+                    if (this.status == "Ready") {
+                        this.sortField = "CreateDate desc, AllowedStartDateTime desc, Description";
+                    }
+                    if (this.status == "Done") {
+                        this.sortField = "EndedAt desc, Description";
+                    }
                 }
                 if (getUrlParameterValue('ConsultantID')) {
                     this.consultantID = getUrlParameterValue('ConsultantID');

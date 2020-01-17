@@ -27,6 +27,7 @@ function loadOfficeComponents() {
         // %OFFICEPORTLETSTART%
         document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionNewPortlet/init.js' defer><\/script>");
         document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionOverviewPortlet/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/SessionProgressPortlet/init.js' defer><\/script>");
         document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/TestCatalogPortlet/init.js' defer><\/script>");
         document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/CreditsUsedPortlet/init.js' defer><\/script>");
         document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/UserPreferencesPortlet/init.js' defer><\/script>");
