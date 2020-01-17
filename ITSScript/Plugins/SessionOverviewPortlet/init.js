@@ -50,7 +50,7 @@
                     ITSInstance.portletReadySessions.loadError,
                     ITSInstance.portletReadySessions.newPortletReadySession,
                     0,
-                    5,
+                    3,
                     'EndedAt desc', "N", "N", "Y", "Status=30,Status=31,SessionType=0"
                 );
             },

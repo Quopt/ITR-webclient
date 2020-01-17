@@ -61,7 +61,7 @@
                     ITSInstance.portletBusySessions.loadError,
                     ITSInstance.portletBusySessions.newPortletSession,
                     0,
-                    5,
+                    3,
                     'CreateDate desc, AllowedStartDateTime desc', "N", "N", "Y", "Status=10,SessionType=0"
                 );
                 ITSInstance.genericAjaxLoader(
@@ -71,7 +71,7 @@
                     ITSInstance.portletBusySessions.loadError,
                     ITSInstance.portletBusySessions.newPortletBusySession,
                     0,
-                    5,
+                    3,
                     'StartedAt desc', "N", "N", "Y", "Status=20,Status=21,SessionType=0"
                 );
             },
