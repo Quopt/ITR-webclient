@@ -28,13 +28,13 @@
             loadSuccess: function () {
                 $('#AdminInterfaceSessionProgressPortletTable tr').remove();
                 for (i = 0; (i < 3) && (i < ITSInstance.portletBusySessions.sessionsToShow.length); i++) {
-                    $('#AdminInterfaceSessionProgressPortletTable').append('<tr><td onclick=ITSRedirectPath("Session&SessionID=' + ITSInstance.portletBusySessions.sessionsToShow[i].id + '");>' + ITSInstance.portletBusySessions.sessionsToShow[i].Description + '</td></tr>');
+                    $('#AdminInterfaceSessionProgressPortletTable').append('<tr><td onclick=ITSRedirectPath("Session&SessionID=' + ITSInstance.portletBusySessions.sessionsToShow[i].id + '");>' + ITSInstance.portletBusySessions.sessionsToShow[i].Description + " / " + ITSInstance.portletBusySessions.sessionsToShow[i].EMail + '</td></tr>');
                 }
             },
             loadSuccessBusy: function () {
                 $('#AdminInterfaceSessionProgressBusyTable tr').remove();
                 for (i = 0; (i < 3) && (i < ITSInstance.portletBusySessions.sessionsToShowBusy.length); i++) {
-                    $('#AdminInterfaceSessionProgressBusyTable').append('<tr><td onclick=ITSRedirectPath("Session&SessionID=' + ITSInstance.portletBusySessions.sessionsToShowBusy[i].id + '");>' + ITSInstance.portletBusySessions.sessionsToShowBusy[i].Description + '</td></tr>');
+                    $('#AdminInterfaceSessionProgressBusyTable').append('<tr><td onclick=ITSRedirectPath("Session&SessionID=' + ITSInstance.portletBusySessions.sessionsToShowBusy[i].id + '");>' + ITSInstance.portletBusySessions.sessionsToShowBusy[i].Description + " / " + ITSInstance.portletBusySessions.sessionsToShow[i].EMail + '</td></tr>');
                 }
             },
             loadError: function () {
@@ -55,7 +55,7 @@
                 ITSInstance.portletBusySessions.sessionsToShow.length = 0;
                 ITSInstance.portletBusySessions.sessionsToShowBusy.length = 0;
                 ITSInstance.genericAjaxLoader(
-                    'sessions',
+                    'sessionsview',
                     ITSInstance.portletBusySessions.sessionsToShow,
                     ITSInstance.portletBusySessions.loadSuccess,
                     ITSInstance.portletBusySessions.loadError,
@@ -65,7 +65,7 @@
                     'CreateDate desc, AllowedStartDateTime desc', "N", "N", "Y", "Status=10,SessionType=0"
                 );
                 ITSInstance.genericAjaxLoader(
-                    'sessions',
+                    'sessionsview',
                     ITSInstance.portletBusySessions.sessionsToShowBusy,
                     ITSInstance.portletBusySessions.loadSuccessBusy,
                     ITSInstance.portletBusySessions.loadError,
