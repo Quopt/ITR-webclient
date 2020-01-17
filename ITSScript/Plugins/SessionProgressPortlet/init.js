@@ -34,7 +34,7 @@
             loadSuccessBusy: function () {
                 $('#AdminInterfaceSessionProgressBusyTable tr').remove();
                 for (i = 0; (i < 3) && (i < ITSInstance.portletBusySessions.sessionsToShowBusy.length); i++) {
-                    $('#AdminInterfaceSessionProgressBusyTable').append('<tr><td onclick=ITSRedirectPath("Session&SessionID=' + ITSInstance.portletBusySessions.sessionsToShowBusy[i].id + '");>' + ITSInstance.portletBusySessions.sessionsToShowBusy[i].Description + " / " + ITSInstance.portletBusySessions.sessionsToShow[i].EMail + '</td></tr>');
+                    $('#AdminInterfaceSessionProgressBusyTable').append('<tr><td onclick=ITSRedirectPath("Session&SessionID=' + ITSInstance.portletBusySessions.sessionsToShowBusy[i].id + '");>' + ITSInstance.portletBusySessions.sessionsToShowBusy[i].Description + " / " + ITSInstance.portletBusySessions.sessionsToShowBusy[i].EMail + '</td></tr>');
                 }
             },
             loadError: function () {
