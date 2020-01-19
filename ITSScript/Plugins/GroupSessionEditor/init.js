@@ -423,8 +423,10 @@ ITSGroupSessionEditor.prototype.saveCurrentSession = function ( onSuccessCallbac
     }
     if (!ITSInstance.users.currentUser.PluginData.MailSettings) ITSInstance.users.currentUser.PluginData.MailSettings = {};
     if (this.currentSession.EMailNotificationAdresses != ITSInstance.users.currentUser.PluginData.MailSettings.Notifications ) {
-        ITSInstance.users.currentUser.PluginData.MailSettings.Notifications = this.currentSession.EMailNotificationAdresses;
-        ITSInstance.users.saveCurrentUser();
+        if (this.currentSession.EMailNotificationAdresses.trim() != "") {
+            ITSInstance.users.currentUser.PluginData.MailSettings.Notifications = this.currentSession.EMailNotificationAdresses;
+            ITSInstance.users.saveCurrentUser();
+        }
     }
 
     if (ValidationMessage == "") {
