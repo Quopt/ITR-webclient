@@ -384,7 +384,7 @@ ITSChangeExistingSessionEditor.prototype.saveCurrentSession = function ( onSucce
     }
 
     this.currentSession.EMailNotificationAdresses = "";
-    if ( $('#AdminInterfaceSessionEditMailMe').is(':checked') ) {
+    if ( $('#AdminInterfaceChangeSessionEditMailMe').is(':checked') ) {
         this.currentSession.EMailNotificationAdresses = $('#AdminInterfaceChangeSessionMail').val();
     }
     if (!ITSInstance.users.currentUser.PluginData.MailSettings) ITSInstance.users.currentUser.PluginData.MailSettings = {};
