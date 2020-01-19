@@ -387,6 +387,7 @@ ITSChangeExistingSessionEditor.prototype.saveCurrentSession = function ( onSucce
     if ( $('#AdminInterfaceChangeSessionEditMailMe').is(':checked') ) {
         this.currentSession.EMailNotificationAdresses = $('#AdminInterfaceChangeSessionMail').val();
     }
+    /*
     if (!ITSInstance.users.currentUser.PluginData.MailSettings) ITSInstance.users.currentUser.PluginData.MailSettings = {};
     if (this.currentSession.EMailNotificationAdresses != ITSInstance.users.currentUser.PluginData.MailSettings.Notifications ) {
         if (this.currentSession.EMailNotificationAdresses.trim() != "") {
@@ -394,6 +395,7 @@ ITSChangeExistingSessionEditor.prototype.saveCurrentSession = function ( onSucce
             ITSInstance.users.saveCurrentUser();
         }
     }
+    */
 
     if (ValidationMessage == "") {
         if (this.currentSession.Status >= 30) this.currentSession.Status = 20;

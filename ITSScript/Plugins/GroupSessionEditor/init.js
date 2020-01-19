@@ -41,6 +41,7 @@ ITSGroupSessionEditor.prototype.show = function () {
         this.newSession = true;
         this.currentSession = ITSInstance.candidateSessions.newGroupSession();
         this.SessionID = this.currentSession.ID;
+
     }
 
     $('#NavbarsAdmin').show();
@@ -50,7 +51,6 @@ ITSGroupSessionEditor.prototype.show = function () {
     ITSInstance.UIController.initNavBar();
 
     // load the session
-//    if ( (!this.currentSession) || (this.currentSession.ID != this.SessionID)) {
      if (this.newSession) {
          this.sessionLoadingSucceeded();
      } else {
@@ -59,9 +59,6 @@ ITSGroupSessionEditor.prototype.show = function () {
          this.currentSession.loadSession(this.SessionID, this.sessionLoadingSucceeded.bind(this), this.sessionLoadingFailed.bind(this));
          ITSInstance.UIController.showInterfaceAsWaitingOn();
      }
-//    } else {
-//        this.sessionLoadingSucceeded();
-//    }
 };
 
 ITSGroupSessionEditor.prototype.sessionLoadingSucceeded = function () {
@@ -71,6 +68,14 @@ ITSGroupSessionEditor.prototype.sessionLoadingSucceeded = function () {
     this.loadTestAndBatteriesList();
     this.currentSession.loadRelatedGroupMembers(this.groupMemberLoadingSucceeded.bind(this), this.groupMemberLoadingFailed.bind(this));
     this.switchUIState();
+
+    // set the email notification to default
+    if ($('#AdminInterfaceGroupSessionMail').val() == "") {
+        try {
+            $('#AdminInterfaceGroupSessionMail').val(ITSInstance.users.currentUser.PluginData.MailSettings.Notifications);
+        } catch(err) {}
+    }
+    $('#AdminInterfaceGroupSessionMailMe').prop('checked', ( $('#AdminInterfaceGroupSessionMail').val().trim() != "") );
 };
 
 ITSGroupSessionEditor.prototype.switchUIState = function () {
