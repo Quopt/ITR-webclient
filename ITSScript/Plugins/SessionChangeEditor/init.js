@@ -47,6 +47,14 @@ ITSChangeExistingSessionEditor.prototype.show = function () {
         } else {
             this.sessionLoadingSucceeded();
         }
+
+        // set the email notification to default
+        if ($('#AdminInterfaceChangeSessionMail').val() == "") {
+            try {
+                $('#AdminInterfaceChangeSessionMail').val(ITSInstance.users.currentUser.PluginData.MailSettings.Notifications);
+            } catch(err) {}
+        }
+        $('#AdminInterfaceChangeSessionEditMailMe').prop('checked', ( $('#AdminInterfaceChangeSessionMail').val().trim() != "") );
     }
     else // no parameter will not work for this screen
     {

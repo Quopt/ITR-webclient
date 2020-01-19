@@ -29,7 +29,7 @@
                 console.log('Portlet sessions loaded');
                 $('#AdminInterfaceInviteRRSessionsTable tr').remove();
                 for (i = 0; (i < 3) && (i < ITSInstance.portletReadySessions.sessionsToShow.length); i++) {
-                    $('#AdminInterfaceInviteRRSessionsTable').append('<tr><td onclick=ITSRedirectPath("Session&SessionID=' + ITSInstance.portletReadySessions.sessionsToShow[i].id + '");>' + ITSInstance.portletReadySessions.sessionsToShow[i].Description + '</td></tr>');
+                    $('#AdminInterfaceInviteRRSessionsTable').append('<tr><td onclick=ITSRedirectPath("Session&SessionID=' + ITSInstance.portletReadySessions.sessionsToShow[i].id + '");>' + ITSInstance.portletReadySessions.sessionsToShow[i].Description  + " / " + ITSInstance.portletReadySessions.sessionsToShow[i].EMail + '</td></tr>');
                 }
             },
             loadError: function () {
@@ -44,7 +44,7 @@
                 //setTimeout(ITSInstance.portletReadySessions.reload, 60000);
                 ITSInstance.portletReadySessions.sessionsToShow.length = 0;
                 ITSInstance.genericAjaxLoader(
-                    'sessions',
+                    'sessionsview',
                     ITSInstance.portletReadySessions.sessionsToShow,
                     ITSInstance.portletReadySessions.loadSuccess,
                     ITSInstance.portletReadySessions.loadError,

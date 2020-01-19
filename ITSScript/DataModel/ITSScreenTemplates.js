@@ -365,7 +365,7 @@ ITSScreenTemplate.prototype.generate_template_and_scan_for_repeatblocks = functi
     };
 }
 
-ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templatevalues, pnp_template, on_change_function, on_add_element_function, on_delete_element_function, placeholderlist, onplaceholderchangefunction, placeholdervalue, testdefinition) {
+ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templatevalues, pnp_template, on_change_function, on_add_element_function, on_delete_element_function, placeholderlist, onplaceholderchangefunction, placeholdervalue, testdefinition, on_element_command ) {
     // div - place to generate the view in the html page
     // id - id of this template
     // templatesvalues - any already filled in values for this template (js object)
@@ -406,14 +406,17 @@ ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templ
     for (var i = 0; i < this.TemplateVariables.length; i++) {
         // is this a repeat block var? If so generate at the bottom ...
         if (repeat_block_vars.indexOf(this.TemplateVariables[i]) < 0) {
-            this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, 0, on_change_function, testdefinition);
+            this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, 0, on_change_function, testdefinition, "", 0,0);
         }
     }
+    var first_on_element_command = "";
     for (var repeat_block_counter = 0; repeat_block_counter < this.RepeatBlockCount; repeat_block_counter++) {
+        first_on_element_command = on_element_command;
         for (var i = 0; i < this.TemplateVariables.length; i++) {
             // is this a repeat block var? If so we can generate it now !
             if (repeat_block_vars.indexOf(this.TemplateVariables[i]) >= 0) {
-                this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, repeat_block_counter + 1, on_change_function, testdefinition);
+                this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, repeat_block_counter + 1, on_change_function, testdefinition, first_on_element_command, repeat_block_counter+1, this.RepeatBlockCount);
+                first_on_element_command = "";
             }
         }
     }
@@ -424,6 +427,57 @@ ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templ
         $('#' + div).append('<button type="button" class="btn-sm btn-success" onclick="' + on_delete_element_function + '"><i class="fa fa-sm fa-minus"></i></button>');
     }
 };
+
+ITSScreenTemplate.prototype.swap = function (element1, element2, templatevalues) {
+    // NOTE : The element1 and element2 are 1-based ! So element 0 is not valid!
+    var ElemIndex1 = "_" + element1;
+    var ElemIndex2 = "_" + element2;
+    if (element1 == 1) { ElemIndex1 = ""; }
+    if (element2 == 1) { ElemIndex2 = ""; }
+
+    if ((element1 >0) && (element2 >0)) {
+        var tempVal = "";
+        for (var i = 0; i < this.TemplateVariables.length; i++) {
+            tempVal1 = templatevalues[this.TemplateVariables[i].variableName + ElemIndex1];
+            tempVal2 = templatevalues[this.TemplateVariables[i].variableName + ElemIndex2];
+            if ((typeof tempVal1 === "undefined") || (typeof tempVal2 === "undefined")) {
+                // do nothing for now
+            }
+            else {
+                templatevalues[this.TemplateVariables[i].variableName + ElemIndex1] = tempVal2;
+                templatevalues[this.TemplateVariables[i].variableName + ElemIndex2] = tempVal1;
+            }
+        }
+    }
+};
+
+ITSScreenTemplate.prototype.deleteElement = function (element1, templatevalues) {
+    // NOTE : element1 is 1-based ! So element 0 is not valid!
+
+    if (element1 >0)  {
+        var tempVal = "";
+        for (var bubble=element1; bubble < this.RepeatBlockCount; bubble++ ) {
+            var ElemIndex1 = "_" + bubble;
+            var ElemIndex2 = "_" + (bubble+1);
+            if (bubble == 1) { ElemIndex1 = ""; }
+
+            for (var i = 0; i < this.TemplateVariables.length; i++) {
+                tempVal1 = templatevalues[this.TemplateVariables[i].variableName + ElemIndex1];
+                tempVal2 = templatevalues[this.TemplateVariables[i].variableName + ElemIndex2];
+                if ((typeof tempVal1 === "undefined") || (typeof tempVal2 === "undefined")) {
+                    // do nothing for now
+                }
+                else
+                    {
+                        templatevalues[this.TemplateVariables[i].variableName + ElemIndex1] = tempVal2;
+                        templatevalues[this.TemplateVariables[i].variableName + ElemIndex2] = tempVal1;
+                    }
+                }
+            }
+        }
+
+        templatevalues.RepeatBlockCount--;
+    };
 
 ITSScreenTemplate.prototype.extract_test_editor_view_templatevalues = function (div, id, pnp_template) {
     // repeatblockcount is taken from this object. This means UI state is in this object. Fine for now.
@@ -623,10 +677,13 @@ ITSScreenTemplateVariable.prototype.traceID = function (template_parent, repeat_
     return this.varTraceID + repeat_block_counter + "Y";
 };
 
-ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function (template_parent, div_to_add_to, template_values, repeat_block_counter, on_change_function, testdefinition) {
+ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function (template_parent, div_to_add_to, template_values, repeat_block_counter, on_change_function, testdefinition, on_element_command, element_position, max_element_position) {
     var traceID = this.traceID(template_parent, repeat_block_counter);
     var colorpicker = false;
     var bgcolor = "#FFFFFF";
+    var buttons = "";
+    var select = "";
+
     if (repeat_block_counter % 2 == 1) {
         bgcolor = "#F0F0F0";
     }
@@ -635,10 +692,25 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
     } else {
         var varNameForTemplateValues = this.variableName + "_" + repeat_block_counter;
     }
+    // generate up/down/delete buttons
+    if (on_element_command != "") {
+        buttons = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0 justify-content-end" style="background-color: '+bgcolor+'">';
+        if (element_position > 1) {
+            buttons = buttons + "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"" + on_element_command + "('UP'," + element_position + ");\"><i class=\"fa fa-xs fa-arrow-up\"></i></button>\n";
+        }
+        if (element_position < max_element_position) {
+            buttons = buttons + "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"" + on_element_command + "('DOWN'," + element_position + ");\"><i class=\"fa fa-xs fa-arrow-down\"></i></button>\n";
+        }
+        //buttons = buttons + "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\""+on_element_command+"('COPY',"+element_position+");\"><i class=\"fa fa-xs fa-copy\"></i></button>&nbsp;" ;
+        if (max_element_position > 1) {
+            buttons = buttons + "<button type=\"button\" class=\"btn-xs btn-warning\" onclick=\"" + on_element_command + "('DELETE'," + element_position + ");\"><i class=\"fa fa-xs fa-trash\"></i></button></div>";
+        }
+        $('#' + div_to_add_to).append(buttons);
+    }
     // generate the variable in the div
     switch (this.variableType) { // T = text, A = textarea, H = HTML text, L = list, B = boolean, E = explanation (no controls), C = Color picker, P = Placeholder
         case "T" :
-            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+            select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
                 '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
                 '<div NoTranslate class="col-6 mx-0 px-0">' +
                 '<input NoTranslate class="form-control" type="text" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" placeholder="screen template default value" id="' + traceID + '">' +
@@ -646,7 +718,7 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             $('#' + div_to_add_to).append(select);
             break;
         case "P" :
-            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+            select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
                 '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
                 '<div NoTranslate class="col-6 mx-0 px-0">' +
                 '<input NoTranslate class="form-control" type="text" onchange="' + on_change_function + '" onkeyup="this.value = this.value.replace(/\\W/g, \'\'); ' + on_change_function + '" placeholder="screen template default value" id="' + traceID + '">' +
@@ -654,7 +726,7 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             $('#' + div_to_add_to).append(select);
             break;
         case "C" :
-            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+            select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
                 '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
                 '<div NoTranslate class="col-6 mx-0 px-0">' +
                 '<input NoTranslate class="form-control jscolor" type="text" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" placeholder="screen template default value" id="' + traceID + '">' +
@@ -663,7 +735,7 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             colorpicker = true;
             break;
         case "A" :
-            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+            select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
                 '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
                 '<div NoTranslate class="col-6 mx-0 px-0">' +
                 '<textarea NoTranslate class="form-control" rows="1" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" placeholder="screen template default value" id="' + traceID + '">' +
@@ -671,7 +743,7 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             $('#' + div_to_add_to).append(select);
             break;
         case "H" :
-            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+            select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
                 '<label NoTranslate for="' + traceID + '" class="col-12 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
                 '<div NoTranslate class="col-12 mx-0 px-0">' +
                 '<textarea-htmledit NoTranslate class="form-control" rows="1" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" placeholder="screen template default value" id="' + traceID + '">' +
@@ -680,7 +752,7 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             tinymce.remove('textarea-htmledit');
             break;
         case "L" :
-            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+            select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
                 '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
                 '<div NoTranslate class="col-6 mx-0 px-0">' +
                 '<select NoTranslate class="form-control" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" id="' + traceID + '">';
@@ -699,7 +771,7 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             $('#' + div_to_add_to).append(select);
             break;
         case "I" :
-            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+            select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
                 '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
                 '<div NoTranslate class="col-6 mx-0 px-0">' +
                 '<select NoTranslate class="form-control" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" id="' + traceID + '">';
@@ -714,7 +786,7 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             $('#' + div_to_add_to).append(select);
             break;
         case "B" :
-            var select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
+            select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0" style="background-color: '+bgcolor+'">' +
                 '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
                 '<div NoTranslate class="col-6 mx-0 px-0">' +
                 '<input NoTranslate class="form-control form-check" type="checkbox" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" data-toggle="toggle" id="' + traceID + '">' +

@@ -570,13 +570,31 @@ ITSTestTemplateEditor.prototype.generateCurrentScreenIndexTemplateVariables = fu
                 'ITSInstance.newITSTestEditorController.templateDeleteElement();',
                 placeholderlist, "ITSInstance.newITSTestEditorController.templatePlaceHolderChanged(this.value);",
                 this.currentScreenComponent.placeholderName,
-                this.currentTest);
+                this.currentTest,
+                "ITSInstance.newITSTestEditorController.templatePlaceHolderCommand");
             $('#AdminInterfaceTestTemplateEditorScreenVar').append('<small>' + this.currentScreenComponent.getColumnName() + '</small>');
         }
     }
 };
 ITSTestTemplateEditor.prototype.templatePlaceHolderChanged = function (newVal) {
     this.currentScreenComponent.placeholderName = newVal;
+};
+ITSTestTemplateEditor.prototype.templatePlaceHolderCommand = function (Command, value1) {
+    if (Command == "DELETE") {
+        ITSInstance.newITSTestEditorController.currentTemplate.deleteElement(value1, ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues);
+        ITSInstance.newITSTestEditorController.editScreenComponentDescription(ITSInstance.newITSTestEditorController.currentScreenComponentIndex, ITSInstance.newITSTestEditorController.currentScreenComponent.varComponentName);
+        ITSInstance.newITSTestEditorController.templateValueChanged();
+    }
+    if (Command == "UP") {
+        ITSInstance.newITSTestEditorController.currentTemplate.swap(value1,value1-1,ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues);
+        ITSInstance.newITSTestEditorController.editScreenComponentDescription(ITSInstance.newITSTestEditorController.currentScreenComponentIndex, ITSInstance.newITSTestEditorController.currentScreenComponent.varComponentName);
+        ITSInstance.newITSTestEditorController.templateValueChanged();
+    }
+    if (Command == "DOWN") {
+        ITSInstance.newITSTestEditorController.currentTemplate.swap(value1,value1+1,ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues);
+        ITSInstance.newITSTestEditorController.editScreenComponentDescription(ITSInstance.newITSTestEditorController.currentScreenComponentIndex, ITSInstance.newITSTestEditorController.currentScreenComponent.varComponentName);
+        ITSInstance.newITSTestEditorController.templateValueChanged();
+    }
 };
 
 ITSTestTemplateEditor.prototype.templateValueChanged = function () {
