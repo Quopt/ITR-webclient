@@ -689,12 +689,13 @@ function ITSJSONLoad(someITSObject, JSONString, parentITSObject, ITSInstanceObje
     return someITSObject;
 }
 
-function saveFileLocally(proposedFileName, fileContents) {
+function saveFileLocally(proposedFileName, fileContents, fileType) {
+    if (typeof fileType == "undefined") { fileType = "text/plain"; }
     if ('Blob' in window) {
         var fileName = prompt(ITSInstance.translator.getTranslatedString('ITSHelpers.js', 'saveFileLocally.FileNameToSave', 'Please enter file name to save'), proposedFileName);
         if (fileName) {
             var textToWrite = fileContents;
-            var textFileAsBlob = new Blob([textToWrite], {type: 'text/plain'});
+            var textFileAsBlob = new Blob([textToWrite], {type: fileType});
 
             if ('msSaveOrOpenBlob' in navigator) {
                 navigator.msSaveOrOpenBlob(textFileAsBlob, fileName);

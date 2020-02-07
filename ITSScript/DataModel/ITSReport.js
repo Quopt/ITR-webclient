@@ -90,6 +90,41 @@ ITSReports.prototype.removeReportByID = function (reportID, OnSucces, OnError) {
     }
 };
 
+ITSReports.prototype.hasReportForTest = function (testID) {
+    // check if there are reports available for this test
+    for (var i=0; i < this.reportsList.length; i++) {
+        if (this.reportsList[i].TestID == testID) {
+            return true;
+        }
+    }
+    return false;
+};
+
+ITSReports.prototype.findReportsForTests = function (testIDs) {
+    // testIDs contains an array of test id's to get the reports for
+    testIDs.sort();
+    var testList = testIDs.join(",");
+    var toReturn = [];
+    // check if there are reports available for this test
+    for (var i=0; i < this.reportsList.length; i++) {
+        if ( testList.indexOf(this.reportsList[i].TestID) >= 0) {
+            toReturn.push(this.reportsList[i]);
+        } else {
+            if (this.reportsList[i].TestIDs != "") {
+                var toCheckList = this.reportsList[i].TestIDs.split(',');
+                var noneMissing = true;
+                for (var tcl=0; tcl < toCheckList.length; tcl++) {
+                    if (testList.indexOf(toCheckList[tcl]) == -1) { noneMissing = false; break; }
+                }
+                if (noneMissing) {
+                    toReturn.push(this.reportsList[i]);
+                }
+            }
+        }
+    }
+    return toReturn;
+};
+
 function ITSReport(par, session) {
     this.ITSSession = session;
     this.myParent = par;
@@ -108,7 +143,7 @@ function ITSReport(par, session) {
     this.AfterReportScript = "";
     this.PerCandidateReportScript = "";
     this.ReportText = "";
-    this.TestIDs = "";
+    this.TestIDs = ""; // a CSV separated list of test guids that this report requires. The list should be sorted before storing.
     this.TestID = '{00000000-0000-0000-0000-000000000000}';
     this.ReportGraphs = []; // graphs belonging to this report of the ITSGraph type
     this.PluginData = {};

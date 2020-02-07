@@ -169,7 +169,7 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
 };
 
 ITSGraph.prototype.showGraph = function (id, context, animate) {
-    return generateGraph(this.ID, id, -1, false, ITSJSONStringify(this),  ITSInstance.reports.currentReport, animate);
+    return generateGraph(this.ID, id, -1, false, ITSJSONStringify(this), context, animate);
 };
 
 ITSGraph.prototype.generateGraphImage = function (textToScan, context) {
@@ -185,6 +185,7 @@ ITSGraph.prototype.generateGraphImage = function (textToScan, context) {
         var newSrc = 'src="'+url_base64+'"' ;
         var re = new RegExp(textToLookFor,"g");
         textToScan = textToScan.replace( re , newSrc);
+        $("div").remove(tempID);
     }
 
     var textToLookFor = '%%graph.'  + this.Name + '%%';
@@ -195,9 +196,10 @@ ITSGraph.prototype.generateGraphImage = function (textToScan, context) {
         }
         var myChart = this.showGraph(tempID, context, false);
         var url_base64 = document.getElementById('ITSGraph_canvas' + tempID).toDataURL('image/png');
-        var newSrc = '<img internal-blob height="'+ this.Height +'" width="'+ this.Width + '" src="'+url_base64+'" alt="..." />' ;
+        var newSrc = '<img internal-blob style="background-color:white;" height="'+ this.Height +'" width="'+ this.Width + '" src="'+url_base64+'" alt="..." />' ;
         var re = new RegExp(textToLookFor,"g");
         textToScan = textToScan.replace( re , newSrc);
+        $("div").remove(tempID);
     }
 
     return textToScan;

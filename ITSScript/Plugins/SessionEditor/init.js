@@ -41,17 +41,28 @@
             "<button type=\"button\"onclick=\"ITSInstance.editSessionController.checkAnswers(%%NR%%);\"class=\"btn-sm btn-success\"><i class=\"fa fa-fw fa-user-edit aria-hidden='true'\"></i><span id=\"AdminInterfaceEditSessionEditCheckAnswers\">Check answers</span></button>" +
             "<button type=\"button\"onclick=\"ITSInstance.editSessionController.deleteTest(%%NR%%);\"class=\"btn-sm btn-warning\"><i class=\"fa fa-fw fa-trash aria-hidden='true'\"></i><span id=\"AdminInterfaceEditSessionEditDeleteTest\">Delete test</span></button>" +
             "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "<button type=\"button\"onclick=\"ITSInstance.editSessionController.testReports(%%NR%%);\"class=\"btn-sm btn-success\"><i class=\"fa fa-fw fa-pen-alt aria-hidden='true'\"></i><span id=\"AdminInterfaceEditSessionEditReportTest\">Test reports</span></button>" +
+            "%%TESTREPORTSBUTTON%%" +
             "</div>" +
-            //            "<div class=\"col-sm-6\">"+
-            //            "<h5 class=\"card-title\"id=\"AdminInterfaceEditSessionEditTestGraphs\">Test graph</h5>"+
-            //            "<p class=\"card-text\">%%GRAPH%%</p>"+
-            //            "</div>"+
             "</div>" +
             "</div>" +
             "</div>";
+
+        this.testCardElementDoneNoUIElements =
+            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%ID%%\">" +
+            "<div class=\"card\">" +
+            "<h5 class=\"card-header\">%%TESTTITLE%%</h5>" +
+            "<div class=\"card-body col-12 row\">" +
+            "<div class=\"col-sm-12\">" +
+            "<h5 class=\"card-title\"id=\"AdminInterfaceEditSessionEditTestScores\">Test scores</h5>" +
+            "<p class=\"card-text\">%%TESTSCORES%%</p>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>";
+
+        this.testCardElementButtonViewReports = "<button type=\"button\"onclick=\"ITSInstance.editSessionController.testReports(%%NR%%);\"class=\"btn-sm btn-success\"><i class=\"fa fa-fw fa-pen-alt aria-hidden='true'\"></i><span id=\"AdminInterfaceEditSessionEditReportTest\">Test reports</span></button>";
         this.testCardElementID = /%%NR%%/g;
-        this.testCardElementTracker = /%%I%%/g;
+        this.testCardElementTracker = /%%ID%%/g;
         this.testCardElementTitle = /%%TESTTITLE%%/g;
         this.testCardElementScores = /%%TESTSCORES%%/g;
         this.testCardElementGraph = /%%GRAPH%%/g;
@@ -66,6 +77,7 @@
         this.testCardElementPerc2 = /%%PERC2%%/g;
         this.testCardElementPerc3 = /%%PERC3%%/g;
         this.testCardElementRaw = /%%RAW%%/g;
+        this.testCardElementReportsButton = /%%TESTREPORTSBUTTON%%/g ;
 
         this.testCardElementInProgress =
             "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%NR%%\">" +
@@ -101,11 +113,11 @@
             "  <thead><tr>" +
             "   <th col='A%%NR%%' id=\"AdminInterfaceTestTemplateEditorNorm_ScaleHeader_%%NR%%\">Scale</th>" +
             "   <th col='B%%NR%%' id=\"AdminInterfaceTestTemplateEditorNorm_RawHeader_%%NR%%\" scope=\"col\">Score</th>" +
-            "   <th col='C%%NR%%' id=\"AdminInterfaceTestTemplateEditorNorm_NormHeader1_%%NR%%\" scope=\"col\">Norm <select notranslate=\"\" class=\"form-control form-control-sm\" id=\"AdminInterfaceTestTemplateEditorNorm%%NR%%-Norm1Select\" onchange=\"ITSInstance.editSessionController.selectNormInEditor(1,%%NR%%,this );\"></th>" +
+            "   <th col='C%%NR%%' notranslate id=\"AdminInterfaceTestTemplateEditorNorm_NormHeader1_%%NR%%\" scope=\"col\"><span id='AdminInterfaceTestTemplateEditorNorm_NormHeader'>Norm </span><select notranslate class=\"form-control form-control-sm\" id=\"AdminInterfaceTestTemplateEditorNorm%%NR%%-Norm1Select\" onchange=\"ITSInstance.editSessionController.selectNormInEditor(1,%%NR%%,this );\"></th>" +
             "   <th col='D%%NR%%' id=\"AdminInterfaceTestTemplateEditorNorm_PercentileHeader1_%%NR%%\" scope=\"col\">Percentile 1</th>" +
-            "   <th col='E%%NR%%' id=\"AdminInterfaceTestTemplateEditorNorm_NormHeader2_%%NR%%\" scope=\"col\">Norm <select notranslate=\"\" class=\"form-control form-control-sm\" id=\"AdminInterfaceTestTemplateEditorNorm%%NR%%-Norm2Select\" onchange=\"ITSInstance.editSessionController.selectNormInEditor(2,%%NR%%,this );\"></th>" +
+            "   <th col='E%%NR%%' notranslate id=\"AdminInterfaceTestTemplateEditorNorm_NormHeader2_%%NR%%\" scope=\"col\"><span id='AdminInterfaceTestTemplateEditorNorm_NormHeader'>Norm </span> <select notranslate class=\"form-control form-control-sm\" id=\"AdminInterfaceTestTemplateEditorNorm%%NR%%-Norm2Select\" onchange=\"ITSInstance.editSessionController.selectNormInEditor(2,%%NR%%,this );\"></th>" +
             "   <th col='F%%NR%%' id=\"AdminInterfaceTestTemplateEditorNorm_PercentileHeader2_%%NR%%\" scope=\"col\">Percentile 2</th>" +
-            "   <th col='G%%NR%%' id=\"AdminInterfaceTestTemplateEditorNorm_NormHeader3_%%NR%%\" scope=\"col\">Norm <select notranslate=\"\" class=\"form-control form-control-sm\" id=\"AdminInterfaceTestTemplateEditorNorm%%NR%%-Norm3Select\" onchange=\"ITSInstance.editSessionController.selectNormInEditor(3,%%NR%%,this );\"></th>" +
+            "   <th col='G%%NR%%' notranslate id=\"AdminInterfaceTestTemplateEditorNorm_NormHeader3_%%NR%%\" scope=\"col\"><span id='AdminInterfaceTestTemplateEditorNorm_NormHeader'>Norm </span> <select notranslate class=\"form-control form-control-sm\" id=\"AdminInterfaceTestTemplateEditorNorm%%NR%%-Norm3Select\" onchange=\"ITSInstance.editSessionController.selectNormInEditor(3,%%NR%%,this );\"></th>" +
             "   <th col='H%%NR%%' id=\"AdminInterfaceTestTemplateEditorNorm_PercentileHeader3_%%NR%%\" scope=\"col\">Percentile 3</th>" +
             "  </tr>" +
             "  </thead>";
@@ -165,14 +177,18 @@
     };
 
     ITSSessionEditor.prototype.sessionLoaded = function () {
-        // session is loaded
-        $('#AdminInterfaceEditSessionEditHeaderName')[0].innerHTML = this.currentSession.Description;
-        $('#AdminInterfaceEditSessionEditHeaderCandidate')[0].innerHTML = this.currentSession.Person.createHailing();
-        ITSInstance.UIController.showInterfaceAsWaitingOff();
-        // to do : check if the session type is OK to be viewed with this viewer
-        this.toggleButtons();
-        this.generateTestsList();
-        this.loadAvailableTestsToAdd();
+        if (! ITSInstance.reports.listLoaded) {
+            ITSInstance.reports.loadAvailableReportsList(this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this));
+        } else {
+            // session is loaded and reports are available
+            $('#AdminInterfaceEditSessionEditHeaderName')[0].innerHTML = this.currentSession.Description;
+            $('#AdminInterfaceEditSessionEditHeaderCandidate')[0].innerHTML = this.currentSession.Person.createHailing();
+            ITSInstance.UIController.showInterfaceAsWaitingOff();
+            // to do : check if the session type is OK to be viewed with this viewer
+            this.toggleButtons();
+            this.generateTestsList();
+            this.loadAvailableTestsToAdd();
+        }
     };
     ITSSessionEditor.prototype.sessionLoadingFailed = function () {
         // go back to the previous page and show error
@@ -206,14 +222,16 @@
         $('#AdminInterfaceEditSessionEditResendInvitation').show();
         $('#AdminInterfaceEditSessionEditResendInvitationNoReset').show();
         $('#AdminInterfaceEditSessionEditStartNow').show();
+        $('#AdminInterfaceEditSessionEditDownloadButton').hide();
         if (this.currentSession.Status >= 30) {
             $('#AdminInterfaceEditSessionEditResendInvitation').hide();
             $('#AdminInterfaceEditSessionEditResendInvitationNoReset').hide();
             $('#AdminInterfaceEditSessionEditStartNow').hide();
+            $('#AdminInterfaceEditSessionEditDownloadButton').show();
         }
     }
 
-    ITSSessionEditor.prototype.generateTestsList = function (saveAfterCalculate) {
+    ITSSessionEditor.prototype.generateTestsList = function (NoUIElements ) {
         $('#AdminInterfaceEditSessionEditTestsList').empty();
         this.currentSession.SessionTests.sort(function (a, b) {
             return a.Sequence - b.Sequence;
@@ -221,7 +239,7 @@
         var ct = {};
         var template = "";
         var allTestsDone = true;
-        if (saveAfterCalculate == undefined) saveAfterCalculate = -1;
+        if (typeof NoUIElements == "undefined") {NoUIElements = false;}
 
         for (var i = 0; i < this.currentSession.SessionTests.length; i++) {
             ct = this.currentSession.SessionTests[i];
@@ -235,18 +253,22 @@
                 allTestsDone = false;
             } else {
                 // done
-                template = this.testCardElementDone;
+                if (NoUIElements) {
+                    template = this.testCardElementDoneNoUIElements;
+                } else {
+                    template = this.testCardElementDone;
+                }
 
                 // make sure results are up to date and auto saved back to the server if not present yet
                 ct.calculateScores(true, true);
-
-                if (saveAfterCalculate >= 0) {
-//                    this.currentSession.SessionTests[saveAfterCalculate].saveToServer(function () {},
-//                        function () { });
-                }
             }
 
             // replace tokens
+            if (ITSInstance.reports.hasReportForTest(ct.testDefinition.ID)) {
+                template = template.replace(this.testCardElementReportsButton, this.testCardElementButtonViewReports);
+            } else {
+                template = template.replace(this.testCardElementReportsButton, "");
+            }
             var percent = Math.round((ct.CurrentPage / ct.TotalPages)  * 100);
             template = template.replace(this.testCardElementID, i);
             template = template.replace(this.testCardElementTitle, ct.testDefinition.Description);
@@ -254,6 +276,7 @@
             template = template.replace(this.testCardElementGraph, "<div id='AdminInterfaceEditSessionEditTestsGraph" + i + "'></div>");
             template = template.replace(this.testCardElementProgress, percent);
             template = template.replace(this.testCardElementStarted, ITSToDatePicker(ct.TestStart));
+            template = template.replace(this.testCardElementTracker, i);
 
             $('#AdminInterfaceEditSessionEditTestsList').append(template);
 
@@ -263,7 +286,7 @@
                 $('#AdminInterfaceEditSessionEditTestCardsProgress' + i).text( percent + "%" );
             }
 
-            this.generateNormTable(ct, i, $('#AdminInterfaceEditSessionEditTestsTable' + i));
+            this.generateNormTable(ct, i, $('#AdminInterfaceEditSessionEditTestsTable' + i), NoUIElements);
             var resultsTable = "";
             ITSInstance.translator.translateDiv("#AdminInterfaceSessionEdit");
         }
@@ -276,7 +299,7 @@
         this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this));
     };
 
-    ITSSessionEditor.prototype.generateNormTable = function (currentTest, testNr, divElement) {
+    ITSSessionEditor.prototype.generateNormTable = function (currentTest, testNr, divElement, noNormDropdowns) {
         divElement.empty();
         var template = this.scoreMatrixLinePart1;
         var totalToAdd = "";
@@ -349,15 +372,21 @@
         divElement.append(totalToAdd);
 
         // load the tests norms
-        $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm1Select').append(this.generateNormSelection(
-            currentTest.testDefinition.norms, currentTest.NormID1
-        ));
-        $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm2Select').append(this.generateNormSelection(
-            currentTest.testDefinition.norms, currentTest.NormID2
-        ));
-        $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm3Select').append(this.generateNormSelection(
-            currentTest.testDefinition.norms, currentTest.NormID3
-        ));
+        if (noNormDropdowns) {
+            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm1Select')[0].outerHTML = this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID1);
+            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm2Select')[0].outerHTML = this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID2);
+            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm3Select')[0].outerHTML = this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID3);
+        } else {
+            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm1Select').append(this.generateNormSelection(
+                currentTest.testDefinition.norms, currentTest.NormID1
+            ));
+            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm2Select').append(this.generateNormSelection(
+                currentTest.testDefinition.norms, currentTest.NormID2
+            ));
+            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm3Select').append(this.generateNormSelection(
+                currentTest.testDefinition.norms, currentTest.NormID3
+            ));
+        }
 
         // switch off unused columns
         if (currentTest.testDefinition.norms.length < 3) {
@@ -402,7 +431,7 @@
                 this.currentSession.SessionTests[testNr].NormID3 = normValue.value;
                 break;
         };
-        this.generateTestsList(testNr);
+        this.generateTestsList();
     };
 
     ITSSessionEditor.prototype.generateNormSelection = function (normsList, defaultNormID) {
@@ -416,6 +445,15 @@
             result += "<option notranslate " + selected + "value ='" + normsList[i].id + "'>" + normsList[i].normDescription + "</option>";
         }
         return result;
+    };
+
+    ITSSessionEditor.prototype.generateNormSelectedDescription = function (normsList, defaultNormID) {
+        for (var i = 0; i < normsList.length; i++) {
+            if (normsList[i].id == defaultNormID) {
+                return normsList[i].normDescription;
+            }
+        }
+        return "";
     };
 
     ITSSessionEditor.prototype.viewAnswers = function (testIndex) {
@@ -559,6 +597,64 @@
             function () { ITSInstance.UIController.showError('ITSSessionEditor.DeleteSessionFailed', 'The session could not be deleted at this moment'); }
             );
         setTimeout(function () { window.history.back();},500);
+    };
+
+
+    ITSSessionEditor.prototype.downloadSession = function () {
+        // make sure all needed reports are loaded first
+        ITSInstance.UIController.showInterfaceAsWaitingOn();
+        // loop through all reports that are applicable for this session
+        var testLists = [];
+        for (var i = 0; i < this.currentSession.SessionTests.length; i++) {
+            ct = this.currentSession.SessionTests[i];
+            testLists.push(ct.testDefinition.ID);
+        }
+        var reportsList = ITSInstance.reports.findReportsForTests(testLists);
+        for (var i = 0; i < reportsList.length; i++) {
+            if (! reportsList[i].detailsLoaded) {
+                reportsList[i].loadDetailDefinition(this.downloadSession.bind(this), this.zipError);
+                return;
+            }
+        }
+
+        // add all results to a ZIP file and download that to the client
+        var zip = new JSZip();
+
+        // add the score overview
+        ITSInstance.editSessionController.generateTestsList(true);
+        var fileName = ITSInstance.translator.getTranslatedString("ITSSessionEditor", "ScoreOverview", "Score overview");
+        zip.file( fileName + ".html", '<html><body>' + $('#AdminInterfaceEditSessionEditTestsList')[0].outerHTML + '</body></html>');
+        zip.file( fileName + ".doc", '<html><body>' + $('#AdminInterfaceEditSessionEditTestsList')[0].outerHTML + '</body></html>' );
+        ITSInstance.editSessionController.generateTestsList();
+
+        // generate and add the reports per test
+        var folderName = "";
+        for (var i = 0; i < reportsList.length; i++) {
+            folderName = "";
+            if (reportsList[i].TestID != "") {
+                // locate the test and use that as folder name
+                try {
+                    folderName = ITSInstance.tests.testList[ITSInstance.tests.findTestById(ITSInstance.tests.testList, reportsList[i].TestID)].Description + "/";
+                } catch {}
+                // find the test for this report
+                for (var tc=0; tc < this.currentSession.SessionTests.length; tc++) {
+                    if (this.currentSession.SessionTests[tc].TestID == reportsList[i].TestID) {
+                        zip.file(folderName + reportsList[i].Description + ".html", '<html><body>' +reportsList[i].generateTestReport(this.currentSession, this.currentSession.SessionTests[tc], false)+ '</body></html>');
+                        zip.file(folderName + reportsList[i].Description + ".doc",'<html><body style="background-color: white">' + reportsList[i].generateTestReport(this.currentSession, this.currentSession.SessionTests[tc], false)+ '</body></html>');
+                    }
+                }
+            }
+            // to do for the future, generate session reports on multiple tests here
+        }
+
+        // download
+        ITSInstance.UIController.showInterfaceAsWaitingOff();
+        var promise = null;
+        promise = zip.generateAsync({type : "blob"}).then(function (blob) { saveFileLocally(fileName + " " + this.currentSession.Description + ".zip" , blob, "application/zip"); }.bind(this));
+    };
+
+    ITSSessionEditor.prototype.zipError = function () {
+        ITSInstance.UIController.showError('ITSSessionEditor.ZIPFailed', 'The session results could not be downloaded at this moment.');
     };
 
     ITSSessionEditor.prototype.addTest = function (testID) {
