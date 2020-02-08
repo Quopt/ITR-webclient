@@ -656,7 +656,8 @@
         // download
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         var promise = null;
-        promise = zip.generateAsync({type : "blob"}).then(function (blob) { saveFileLocally(fileName + " " + this.currentSession.Description + ".zip" , blob, "application/zip"); }.bind(this));
+        promise = zip.generateAsync({type : "blob"}).
+            then(function (blob) { saveFileLocally(fileName + " " + this.currentSession.Description + " - " + this.currentSession.Person.createHailing() + ".zip" , blob, "application/zip"); }.bind(this));
     };
 
     ITSSessionEditor.prototype.zipError = function () {
