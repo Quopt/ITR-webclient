@@ -601,6 +601,14 @@
 
 
     ITSSessionEditor.prototype.downloadSession = function () {
+        var openingTag = '<html><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">';
+        openingTag += '<link href="fontawesome/css/all.css" rel="stylesheet">';
+        openingTag += '<body><script src="https://use.fontawesome.com/releases/v5.12.1/js/all.js" data-auto-replace-svg="nest"></script>';
+        openingTag += '<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>\n' +
+        '<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>\n' +
+        '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>';
+        var closingTag = '</body></html>';
+
         // make sure all needed reports are loaded first
         ITSInstance.UIController.showInterfaceAsWaitingOn();
         // loop through all reports that are applicable for this session
@@ -623,8 +631,7 @@
         // add the score overview
         ITSInstance.editSessionController.generateTestsList(true);
         var fileName = ITSInstance.translator.getTranslatedString("ITSSessionEditor", "ScoreOverview", "Score overview");
-        zip.file( fileName + ".html", '<html><body>' + $('#AdminInterfaceEditSessionEditTestsList')[0].outerHTML + '</body></html>');
-        zip.file( fileName + ".doc", '<html><body>' + $('#AdminInterfaceEditSessionEditTestsList')[0].outerHTML + '</body></html>' );
+        zip.file( fileName + ".html", openingTag + $('#AdminInterfaceEditSessionEditTestsList')[0].outerHTML + closingTag);
         ITSInstance.editSessionController.generateTestsList();
 
         // generate and add the reports per test
@@ -639,8 +646,7 @@
                 // find the test for this report
                 for (var tc=0; tc < this.currentSession.SessionTests.length; tc++) {
                     if (this.currentSession.SessionTests[tc].TestID == reportsList[i].TestID) {
-                        zip.file(folderName + reportsList[i].Description + ".html", '<html><body>' +reportsList[i].generateTestReport(this.currentSession, this.currentSession.SessionTests[tc], false)+ '</body></html>');
-                        zip.file(folderName + reportsList[i].Description + ".doc",'<html><body style="background-color: white">' + reportsList[i].generateTestReport(this.currentSession, this.currentSession.SessionTests[tc], false)+ '</body></html>');
+                        zip.file(folderName + reportsList[i].Description + ".html", openingTag +reportsList[i].generateTestReport(this.currentSession, this.currentSession.SessionTests[tc], false)+ closingTag);
                     }
                 }
             }
