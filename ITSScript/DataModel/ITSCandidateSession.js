@@ -397,7 +397,7 @@ ITSCandidateSession.prototype.sessionLoaded = function () {
 
         this.SessionTests[i].loadDetails(this.testLoadedFine.bind(this,i), this.sessionLoadingFailed.bind(this), this.InTestTaking);
     }
-    if (this.SessionTests.length == 0) this.sessionLoadingFailed();
+    //if (this.SessionTests.length == 0) this.sessionLoadingFailed(); xxx
 };
 
 ITSCandidateSession.prototype.testLoadedFine = function (testIndex) {

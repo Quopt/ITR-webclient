@@ -342,9 +342,8 @@ ITSChangeExistingSessionEditor.prototype.UIToInvalidated = function () {
 
 ITSChangeExistingSessionEditor.prototype.emailAddressChanged = function ( newValue ) {
     // the email address has changed. check if this is a known user. If so then update the password, name etc and stored persid. If not generate a new person id.
-    // AdminInterfaceChangeSessionCandidateFirstName AdminInterfaceChangeSessionCandidateInitials  AdminInterfaceChangeSessionCandidateLastName  AdminInterfaceChangeSessionCandidateBirthDate
-    // AdminInterfaceChangeSessionCandidateSexMale AdminInterfaceChangeSessionCandidateSexFemale AdminInterfaceChangeSessionCandidateSexUnknown
-    // AdminInterfaceChangeSessionCandidatePassword
+    // the session cannot be saved until this check is complete
+    $('#AdminInterfaceChangeSessionSaveButton')[0].disabled  = true;
     ITSInstance.candidates.loadCurrentCandidateByLogin( newValue, this.emailAddressChangedFound.bind(this), this.emailAddressChangedNotFound.bind(this) );
 };
 
@@ -445,6 +444,7 @@ ITSChangeExistingSessionEditor.prototype.emailAddressChangedFound = function () 
         this.currentSession.Person.LastName = ITSInstance.candidates.searchForCandidates[0].LastName;
         this.currentSession.Person.Initials = ITSInstance.candidates.searchForCandidates[0].Initials;
         this.currentSession.Person.BirthDate = ITSInstance.candidates.searchForCandidates[0].BirthDate;
+        this.currentSession.Person.Age = ITSInstance.candidates.searchForCandidates[0].Age;
         this.currentSession.Person.Sex = ITSInstance.candidates.searchForCandidates[0].Sex;
         //this.currentSession.Person.Password = ITSInstance.candidates.searchForCandidates[0].Password;
         this.currentSession.Person.Password = "";
@@ -463,6 +463,7 @@ ITSChangeExistingSessionEditor.prototype.emailAddressChangedFound = function () 
     }
     // relink all sessiontests to the correct person id
     this.currentSession.relinkToCurrentPersonID();
+    $('#AdminInterfaceChangeSessionSaveButton')[0].disabled  = false;
 };
 
 ITSChangeExistingSessionEditor.prototype.emailAddressChangedNotFound = function () {
@@ -473,6 +474,7 @@ ITSChangeExistingSessionEditor.prototype.emailAddressChangedNotFound = function 
     $('#AdminInterfaceChangeSessionCandidatePassword').val(this.currentSession.Person.Password);
     // relink all sessiontests to the correct person id
     this.currentSession.relinkToCurrentPersonID();
+    $('#AdminInterfaceChangeSessionSaveButton')[0].disabled  = false;
 };
 
 ITSChangeExistingSessionEditor.prototype.clearSession = function () {

@@ -384,9 +384,6 @@ ITSGroupSessionEditor.prototype.UIToInvalidated = function () {
 
 ITSGroupSessionEditor.prototype.emailAddressChanged = function ( newValue ) {
     // the email address has changed. check if this is a known user. If so then update the password, name etc and stored persid. If not generate a new person id.
-    // AdminInterfaceGroupSessionCandidateFirstName AdminInterfaceGroupSessionCandidateInitials  AdminInterfaceGroupSessionCandidateLastName  AdminInterfaceGroupSessionCandidateBirthDate
-    // AdminInterfaceGroupSessionCandidateSexMale AdminInterfaceGroupSessionCandidateSexFemale AdminInterfaceGroupSessionCandidateSexUnknown
-    // AdminInterfaceGroupSessionCandidatePassword
     ITSInstance.candidates.loadCurrentCandidateByLogin( newValue, this.emailAddressChangedFound.bind(this), this.emailAddressChangedNotFound.bind(this) );
 };
 
@@ -693,6 +690,7 @@ ITSGroupSessionEditor.prototype.emailAddressChangedFound = function () {
         this.currentSession.Person.LastName = ITSInstance.candidates.searchForCandidates[0].LastName;
         this.currentSession.Person.Initials = ITSInstance.candidates.searchForCandidates[0].Initials;
         this.currentSession.Person.BirthDate = ITSInstance.candidates.searchForCandidates[0].BirthDate;
+        this.currentSession.Person.Age = ITSInstance.candidates.searchForCandidates[0].Age;
         this.currentSession.Person.Sex = ITSInstance.candidates.searchForCandidates[0].Sex;
         //this.currentSession.Person.Password = ITSInstance.candidates.searchForCandidates[0].Password;
         this.currentSession.Person.Password = "";

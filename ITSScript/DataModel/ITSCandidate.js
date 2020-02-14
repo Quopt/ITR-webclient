@@ -47,6 +47,7 @@ ITSCandidate = function (parent, ITSSession) {
 
     this.Active = true;
     this.BirthDate = "1900-1-1";
+    this.Age = 0;
     this.Sex = 0; // 0 unknonw, 1 male, 2 female, 3 gender neutral
     this.Password = "";
 
@@ -55,7 +56,7 @@ ITSCandidate = function (parent, ITSSession) {
     this.persistentProperties = [
         'ID', 'EMail', 'FirstName', 'LastName', 'Initials', 'TitlesBefore', 'TitlesAfter', 'UserDefinedFields',
         'Remarks', 'PreferredLanguage', 'DateOfLastTest', 'CompanyID', 'ManagedByUserID', 'PluginData', 'Active', 'BirthDate',
-        'Sex', 'Password'
+        'Sex', 'Password', 'Age'
     ];
 }
 
