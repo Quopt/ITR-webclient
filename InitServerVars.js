@@ -21,10 +21,10 @@ var configBaseURL = "https://" + document.location.host;
 if (document.location.host.indexOf("localhost") == 0) {
     if (document.location.protocol == "http:") {
         configBaseURL = "http://localhost";
-    }
-    if (document.location.port != 80) {
+    } else if (document.location.port != 80) {
         configBaseURL = "http://localhost:443";
     }
+    if (document.location.port > 10000) { configBaseURL = "http://localhost:443"; }// dev environment
 }
 var CopyrightString = ""; // this copyright line is shown by default. You will need to claim copyright of the pages server for your customers protection (copyright laws ... sigh)
 var CompanyName = ""; // this is the default company name

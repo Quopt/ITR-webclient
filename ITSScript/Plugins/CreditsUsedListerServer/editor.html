@@ -15,22 +15,22 @@
 -->
 <div class="row col-12">
     <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
-    <h4 id="CreditsUsedListerInterfaceEditSessionEditHeader">View credit usage</h4> &nbsp;<i class="fa fa-2x fa-angle-double-down" onclick="$('html, body').animate({scrollTop: $('html, body').get(0).scrollHeight }, 2000); "></i>
+    <h4 id="CreditsUsedListerServerInterfaceEditSessionEditHeader">View consolidated credit usage at the server level </h4> &nbsp;<i class="fa fa-2x fa-angle-double-down" onclick="$('html, body').animate({scrollTop: $('html, body').get(0).scrollHeight }, 2000); "></i>
     <br/><br/>
 </div>
 
 
 <div class="row col-12">
-    <div id="CreditsUsedListerTable" class="row col-12">
+    <div id="CreditsUsedListerServerTable" class="row col-12">
     </div>
-    <div class="row align-items-center justify-content-center col-12" id="CreditsUsedListerTableAdd">
-        <button id="CreditsUsedListerTableFindMoreButton" type="button" class="btn btn-success"
-                onclick="ITSInstance.CreditsUsedListerController.findMore();"><i
+    <div class="row align-items-center justify-content-center col-12" id="CreditsUsedListerServerTableAdd">
+        <button id="CreditsUsedListerServerTableFindMoreButton" type="button" class="btn btn-success"
+                onclick="ITSInstance.CreditsUsedListerServerController.findMore();"><i
                 class="fa fa-fw fa-layer-group"></i> Show more information
         </button>
-        <button id="CreditsUsedListerTableDownloadButton" type="button" class="btn btn-success"
-                onclick="ITSInstance.CreditsUsedListerController.download();"><i
-                class="fa fa-fw fa-download"></i> <span id="CreditsUsedListerTableDownloadButtonLabel">Download current list as CSV</span>
+        <button id="CreditsUsedListerServerTableDownloadButton" type="button" class="btn btn-success"
+                onclick="ITSInstance.CreditsUsedListerServerController.download();"><i
+                class="fa fa-fw fa-download"></i> <span id="CreditsUsedListerServerTableDownloadButtonLabel">Download current list as CSV</span>
         </button> &nbsp;<i class="fa fa-2x fa-angle-double-up" onclick="$('html, body').animate({scrollTop: 0 }, 2000); "></i>
     </div>
 

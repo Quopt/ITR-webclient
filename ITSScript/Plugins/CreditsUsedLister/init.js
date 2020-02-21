@@ -107,10 +107,9 @@
     };
 
     ITSCreditsUsedListerEditor.prototype.fireRequest = function () {
-        // ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, DefaultObjectType, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter) {
         this.CreditsUsedList = {};
         ITSInstance.UIController.showInterfaceAsWaitingOn();
-        ITSInstance.JSONAjaxLoader('creditusages' , this.CreditsUsedList, this.listLoaded.bind(this), this.listLoadingFailed.bind(this), 'ITSObject', this.currentPage, 25,
+        ITSInstance.JSONAjaxLoader('creditusages' , this.CreditsUsedList, this.listLoaded.bind(this), this.listLoadingFailed.bind(this), 'ITSObject', this.currentPage, 100,
             this.sortField, this.archived, "N", "Y", this.filter, this.searchField);
     };
 
@@ -127,7 +126,7 @@
 
             this.CreditsUsedList[i].UsageDateTime = convertISOtoITRDate(this.CreditsUsedList[i].UsageDateTime);
 
-            rowText = rowText.replace( this.mNR, i + this.currentPage *25 +1 );
+            rowText = rowText.replace( this.mNR, i + this.currentPage *100 +1 );
             rowText = rowText.replace( this.mUsageDateTime, this.CreditsUsedList[i].UsageDateTime );
             rowText = rowText.replace( this.mInvoiceCode, this.CreditsUsedList[i].InvoiceCode );
             rowText = rowText.replace( this.mTotalTicks, this.CreditsUsedList[i].TotalTicks );
@@ -145,9 +144,9 @@
             this.generatedTable += rowText;
         }
 
-        // if returned data is less than 25 records then hide the load more button
+        // if returned data is less than 100 records then hide the load more button
         $('#CreditsUsedListerTableFindMoreButton').hide();
-        if (this.CreditsUsedList.length >= 25) { $('#CreditsUsedListerTableFindMoreButton').show(); };
+        if (this.CreditsUsedList.length >= 100) { $('#CreditsUsedListerTableFindMoreButton').show(); };
 
         // replace the div contents with the generated table
         $('#CreditsUsedListerTable').empty();
@@ -180,6 +179,11 @@
     ITSCreditsUsedListerEditor.prototype.findMore = function () {
         this.currentPage++;
         this.fireRequest();
+    };
+
+    ITSCreditsUsedListerEditor.prototype.download = function () {
+        temp = ConvertObjectListToCSV(this.CreditsUsedList, ",", ["CompanyID","ID","SessionID","UserID","dbsource","id"]);
+        saveFileLocally("itr_creditsused_download.csv", temp);
     };
 
     // register the portlet

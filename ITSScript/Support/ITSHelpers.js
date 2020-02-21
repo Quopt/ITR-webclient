@@ -986,6 +986,19 @@ function precise_round(num, dec){
     return (Math.round((num*Math.pow(10,dec))+(num_sign*0.0001))/Math.pow(10,dec)).toFixed(dec);
 }
 
+function ConvertObjectListToCSV(objectList, separator, fieldsToRemove) {
+    if (typeof fieldsToRemove == "undefined") { fieldsToRemove = []; }
+    // get the desired headers for this object list
+    var headers = {};
+    var keys = Object.getOwnPropertyNames(objectList[0]);
+    for (var headerLine in keys) {
+        if (fieldsToRemove.lastIndexOf(keys[headerLine]) < 0) {
+            headers[keys[headerLine]] = keys[headerLine];
+        }
+    }
+    return ConvertToSV(headers, objectList, ConvertFieldToCSVSafe, separator);
+}
+
 function ConvertToSV(headerRow, dataRow, fieldConversionFunction, separator) {
     var firstField = true;
     var result = "";
