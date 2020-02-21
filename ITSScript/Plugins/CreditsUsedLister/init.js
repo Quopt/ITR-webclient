@@ -195,5 +195,9 @@
 
     ITSInstance.UIController.registerEditor(ITSInstance.CreditsUsedListerController);
 
-
+    ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
+        if (ITSInstance.users.currentUser.MayOrderCredits) {
+            ITSInstance.UIController.registerMenuItem('#submenuCompaniesLI', "#CreditsUserLister.ListMenu", ITSInstance.translator.translate("#CreditsUserLister.ListMenu", "Credit usage"), "fa-calculator", "ITSRedirectPath(\'CreditsUsedLister\');");
+        }
+    }, true);
 })()// IIFE

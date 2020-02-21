@@ -109,5 +109,9 @@
     ITSInstance.translator.translateDiv("#CreditsOrderByMailInterfaceSessionEdit");
 
     // register the menu items if applicable
-
+    ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
+        if (ITSInstance.users.currentUser.MayOrderCredits) {
+            ITSInstance.UIController.registerMenuItem('#submenuCompaniesLI', "#CreditsOrderByMail.ListMenu", ITSInstance.translator.translate("#CreditsOrderByMail.ListMenu", "Order credits by e-mail"), "fa-calculator", "ITSRedirectPath(\'CreditsOrderByMail\');");
+        }
+    }, true);
 })()// IIFE
