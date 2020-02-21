@@ -118,7 +118,7 @@
             rowText = rowText.replace( this.mCreditsGranted, this.CreditsGrantedList[i].CreditsGranted );
 
             if (ITSInstance.users.currentUser.IsMasterUser) {
-                var companyName ="X";
+                var companyName="X";
                 try {
                     companyName = ITSInstance.companies.findOtherCompanyByID(this.CreditsGrantedList[i].CompanyID).CompanyName;
                 } catch {}

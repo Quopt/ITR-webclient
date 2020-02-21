@@ -33,6 +33,7 @@ function ITSCompany (uParent) {
     this.ContactPerson = "";
     this.ContactPhone = "";
     this.ContactEMail = "";
+    this.CCEMail = '';
     this.AllowNegativeCredits = false;
     this.NoPublicTests = false;
     this.VATPercentage = "21";
@@ -47,7 +48,7 @@ function ITSCompany (uParent) {
         'YearlyLicenseFee','ConcurrentOpenSessions','CompanyName','CompanyCountry',
         'InternationalVATNr','InvoiceAddress','MailAddress','VisitingAddress','CompanyLogo','ContactPerson','ContactPhone',
         'ContactEMail','AllowNegativeCredits','NoPublicTests','VATPercentage','LicenseStartDate','LicenseEndDate',
-        'InvoiceCurrency','AdministrativeID'
+        'InvoiceCurrency','AdministrativeID', 'CCEMail'
     ];
     
     this.newCompany = false;

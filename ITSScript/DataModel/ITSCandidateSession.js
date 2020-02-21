@@ -363,7 +363,7 @@ ITSCandidateSession.prototype.loadSession = function (sessionID, OnSuccess, OnEr
                 ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, function () {
                 }, this.sessionLoadingFailed.bind(this));
             }
-        }.bind(this), this.sessionLoadingFailed.bind(this), 'ITSCandidateSession', 0, 99999, "", "N", "N", "Y", "Status=10, Status=20");
+        }.bind(this), this.sessionLoadingFailed.bind(this), 'ITSObject', 0, 99999, "", "N", "N", "Y", "Status=10, Status=20");
     } else {
         ITSInstance.JSONAjaxLoader('sessions/' + sessionID, this, function () {
             // load the candidate information
@@ -371,7 +371,7 @@ ITSCandidateSession.prototype.loadSession = function (sessionID, OnSuccess, OnEr
                 ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, function () {
                 }, this.sessionLoadingFailed.bind(this));
             }
-        }.bind(this), this.sessionLoadingFailed.bind(this), 'ITSCandidateSession');
+        }.bind(this), this.sessionLoadingFailed.bind(this), 'ITSObject');
     }
     // load the tests in the session
     if (InTestTaking) {

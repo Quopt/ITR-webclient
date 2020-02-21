@@ -397,10 +397,8 @@ ITSChangeExistingSessionEditor.prototype.saveCurrentSession = function ( onSucce
     */
 
     if (ValidationMessage == "") {
-        if (this.currentSession.Status >= 30) this.currentSession.Status = 20;
-        if (this.currentSession.firstTestToTake() == -1) {
-            this.currentSession.Status = 30;
-        }
+        if ((this.currentSession.Status >= 30) && (this.currentSession.firstTestToTake() > -1) ) this.currentSession.Status = 20;
+        if ((this.currentSession.Status == 20) && (this.currentSession.firstTestToTake() <= -1) ) this.currentSession.Status = 30;
 
         if (!this.currentSession.Active) {
             // if this session is not active then activate it

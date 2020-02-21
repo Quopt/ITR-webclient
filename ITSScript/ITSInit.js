@@ -70,6 +70,7 @@ ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuc
     //tempHeaders['IncludeArchived'] = "N";
     tempHeaders['IncludeMaster'] = "N";
     tempHeaders['IncludeClient'] = "Y";
+    tempHeaders['ITRLang'] = ITSLanguage;
     tempHeaders['TimeZoneOffset'] = "" + moment().utcOffset() / 60; //(new Date()).getTimezoneOffset()/60;
     if (Filter) {
         if (Filter != "") tempHeaders['Filter'] = Filter;
@@ -148,6 +149,7 @@ ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSucces
     tempHeaders['IncludeMaster'] = "N";
     tempHeaders['IncludeClient'] = "Y";
     tempHeaders['SearchField'] = "";
+    tempHeaders['ITRLang'] = ITSLanguage;
     tempHeaders['TimeZoneOffset'] = "" + moment().utcOffset() / 60; //(new Date()).getTimezoneOffset()/60;
     if (UnifiedSearchString) {
         if (UnifiedSearchString != "") tempHeaders['SearchField'] = UnifiedSearchString;
@@ -202,6 +204,7 @@ ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSucces
     tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
     tempHeaders['IncludeMaster'] = "N";
     tempHeaders['IncludeClient'] = "Y";
+    tempHeaders['ITRLang'] = ITSLanguage;
     if (IncludeMaster) {
         tempHeaders['IncludeMaster'] = IncludeMaster ;
     }
@@ -242,6 +245,7 @@ ITSSession.prototype.genericAjaxDelete = function (URL, OnSuccess, OnError, Incl
         tempHeaders['IncludeMaster'] = IncludeMaster ;
     }
     tempHeaders['IncludeClient'] = "Y" ;
+    tempHeaders['ITRLang'] = ITSLanguage;
     if (IncludeClient) {
         tempHeaders['IncludeClient'] = IncludeClient ;
     }
