@@ -217,6 +217,7 @@
                 <label id="LoginWindowWelcomeTo">Welcome to</label>
                 <label id="LoginWindowCompanyName" notranslate></label>
             </div>
+
             <div class="form-group">
                 <label for="LoginWindowinputUsername" id="LoginWindowUserName">User name</label>
                 <input type="text" class="form-control" autocomplete="username" id="LoginWindowinputUsername" NoTranslate/>
@@ -227,10 +228,11 @@
             </div>
             <span id="LoginWindowIEWarning" class="badge badge-danger" style="display: none">Internet Explorer is <B>NOT</B> supported for this website. <br/>Please use a recent version of Microsoft Edge,<br/>Google Chrome, Mozilla Firefox, Apple Safari or Opera.</span>
             <span id="LoginWindowUnknownBrowserWarning" class="badge badge-warning" style="display: none;">Your browser could not be detected and <br/>may not work with this website.<br/>Please use a recent version of Microsoft Edge,<br/>Google Chrome, Mozilla Firefox, Apple Safari or Opera.</span>
-            <button class="btn btn-primary" id="LoginWindowLoginButton"
+            <button class="btn btn-primary" id="LoginWindowLoginButton" type="submit"
                     onclick="ITSInstance.loginController.login( $('#LoginWindowinputUsername').val(), $('#LoginWindowinputPassword').val());">
                 Login
             </button>
+
             <span class="pull-right nav-link" href="#" id="LoginWindowPasswordForgotten"
                   onclick="ITSInstance.UIController.activateScreenPath('PasswordForgotten');">Have you forgotten your
                     password?</span>

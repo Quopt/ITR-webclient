@@ -52,6 +52,7 @@
         this.companyLogo = "";
         this.companyName = "";
         this.companyCopyright = "";
+        this.CC_Address = "";
 
         ITSInstance.UIController.showInterfaceAsWaitingOn();
 
@@ -74,6 +75,8 @@
         ITSInstance.JSONAjaxLoader('systemsettings/SMTP_USER', this.SMTP_User,  this.SMTPUserLoaded.bind(this), this.ParsLoadedError.bind(this),ITSObject,
             0, 999, "", "N", "N", "Y");
         ITSInstance.JSONAjaxLoader('systemsettings/SMTP_PASSWORD', this.SMTP_Password,  this.SMTPPasswordLoaded.bind(this), this.ParsLoadedError.bind(this),ITSObject,
+            0, 999, "", "N", "N", "Y");
+        ITSInstance.JSONAjaxLoader('systemsettings/CC_ADDRESS', this.CC_Address,  this.CCAddressLoaded.bind(this), this.ParsLoadedError.bind(this),ITSObject,
             0, 999, "", "N", "N", "Y");
 
         $('#CustomerSettingsDiv').children().prop('disabled',true);
@@ -133,6 +136,11 @@
         this.ParsLoaded();
     };
 
+    ITSCustomerSettingsEditor.prototype.CCAddressLoaded = function (newValue) {
+        this.CC_Address = newValue;
+        this.ParsLoaded();
+    };
+
     ITSCustomerSettingsEditor.prototype.ParsLoaded = function () {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
 
@@ -157,6 +165,7 @@
         $('#CustomerSettingsDiv-CompanyName-val').val(this.companyName);
         $('#CustomerSettingsDiv-CompanyCopyright-val').val(this.companyCopyright);
 
+        $('#CustomerSettingsDiv-CompanyCCAdress-val').val(this.CC_Address);
     };
 
     ITSCustomerSettingsEditor.prototype.ParsLoadedError = function (xhr) {
@@ -206,7 +215,11 @@
     ITSCustomerSettingsEditor.prototype.changeSMTPPortParameter= function (newVal) {
         ITSInstance.genericAjaxUpdate('systemsettings/SMTP_PORT', newVal, function () {}, function () {}, "N", "Y");
     };
-g
+
+    ITSCustomerSettingsEditor.prototype.changeCompanyCCAddressParameter= function (newVal) {
+        ITSInstance.genericAjaxUpdate('systemsettings/CC_ADDRESS', newVal, function () {}, function () {}, "N", "Y");
+    };
+
     ITSCustomerSettingsEditor.prototype.changeSMTPServerParameter= function (newVal) {
         ITSInstance.genericAjaxUpdate('systemsettings/SMTP_SERVER', newVal, function () {}, function () {}, "N", "Y");
     };
