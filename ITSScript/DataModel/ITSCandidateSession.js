@@ -148,7 +148,7 @@ ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixF
                 folderName = folderName + ITSInstance.tests.testList[ITSInstance.tests.findTestById(ITSInstance.tests.testList, reportsList[i].TestID)].Description + "/";
             } catch {}
             // find the test for this report
-            var reportFound = undefined;
+            var reportFound = undefined; 
             for (var tc=0; tc < this.SessionTests.length; tc++) {
                 if (this.SessionTests[tc].TestID == reportsList[i].TestID) {
                     reportFound = this.generatedReports.findFirst(reportsList[i].ID);
