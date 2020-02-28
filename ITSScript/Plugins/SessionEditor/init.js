@@ -183,6 +183,10 @@
             // session is loaded and reports are available
             $('#AdminInterfaceEditSessionEditHeaderName')[0].innerHTML = this.currentSession.Description;
             $('#AdminInterfaceEditSessionEditHeaderCandidate')[0].innerHTML = this.currentSession.Person.createHailing();
+            if (this.currentSession.Person.createHailing() == "") {
+                setTimeout( function () { $('#AdminInterfaceEditSessionEditHeaderCandidate')[0].innerHTML = this.currentSession.Person.createHailing(); }.bind(this),
+                    3000);
+            }
             ITSInstance.UIController.showInterfaceAsWaitingOff();
             // to do : check if the session type is OK to be viewed with this viewer
             this.toggleButtons();
@@ -601,67 +605,17 @@
 
 
     ITSSessionEditor.prototype.downloadSession = function () {
-        var openingTag = '<html><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">';
-        openingTag += '<link href="fontawesome/css/all.css" rel="stylesheet">';
-        openingTag += '<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">';
-        openingTag += '<link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet" type="text/css">';
-        openingTag += '<link href="https://fonts.googleapis.com/css?family=Alegreya+Sans" rel="stylesheet" type="text/css">';
-        openingTag += '<link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet" type="text/css">';
-        openingTag += '<body><script src="https://use.fontawesome.com/releases/v5.12.1/js/all.js" data-auto-replace-svg="nest"></script>';
-        openingTag += '<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>\n' +
-        '<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>\n' +
-        '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>';
-        var closingTag = '</body></html>';
-
-        // make sure all needed reports are loaded first
         ITSInstance.UIController.showInterfaceAsWaitingOn();
-        // loop through all reports that are applicable for this session
-        var testLists = [];
-        for (var i = 0; i < this.currentSession.SessionTests.length; i++) {
-            ct = this.currentSession.SessionTests[i];
-            testLists.push(ct.testDefinition.ID);
-        }
-        var reportsList = ITSInstance.reports.findReportsForTests(testLists);
-        for (var i = 0; i < reportsList.length; i++) {
-            if (! reportsList[i].detailsLoaded) {
-                reportsList[i].loadDetailDefinition(this.downloadSession.bind(this), this.zipError);
-                return;
-            }
-        }
 
         // add all results to a ZIP file and download that to the client
         var zip = new JSZip();
-
-        // add the score overview
-        ITSInstance.editSessionController.generateTestsList(true);
-        var fileName = ITSInstance.translator.getTranslatedString("ITSSessionEditor", "ScoreOverview", "Score overview");
-        zip.file( fileName + ".html", openingTag + $('#AdminInterfaceEditSessionEditTestsList')[0].outerHTML + closingTag);
-        ITSInstance.editSessionController.generateTestsList();
-
-        // generate and add the reports per test
-        var folderName = "";
-        for (var i = 0; i < reportsList.length; i++) {
-            folderName = "";
-            if (reportsList[i].TestID != "") {
-                // locate the test and use that as folder name
-                try {
-                    folderName = ITSInstance.tests.testList[ITSInstance.tests.findTestById(ITSInstance.tests.testList, reportsList[i].TestID)].Description + "/";
-                } catch {}
-                // find the test for this report
-                for (var tc=0; tc < this.currentSession.SessionTests.length; tc++) {
-                    if (this.currentSession.SessionTests[tc].TestID == reportsList[i].TestID) {
-                        zip.file(folderName + reportsList[i].Description + ".html", openingTag +reportsList[i].generateTestReport(this.currentSession, this.currentSession.SessionTests[tc], false)+ closingTag);
-                    }
-                }
-            }
-            // to do for the future, generate session reports on multiple tests here
-        }
-
-        // download
-        ITSInstance.UIController.showInterfaceAsWaitingOff();
-        var promise = null;
-        promise = zip.generateAsync({type : "blob"}).
-            then(function (blob) { saveFileLocally(fileName + " " + this.currentSession.Description + " - " + this.currentSession.Person.createHailing() + ".zip" , blob, "application/zip"); }.bind(this));
+        this.currentSession.createReportOverviewInZip(zip,"", function(currentSession,zip) {
+            // download
+            ITSInstance.UIController.showInterfaceAsWaitingOff();
+            var fileName = ITSInstance.translator.getTranslatedString("ITSSessionEditor", "ScoreOverview", "Score overview");
+            zip.generateAsync({type : "blob"}).
+             then(function (blob) { saveFileLocally(fileName + " " + this.currentSession.Description + " - " + this.currentSession.Person.createHailing() + ".zip" , blob, "application/zip"); }.bind(this));
+        }.bind(this), this.zipError);
     };
 
     ITSSessionEditor.prototype.zipError = function () {
@@ -759,4 +713,4 @@
     // register the portlet
     ITSInstance.editSessionController = new ITSSessionEditor();
     ITSInstance.UIController.registerEditor(ITSInstance.editSessionController);
-})()// IIFE
+})();// IIFE

@@ -142,20 +142,71 @@
     ITSSessionViewReportsEditor.prototype.showReport =function (reportID) {
         // locate the report
         ITSInstance.UIController.showInterfaceAsWaitingOff();
+        $('#SessionViewReportsReportOriginalCheck').hide();
+        $('#SessionViewReportsReportModifiedCheck').hide();
+
         var repToGen = ITSInstance.reports.findReportByID(ITSInstance.reports.reportsList, reportID);
         if (!repToGen.detailsLoaded) {
             ITSInstance.UIController.showInterfaceAsWaitingOn(0);
             repToGen.loadDetailDefinition(this.showReport.bind(this,reportID), this.reportLoadError.bind(this) );
-        } else {
+        } else if (! this.currentSession.generatedReports.listLoaded) {
+            this.currentSession.generatedReports.loadGeneratedReportsForSession(this.showReport.bind(this,reportID), this.reportLoadError.bind(this));
+        }
+        else {
             if (repToGen) {
-                ITSInstance.reports.currentReport = repToGen;
-                var reportText = repToGen.generateTestReport(this.currentSession, this.currentSessionTest, false);
+                this.currentReport = repToGen;
+                var storedReport = this.currentSession.generatedReports.findFirst(reportID);
+                var reportText = "";
+                if (typeof storedReport != "undefined" ){
+                    $('#SessionViewReportsReportModifiedCheck').show();
+                    if (storedReport.detailsLoaded) {
+                        reportText = storedReport.ReportText;
+                    } else {
+                        storedReport.loadDetail(function (newContent) {
+                            tinyMCE.get("SessionViewReportsReportContent").setContent( newContent );
+                        }.bind(this), function () {});
+                        return;
+                    }
+                } else {
+                    $('#SessionViewReportsReportOriginalCheck').show();
+                    reportText = repToGen.generateTestReport(this.currentSession, this.currentSessionTest, false);
+                }
                 tinyMCE.get("SessionViewReportsReportContent").setContent( reportText );
             }
         }
     };
 
-        // register the portlet
+    ITSSessionViewReportsEditor.prototype.saveReport = function () {
+        var storedReport = this.currentSession.generatedReports.findFirst(this.currentReport.ID);
+        if (typeof storedReport != "undefined" ) {
+            storedReport.ReportText = tinyMCE.get("SessionViewReportsReportContent").getContent();
+            storedReport.saveToServer(function () {}, function () {});
+        } else {
+            this.currentSession.generatedReports.newReport(this.currentReport.ID, this.currentReport.Description, tinyMCE.get("SessionViewReportsReportContent").getContent());
+            storedReport = this.currentSession.generatedReports.findFirst(this.currentReport.ID);
+            storedReport.saveToServer(function () {}, function () {});
+        };
+        $('#SessionViewReportsReportModifiedCheck').show();
+        $('#SessionViewReportsReportOriginalCheck').hide();
+    };
+
+    ITSSessionViewReportsEditor.prototype.deleteStoredReport = function () {
+        this.currentSession.generatedReports.deleteOne(this.currentReport.ID, true, function () {}, function () {});
+        this.showReport(this.currentReport.ID);
+    };
+
+    ITSSessionViewReportsEditor.prototype.showOriginalReport = function () {
+        reportText = this.currentReport.generateTestReport(this.currentSession, this.currentSessionTest, false);
+        tinyMCE.get("SessionViewReportsReportContent").setContent( reportText );
+        $('#SessionViewReportsReportModifiedCheck').hide();
+        $('#SessionViewReportsReportOriginalCheck').show();
+    };
+
+    ITSSessionViewReportsEditor.prototype.showModifiedReport = function () {
+        this.showReport(this.currentReport.ID);
+    };
+
+    // register the portlet
     ITSInstance.SessionViewReportsSessionController = new ITSSessionViewReportsEditor();
     ITSInstance.UIController.registerEditor(ITSInstance.SessionViewReportsSessionController);
 

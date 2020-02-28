@@ -81,6 +81,92 @@ ITSCandidateSession = function (session, ITSSession) {
     // process information
     this.OnError = {};
     this.OnSucces = {};
+
+    this.generatedReports = new ITSCandidateSessionGeneratedReports(this, ITSSession); // the list of generated reports for this session
+};
+
+ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixForPath, callWhenDone, callOnError) {
+    // make sure all needed reports and possible changed reports are loaded first
+    if (! ITSInstance.reports.listLoaded) {
+        ITSInstance.reports.loadAvailableReportsList(function () { this.createReportOverviewInZip(zip,prefixForPath, callWhenDone); }.bind(this), callOnError);
+        return;
+    }
+
+    // loop through all reports that are applicable for this session and load them
+    var testLists = [];
+    for (var i = 0; i < this.SessionTests.length; i++) {
+        ct = this.SessionTests[i];
+        testLists.push(ct.testDefinition.ID);
+    }
+    var reportsList = ITSInstance.reports.findReportsForTests(testLists);
+    for (var i = 0; i < reportsList.length; i++) {
+        if (! reportsList[i].detailsLoaded) {
+            reportsList[i].loadDetailDefinition(function () { this.createReportOverviewInZip(zip,prefixForPath, callWhenDone); }.bind(this), callOnError);
+            return;
+        }
+    }
+
+    // check if the generatedReports for this session is loaded
+    if (! this.generatedReports.listLoaded) {
+        this.generatedReports.loadGeneratedReportsForSession(function () { this.createReportOverviewInZip(zip,prefixForPath, callWhenDone); }.bind(this), callOnError );
+        return;
+    }
+    for (var i=0; i < this.generatedReports.reportCount(); i++) {
+        if (! this.generatedReports.generatedReports[i].detailsLoaded) {
+            this.generatedReports.generatedReports[i].loadDetail(function () { this.createReportOverviewInZip(zip,prefixForPath, callWhenDone); }.bind(this), callOnError );
+            return;
+        }
+    }
+
+    var openingTag = '<html><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">';
+    openingTag += '<link href="fontawesome/css/all.css" rel="stylesheet">';
+    openingTag += '<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">';
+    openingTag += '<link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet" type="text/css">';
+    openingTag += '<link href="https://fonts.googleapis.com/css?family=Alegreya+Sans" rel="stylesheet" type="text/css">';
+    openingTag += '<link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet" type="text/css">';
+    openingTag += '<body><script src="https://use.fontawesome.com/releases/v5.12.1/js/all.js" data-auto-replace-svg="nest"></script>';
+    openingTag += '<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>\n' +
+        '<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>\n' +
+        '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>';
+    var closingTag = '</body></html>';
+
+    // add the score overview
+    ITSInstance.editSessionController.generateTestsList(true);
+    var fileName = ITSInstance.translator.getTranslatedString("ITSCandidateSession", "ScoreOverview", "Score overview");
+    var folderName = prefixForPath == "" ? "" : prefixForPath + "/" ;
+    zip.file( folderName + fileName + ".html", openingTag + $('#AdminInterfaceEditSessionEditTestsList')[0].outerHTML + closingTag);
+    ITSInstance.editSessionController.generateTestsList();
+
+    // generate and add the reports per test
+    var folderName = "";
+    for (var i = 0; i < reportsList.length; i++) {
+        folderName = "";
+        if (reportsList[i].TestID != "") {
+            // locate the test and use that as folder name
+            try {
+                folderName = prefixForPath == "" ? "" : prefixForPath + "/" ;
+                folderName = folderName + ITSInstance.tests.testList[ITSInstance.tests.findTestById(ITSInstance.tests.testList, reportsList[i].TestID)].Description + "/";
+            } catch {}
+            // find the test for this report
+            var reportFound = undefined;
+            for (var tc=0; tc < this.SessionTests.length; tc++) {
+                if (this.SessionTests[tc].TestID == reportsList[i].TestID) {
+                    reportFound = this.generatedReports.findFirst(reportsList[i].ID);
+                    if (typeof reportFound == "undefined") {
+                        zip.file(folderName + reportsList[i].Description + ".html", openingTag + reportsList[i].generateTestReport(this, this.SessionTests[tc], false) + closingTag);
+                    } else {
+                        var org = ITSInstance.translator.getTranslatedString("ITSCandidateSession", "Original", "original");
+
+                        zip.file(folderName + reportsList[i].Description + ".html", openingTag + reportFound.ReportText + closingTag);
+                        zip.file(folderName + reportsList[i].Description + "." + org + ".html", openingTag + reportsList[i].generateTestReport(this, this.SessionTests[tc], false) + closingTag);
+                    }
+                }
+            }
+        }
+        // to do for the future, generate session reports on multiple tests here
+    }
+
+    if (typeof callWhenDone != "undefined") { callWhenDone(this, zip); }
 };
 
 ITSCandidateSession.prototype.regenerateCandidate = function () {
@@ -945,3 +1031,107 @@ ITSCandidateSessions.prototype.newGroupSession = function () {
     return x;
 };
 
+ITSCandidateSessionGeneratedReports = function (session, ITSSession) {
+    this.myParent = session;
+    this.ITSSession = ITSSession;
+
+    this.listLoaded = false;
+    this.generatedReports = [];
+};
+
+ITSCandidateSessionGeneratedReports.prototype.loadGeneratedReportsForSession = function(OnSucces, OnError, forceReload) {
+    if (typeof forceReload != "undefined") { if (forceReload) this.listLoaded = false; }
+    if (! this.listLoaded) {
+        this.generatedReports = [];
+        ITSInstance.JSONAjaxLoader('generatedreports/' + this.myParent.ID, this.generatedReports,
+            function(OnSucces) {
+              this.listLoaded = true; if (typeof OnSucces != "undefined") OnSucces();
+            }.bind(this, OnSucces),
+            OnError, 'ITSCandidateSessionGeneratedReport' );
+    }
+};
+
+ITSCandidateSessionGeneratedReports.prototype.reportCount = function() {
+    return this.generatedReports.length;
+};
+
+ITSCandidateSessionGeneratedReports.prototype.deleteAll = function(OnSuccess, OnError) {
+    ITSInstance.genericAjaxDelete('generatedreports/' + this.myParent.ID , OnSuccess, OnError, false, true);
+    this.ITSSession.MessageBus.publishMessage("SessionGeneratedReport.DeleteAll", this);
+};
+
+ITSCandidateSessionGeneratedReports.prototype.deleteOne = function(reportID, SaveToAPI, OnSuccess, OnError) {
+    // try to locate the report, delete the first report that matches the report id and then return
+    var reportIndex = -1;
+    for (var i=0; i < this.generatedReports.length; i++) {
+        if (this.generatedReports[i].ReportID == reportID) {
+            reportIndex = i;
+            if (SaveToAPI) {
+                this.generatedReports[i].delete(OnSuccess, OnError);
+                this.generatedReports.splice(i, 1);
+            }
+            break;
+        }
+    }
+    return reportIndex;
+};
+
+ITSCandidateSessionGeneratedReports.prototype.findFirst = function(reportID) {
+    // try to locate the report, delete the first report that matches the report id and then return
+    var reportFound = undefined;
+    for (var i=0; i < this.generatedReports.length; i++) {
+        if (this.generatedReports[i].ReportID == reportID) {
+            reportFound = this.generatedReports[i];
+            break;
+        }
+    }
+    return reportFound;
+};
+
+ITSCandidateSessionGeneratedReports.prototype.newReport = function(reportID, title, contents){
+    var newReport = new ITSCandidateSessionGeneratedReport(this.myParent, this.ITSSession);
+    newReport.LinkedObjectID = this.myParent.ID;
+    newReport.ReportID = reportID;
+    newReport.ReportTitle = title;
+    newReport.ReportText = contents;
+    this.generatedReports.push(newReport);
+};
+
+ITSCandidateSessionGeneratedReport = function (session, ITSSession) {
+    this.myParent = session;
+    this.ITSSession = ITSSession;
+    this.ID = newGuid();
+    this.LinkedObjectID = session.ID;
+    this.ReportID = newGuid();
+    this.ReportText = "";
+    this.ReportTitle = "";
+    this.PluginData = {};
+    this.PluginData.persistentProperties = "*ALL*";
+    this.newGeneratedReport = true;
+
+    this.detailsLoaded = false;
+
+    this.persistentProperties = ['ID', 'LinkedObjectID', 'ReportID', 'ReportText', 'ReportTitle', 'PluginData'  ];
+};
+
+ITSCandidateSessionGeneratedReport.prototype.loadDetail = function(OnSuccess, OnError) {
+    ITSInstance.JSONAjaxLoader('generatedreports/' + this.LinkedObjectID + "/" + this.ID, this,
+        function (OnSuccess) {
+            this.detailsLoaded = true;
+            if (typeof OnSuccess != "undefined") OnSuccess(this.ReportText);
+        }.bind(this, OnSuccess),
+        OnError, 'ITSCandidateSessionGeneratedReport');
+};
+
+ITSCandidateSessionGeneratedReport.prototype.delete = function(OnSuccess, OnError) {
+    ITSInstance.genericAjaxDelete('generatedreports/' + this.LinkedObjectID + "/" + this.ID, OnSuccess, OnError, false, true);
+    this.ITSSession.MessageBus.publishMessage("SessionGeneratedReport.Delete", this);
+};
+
+ITSCandidateSessionGeneratedReport.prototype.saveToServer = function (OnSuccess, OnError) {
+    this.lastSavedJSON = ITSJSONStringify(this);
+    this.newGeneratedReport = false;
+
+    ITSInstance.genericAjaxUpdate('generatedreports/' + this.LinkedObjectID  + "/" + this.ID, this.lastSavedJSON, OnSuccess, OnError, "N", "Y");
+    this.ITSSession.MessageBus.publishMessage("SessionGeneratedReport.Update", this);
+};
