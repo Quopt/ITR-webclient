@@ -780,6 +780,11 @@ ITSGroupSessionEditor.prototype.downloadSession = function () {
                 this.zipError);
       }
     }
+
+    if (this.tempCounter == 0) {
+        ITSInstance.UIController.showInterfaceAsWaitingOff();
+        ITSInstance.UIController.showError('ITSGroupSessionEditor.ZIPNothingYet', 'No sessions are done yet, please retry downloading the archive once one or more sessions are done.');
+    }
 };
 
 ITSGroupSessionEditor.prototype.zipError = function () {
