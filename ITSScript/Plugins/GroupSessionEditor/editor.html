@@ -169,6 +169,9 @@
         <i id="AdminInterfaceGroupSessionDeleteTestIcon" class="fa fa-fw fa-trash"></i><span id="AdminInterfaceGroupSessionDelete">Delete this session</span></button>
     <button id="AdminInterfaceGroupSessionUnArchiveTest" type="button" data-toggle="modal" data-target="#AdminInterfaceGroupSessionUnArchive-dialog" class="btn btn-warning">
         <i id="AdminInterfaceGroupSessionUnArchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceGroupSessionUnArchive">Unarchive this session</span></button>
+    &nbsp;
+    <button type="button" onclick="ITSInstance.groupSessionController.downloadSession();" class="btn btn-success" id="AdminInterfaceGroupSessionDownloadButton"><i class="fa fa-fw fa-download "></i><span id="AdminInterfaceGroupSessionDownload">Download session results archive</span></button>
+
 </div>
 
 <div class="modal fade" id="AdminInterfaceGroupSessionDelete-dialog" tabindex="-1" role="dialog" aria-labelledby="AdminInterfaceGroupSessionDeleteLabel" aria-hidden="true">

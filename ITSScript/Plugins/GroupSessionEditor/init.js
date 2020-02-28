@@ -747,9 +747,43 @@ ITSGroupSessionEditor.prototype.startNowSession = function () {
     this.currentSession.saveCurrentSession(this.startNowSessionCallback.bind(this),
         function () { ITSInstance.UIController.showError("SessionEditor", "SessionStartFailed", "The session could not be started, please refresh your browser page and try again."); } );
 };
+
 ITSGroupSessionEditor.prototype.startNowSessionCallback = function () {
     // redirect to login screen
     ITSInstance.logoutController.logout("UserID=" + $('#AdminInterfaceGroupSessionCandidateFor').val() + "&Password=" + $('#AdminInterfaceGroupSessionCandidatePassword').val());
+};
+
+ITSGroupSessionEditor.prototype.downloadSession = function () {
+    this.archiveDownloadCounter = 0;
+    this.tempCounter =0;
+    ITSInstance.UIController.showInterfaceAsWaitingOn();
+    var zip = new JSZip();
+
+    for (var i=0; i < this.currentSession.PluginData.GroupMembers.length; i++) {
+        if (this.currentSession.PluginData.GroupMembers[i].sessionstatus >= 30) {
+          this.archiveDownloadCounter ++;
+          this.tempCounter ++;
+          var tempSession = new ITSCandidateSession(undefined, ITSInstance);
+          tempSession.loadSession(this.currentSession.PluginData.GroupMembers[i].sessionid, function (tempSession, zip, tempCounter) {
+                  tempSession.createReportOverviewInZip(zip, pad(tempCounter,2) + " " + tempSession.Person.createHailing(),
+                      function(tempSession,zip) {
+                          this.archiveDownloadCounter --;
+                          if (this.archiveDownloadCounter == 0) {
+                              ITSInstance.UIController.showInterfaceAsWaitingOff();
+                              var fileName = ITSInstance.translator.getTranslatedString("ITSSessionEditor", "ScoreOverview", "Score overview");
+                              zip.generateAsync({type : "blob"}).
+                              then(function (blob) { saveFileLocally(fileName + " " + this.currentSession.Description + ".zip" , blob, "application/zip"); }.bind(this));
+                          }
+                      }.bind(this,tempSession, zip),
+                      this.zipError);
+                }.bind(this, tempSession, zip, this.tempCounter),
+                this.zipError);
+      }
+    }
+};
+
+ITSGroupSessionEditor.prototype.zipError = function () {
+    ITSInstance.UIController.showError('ITSGroupSessionEditor.ZIPFailed', 'Not all group session results could be downloaded at this moment.');
 };
 
 (function() { // iife to prevent pollution of the global memspace

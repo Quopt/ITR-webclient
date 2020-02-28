@@ -235,9 +235,12 @@
         }
     }
 
-    ITSSessionEditor.prototype.generateTestsList = function (NoUIElements ) {
+    ITSSessionEditor.prototype.generateTestsList = function (NoUIElements, alternateSession ) {
+        var cs = this.currentSession;
+        if (typeof alternateSession != "undefined") { cs = alternateSession; }
+
         $('#AdminInterfaceEditSessionEditTestsList').empty();
-        this.currentSession.SessionTests.sort(function (a, b) {
+        cs.SessionTests.sort(function (a, b) {
             return a.Sequence - b.Sequence;
         });
         var ct = {};
@@ -245,8 +248,8 @@
         var allTestsDone = true;
         if (typeof NoUIElements == "undefined") {NoUIElements = false;}
 
-        for (var i = 0; i < this.currentSession.SessionTests.length; i++) {
-            ct = this.currentSession.SessionTests[i];
+        for (var i = 0; i < cs.SessionTests.length; i++) {
+            ct = cs.SessionTests[i];
             if (ct.Status <= 10) {
                 // not started
                 template = this.testCardElementWaitingForStart;

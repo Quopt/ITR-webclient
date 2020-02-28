@@ -1052,3 +1052,8 @@ function format(source, params) {
     })
     return source;
 }
+
+function pad(num, size) {
+    var sign = Math.sign(num) === -1 ? '-' : '';
+    return sign + new Array(size).concat([Math.abs(num)]).join('0').slice(-size);
+}
