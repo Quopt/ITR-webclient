@@ -47,6 +47,11 @@
             },
             currentCompanyLoaded: function () {
                 $('#AdminInterfaceCreditManagementBodyAmount').text(ITSInstance.companies.currentCompany.CurrentCreditLevel);
+                try{
+                  if (ITSInstance.users.currentUser.HasPersonalCreditPool) {
+                      $('#AdminInterfaceCreditManagementBodyAmount').text(ITSInstance.users.currentUser.CurrentPersonalCreditLevel);
+                  }
+                } catch {};
             },
             creditUsagesLoaded: function () {
                 console.log('Portlet credit usages loaded');

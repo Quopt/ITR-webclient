@@ -202,6 +202,29 @@
     </div>
 </div>
 
+<div class="bg-dark text-white well row col-12"><label id="ConsultantEditorPersonalCreditPool">Personal credit</label></div>
+<div id="ConsultantEditorPersonalCreditPoolDiv" class="row col-12">
+    <div class="col-12" id="ConsultantEditorPersonalCreditPoolOnDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="HasPersonalCreditPool"
+                   onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"
+                   class="form-check-input form-check-input-sm"
+                   id="ConsultantEditorPersonalCreditPoolOnDivCheck"/>
+        </div>
+        <label class="col-sm-11"
+               id="ConsultantEditorPersonalCreditPoolOnDivHeader"
+               for="ConsultantEditorPersonalCreditPoolOnDivCheck">Use personal credit pool</label>
+    </div>
+
+    <div class="form-group row col-12">
+        <label for="ConsultantEditorPersonalCreditPoolLevel"
+               id="ConsultantEditorPersonalCreditPoolLevelLabel" class="col-sm-2 col-form-label">Personal credit pool level</label>
+        <input class="form-control col-sm-6" type="number" maxlength="10" data-field="CurrentPersonalCreditLevel" placeholder="" novalidate
+               onkeyup="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"
+               onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"  value="" id="ConsultantEditorPersonalCreditPoolLevel">
+    </div>
+</div>
+
 <div class="bg-dark text-white well row col-12" id="ConsultantEditorEditAPIKeyDiv"><label id="ConsultantEditorEditAPIKeyHeader">External API key</label></div>
 <div class="card col-12" id="ConsultantEditorEditAPIKeyDiv2">
     <div class="card-header" role="tab" id="ConsultantEditorheadingOne">

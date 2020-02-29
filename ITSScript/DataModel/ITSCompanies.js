@@ -42,13 +42,15 @@ function ITSCompany (uParent) {
     this.InvoiceCurrency = "Euro";
     this.AdministrativeID = "";
     this.CreditUsagesPerMonth = [];
+    this.PluginData = {};
+    this.PluginData.persistentProperties = "*ALL*";
 
     this.persistentProperties = [
       'ID','CostsPerTestInUnits','Active','CurrentCreditLevel','TestTakingDiscount','YearlyLicenseDiscount',
         'YearlyLicenseFee','ConcurrentOpenSessions','CompanyName','CompanyCountry',
         'InternationalVATNr','InvoiceAddress','MailAddress','VisitingAddress','CompanyLogo','ContactPerson','ContactPhone',
         'ContactEMail','AllowNegativeCredits','NoPublicTests','VATPercentage','LicenseStartDate','LicenseEndDate',
-        'InvoiceCurrency','AdministrativeID', 'CCEMail'
+        'InvoiceCurrency','AdministrativeID', 'CCEMail', 'PluginData'
     ];
     
     this.newCompany = false;
@@ -58,7 +60,15 @@ function ITSCompany (uParent) {
 ITSCompany.prototype.outOfCredits = function() {
     return ((this.CurrentCreditLevel <= 0) && (! this.AllowNegativeCredits));
 };
-
+ITSCompany.prototype.getCostsForTest = function(TestCode, DefaultCosts) {
+    var tempCosts = DefaultCosts;
+    if (typeof this.PluginData.Invoicing != "undefined") {
+        if (typeof this.PluginData.Invoicing[TestCode] != "undefined") {
+            tempCosts = this.PluginData.Invoicing[TestCode];
+        }
+    }
+    return tempCosts;
+};
 ITSCompany.prototype.resetCreditUsagesPerMonth = function () {
     this.CreditUsagesPerMonth = [];
 };

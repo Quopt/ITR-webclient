@@ -27,6 +27,32 @@
         this.info = new ITSPortletAndEditorRegistrationInformation('24f1643d-1239-4d24-94c1-d61306d3fcad', 'Organisation editor', '1.0', 'Copyright 2018 Quopt IT Services BV', 'Edit organisations on the database level');
         this.path = "OrganisationEditor";
         this.currentOrganisation = new ITSCompany(ITSInstance);
+
+        this.tablePart1 = "  <table notranslate class=\"table col-12 table-responsive w-100 d-block d-md-table\">" +
+            "  <thead>" +
+            "  <tr>" +
+            "   <th scope=\"col\">#</th>" +
+            "   <th id=\"ITSOrganisationEditor_DescriptionInvoiceCode\" scope=\"col\">Invoice code</th>" +
+            "   <th id=\"ITSOrganisationEditor_DescriptionCosts\" class='d-none d-sm-table-cell' scope=\"col\">Test costs override</th>" +
+            "   <th scope=\"col\"></th>" +
+            "  </tr>" +
+            "  </thead>" +
+            "  <tbody>" ;
+        this.tablePart2 = "  <tr>" +
+            "   <td scope=\"row\">%%NR%%</td>" +
+            "   <td><span><input id='ITSOrganisationEditor_InvoiceCode_%%NR%%' notranslate class=\"form-control col-sm-6\" maxlength=\"50\" onchange=\"ITSInstance.OrganisationEditorController.changeCostsOverrideLine(this,'%%INVOICECODE%%');\"></input></span></td>" +
+            "   <td><span><input id='ITSOrganisationEditor_Costs_%%NR%%' notranslate class=\"form-control col-sm-6\" type=\"number\" maxlength=\"10\" onchange=\"ITSInstance.OrganisationEditorController.changeCostsOverrideLineCosts(this,'%%INVOICECODE%%');\"></input></span></td>" +
+            "   <td nowrap>" +
+            "   <button type=\"button\" class=\"btn btn-warning\"" +
+            "    onclick=\'ITSInstance.OrganisationEditorController.removeLineFromCostsOverride(\"%%INVOICECODE%%\");\'>" +
+            "    <i class=\"fa fa-1x fa-trash\"></i></button>" +
+            "   </td>" +
+            "  </tr>";
+        this.tablePart3 = "</tbody></table>" ;
+
+        this.mInvoiceCode = /%%INVOICECODE%%/g;
+        this.mNR = /%%NR%%/g;
+        this.mCosts = /%%COSTS%%/g;
     };
 
     ITSOrganisationEditor.prototype.init=function () {
@@ -74,12 +100,60 @@
         if (this.currentOrganisation) {
             // now show the Organisations info by binding it to the form
             DataBinderTo('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );
+            // and load up the costs per test override table
+            this.showTestCostsOverrideTable();
         } else {
             ITSInstance.UIController.showError('OrganisationEditorController.NotFound', 'This Organisation cannot be found.');
             window.history.back();
         }
     };
+    ITSOrganisationEditor.prototype.showTestCostsOverrideTable = function () {
+        this.generatedTable = this.tablePart1;
+        if (typeof this.currentOrganisation.PluginData == "undefined") {
+            this.currentOrganisation.PluginData = {};
+        }
+        if (typeof this.currentOrganisation.PluginData["Invoicing"] == "undefined") {
+            this.currentOrganisation.PluginData.Invoicing = {};
+        }
 
+        // generate the table first
+        var rowCounter=1;
+        for(var propt in this.currentOrganisation.PluginData.Invoicing) {
+            var rowText = this.tablePart2;
+            rowText = rowText.replace( this.mNR, rowCounter);
+            rowText = rowText.replace( this.mInvoiceCode, propt );
+            rowText = rowText.replace( this.mCosts, this.currentOrganisation.PluginData.Invoicing[propt] );
+            this.generatedTable += rowText;
+            rowCounter++;
+        }
+        $('#OrganisationEditorInterfaceTestCostsOverride').empty();
+        $('#OrganisationEditorInterfaceTestCostsOverride').append(this.generatedTable + this.tablePart3);
+
+        // now set the values
+        rowCounter = 1;
+        for(var propt in this.currentOrganisation.PluginData.Invoicing) {
+            $('#ITSOrganisationEditor_InvoiceCode_' + rowCounter)[0].value = propt;
+            $('#ITSOrganisationEditor_Costs_' + rowCounter)[0].value = this.currentOrganisation.PluginData.Invoicing[propt];
+            rowCounter++;
+        }
+    };
+    ITSOrganisationEditor.prototype.addNewCostsOverrideLine = function () {
+        this.currentOrganisation.PluginData.Invoicing["..."] = 0;
+        this.showTestCostsOverrideTable();
+    };
+    ITSOrganisationEditor.prototype.changeCostsOverrideLine = function (newElem, oldcode) {
+        if (oldcode != newElem.value) {
+            this.currentOrganisation.PluginData.Invoicing[newElem.value] = this.currentOrganisation.PluginData.Invoicing[oldcode];
+            this.removeLineFromCostsOverride(oldcode);
+        }
+    };
+    ITSOrganisationEditor.prototype.changeCostsOverrideLineCosts = function (newElem, oldcode) {
+        this.currentOrganisation.PluginData.Invoicing[oldcode] = newElem.value;
+    };
+    ITSOrganisationEditor.prototype.removeLineFromCostsOverride = function (oldcode) {
+        delete this.currentOrganisation.PluginData.Invoicing[oldcode];
+        this.showTestCostsOverrideTable();
+    };
     ITSOrganisationEditor.prototype.currentOrganisationLoaded = function () {
         this.showCurrentOrganisation();
     };

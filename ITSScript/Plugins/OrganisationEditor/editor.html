@@ -86,7 +86,32 @@
                onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);" onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"  value="" id="OrganisationEditorInterfaceLowCreditWarningLevel">
     </div>
 
-    <div class="col-3" id="OrganisationEditorInterfaceOrganisationAllowNegativeCreditsDiv">
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceCreditsPerTest"
+               id="OrganisationEditorInterfaceCreditsPerTestLabel" class="col-sm-2 col-form-label">Additional credits charged per test</label>
+        <input class="form-control col-sm-6" type="number" maxlength="10" data-field="CostsPerTestInUnits" placeholder="" novalidate
+               onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);" onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"  value="" id="OrganisationEditorInterfaceCreditsPerTest">
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceTestTakingDiscount"
+               id="OrganisationEditorInterfaceTestTakingDiscountLabel" class="col-sm-2 col-form-label">Test taking discount percentage</label>
+        <input class="form-control col-sm-6" type="number" maxlength="3" min="0" max="100" data-field="TestTakingDiscount" placeholder="" novalidate
+               onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);" onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"  value="" id="OrganisationEditorInterfaceTestTakingDiscount">
+    </div>
+
+    <div class="form-group row col-sm-12">
+        <label for="OrganisationEditorInterfaceTestCostsOverride"
+               id="OrganisationEditorInterfaceTestCostsOverrideLabel" class="col-sm-2 col-form-label">Test taking costs override</label>
+        <div class="col-sm-9" notranslate id="OrganisationEditorInterfaceTestCostsOverride"></div>
+        <div class="col-sm-2" notranslate id="OrganisationEditorInterfaceTestCostsOverrideSpacer"></div>
+            <button id="OrganisationEditorInterfaceTestCostsOverride_Add" type="button" class="btn btn-success" notranslate
+                    onclick="ITSInstance.OrganisationEditorController.addNewCostsOverrideLine();"><i
+                    class="fa fa-fw fa-plus"></i>
+            </button>&nbsp;
+    </div>
+
+    <div class="col-12" id="OrganisationEditorInterfaceOrganisationAllowNegativeCreditsDiv">
         <div class="col-1">
             <input type="checkbox" data-field="AllowNegativeCredits"
                    onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );"

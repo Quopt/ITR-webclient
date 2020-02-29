@@ -139,13 +139,22 @@ function ITSTest(par, session) {
     this.detailsLoaded = false;
 }
 
+ITSTest.prototype.getTestCosts = function () {
+    if (typeof ITSInstance.companies.currentCompany != "undefined") {
+        return ITSInstance.companies.currentCompany.getCostsForTest(this.InvoiceCode, this.Costs);
+    }
+    else {
+        return this.Costs;
+    }
+};
+
 ITSTest.prototype.getTestFormatted = function () {
     if (!this.Description) return "";
     var x =
         ITSInstance.translator.getTranslatedString('ITSTest','Description','Description ') + " : " + this.Description
         + " (" + this.TestName + ") "+
         ITSInstance.translator.getTranslatedString('ITSTest','Costs','Costs') +
-        " : " + this.Costs + ". " +
+        " : " + this.getTestCosts() + ". " +
         ITSInstance.translator.getTranslatedString('ITSTest','Language','Language') +
          " : " +
         ITSInstance.translator.getLanguageDescription(this.LanguageSupport.replace('"', '').replace('"', '') );

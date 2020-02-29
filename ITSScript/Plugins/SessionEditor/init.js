@@ -212,7 +212,11 @@
                     }
                 ]);
         } else {
-            ITSInstance.UIController.showError("SessionEditor.SessionLoadingFailed", "The session could not be loaded, please refresh your browser page and try again.");
+            if (ITSInstance.users.currentUser.HasPersonalCreditPool) {
+                ITSInstance.UIController.showError("SessionEditor.SessionLoadingFailedWithPersonalCreditPool", "The session could not be loaded, you may be out of personal credits. Refresh your browser page and try again. If you are out of personal credits then contact your ITR administrator.");
+            } else {
+                ITSInstance.UIController.showError("SessionEditor.SessionLoadingFailed", "The session could not be loaded, please refresh your browser page and try again.");
+            }
         }
         history.back();
     };
