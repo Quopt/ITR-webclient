@@ -336,9 +336,9 @@
                     function () {
                         // force update
                         location.reload(true);
-                     }, function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
-            }, function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
-        }, function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
+                     }.bind(this), function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
+            }.bind(this), function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
+        }.bind(this), function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
     };
 
     // register the portlet
