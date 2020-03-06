@@ -62,7 +62,7 @@ ITSEmptyObject = function () {
 
 // generic support functions
 ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, OnNewChild, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
-    console.log('ajax load : ' + this.baseURLAPI + URL + ' - ' + ITSInstance.token.IssuedToken);
+    console.log('ajax load : ' + this.baseURLAPI + URL );
     tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
     tempHeaders['StartPage'] = "-1";
     tempHeaders['PageSize'] = "0";
@@ -140,7 +140,7 @@ ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuc
 };
 
 ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, DefaultObjectType, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
-    console.log('ajax JSON load : ' + this.baseURLAPI + URL + ' - ' + ITSInstance.token.IssuedToken);
+    console.log('ajax JSON load : ' + this.baseURLAPI + URL );
     tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
     tempHeaders['StartPage'] = "-1";
     tempHeaders['PageSize'] = "0";
@@ -200,7 +200,7 @@ ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSucces
 };
 
 ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSuccess, OnError, IncludeMaster, IncludeClient, dataType, ForceTranslation) {
-    console.log('ajax update or create : ' + this.baseURLAPI + URL + ' - ' + ITSInstance.token.IssuedToken);
+    console.log('ajax update or create : ' + this.baseURLAPI + URL);
     tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
     tempHeaders['IncludeMaster'] = "N";
     tempHeaders['IncludeClient'] = "Y";
@@ -239,7 +239,7 @@ ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSucces
 };
 
 ITSSession.prototype.genericAjaxDelete = function (URL, OnSuccess, OnError, IncludeMaster, IncludeClient) {
-    console.log('ajax delete : ' + this.baseURLAPI + URL + ' - ' + ITSInstance.token.IssuedToken);
+    console.log('ajax delete : ' + this.baseURLAPI + URL );
     var tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
     if (IncludeMaster) {
         tempHeaders['IncludeMaster'] = IncludeMaster ;
@@ -268,7 +268,7 @@ ITSSession.prototype.genericAjaxDelete = function (URL, OnSuccess, OnError, Incl
 };
 
 ITSSession.prototype.uploadFile = function(URL, data, OnSuccess, OnError) {
-    console.log('upload file: ' + this.baseURLAPIFiles + URL + ' - ' + ITSInstance.token.IssuedToken);
+    console.log('upload file: ' + this.baseURLAPIFiles + URL );
 
     var oReq = new XMLHttpRequest();
     oReq.open("POST", this.baseURLAPIFiles + URL, true);
@@ -291,7 +291,7 @@ ITSSession.prototype.uploadFile = function(URL, data, OnSuccess, OnError) {
 };
 
 ITSSession.prototype.downloadFile = function(URL, OnSuccess, OnError) {
-    console.log('download file: ' + this.baseURLAPIFiles + URL + ' - ' + ITSInstance.token.IssuedToken);
+    console.log('download file: ' + this.baseURLAPIFiles + URL );
 
     var oReq = new XMLHttpRequest();
     oReq.open("GET", this.baseURLAPIFiles + URL, true);

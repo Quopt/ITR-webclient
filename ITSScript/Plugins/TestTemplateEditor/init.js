@@ -22,7 +22,7 @@ function ITSTestTemplateEditor(session) {
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenUp(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-up\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenDown(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-down\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.copyToNewScreen(%%NR%%);\"><i class=\"fa fa-xs fa-copy\"></i></button>\n" +
-        "<div id=\"AdminInterfaceTestTemplateEditorScreenRow\"><input style=\"width:120px\" type=\"text\" id=\"TestTemplateEditorSCREEN%%NR%%\" onfocus=\"ITSInstance.newITSTestEditorController.focusOnScreen(%%NR%%);\" onkeyup=\"ITSInstance.newITSTestEditorController.editScreenDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" />" +
+        "<div notranslate id=\"AdminInterfaceTestTemplateEditorScreenRow\"><input style=\"width:120px\" type=\"text\" id=\"TestTemplateEditorSCREEN%%NR%%\" onfocus=\"ITSInstance.newITSTestEditorController.focusOnScreen(%%NR%%);\" onkeyup=\"ITSInstance.newITSTestEditorController.editScreenDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" />" +
         "&nbsp;<button type=\"button\" class=\"btn-xs btn-warning\" onclick=\"ITSInstance.newITSTestEditorController.deleteScreen(%%NR%%);\"><i class=\"fa fa-xs fa-trash\"></i></button>"+
         "</div>\n" +
         "</div>";
@@ -34,11 +34,11 @@ function ITSTestTemplateEditor(session) {
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenComponentUp(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-up\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenComponentDown(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-down\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.copyScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-copy\"></i></button>\n" +
-        "<div id=\"AdminInterfaceTestTemplateEditorScreenRow\"><input style=\"width:200px\"  type=\"text\" id=\"TestTemplateEditorSCREENCOMPONENT%%NR%%\" onkeyup=\"ITSInstance.newITSTestEditorController.editScreenComponentDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" />\n" +
+        "<div notranslate id=\"AdminInterfaceTestTemplateEditorScreenRow\"><input style=\"width:200px\"  type=\"text\" id=\"TestTemplateEditorSCREENCOMPONENT%%NR%%\" onkeyup=\"ITSInstance.newITSTestEditorController.editScreenComponentDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" />\n" +
         "<button type=\"button\" class=\"btn-xs btn-warning\" onclick=\"ITSInstance.newITSTestEditorController.deleteScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-trash\"></i></button>\n" +
-        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" class=\"form-check-input\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_Privacy%%NR%%\" %%PRIVACY%% onchange=\"ITSInstance.newITSTestEditorController.changeScreenComponentPrivacy(%%NR%%, this.checked);\">\n" +
+        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" class=\"form-check-input\" notranslate id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_Privacy%%NR%%\" %%PRIVACY%% onchange=\"ITSInstance.newITSTestEditorController.changeScreenComponentPrivacy(%%NR%%, this.checked);\">\n" +
         "<label class=\"form-check-label\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_PrivacyLabel\" for=\"AdminInterfaceTestTemplateEditorScreenComponentRow_Privacy%%NR%%\">Exclude from anonimised</label>" +
-        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" class=\"form-check-input\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_SessionStore%%NR%%\" %%SESSIONSTORE%% onchange=\"ITSInstance.newITSTestEditorController.changeScreenComponentSessionStore(%%NR%%, this.checked);\">\n" +
+        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" class=\"form-check-input\" notranslate id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_SessionStore%%NR%%\" %%SESSIONSTORE%% onchange=\"ITSInstance.newITSTestEditorController.changeScreenComponentSessionStore(%%NR%%, this.checked);\">\n" +
         "<label class=\"form-check-label\" id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_SessionStoreLabel\" for=\"AdminInterfaceTestTemplateEditorScreenComponentRow_SessionStore%%NR%%\">Store at session level</label>" +
         "</div></div>\n" +
         "<div id=\"AdminInterfaceTestTemplateEditorScreenContentsPreview%%NR%%\" NoTranslate class=\"row mx-0 px-0 col-12\">\n" +
@@ -55,11 +55,11 @@ function ITSTestTemplateEditor(session) {
         "<th scope=\"row\">%%NR1%%</th>\n" +
         " <td><select notranslate class=\"form-control form-control-sm\"\n" +
         "  id=\"AdminInterfaceTestTemplateEditorScreenDynamics_sourcecomponentlist_%%NR%%\"\n" +
-        "  onchange=\"ITSInstance.newITSTestEditorController.changeScreenDynamicsSource(%%NR%%, this.value);\"></select>\n" +
+        "  notranslate onchange=\"ITSInstance.newITSTestEditorController.changeScreenDynamicsSource(%%NR%%, this.value);\"></select>\n" +
         " </td>\n" +
         " <td><select notranslate class=\"form-control form-control-sm\"\n" +
         "  id=\"AdminInterfaceTestTemplateEditorScreenDynamics_sourcecomparison_%%NR%%\"\n" +
-        "  onchange=\"ITSInstance.newITSTestEditorController.changeScreenDynamicsComparison(%%NR%%, this.value);\">"+
+        "  notranslate onchange=\"ITSInstance.newITSTestEditorController.changeScreenDynamicsComparison(%%NR%%, this.value);\">"+
         "  <option value=\"==\">=</option>" +
         "  <option value=\"!=\">!=</option>" +
         "  <option value=\">\">&gt;</option>" +
@@ -68,16 +68,16 @@ function ITSTestTemplateEditor(session) {
         " </td>\n" +
         " <td><input type=\"text\" class=\"form-control form-control-sm\"\n" +
         "  id=\"AdminInterfaceTestTemplateEditorScreenDynamics_sourcevalue_%%NR%%\"\n" +
-        "  onkeyup=\"ITSInstance.newITSTestEditorController.changeScreenDynamicsSourceValue(%%NR%%, this.value);\">\n" +
+        "  notranslate onkeyup=\"ITSInstance.newITSTestEditorController.changeScreenDynamicsSourceValue(%%NR%%, this.value);\">\n" +
         " </td>\n" +
         " <td><select notranslate class=\"form-control form-control-sm\"\n" +
         "  id=\"AdminInterfaceTestTemplateEditorScreenDynamics_targetcomponentlist_%%NR%%\"\n" +
-        "  onchange=\"ITSInstance.newITSTestEditorController.changeScreenDynamicsTarget(%%NR%%, this.value);\"></select>\n" +
+        "  notranslate onchange=\"ITSInstance.newITSTestEditorController.changeScreenDynamicsTarget(%%NR%%, this.value);\"></select>\n" +
         " </td>\n" +
         " <td> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"checkbox\"\n" +
         "  class=\"form-check-input form-check-input-sm\"\n" +
         "  id=\"AdminInterfaceTestTemplateEditorScreenDynamics_visible_%%NR%%\"\n" +
-        "  onchange=\"ITSInstance.newITSTestEditorController.changeScreenDynamicsTargetVisibility(%%NR%%, this.checked);\">\n" +
+        "  notranslate onchange=\"ITSInstance.newITSTestEditorController.changeScreenDynamicsTargetVisibility(%%NR%%, this.checked);\">\n" +
         " </td>\n" +
         " <td nowrap>\n" +
         "  <button type=\"button\" class=\"btn-xs btn-success\"\n" +
@@ -98,18 +98,18 @@ function ITSTestTemplateEditor(session) {
         " <th scope=\"row\">%%NR1%%</th>\n" +
         " <td><select notranslate=\"\" class=\"form-control form-control-sm\"\n" +
         "  id=\"AdminInterfaceTestTemplateEditorScreenScales_sourcecomponentlist_%%NR%%\"\n" +
-        "  onchange=\"ITSInstance.newITSTestEditorController.changeScaleScoreSource(%%NR%%, this.value);\"></select>\n" +
+        "  notranslate onchange=\"ITSInstance.newITSTestEditorController.changeScaleScoreSource(%%NR%%, this.value);\"></select>\n" +
         " </td>\n" +
         " <td><input type=\"text\" class=\"form-control form-control-sm\"\n" +
         "  id=\"AdminInterfaceTestTemplateEditorScreenScales_sourcevalue_%%NR%%\"\n" +
-        "  onkeyup=\"ITSInstance.newITSTestEditorController.changeScaleScoreSourceValue(%%NR%%, this.value);\">\n" +
+        "  notranslate onkeyup=\"ITSInstance.newITSTestEditorController.changeScaleScoreSourceValue(%%NR%%, this.value);\">\n" +
         " </td>\n" +
         " <td><select notranslate=\"\" class=\"form-control form-control-sm\"\n" +
         "  id=\"AdminInterfaceTestTemplateEditorScreenScales_targetscalelist_%%NR%%\"\n" +
-        "  onchange=\"ITSInstance.newITSTestEditorController.changeScaleTarget(%%NR%%, this.value);\"></select>\n" +
+        "  notranslate onchange=\"ITSInstance.newITSTestEditorController.changeScaleTarget(%%NR%%, this.value);\"></select>\n" +
         " </td>\n" +
         " <td><input type=\"text\" class=\"form-control form-control-sm\" id=\"AdminInterfaceTestTemplateEditorScreenScales_targetscalescore_%%NR%%\" value title data-toggle=\"tooltip\" data-original-title=\"Enter a number (like 1 or -2) or %%QuestionValue%% to add the value returned by the question to the scale score. Please note that if the resulting value is NOT numeric that the value will be ignored when the target scales is numeric. If the target scales is textual then the resulting value will replace the scale value altogether.\"\n" +
-        "  onkeyup=\"ITSInstance.newITSTestEditorController.changeScaleTargetScore(%%NR%%, this.value);\">\n" +
+        "  notranslate onkeyup=\"ITSInstance.newITSTestEditorController.changeScaleTargetScore(%%NR%%, this.value);\">\n" +
         " </td>\n" +
         " <td>\n" +
         " <button type=\"button\" class=\"btn-xs btn-success\"\n" +
@@ -129,7 +129,7 @@ function ITSTestTemplateEditor(session) {
     this.normMatrixLinePart1 = "  <table notranslate=\"\" class=\"table table-sm\">\n" +
         "  <thead>\n" +
         "  <tr>\n" +
-        "   <th colspan=4>Scale %%SCALEDESCRIPTION%%</th>\n" +
+        "   <th colspan=4><label id='AdminInterfaceTestTemplateEditorNorm_ScaleHeader'>Scale</label> %%SCALEDESCRIPTION%%</th>\n" +
         "  </tr>\n" +
         "  <tr>\n" +
         "   <th scope=\"col\">#</th>\n" +
@@ -144,15 +144,15 @@ function ITSTestTemplateEditor(session) {
         "   <th scope=\"row\">%%NR1%%</th>\n" +
         "   <td><input type=\"text\" class=\"form-control form-control-sm\"\n" +
         "    id=\"AdminInterfaceTestTemplateEditorNorm_RawCol_%%NR2%%\"\n" +
-        "    onkeyup=\"%%NRCHECKSCALE%% ITSInstance.newITSTestEditorController.changeNormColumnRawValue('%%SCALEID%%','%%NR%%', this.value);\">\n" +
+        "    notranslate onkeyup=\"%%NRCHECKSCALE%% ITSInstance.newITSTestEditorController.changeNormColumnRawValue('%%SCALEID%%','%%NR%%', this.value);\">\n" +
         "   </td>\n" +
         "   <td><input type=\"text\" class=\"form-control form-control-sm\"\n" +
         "    id=\"AdminInterfaceTestTemplateEditorNorm_ValCol_%%NR2%%\"\n" +
-        "    onkeyup=\"%%NRCHECKNORM%% ITSInstance.newITSTestEditorController.changeNormColumnNormValue('%%SCALEID%%','%%NR%%', this.value);\">\n" +
+        "    notranslate onkeyup=\"%%NRCHECKNORM%% ITSInstance.newITSTestEditorController.changeNormColumnNormValue('%%SCALEID%%','%%NR%%', this.value);\">\n" +
         "   </td>\n" +
         "   <td><input type=\"text\" class=\"form-control form-control-sm\"\n" +
         "    id=\"AdminInterfaceTestTemplateEditorNorm_PercCol_%%NR2%%\"\n" +
-        "    onkeyup=\" this.value = this.value.replace(/[^0-9.]/g,''); ITSInstance.newITSTestEditorController.changeNormColumnPercentileValue('%%SCALEID%%','%%NR%%', this.value);\">\n" +
+        "    notranslate onkeyup=\" this.value = this.value.replace(/[^0-9.]/g,''); ITSInstance.newITSTestEditorController.changeNormColumnPercentileValue('%%SCALEID%%','%%NR%%', this.value);\">\n" +
         "   </td>\n" +
         "   <td nowrap>\n" +
         "   <button type=\"button\" class=\"btn-xs btn-success\"\n" +
@@ -184,10 +184,10 @@ function ITSTestTemplateEditor(session) {
     this.fileUploadPart = "<tr>\n" +
         "    <th scope=\"row\">%%NR1%%</th>\n" +
         "    <td><input type=\"text\" class=\"form-control form-control-sm\" readonly value='%%FILENAME%%' \n" +
-        "               id=\"AdminInterfaceTestTemplateEditorMedia_FileNameCol%%NR%%\">\n" +
+        "              notranslate  id=\"AdminInterfaceTestTemplateEditorMedia_FileNameCol%%NR%%\">\n" +
         "    </td>\n" +
         "    <td><input type=\"text\" class=\"form-control form-control-sm\" readonly value='%%FILELINK%%' \n" +
-        "               id=\"AdminInterfaceTestTemplateEditorMedia_LinkCol%%NR%%\">\n" +
+        "              notranslate  id=\"AdminInterfaceTestTemplateEditorMedia_LinkCol%%NR%%\">\n" +
         "    </td>\n" +
         "    <td nowrap>\n" +
         "        <button type=\"button\" class=\"btn-xs btn-warning\"\n" +
@@ -202,18 +202,18 @@ function ITSTestTemplateEditor(session) {
     this.catalogUploadPart = " <tr>\n" +
         "     <th scope=\"row\">%%NR1%%</th>\n" +
         "     <td><input type=\"text\"class=\"form-control form-control-sm\" readonly value='%%FILENAME%%'\n" +
-        "                id=\"AdminInterfaceTestTemplateEditorMedia_CatalogFileNameCol%%NR%%\">\n" +
+        "               notranslate  id=\"AdminInterfaceTestTemplateEditorMedia_CatalogFileNameCol%%NR%%\">\n" +
         "     </td>\n" +
         "     <td><input type=\"text\"class=\"form-control form-control-sm\" readonly value='%%FILELINK%%'\n" +
-        "                id=\"AdminInterfaceTestTemplateEditorMedia_CatalogFileLinkCol%%NR%%\">\n" +
+        "               notranslate  id=\"AdminInterfaceTestTemplateEditorMedia_CatalogFileLinkCol%%NR%%\">\n" +
         "     </td>\n" +
         "     <td nowrap>\n" +
         "         <button type=\"button\"class=\"btn-xs btn-warning\"\n" +
-        "                 onclick=\"ITSInstance.newITSTestEditorController.removeCatalogFile('%%FILENAME%%',%%NR%%);\">\n" +
+        "                notranslate  onclick=\"ITSInstance.newITSTestEditorController.removeCatalogFile('%%FILENAME%%',%%NR%%);\">\n" +
         "             <i class=\"fa fa-xs fa-trash\"></i></button>\n" +
         "         <button type=\"button\"class=\"btn-xs btn-success\"\n" +
         "               id=\"AdminInterfaceTestTemplateEditorMedia_CatalogNameButton%%NR%%\" \n" +
-        "                onclick=\"saveFileLocallyFromURL('%%FILENAME%%','%%FILELINK%%');\">\n" +
+        "               notranslate  onclick=\"saveFileLocallyFromURL('%%FILENAME%%','%%FILELINK%%');\">\n" +
         "             <i class=\"fa fa-xs fa-download\"></i></button>\n" +
         "     </td>\n" +
         " </tr>";
@@ -408,6 +408,7 @@ ITSTestTemplateEditor.prototype.showTab = function (id, tabID) {
     $('#AdminInterfaceTestTemplateEditorTabNorms').hide();
     $('#AdminInterfaceTestTemplateEditorTabCatalog').hide();
     $('#AdminInterfaceTestTemplateEditorTabMedia').hide();
+    $('#AdminInterfaceTestTemplateEditorTestCostsDiv').hide();
     $('#AdminInterfaceTestTemplateEditor_TabTestInformation').removeClass("text-info");
     $('#AdminInterfaceTestTemplateEditor_TabScreens').removeClass("text-info");
     $('#AdminInterfaceTestTemplateEditor_TabScoring').removeClass("text-info");
@@ -422,6 +423,9 @@ ITSTestTemplateEditor.prototype.showTab = function (id, tabID) {
         case "AdminInterfaceTestTemplateEditorTabTestInformation" :
             this.fillTestInformationTab();
             this.processTestCapabilities();
+            if (ITSInstance.users.currentUser.IsMasterUser) {
+                $('#AdminInterfaceTestTemplateEditorTestCostsDiv').show();
+            }
             break;
         case "AdminInterfaceTestTemplateEditorTabScreens" :
             ITSInstance.UIController.showInterfaceAsWaitingOn(-1);

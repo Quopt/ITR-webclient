@@ -348,11 +348,20 @@ ITSUIController = function () {
         if (!ITSInstance.UIController.refreshCompanyInformationLastTimestamp) { ITSInstance.UIController.refreshCompanyInformationLastTimestamp = new Date(2000,1,1,1,1,1,1); }
         var dateNow = new Date();
         if (((Math.abs(dateNow.getTime() - ITSInstance.UIController.refreshCompanyInformationLastTimestamp.getTime()) ) > 60000) || force) {
-            ITSInstance.UIController.refreshCompanyInformationLastTimestamp = new Date();
             setTimeout(ITSInstance.UIController.refreshCompanyInformation, 60100);
-            ITSInstance.companies.loadCurrentCompany(function () {
-            }, function () {
-            }, true);
+            ITSInstance.UIController.refreshCompanyInformationLastTimestamp = new Date();
+            if (typeof ITSInstance.users.currentUser != "undefined") {
+                if (ITSInstance.users.currentUser.IsTestTakingUser) {
+                    // test taking users do not need a refresh
+                    ITSInstance.token.keepTokenFresh();
+                    console.log("All information exchanged through this interface and website is copyrighted " + CopyrightString );
+                }
+                else {
+                    ITSInstance.companies.loadCurrentCompany(function () {}, function () {}, true);
+                }
+            } else {
+                // never refresh until logged in
+            }
         }
     };
 

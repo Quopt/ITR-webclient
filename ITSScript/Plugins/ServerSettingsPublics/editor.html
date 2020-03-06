@@ -62,3 +62,15 @@
         <span id="ServerSettingsLanguageTemplate_SaveButtonLabel">Install all translations</span>
     </button>&nbsp;
 </div>
+
+<div id="ServerSettingsCode" class="needs-validation" novalidate class="row col-12">
+    <div class="bg-dark text-white well"><label id="ServerSettingsCode-ActionsHeader">Source codes</label></div><br/>
+    <div id="ServerSettingsCode-list" class="needs-validation" novalidate class="row col-12">
+    </div>
+    <label id="ServerSettingsCode-warning" >PLEASE NOTE : Updating the code may break your system. Use with care. Your system will be offline for a few minutes. </label>
+    <button NoTranslate id="ServerSettingsCode_all" type="button" class="btn btn-success"
+            onclick="ITSInstance.ServerSettingsPublicsController.installNewCode();"><i
+            id="ServerSettingsCode_SaveIcon" class="fa fa-fw fa-thumbs-up"></i>
+        <span id="ServerSettingsCode_SaveButtonLabel">Update all code from the github repositories</span>
+    </button>&nbsp;
+</div>

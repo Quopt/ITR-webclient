@@ -326,6 +326,11 @@
         }
     };
 
+    ITSServerSettingsPublicsEditor.prototype.installNewCode = function () {
+        ITSInstance.genericAjaxUpdate('installpublics/itr-webclient', function () {}, function () {});
+        ITSInstance.genericAjaxUpdate('installpublics/itr-public-api', function () {}, function () {});
+        ITSInstance.genericAjaxUpdate('installpublics/itr-api', function () {}, function () {});
+    };
 
     // register the portlet
     ITSInstance.ServerSettingsPublicsController = new ITSServerSettingsPublicsEditor();

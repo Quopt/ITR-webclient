@@ -151,7 +151,7 @@ ITSLoginToken.prototype.acquire = function (userName, password, okFunction, erro
 
 ITSLoginToken.prototype.keepTokenFresh = function () {
     if (this.IssuedToken != '') {
-        console.log('Refresh token = ' + this.IssuedToken);
+        console.log('Refresh token');
         $.ajax({
             url: this.ITSInstance.baseURLAPI + 'checktoken',
             headers: {'SessionID': this.IssuedToken},
