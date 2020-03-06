@@ -330,15 +330,15 @@
     };
 
     ITSServerSettingsPublicsEditor.prototype.installNewCode = function () {
-        ITSInstance.genericAjaxUpdate('installpublics/itr-webclient', this,function () {
-            ITSInstance.genericAjaxUpdate('installpublics/itr-public-api', this,function () {
-                ITSInstance.genericAjaxUpdate('installpublics/itr-api', this,
+        ITSInstance.genericAjaxUpdate('installpublics/itr-webclient', "{}", function () {
+            ITSInstance.genericAjaxUpdate('installpublics/itr-public-api', "{}", function () {
+                ITSInstance.genericAjaxUpdate('installpublics/itr-api', "{}",
                     function () {
                         // force update
                         location.reload(true);
-                     }.bind(this), function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
-            }.bind(this), function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
-        }.bind(this), function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
+                     }, function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
+            }, function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
+        }, function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
     };
 
     // register the portlet
