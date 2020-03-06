@@ -335,6 +335,7 @@
                 ITSInstance.genericAjaxUpdate('installpublics/itr-api', "{}",
                     function () {
                         // force update
+                        ITSInstance.genericAjaxUpdate('installpublics/itr-restart', "{}", function (){}, function (){});
                         location.reload(true);
                      }, function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
             }, function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
