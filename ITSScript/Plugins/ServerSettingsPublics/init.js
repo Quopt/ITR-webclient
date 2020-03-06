@@ -203,6 +203,7 @@
         ITSInstance.UIController.showError("ITSServerSettingsPublicsEditor.LoadTranslationsFailed", "The translation list could not be loaded at this moment.");
     };
     ITSServerSettingsPublicsEditor.prototype.sourceCodeUpdateFailed= function () {
+        ITSInstance.UIController.showInterfaceAsWaitingOff();
         ITSInstance.UIController.showError("ITSServerSettingsPublicsEditor.sourceCodeUpdateFailed", "The source code update failed.");
     };
 
@@ -330,12 +331,14 @@
     };
 
     ITSServerSettingsPublicsEditor.prototype.installNewCode = function () {
+        ITSInstance.UIController.showInterfaceAsWaitingOn();
         ITSInstance.genericAjaxUpdate('installpublics/itr-webclient', "{}", function () {
             ITSInstance.genericAjaxUpdate('installpublics/itr-public-api', "{}", function () {
                 ITSInstance.genericAjaxUpdate('installpublics/itr-api', "{}",
                     function () {
                         // force update
                         ITSInstance.genericAjaxUpdate('installpublics/itr-restart', "{}", function (){}, function (){});
+                        ITSInstance.UIController.showInterfaceAsWaitingOff();
                         location.reload(true);
                      }, function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
             }, function () { ITSInstance.ServerSettingsPublicsController.sourceCodeUpdateFailed(); });
