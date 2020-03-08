@@ -66,6 +66,7 @@
 
     ITSServerLogsEditor.prototype.logsLoadedError = function (xhr) {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
+        $('#ServerLogsDiv-Now').prop("checked",true)
         ITSInstance.UIController.showError("ITSServerLogsEditor.LogsLoadError", "The server logs could not be loaded at this moment.", '',
             'window.history.back();');
     };
