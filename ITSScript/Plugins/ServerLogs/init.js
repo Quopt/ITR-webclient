@@ -99,28 +99,30 @@
             this.lastRefresh = dateNow;
             if ($('#ServerLogsDiv-AutoUpdate').is(':visible')) {
                 if ($('#ServerLogsDiv-AutoUpdate').is(':checked')) {
-                    console.log('Update logs')
+                    console.log('Update logs check')
                     setTimeout(this.refreshLogs.bind(this), 30000);
-                    $('#ServerLogsDiv-LogText').scrollTop(this.logLines.length * 999);
+                    if ($('#ServerLogsDiv-Now').is(":checked")) { // only update when current log is active
+                        $('#ServerLogsDiv-LogText').scrollTop(this.logLines.length * 999);
 
-                    lastLineFound = "ALL";
-                    lastLineCounter = this.logLines.length - 1;
-                    lastLine = this.logLines[lastLineCounter];
-                    while (lastLine.indexOf('ITR') != 0 && lastLineCounter > 0) {
+                        lastLineFound = "ALL";
+                        lastLineCounter = this.logLines.length - 1;
                         lastLine = this.logLines[lastLineCounter];
-                        lastLineCounter--;
-                    }
+                        while (lastLine.indexOf('ITR') != 0 && lastLineCounter > 0) {
+                            lastLine = this.logLines[lastLineCounter];
+                            lastLineCounter--;
+                        }
 
-                    if (lastLine.indexOf('ITR') == 0 && lastLineCounter > 0) {
-                        lastLineFound = lastLine.substring(4, 23);
-                    }
+                        if (lastLine.indexOf('ITR') == 0 && lastLineCounter > 0) {
+                            lastLineFound = lastLine.substring(4, 23);
+                        }
 
-                    ITSInstance.genericAjaxLoader('log/0/' + lastLineFound, undefined,
-                        function (mydata, textStatus, xhr) {
-                            this.logLines = this.logLines.concat(mydata);
-                            $('#ServerLogsDiv-LogText').val(this.logLines.join(''));
-                            $('#ServerLogsDiv-LogText').scrollTop(this.logLines.length * 999);
-                        }.bind(this), this.logsLoadedError, undefined, 0, 0, "", true)
+                        ITSInstance.genericAjaxLoader('log/0/' + lastLineFound, undefined,
+                            function (mydata, textStatus, xhr) {
+                                this.logLines = this.logLines.concat(mydata);
+                                $('#ServerLogsDiv-LogText').val(this.logLines.join(''));
+                                $('#ServerLogsDiv-LogText').scrollTop(this.logLines.length * 999);
+                            }.bind(this), this.logsLoadedError, undefined, 0, 0, "", true)
+                    }
                 }
             }
         }
