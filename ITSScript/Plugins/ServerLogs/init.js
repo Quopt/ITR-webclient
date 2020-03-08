@@ -80,7 +80,7 @@
                 $('#ServerLogsDiv-LogText').val(mydata.join(''));
                 this.logLines = mydata;
                 ITSInstance.UIController.showInterfaceAsWaitingOff();
-                if ( $('#ServerLogsDiv-AutoUpdate').is(":checked") ) { ITSInstance.ServerLogsController.refreshLogs(); }
+                if ( $('#ServerLogsDiv-AutoUpdate').is(":checked") ) { setTimeout(this.refreshLogs.bind(this), 30000); }
                 }.bind(this), this.logsLoadedError,undefined,0,0,"",true)
         } else {
             $('#ServerLogsDiv-LogText').val('');
