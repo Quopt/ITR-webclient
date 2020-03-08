@@ -43,6 +43,7 @@
         ITSInstance.UIController.initNavBar();
 
         this.LOG_HANDLER_BACKUP_COUNT = "";
+        this.lastRefresh = new Date(2000,1,1);
 
         ITSInstance.JSONAjaxLoader('systemsettings/LOG_HANDLER_BACKUP_COUNT', this.LOG_HANDLER_BACKUP_COUNT, this.LogHandlerBackupCountLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
             0, 999, "", "N", "Y", "N");
@@ -92,31 +93,35 @@
         }
     };
 
-// $('#ServerLogsDiv-AutoUpdate').is(':visible')
     ITSServerLogsEditor.prototype.refreshLogs = function () {
-        if ($('#ServerLogsDiv-AutoUpdate').is(':visible')) {
-            if ($('#ServerLogsDiv-AutoUpdate').is(':checked')) {
-                setTimeout( this.refreshLogs.bind(this), 30000 );
-                $('#ServerLogsDiv-LogText').scrollTop(this.logLines.length*999);
+        var dateNow = new Date();
+        if ((Math.abs(dateNow.getTime() - this.lastRefresh) ) > 29000) {
+            this.lastRefresh = dateNow;
+            if ($('#ServerLogsDiv-AutoUpdate').is(':visible')) {
+                if ($('#ServerLogsDiv-AutoUpdate').is(':checked')) {
+                    console.log('Update logs')
+                    setTimeout(this.refreshLogs.bind(this), 30000);
+                    $('#ServerLogsDiv-LogText').scrollTop(this.logLines.length * 999);
 
-                lastLineFound = "ALL";
-                lastLineCounter = this.logLines.length-1;
-                lastLine = this.logLines[lastLineCounter];
-                while (lastLine.indexOf('ITR') != 0  && lastLineCounter > 0) {
+                    lastLineFound = "ALL";
+                    lastLineCounter = this.logLines.length - 1;
                     lastLine = this.logLines[lastLineCounter];
-                    lastLineCounter--;
-                }
+                    while (lastLine.indexOf('ITR') != 0 && lastLineCounter > 0) {
+                        lastLine = this.logLines[lastLineCounter];
+                        lastLineCounter--;
+                    }
 
-                if (lastLine.indexOf('ITR') == 0 && lastLineCounter > 0) {
-                    lastLineFound = lastLine.substring(4,23);
-                }
+                    if (lastLine.indexOf('ITR') == 0 && lastLineCounter > 0) {
+                        lastLineFound = lastLine.substring(4, 23);
+                    }
 
-                ITSInstance.genericAjaxLoader('log/0/' + lastLineFound, undefined,
-                    function(mydata, textStatus, xhr) {
-                        this.logLines = this.logLines.concat(mydata);
-                        $('#ServerLogsDiv-LogText').val(this.logLines.join(''));
-                        $('#ServerLogsDiv-LogText').scrollTop(this.logLines.length*999);
-                    }.bind(this), this.logsLoadedError,undefined,0,0,"",true)
+                    ITSInstance.genericAjaxLoader('log/0/' + lastLineFound, undefined,
+                        function (mydata, textStatus, xhr) {
+                            this.logLines = this.logLines.concat(mydata);
+                            $('#ServerLogsDiv-LogText').val(this.logLines.join(''));
+                            $('#ServerLogsDiv-LogText').scrollTop(this.logLines.length * 999);
+                        }.bind(this), this.logsLoadedError, undefined, 0, 0, "", true)
+                }
             }
         }
     };
