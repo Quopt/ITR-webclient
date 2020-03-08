@@ -95,7 +95,7 @@
     ITSServerLogsEditor.prototype.refreshLogs = function () {
         if ($('#ServerLogsDiv-AutoUpdate').is(':visible')) {
             if ($('#ServerLogsDiv-AutoUpdate').is(':checked')) {
-                setTimeout( this.refreshLogs.bind(this), 5000 );
+                setTimeout( this.refreshLogs.bind(this), 30000 );
                 $('#ServerLogsDiv-LogText').scrollTop(this.logLines.length*999);
 
                 lastLineFound = "ALL";
