@@ -73,6 +73,7 @@ function loadOfficeComponents() {
         document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/TokenLister/init.js' defer><\/script>");
         document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/CreditsUsedListerServer/init.js' defer><\/script>");
         document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/CreditsGrantedLister/init.js' defer><\/script>");
+        document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Plugins/ServerLogs/init.js' defer><\/script>");
         // %OFFICEEDITOREND%
     }
 };

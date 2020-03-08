@@ -1,0 +1,60 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://raw.githubusercontent.com/Quopt/ITR-webclient/master/LICENSE
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div class="row col-12">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="ServerLogsInterfaceEditHeader">View server logs</h4>
+    <br/><br/>
+</div>
+
+<div id="ServerLogsDiv" class="needs-validation" novalidate class="row col-12">
+
+    <div class="bg-dark text-white well"><label id="ServerLogsDiv-Settings">Log view settings</label></div>
+    <div>
+        <div class="form-check col-12">
+            <input class="form-check-input" type="radio" name="ServerLogs" id="ServerLogsDiv-Now" checked onchange="ITSInstance.ServerLogsController.loadLogs();">
+            <label class="form-check-label" for="ServerLogsDiv-Now" id="ServerLogsDiv-Now-label">
+                Current log file
+            </label>
+            <div class="col-12 form-group">
+                <input type="checkbox" class="form-check-input" id="ServerLogsDiv-AutoUpdate" onchange="ITSInstance.ServerLogsController.refreshLogs();">
+                <label class="form-check-label" id="ServerLogsDiv-AutoUpdate-label" for="ServerLogsDiv-AutoUpdate">Auto update</label>
+            </div>
+        </div>
+
+        <div class="form-check col-12">
+            <input class="form-check-input" type="radio" name="ServerLogs" id="ServerLogsDiv-Historic" value="Historic" onchange="ITSInstance.ServerLogsController.loadLogs();">
+            <label class="form-check-label" for="ServerLogsDiv-Historic" id="ServerLogsDiv-Historic-label">
+                Historic log file
+            </label>
+            <div class="col-12 form-group row">
+                <label for="ServerLogsDiv-HistoricCount" class="col-form-label col-3" id="ServerLogsDiv-HistoricCount-label">
+                    Log file counter
+                </label>
+                <div class="col-3">
+                  <input type="number" notranslate id="ServerLogsDiv-HistoricCount" name="quantity" class="form-control" min="1" max="2" value="1" onchange="ITSInstance.ServerLogsController.loadLogs();">
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="bg-dark text-white well"><label id="ServerLogsDiv-ServerLogs">Logs</label></div>
+    <div>
+        <textarea id="ServerLogsDiv-LogText" class="md-textarea form-control form-control-xs" rows="30" readonly style="font-family: 'Courier New', Courier, monospace; font-size:8pt;"></textarea>
+    </div>
+
+</div>

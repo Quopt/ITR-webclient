@@ -104,7 +104,7 @@ ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuc
         error: function (xhr, ajaxOptions, thrownError) {
             console.log("Ajax error : " + xhr.status + " - " + thrownError);
             console.log(URL + " = " + JSON.stringify(tempHeaders));
-            OnError();
+            OnError(xhr, ajaxOptions, thrownError);
         },
         success: function (data, textStatus, xhr) {
             //console.log(ITSInstance.baseURLAPI + URL + '=' + data + ' to ' + objectToPutDataIn);
@@ -132,8 +132,8 @@ ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuc
                         objectToPutDataIn.afterLoad();
                     }
                 }
-                OnSuccess();
             }
+            OnSuccess(data, textStatus, xhr);
         },
         type: 'GET'
     });

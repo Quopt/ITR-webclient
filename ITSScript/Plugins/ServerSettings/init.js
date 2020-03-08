@@ -53,6 +53,7 @@
         this.Translate_Azure_Key = "";
         this.CopyrightMessage = "";
         this.CompanyName = "";
+        this.LOG_HANDLER_BACKUP_COUNT = "";
 
         ITSInstance.UIController.showInterfaceAsWaitingOn();
 
@@ -78,6 +79,9 @@
             0, 999, "", "N", "Y", "N");
         ITSInstance.JSONAjaxLoader('systemsettings/COMPANYNAME', this.CompanyName, this.CompanyNameLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
             0, 999, "", "N", "Y", "N");
+        ITSInstance.JSONAjaxLoader('systemsettings/LOG_HANDLER_BACKUP_COUNT', this.LOG_HANDLER_BACKUP_COUNT, this.LogHandlerBackupCountLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
+            0, 999, "", "N", "Y", "N");
+
 
         $('#ServerSettingsDiv').children().prop('disabled',true);
         if (ITSInstance.users.currentUser.IsMasterUser) {
@@ -140,6 +144,11 @@
         this.ParsLoaded();
     };
 
+    ITSServerSettingsEditor.prototype.LogHandlerBackupCountLoaded = function (newValue) {
+        this.LOG_HANDLER_BACKUP_COUNT = newValue;
+        this.ParsLoaded();
+    };
+
     ITSServerSettingsEditor.prototype.ParsLoaded = function () {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         $('#ServerSettingsOrderByMailAddress').val(this.emailPar);
@@ -157,6 +166,8 @@
         $('#ServerSettingsDiv-CompanyName-val').val(this.CompanyName);
 
         $('#ServerSettingsDiv-MaxNumberOfConsulants-val').val(this.maxNumberOfConsultants);
+
+        $('#ServerSettingsDiv-Logging-val').val(this.LOG_HANDLER_BACKUP_COUNT);
     };
 
     ITSServerSettingsEditor.prototype.ParsLoadedError = function (xhr) {
@@ -211,6 +222,16 @@
     ITSServerSettingsEditor.prototype.changeCompanyNameParameter= function (newVal) {
         ITSInstance.genericAjaxUpdate('systemsettings/COMPANYNAME', newVal, function () {}, function () {}, "Y","N");
         setTimeout(1000,getCopyrightMessage);
+    };
+
+    ITSServerSettingsEditor.prototype.changeHistoricLogFilesParameter = function (newVal){
+        ITSInstance.genericAjaxUpdate('systemsettings/LOG_HANDLER_BACKUP_COUNT', newVal, function () {}, function () {}, "Y","N");
+    };
+
+    ITSServerSettingsEditor.prototype.restartServer = function () {
+        ITSInstance.genericAjaxUpdate('installpublics/itr-stop', "{}", function (){}, function (){});
+        ITSInstance.UIController.showInterfaceAsWaitingOn();
+        setTimeout( function () { location.reload(true); }, 30000);
     };
 
     // register the portlet

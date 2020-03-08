@@ -122,9 +122,25 @@
             </div>
         </div>
     </div>
+
+    <div class="bg-dark text-white well"><label id="ServerSettingsDiv-Logging">Logging settings</label></div>
+    <div class="">
+        <div id="ServerSettingsDiv-LoggingDiv" class="form-group row">
+            <label for="ServerSettingsDiv-Logging-val" id="ServerSettingsDivLogging-lbl" class="col-sm-4 col-form-label">Amount of historic log files (change requires server restart)</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="number" placeholder="Number of historic log files" value="" min="1" max="100"
+                       id="ServerSettingsDiv-Logging-val" onchange="ITSInstance.ServerSettingsController.changeHistoricLogFilesParameter(this.value);">
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="ServerSettingsActions" class="needs-validation" novalidate class="row col-12">
     <div class="bg-dark text-white well"><label id="ServerSettingsActions-ActionsHeader">Actions</label></div><br/>
     <button id="ServerSettingsActions-installButton" notranslate type="button" class="btn btn-success" onclick="ITSRedirectPath('ServerSettingsPublics');"><i class="fa fa-fw fa-download"></i> <span id="ServerSettingsActions-installButton-label">Install open source publics</span></button>&nbsp;
+    <button id="ServerSettingsActions-showLogsButton" notranslate type="button" class="btn btn-success" onclick="ITSRedirectPath('ServerLogs');"><i class="fa fa-fw fa-drafting-compass"></i> <span id="ServerSettingsActions-logButton-label">View log files</span></button>&nbsp;
+    <br/>
+    <label id="ServerSettingsActions-restartButtonWarning-label">PLEASE NOTE : restarting the server will break all sessions currently active. Only restart the server when there are no active users.</label>
+    <br/>
+    <button id="ServerSettingsActions-restartButton" notranslate type="button" class="btn btn-warning" onclick="ITSInstance.ServerSettingsController.restartServer();"><i class="fa fa-fw fa-server"></i> <span id="ServerSettingsActions-restartButton-label">Restart</span></button>&nbsp;
 </div>
