@@ -27,12 +27,18 @@ ITSInviteNewCandidateEditor.prototype.info = new ITSPortletAndEditorRegistration
 
 ITSInviteNewCandidateEditor.prototype.afterOfficeLogin = function () {
     // make sure we get the tests and batteries loaded, dont care when it is ready
-    ITSInstance.tests.loadAvailableTests(function () {
-    }, function () {
-    });
-    ITSInstance.batteries.loadAvailableBatteries(function () {
-    }, function () {
-    });
+    if (ITSInstance.tests.testList.length <= 0) {
+        this.createNewSession("");
+
+        ITSInstance.tests.loadAvailableTests(function () {
+            this.loadTestAndBatteriesList();
+        }.bind(this), function () {
+        });
+        ITSInstance.batteries.loadAvailableBatteries(function () {
+            this.loadTestAndBatteriesList();
+        }.bind(this), function () {
+        });
+    }
 };
 
 ITSInviteNewCandidateEditor.prototype.loadTestAndBatteriesList = function() {
@@ -117,11 +123,15 @@ ITSInviteNewCandidateEditor.prototype.TestOrBatterySelected = function (textFoun
     this.loadTestAndBatteriesList();
 };
 
-ITSInviteNewCandidateEditor.prototype.createNewSession= function (EmailAddress) {
+ITSInviteNewCandidateEditor.prototype.createNewSession = function (EmailAddress) {
     console.log("New test session requested " + EmailAddress);
     // create a new and empty session
     this.newSession = ITSInstance.candidateSessions.newCandidateSession();
     this.newSession.Person.EMail = EmailAddress;
+    this.forcePasswordReset();
+    this.UpdateEMailAddress();
+
+    this.newSession.Description = ITSInstance.translator.getTranslatedString( 'SessionNewEditor', 'DefaultSessionDescription', 'Session') + " " + EmailAddress.trim();
 
     // bind it to the div elements AdminInterfaceSessionEditNew
     DataBinderTo("AdminInterfaceSessionEditNew", this.newSession);
@@ -281,8 +291,13 @@ ITSInviteNewCandidateEditor.prototype.show = function () {
     $('#AdminInterfaceSessionEditNew').show();
     ITSInstance.UIController.initNavBar();
 
-    this.loadTestAndBatteriesList();
+    this.afterOfficeLogin();
     this.repopulateTestsLists();
+    this.UpdateEMailAddress();
+};
+
+
+ITSInviteNewCandidateEditor.prototype.UpdateEMailAddress = function () {
     if ($('#AdminInterfaceSessionNewSessionMail').val() == "") {
         try {
             $('#AdminInterfaceSessionNewSessionMail').val(ITSInstance.users.currentUser.PluginData.MailSettings.Notifications);
@@ -323,11 +338,14 @@ ITSInviteNewCandidateEditor.prototype.saveNewSession = function ( onSuccessCallb
     if (this.newSession.SessionTests.length == 0) {
         ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','TestMissing','Please add a test to this session.')
     }
+
     // get the date & time fields from the interface
-    var tempValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','DatesInvalid','Please check the date fields in the birthdate and session validity fields. The values are no valid dates.');
     // check for invalid dates
-    if (! (isValidDate(this.newSession.Person.BirthDate) && isValidDate(this.newSession.AllowedStartDateTime) && isValidDate(this.newSession.AllowedEndDateTime)  )) {
-        ValidationMessage = tempValidationMessage;
+    if (!isValidDate(this.newSession.Person.BirthDate)) { this.newSession.Person.BirthDate = new Date(1900,1,1);}
+    if (!isValidDate(this.newSession.Person.AllowedStartDateTime)) { this.newSession.AllowedStartDateTime = new Date(); }
+    if (!isValidDate(this.newSession.Person.AllowedEndDateTime)) {
+        var oldDate = new Date();
+        this.newSession.AllowedEndDateTime = new Date(parseInt(oldDate.getFullYear())+1, parseInt(oldDate.getMonth()), parseInt(oldDate.getDay()));
     }
 
     this.newSession.EMailNotificationAdresses = "";
@@ -342,8 +360,7 @@ ITSInviteNewCandidateEditor.prototype.saveNewSession = function ( onSuccessCallb
 
     if (ValidationMessage == "") {
         // update on the server
-        if (this.existingUserFound)  this.newSession.Person.Password = "";
-        if (!this.existingUserFound)  this.newSession.Person.Password = $('#AdminInterfaceSessionNewSessionCandidatePassword').val();
+        this.newSession.Person.Password = $('#AdminInterfaceSessionNewSessionCandidatePassword').val();
 
         $('#AdminInterfaceSessionNewSession-saveIcon')[0].outerHTML = "<i id='AdminInterfaceSessionNewSession-saveIcon' class='fa fa-fw fa-life-ring fa-spin fa-lg'></i>";
         this.newSession.saveToServerIncludingTestsAndPerson(function () {
@@ -361,9 +378,6 @@ ITSInviteNewCandidateEditor.prototype.saveNewSession = function ( onSuccessCallb
 
 ITSInviteNewCandidateEditor.prototype.emailAddressChanged = function ( newValue ) {
     // the email address has changed. check if this is a known user. If so then update the password, name etc and stored persid. If not generate a new person id.
-    // AdminInterfaceSessionNewSessionCandidateFirstName AdminInterfaceSessionNewSessionCandidateInitials  AdminInterfaceSessionNewSessionCandidateLastName  AdminInterfaceSessionNewSessionCandidateBirthDate
-    // AdminInterfaceSessionNewSessionCandidateSexMale AdminInterfaceSessionNewSessionCandidateSexFemale AdminInterfaceSessionNewSessionCandidateSexUnknown
-    // AdminInterfaceSessionNewSessionCandidatePassword
     ITSInstance.candidates.loadCurrentCandidateByLogin( newValue, this.emailAddressChangedFound.bind(this), this.emailAddressChangedNotFound.bind(this) );
 };
 
@@ -382,14 +396,14 @@ ITSInviteNewCandidateEditor.prototype.emailAddressChangedFound = function () {
         this.newSession.Person.Initials = ITSInstance.candidates.searchForCandidates[0].Initials;
         this.newSession.Person.BirthDate = ITSInstance.candidates.searchForCandidates[0].BirthDate;
         this.newSession.Person.Sex = ITSInstance.candidates.searchForCandidates[0].Sex;
-        //this.newSession.Person.Password = ITSInstance.candidates.searchForCandidates[0].Password;
         this.newSession.Person.Password = "";
-        //this.newSession.AllowedStartDateTime = oldStart;
-        //this.newSession.AllowedEndDateTime = oldEnd;
         DataBinderTo("AdminInterfaceSessionEditNew", this.newSession);
         $('#AdminInterfaceSessionNewWarningExistsLabel').show();
         $('#AdminInterfaceSessionNewSessionCandidatePasswordDiv').hide();
         this.existingUserFound = true;
+        // request the password (if possible by rights)
+        ITSInstance.UIController.showInterfaceAsWaitingOn(0);
+        this.newSession.Person.requestPassword(this.UpdatePasswordOnScreen.bind(this),this.UpdatePasswordOnScreenFailed.bind(this))
     } else {
         // no match
         this.emailAddressChangedNotFound();
@@ -401,14 +415,29 @@ ITSInviteNewCandidateEditor.prototype.emailAddressChangedFound = function () {
     this.newSession.relinkToCurrentPersonID();
 };
 
+ITSInviteNewCandidateEditor.prototype.UpdatePasswordOnScreen = function () {
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+    DataBinderTo("AdminInterfaceSessionEditNew", this.newSession);
+    $('#AdminInterfaceSessionNewSessionCandidatePasswordDiv').show();
+};
+
+ITSInviteNewCandidateEditor.prototype.UpdatePasswordOnScreenFailed = function () {
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+    // do nothing for now
+};
+
 ITSInviteNewCandidateEditor.prototype.emailAddressChangedNotFound = function () {
     // generate a new guid for this.newSession.Person to make sure we save it as a new person instead of update an existing one
     this.newSession.Person.ID = newGuid();
     this.newSession.PersonID = this.newSession.Person.ID;
-    this.newSession.Person.regeneratePassword();
-    $('#AdminInterfaceSessionNewSessionCandidatePassword').val(this.newSession.Person.Password);
+    this.forcePasswordReset();
     // relink all sessiontests to the correct person id
     this.newSession.relinkToCurrentPersonID();
+};
+
+ITSInviteNewCandidateEditor.prototype.forcePasswordReset = function () {
+    this.newSession.Person.regeneratePassword();
+    $('#AdminInterfaceSessionNewSessionCandidatePassword').val(this.newSession.Person.Password);
 };
 
 ITSInviteNewCandidateEditor.prototype.clearSession = function () {

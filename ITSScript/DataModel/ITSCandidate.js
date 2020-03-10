@@ -158,8 +158,6 @@ ITSCandidates.prototype.loadCurrentCandidate = function (CandidateID, OnSuccess,
 
 ITSCandidates.prototype.loadCurrentCandidateByLogin = function (Login, OnSuccess, OnFailure) {
     // load the candidate
-    // ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, OnNewChild, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter) {
-    // ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, DefaultObjectType, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter) {
     if (Login.trim() != "") {
         ITSInstance.JSONAjaxLoader('persons', ITSInstance.candidates.searchForCandidates, OnSuccess, OnFailure, "ITSCandidate", 0, 1, "", "", "N", "Y", "EMail = '" + Login + "'");
     }
