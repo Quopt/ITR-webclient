@@ -121,7 +121,7 @@
                 var companyName="X";
                 try {
                     companyName = ITSInstance.companies.findOtherCompanyByID(this.CreditsGrantedList[i].CompanyID).CompanyName;
-                } catch {}
+                } catch(err) {}
                 this.CreditsGrantedList[i].Remarks = "[" + companyName + "] " + this.CreditsGrantedList[i].Remarks ;
                 rowText = rowText.replace( this.mRemarks, this.CreditsGrantedList[i].Remarks );
             } else {

@@ -51,7 +51,7 @@
                   if (ITSInstance.users.currentUser.HasPersonalCreditPool) {
                       $('#AdminInterfaceCreditManagementBodyAmount').text(ITSInstance.users.currentUser.CurrentPersonalCreditLevel);
                   }
-                } catch {};
+                } catch(err) {};
             },
             creditUsagesLoaded: function () {
                 console.log('Portlet credit usages loaded');

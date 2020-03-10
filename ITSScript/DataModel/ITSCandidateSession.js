@@ -146,7 +146,7 @@ ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixF
             try {
                 folderName = prefixForPath == "" ? "" : prefixForPath + "/" ;
                 folderName = folderName + ITSInstance.tests.testList[ITSInstance.tests.findTestById(ITSInstance.tests.testList, reportsList[i].TestID)].Description + "/";
-            } catch {}
+            } catch (err) { /* do nothing */ }
             // find the test for this report
             var reportFound = undefined;
             for (var tc=0; tc < this.SessionTests.length; tc++) {
