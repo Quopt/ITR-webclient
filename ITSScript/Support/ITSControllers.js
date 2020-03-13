@@ -714,10 +714,11 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             setTimeout(this.renderTestPage.bind(this),100);
             break;
         case "NextUnansweredScreenWithProceed":
+            var oldPage = this.currentSessionTest.CurrentPage;
             this.currentSessionTest.CurrentPage++;
         case "NextUnansweredScreen" :
             if (this.InTestTaking) $('#NavbarsTestTaking').show();
-            var oldPage = this.currentSessionTest.CurrentPage;
+            if (eventName == "NextUnansweredScreen") { var oldPage = this.currentSessionTest.CurrentPage; }
             while ( (this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].show) &&
                     (this.currentSessionTest.CurrentPage < this.currentTestDefinition.screens.length) &&
                     (this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].checkIsAnswered( this.currentSessionTest.Results ) >= 1  ) ) {
