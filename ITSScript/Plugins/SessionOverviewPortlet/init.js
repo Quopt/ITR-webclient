@@ -16,14 +16,19 @@
 (function() { // iife to prevent pollution of the global memspace
 
 // add the portlet at the proper place, add portlet.html to AdminInterfacePortlets
-    AdminInterfaceInviteRRSessionsDiv = $('<div class="col-md-4" id="AdminInterfaceInviteRRSessions">');
-    $('#AdminInterfacePortlets').append(AdminInterfaceInviteRRSessionsDiv);
-    $(AdminInterfaceInviteRRSessionsDiv).load(ITSJavaScriptVersion + '/Plugins/SessionOverviewPortlet/portlet.html', function () {
+    $.get(ITSJavaScriptVersion + '/Plugins/SessionOverviewPortlet/portlet.html', function (htmlLoaded) {
         var ITSPortletReadySessions = {
             info: new ITSPortletAndEditorRegistrationInformation('93e0bdc4-3f20-42c8-887e-8aa8ceee2baa', 'Session overview portlet', '1.0', 'Copyright 2018 Quopt IT Services BV', 'Presents an overview of sessions that have recently finished and an option to view them'),
+            defaultShowOrder : 3,
+            html : htmlLoaded,
+            addToInterface : function () {
+                AdminInterfaceInviteRRSessionsDiv = $('<div class="col-md-4" id="AdminInterfaceInviteRRSessions">');
+                $('#AdminInterfacePortlets').append(AdminInterfaceInviteRRSessionsDiv);
+                $('#AdminInterfaceInviteRRSessions').append(this.html);
+            },
             afterOfficeLogin: function () {
                 console.log('Init portlet ready sessions');
-                this.reload();
+                ITSInstance.portletReadySessions.reload();
             },
             loadSuccess: function () {
                 console.log('Portlet sessions loaded');
@@ -69,11 +74,10 @@
         // register the portlet
         ITSInstance.portletReadySessions = Object.create(ITSPortletReadySessions);
         ITSInstance.UIController.registerPortlet(ITSInstance.portletReadySessions);
+
         ITSInstance.MessageBus.subscribe("Session.Delete", ITSInstance.portletReadySessions.reloadAfterDelay.bind(ITSInstance.portletReadySessions));
         ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletReadySessions.reload.bind(ITSInstance.portletReadySessions));
 
-        // make sure the portlet is reloaded every 5 minutes
-        //setTimeout(ITSInstance.portletReadySessions.reload, 300000);
     })
 
 })() //iife

@@ -15,15 +15,19 @@
 
 (function() { // iife to prevent pollution of the global memspace
 
-// add the portlet at the proper place, add portlet.html to AdminInterfacePortlets
-    AdminInterfaceSessionProgressPortletDiv = $('<div class="col-md-4" id="AdminInterfaceSessionProgressPortlet">');
-    $('#AdminInterfacePortlets').append(AdminInterfaceSessionProgressPortletDiv);
-    $(AdminInterfaceSessionProgressPortletDiv).load(ITSJavaScriptVersion + '/Plugins/SessionProgressPortlet/portlet.html', function () {
+    $.get(ITSJavaScriptVersion + '/Plugins/SessionProgressPortlet/portlet.html', function (htmlLoaded) {
         var ITSportletBusySessions = {
             info: new ITSPortletAndEditorRegistrationInformation('a460c1b9-7b5e-4612-8407-fea11385c964', 'Session prepared and in progress portlet', '1.0', 'Copyright 2020 Quopt IT Services BV', 'Presents an overview of sessions that have recently finished and an option to view them'),
+            defaultShowOrder : 2,
+            html : htmlLoaded,
+            addToInterface: function () {
+                AdminInterfaceSessionProgressPortletDiv = $('<div class="col-md-4" id="AdminInterfaceSessionProgressPortlet">');
+                $('#AdminInterfacePortlets').append(AdminInterfaceSessionProgressPortletDiv);
+                $('#AdminInterfaceSessionProgressPortlet').append(this.html);
+            },
             afterOfficeLogin: function () {
                 console.log('Init portlet prepared and busy sessions');
-                this.reloadAfterDelay();
+                ITSInstance.portletBusySessions.reloadAfterDelay();
             },
             loadSuccess: function () {
                 $('#AdminInterfaceSessionProgressPortletTable tr').remove();
@@ -91,11 +95,11 @@
         // register the portlet
         ITSInstance.portletBusySessions = Object.create(ITSportletBusySessions);
         ITSInstance.UIController.registerPortlet(ITSInstance.portletBusySessions);
+
         ITSInstance.MessageBus.subscribe("Session.Update", ITSInstance.portletBusySessions.reloadAfterDelay.bind(ITSInstance.portletBusySessions));
         ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletBusySessions.reload.bind(ITSInstance.portletBusySessions));
 
-        // make sure the portlet is reloaded every 5 minutes
-        //setTimeout(ITSInstance.portletBusySessions.reload, 300000);
+
     })
 
 })() //iife

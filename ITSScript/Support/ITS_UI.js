@@ -365,9 +365,40 @@ ITSUIController = function () {
         }
     };
 
-    this.registerPortlet = function (portlet) { if (ITSInstance.UIController.registeredPortlets.indexOf(portlet)<0) { ITSInstance.UIController.registeredPortlets.push(portlet); } } ; // please note that portlets must conform to the portlet interface
-    this.registerEditor = function (editor) { if (ITSInstance.UIController.registeredEditors.indexOf(editor)<0) { ITSInstance.UIController.registeredEditors.push(editor); } } ; // please note that editors must conform to the editor interface
-    this.initPortlets = function () { ITSInstance.UIController.registeredPortlets.forEach( function (currentValue, index, arr) { if(typeof currentValue.init == 'function') currentValue.init(); } ) };
+    this.registerPortlet = function (portlet) {
+        if (ITSInstance.UIController.registeredPortlets.indexOf(portlet)<0) {
+            ITSInstance.UIController.registeredPortlets.push(portlet);
+            this.showPortlets();
+        }
+    } ; // please note that portlets must conform to the portlet interface
+    this.registerEditor = function (editor) {
+        if (ITSInstance.UIController.registeredEditors.indexOf(editor)<0) { ITSInstance.UIController.registeredEditors.push(editor); }
+    } ; // please note that editors must conform to the editor interface
+    this.initPortlets = function () {
+        ITSInstance.UIController.registeredPortlets.forEach( function (currentValue, index, arr) {
+            if(typeof currentValue.afterOfficeLogin == 'function') {
+                setTimeout(currentValue.afterOfficeLogin, 1);
+            }
+        } )
+    };
+    this.showPortlets = function () {
+        // if all portlets are loaded then translate and init them
+        if (loadPortletsCount == ITSInstance.UIController.registeredPortlets.length) {
+            // reorder (and in the future hide) the portlets based on the default settings in the portlets and (in the future) user preference
+            ITSInstance.UIController.registeredPortlets.sort( function (a,b) {
+                aval = typeof a.defaultShowOrder != "undefined" ? a.defaultShowOrder : 999;
+                bval = typeof b.defaultShowOrder != "undefined" ? b.defaultShowOrder : 999;
+                if (aval > bval) {return 1; } else {return -1;}
+            } );
+            $('#AdminInterfacePortlets').empty();
+            for (var i=0; i < ITSInstance.UIController.registeredPortlets.length; i++) {
+                ITSInstance.UIController.registeredPortlets[i].addToInterface();
+            }
+
+            ITSInstance.translator.retranslateInterface();
+            this.initPortlets();
+        }
+    };
     this.initEditors = function () { ITSInstance.UIController.registeredEditors.forEach( function (currentValue, index, arr) { currentValue.init(); } ) };
     this.hideAllEditors = function () {
         ITSInstance.UIController.registeredEditors.forEach(
@@ -394,11 +425,7 @@ ITSUIController = function () {
     this.prepareOfficeSession = function () {
         // load all data that is required by the system
         ITSInstance.ITRSessionType = "office";
-        if (!loadOfficeComponentsAlreadyCalled) {
-            // this is a partially loaded session (only for test taking) trying to login in the office
-            // refresh the complete browser now to load properly
-            setTimeout(function () { location.reload(true); }, 1000);
-        };
+        loadOfficeComponents();
         ITSInstance.screenTemplates.loadAvailableScreenTemplates(); // always load the screen templates
 
         // make sure the server updates periodically
@@ -407,7 +434,7 @@ ITSUIController = function () {
         // get the amount of sessions
         getActiveSessions();
 
-        // now initialise the editors and portlets. The may need more data.
+        // now initialise the editors and portlets. They may need more data.
         ITSInstance.UIController.registeredEditors.forEach(
             function (currentValue, index, arr) {
                 if (currentValue) {
@@ -420,7 +447,8 @@ ITSUIController = function () {
                         }
                     }
                 }
-            } )
+            } );
+
         ITSInstance.UIController.registeredPortlets.forEach( function (currentValue, index, arr) { if(typeof currentValue.afterOfficeLogin == 'function') { currentValue.afterOfficeLogin(); } } )
     };
     this.prepareTestRunSession = function () {

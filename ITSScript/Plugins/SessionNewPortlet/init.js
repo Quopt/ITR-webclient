@@ -15,16 +15,21 @@
 
 (function() { // iife to prevent pollution of the global memspace
 
-// add the portlet at the proper place, add portlet.html to AdminInterfacePortlets
-    AdminInterfaceNewSessionPortletDiv = $('<div class="col-md-4" id="AdminInterfaceInviteNewCandidate">');
-    $('#AdminInterfacePortlets').append(AdminInterfaceNewSessionPortletDiv);
-    $(AdminInterfaceNewSessionPortletDiv).load(ITSJavaScriptVersion + '/Plugins/SessionNewPortlet/portlet.html', function () {
-        // disable the portlet while the tests are not available
-        $("#AdminInterfaceInviteNewCandidate").prop('disabled', true);
-        $("#AdminInterfaceInviteNewCandidate").children().prop('disabled', true);
-        $("#AdminInterfaceInviteNewCandidate").fadeTo("quick", 0.3);
+    $.get(ITSJavaScriptVersion + '/Plugins/SessionNewPortlet/portlet.html', function (htmlLoaded) {
         var ITSPortletInviteNewCandidate = {
             info: new ITSPortletAndEditorRegistrationInformation('d922f006-de57-4d2b-b5cc-ec76f0991ccb', 'New session portlet', '1.0', 'Copyright 2018 Quopt IT Services BV', 'Allows from the switchboard to easily jump into the create new session editor.'),
+            defaultShowOrder : 1,
+            html: htmlLoaded,
+            addToInterface : function () {
+                AdminInterfaceNewSessionPortletDiv = $('<div class="col-md-4" id="AdminInterfaceInviteNewCandidate">');
+                $('#AdminInterfacePortlets').append(AdminInterfaceNewSessionPortletDiv);
+                $('#AdminInterfaceInviteNewCandidate').append(this.html);
+
+                // disable the portlet while the tests are not available
+                $("#AdminInterfaceInviteNewCandidate").prop('disabled', true);
+                $("#AdminInterfaceInviteNewCandidate").children().prop('disabled', true);
+                $("#AdminInterfaceInviteNewCandidate").fadeTo("quick", 0.3);
+            },
             afterOfficeLogin: function () {
                 console.log('Init portlet invite new candidate');
                 ITSInstance.batteries.loadAvailableBatteries(function () {}, function () {});
@@ -56,6 +61,7 @@
                 $('#AdminInterfaceInviteNewCandidateButton').click();
             }
         });
+
     })
 
 })() // iife

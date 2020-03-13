@@ -15,16 +15,24 @@
 
 (function() { // iife to prevent pollution of the global memspace
 
-// add the portlet at the proper place, add portlet.html to AdminInterfacePortlets
-    AdminInterfaceInviteTCatalogDiv = $('<div class="col-md-4" id="AdminInterfaceInviteTCatalog">');
-    $('#AdminInterfacePortlets').append(AdminInterfaceInviteTCatalogDiv);
-    $(AdminInterfaceInviteTCatalogDiv).load(ITSJavaScriptVersion + '/Plugins/TestCatalogPortlet/portlet.html', function () {
+    $.get(ITSJavaScriptVersion + '/Plugins/TestCatalogPortlet/portlet.html', function (htmlLoaded) {
         // disable the portlet while the tests are not available
-        $("#AdminInterfaceInviteTCatalog").prop('disabled', true);
-        $("#AdminInterfaceInviteTCatalog").children().prop('disabled', true);
-        $("#AdminInterfaceInviteTCatalog").fadeTo("quick", 0.3);
+        //$("#AdminInterfaceInviteTCatalog").prop('disabled', true);
+        //$("#AdminInterfaceInviteTCatalog").children().prop('disabled', true);
+        //$("#AdminInterfaceInviteTCatalog").fadeTo("quick", 0.3);
+
         var ITSPortletTestCatalog = {
             info: new ITSPortletAndEditorRegistrationInformation('020247ef-5afd-4ab4-9f99-0aa1f4466978', 'Test catalog portlet', '1.0', 'Copyright 2018 Quopt IT Services BV', 'Shows a portlet that will allow easy linking into the test catalog information.'),
+            defaultShowOrder : 6,
+            html: htmlLoaded,
+            addToInterface : function () {
+                AdminInterfaceInviteTCatalogDiv = $('<div class="col-md-4" id="AdminInterfaceInviteTCatalog">');
+                $('#AdminInterfacePortlets').append(AdminInterfaceInviteTCatalogDiv);
+                $('#AdminInterfaceInviteTCatalog').append(this.html);
+                $("#AdminInterfaceInviteTCatalog").prop('disabled', true);
+                $("#AdminInterfaceInviteTCatalog").children().prop('disabled', true);
+                $("#AdminInterfaceInviteTCatalog").fadeTo("quick", 0.3);
+            },
             testList: [],
             afterOfficeLogin: function () {
                 console.log('Init portlet test catalog');
@@ -56,6 +64,8 @@
         // register the portlet
         ITSInstance.portletTestCatalog = Object.create(ITSPortletTestCatalog);
         ITSInstance.UIController.registerPortlet(ITSInstance.portletTestCatalog);
+
+
     })
 
 })() // iife

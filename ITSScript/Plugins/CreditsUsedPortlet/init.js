@@ -14,15 +14,21 @@
  */
 
 (function() { // iife to prevent pollution of the global memspace
-// add the portlet at the proper place, add portlet.html to AdminInterfacePortlets
-    AdminInterfaceCreditManagementPortletDiv = $('<div class="col-md-4" id="AdminInterfaceCreditManagement">');
-    $('#AdminInterfacePortlets').append(AdminInterfaceCreditManagementPortletDiv);
-    $(AdminInterfaceCreditManagementPortletDiv).load(ITSJavaScriptVersion + '/Plugins/CreditsUsedPortlet/portlet.html', function () {
+    $.get(ITSJavaScriptVersion + '/Plugins/CreditsUsedPortlet/portlet.html', function (htmlLoaded) {
         // init the portlet
         var ITSPortletCreditManagement = {
             info: new ITSPortletAndEditorRegistrationInformation('8ce5ec6e-c125-4d15-ba41-b67740ef0453', 'Credits used portlet', '1.0', 'Copyright 2018 Quopt IT Services BV', 'Shows credit usage of the company and remaining credit units.'),
+            defaultShowOrder : 4,
+            html : htmlLoaded,
+            addToInterface : function () {
+                AdminInterfaceCreditManagementPortletDiv = $('<div class="col-md-4" id="AdminInterfaceCreditManagement">');
+                $('#AdminInterfacePortlets').append(AdminInterfaceCreditManagementPortletDiv);
+                $('#AdminInterfaceCreditManagement').append(this.html);
+            },
             afterOfficeLogin: function () {
                 console.log('Init portlet credit management');
+                ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletCreditManagement.init_after_load);
+                ITSInstance.portletCreditManagement.init_after_load();
             },
             init_after_load: function () {
                 if (ITSInstance.companies.currentCompany) {
@@ -127,13 +133,7 @@
 
         // register the portlet
         ITSInstance.portletCreditManagement = Object.create(ITSPortletCreditManagement);
-        $('#AdminInterfaceCreditManagement').hide();
-
-        ITSInstance.MessageBus.subscribe("CurrentCompany.Loaded", function () {
-            ITSInstance.portletCreditManagement.loadPortletWhenCompanyKnown();
-        }, true);
-        //if (ITSInstance.companies.currentCompanyAvailable) ITSInstance.portletCreditManagement.loadPortletWhenCompanyKnown();
-
+        ITSInstance.UIController.registerPortlet(ITSInstance.portletCreditManagement);
     })
 
 })() // iife

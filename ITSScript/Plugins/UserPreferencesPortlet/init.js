@@ -14,21 +14,23 @@
  */
 
 (function() { // iife to prevent pollution of the global memspace
-
-// add the portlet at the proper place, add portlet.html to AdminInterfacePortlets
-    AdminInterfaceSettingsDiv = $('<div class="col-md-4" id="AdminInterfaceSettings">');
-    $('#AdminInterfacePortlets').append(AdminInterfaceSettingsDiv);
-    $(AdminInterfaceSettingsDiv).load(ITSJavaScriptVersion + '/Plugins/UserPreferencesPortlet/portlet.html', function () {
+    $.get(ITSJavaScriptVersion + '/Plugins/UserPreferencesPortlet/portlet.html', function (htmlLoaded) {
         var ITSPortletUserPreferences = {
             info: new ITSPortletAndEditorRegistrationInformation('c3095d24-0382-48cf-b51d-d6018526b184', 'User preferences portlet', '1.0', 'Copyright 2018 Quopt IT Services BV', 'Jump to the settings of the current user.'),
-            init: function () {
-
+            html: htmlLoaded,
+            addToInterface: function () {
+                AdminInterfaceSettingsDiv = $('<div class="col-md-4" id="AdminInterfaceSettings">');
+                $('#AdminInterfacePortlets').append(AdminInterfaceSettingsDiv);
+                $('#AdminInterfaceSettings').append(this.html);
             },
             hide: function () {
                 $('#AdminInterfaceSettings').hide();
             },
             show: function () {
                 $('#AdminInterfaceSettings').show();
+            },
+            afterOfficeLogin: function () {
+                ITSInstance.portletUserPreferences.loadMenu();
             },
             loadMenu: function () {
                 if (ITSInstance.users.currentUser) {
@@ -50,11 +52,7 @@
         // register the portlet
         ITSInstance.portletUserPreferences = Object.create(ITSPortletUserPreferences);
         ITSInstance.UIController.registerPortlet(ITSInstance.portletUserPreferences);
-        ITSInstance.portletUserPreferences.loadMenu();
 
-        ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
-            ITSInstance.portletUserPreferences.loadMenu();
-        }, true);
     })
 
 })() // iife

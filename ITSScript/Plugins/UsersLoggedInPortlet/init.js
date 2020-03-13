@@ -15,12 +15,16 @@
 
 (function() { // iife to prevent pollution of the global memspace
 
-// add the portlet at the proper place, add portlet.html to AdminInterfacePortlets
-    AdminInterfaceInviteUserMngtDiv = $('<div class="col-md-4" id="AdminInterfaceInviteUserMngt">');
-    $('#AdminInterfacePortlets').append(AdminInterfaceInviteUserMngtDiv);
-    $(AdminInterfaceInviteUserMngtDiv).load(ITSJavaScriptVersion + '/Plugins/UsersLoggedInPortlet/portlet.html', function () {
+    $.get(ITSJavaScriptVersion + '/Plugins/UsersLoggedInPortlet/portlet.html', function (htmlLoaded) {
         var ITSPortletLoggedInUsers = {
             info: new ITSPortletAndEditorRegistrationInformation('7b0e7c93-0269-48ef-a26f-e26f839766bf', 'Users logged in portlet', '1.0', 'Copyright 2018 Quopt IT Services BV', 'Shows the latest logged in users and allows jumping to the logged in users audit trail.'),
+            defaultShowOrder : 5,
+            html: htmlLoaded,
+            addToInterface : function () {
+                AdminInterfaceInviteUserMngtDiv = $('<div class="col-md-4" id="AdminInterfaceInviteUserMngt">');
+                $('#AdminInterfacePortlets').append(AdminInterfaceInviteUserMngtDiv);
+                $('#AdminInterfaceInviteUserMngt').append(this.html);
+            },
             afterOfficeLogin: function () {
                 console.log('Init portlet last logged in users');
                 ITSInstance.portletLoggedInUsers.objectsToShow.length = 0;
@@ -66,7 +70,6 @@
             },
         }
 
-
         // register the portlet
         ITSInstance.portletLoggedInUsers = Object.create(ITSPortletLoggedInUsers);
         ITSInstance.portletLoggedInUsers.hide();
@@ -82,8 +85,11 @@
                     ITSInstance.UIController.showWarning("passwordExpired", "Your password has expired. Please change your password now.", "", "ITSRedirectPath('ResetPassword');" )
                 }
             }
+            ITSInstance.translator.retranslateInterface();
         }, true);
+
         ITSInstance.UIController.registerPortlet(ITSInstance.portletLoggedInUsers);
+        ITSInstance.UIController.showPortlets();
 
         // make sure the list is reloaded every 5 minutes
         setTimeout(ITSInstance.portletLoggedInUsers.reload, 300000);
