@@ -89,7 +89,6 @@
         }, true);
 
         ITSInstance.UIController.registerPortlet(ITSInstance.portletLoggedInUsers);
-        ITSInstance.UIController.showPortlets();
 
         // make sure the list is reloaded every 5 minutes
         setTimeout(ITSInstance.portletLoggedInUsers.reload, 300000);
