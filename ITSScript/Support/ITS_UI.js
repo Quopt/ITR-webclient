@@ -18,6 +18,7 @@ modalShows = false;
 ITSUIController = function () {
     this.registeredPortlets = [];
     this.registeredEditors = [];
+    this.OfficeSessionPrepared = false;
     // login phase support
     this.showLogin= function () {
         // hide all UI elements
@@ -423,33 +424,42 @@ ITSUIController = function () {
         $(menuPosition).append(newLI);
         };
     this.prepareOfficeSession = function () {
-        // load all data that is required by the system
-        ITSInstance.ITRSessionType = "office";
-        loadOfficeComponents();
-        ITSInstance.screenTemplates.loadAvailableScreenTemplates(); // always load the screen templates
+        if (!this.OfficeSessionPrepared) {
+            this.OfficeSessionPrepared = true;
+            // load all data that is required by the system
+            ITSInstance.ITRSessionType = "office";
+            loadOfficeComponents();
+            ITSInstance.screenTemplates.loadAvailableScreenTemplates(); // always load the screen templates
 
-        // make sure the server updates periodically
-        ITSInstance.genericAjaxUpdate('refreshpublics', function () {}, function () {});
+            // make sure the server updates periodically
+            ITSInstance.genericAjaxUpdate('refreshpublics', function () {
+            }, function () {
+            });
 
-        // get the amount of sessions
-        getActiveSessions();
+            // get the amount of sessions
+            getActiveSessions();
 
-        // now initialise the editors and portlets. They may need more data.
-        ITSInstance.UIController.registeredEditors.forEach(
-            function (currentValue, index, arr) {
-                if (currentValue) {
-                    if (typeof currentValue.afterOfficeLogin == 'function') {
-                        try {
-                            currentValue.afterOfficeLogin();
-                            //console.log("Init ok :  " + currentValue.path);
-                        } catch (err) {
-                            console.log("Init of " + currentValue.path + "failed : " + err.message);
+            // now initialise the editors and portlets. They may need more data.
+            ITSInstance.UIController.registeredEditors.forEach(
+                function (currentValue, index, arr) {
+                    if (currentValue) {
+                        if (typeof currentValue.afterOfficeLogin == 'function') {
+                            try {
+                                currentValue.afterOfficeLogin();
+                                //console.log("Init ok :  " + currentValue.path);
+                            } catch (err) {
+                                console.log("Init of " + currentValue.path + "failed : " + err.message);
+                            }
                         }
                     }
-                }
-            } );
+                });
 
-        ITSInstance.UIController.registeredPortlets.forEach( function (currentValue, index, arr) { if(typeof currentValue.afterOfficeLogin == 'function') { currentValue.afterOfficeLogin(); } } )
+            ITSInstance.UIController.registeredPortlets.forEach(function (currentValue, index, arr) {
+                if (typeof currentValue.afterOfficeLogin == 'function') {
+                    currentValue.afterOfficeLogin();
+                }
+            })
+        }
     };
     this.prepareTestRunSession = function () {
         // load all data that is required by the system
