@@ -358,6 +358,8 @@ ITSTestTakingController.prototype.setSessionID = function (id) {
     // the candidate has selected the session
     ITSInstance.UIController.showInterfaceAsWaitingOn(100);
     this.currentSession = new ITSCandidateSession(this, this.myInstance);
+    ITSInstance.UIController.EnableTestTakingInterface();
+    this.InTestTaking = true;
     this.currentSession.loadSession(id, this.sessionLoadingSucceeded.bind(this), this.sessionLoadingFailed.bind(this), true, true);
 };
 

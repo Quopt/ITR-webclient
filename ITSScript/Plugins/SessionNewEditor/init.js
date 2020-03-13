@@ -441,7 +441,8 @@ ITSInviteNewCandidateEditor.prototype.forcePasswordReset = function () {
 };
 
 ITSInviteNewCandidateEditor.prototype.clearSession = function () {
-    this.saveNewSession(this.clearSessionCallback.bind(this));
+    // this.saveNewSession(this.clearSessionCallback.bind(this));
+    this.clearSessionCallback();
 };
 
 ITSInviteNewCandidateEditor.prototype.clearSessionCallback = function () {
@@ -463,7 +464,7 @@ ITSInviteNewCandidateEditor.prototype.deleteNewSession = function () {
 
 ITSInviteNewCandidateEditor.prototype.startNowSession = function () {
     this.existingUserFound = false; // always save the password
-    this.newSession.Person.regeneratePassword();
+    if (this.newSession.Person.Password == "") { this.newSession.Person.regeneratePassword(); }
     $('#AdminInterfaceSessionNewSessionCandidatePassword').val(this.newSession.Person.Password);
     this.saveNewSession(function () { setTimeout(this.startNowSessionCallback.bind(this),1000); } );
 };

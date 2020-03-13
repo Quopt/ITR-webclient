@@ -90,8 +90,10 @@ ITSUIController = function () {
         $('#NavbarsTestTaking').visibility = 'visible';
         $('#NavBarsFooter').show();
         $('#ITSTestTakingDiv').show();
+        $('#LoginWindowSelectSession').hide();
         this.initNavBar();
         ITSTranslateInterface();
+        setTimeout(onResize,5000);
     };
 
     this.EnablePublicTestTakingInterface = function () {
