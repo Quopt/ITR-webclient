@@ -228,14 +228,14 @@ ITSUIController = function () {
         }
     } ;
     this.showInterfaceAsWaitingOnForceShow= function () {
-        if ( ! modalShows) {
+        if (modalRequired) {
             $("#waitModal").modal('show');
             modalShows = true;
         }
     } ;
     this.showInterfaceAsWaitingOff = function () {
         modalRequired = false;
-        if (modalShows == true) { setTimeout( this.showInterfaceAsWaitingOffForceShow , 500); }
+        if (modalShows == true) { setTimeout( this.showInterfaceAsWaitingOffForceShow , 100); }
     } ;
     this.showInterfaceAsWaitingOffForceShow= function () {
         $("#waitModal").modal('hide');
