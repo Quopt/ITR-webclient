@@ -235,7 +235,7 @@ ITSUIController = function () {
     } ;
     this.showInterfaceAsWaitingOff = function () {
         modalRequired = false;
-        if (modalShows == true) { setTimeout( this.showInterfaceAsWaitingOffForceShow , 100); }
+        if (modalShows == true) { this.showInterfaceAsWaitingOffForceShow(); }
     } ;
     this.showInterfaceAsWaitingOffForceShow= function () {
         $("#waitModal").modal('hide');
