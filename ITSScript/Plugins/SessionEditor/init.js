@@ -471,10 +471,11 @@
     };
 
     ITSSessionEditor.prototype.viewAnswers = function (testIndex) {
+        console.log("viewanswers " + testIndex);
         if (this.currentSession.SessionTests.length > testIndex) {
             var testSessionID = this.currentSession.SessionTests[testIndex].ID;
             ITSInstance.SessionViewAnswersSessionController.currentSession = this.currentSession;
-            ITSRedirectPath('SessionViewAnswers&SessionID=' + this.currentSession.ID + '&SessionTestID=' + testSessionID);
+            setTimeout(function () {ITSRedirectPath('SessionViewAnswers&SessionID=' + this.currentSession.ID + '&SessionTestID=' + testSessionID);}.bind(this), 100);
         }
     };
 

@@ -216,7 +216,9 @@ ITSUIController = function () {
         // show the progress indicator and block the interface
         modalRequired = true;
         modalShows = false;
+        $("#waitModal").modal('show');
         $('#waitModalProgress').hide();
+        alternativeTimeout = 0;
         if (!alternativeTimeout) {
             setTimeout(this.showInterfaceAsWaitingOnForceShow, 1000);
         } else {
@@ -229,13 +231,13 @@ ITSUIController = function () {
     } ;
     this.showInterfaceAsWaitingOnForceShow= function () {
         if (modalRequired) {
-            $("#waitModal").modal('show');
             modalShows = true;
+            $("#waitModal").modal('show');
         }
     } ;
     this.showInterfaceAsWaitingOff = function () {
         modalRequired = false;
-        if (modalShows == true) { this.showInterfaceAsWaitingOffForceShow(); }
+        if (modalShows == true) { setTimeout( this.showInterfaceAsWaitingOffForceShow , 500); }
     } ;
     this.showInterfaceAsWaitingOffForceShow= function () {
         $("#waitModal").modal('hide');
