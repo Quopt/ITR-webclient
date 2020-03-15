@@ -314,7 +314,7 @@ ITSTestTemplateEditor.prototype.loadTest = function (testIndex) {
     this.currentTest = ITSInstance.tests.testList[testIndex];
     if (!this.currentTest.detailsLoaded) {
         // load the test details first
-        ITSInstance.UIController.showInterfaceAsWaitingOn();
+        ITSInstance.UIController.showInterfaceAsWaitingOn(0);
         this.currentTest.loadTestDetailDefinition(this.loadCurrentTestOnScreen.bind(this),
             function () {
                 ITSInstance.UIController.showInterfaceAsWaitingOff();
@@ -324,8 +324,6 @@ ITSTestTemplateEditor.prototype.loadTest = function (testIndex) {
             })
     } else {
         this.loadCurrentTestOnScreen();
-        // and show the view
-        //this.switchToTestEditView();
     }
 };
 

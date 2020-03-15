@@ -73,7 +73,7 @@
     };
 
     ITSServerLogsEditor.prototype.loadLogs = function () {
-        ITSInstance.UIController.showInterfaceAsWaitingOnForceShow();
+        ITSInstance.UIController.showInterfaceAsWaitingOn(0);
         if ( $('#ServerLogsDiv-Now').is(":checked") ) {
             ITSInstance.genericAjaxLoader('log/0/ALL', undefined,
                 function(mydata, textStatus, xhr) {

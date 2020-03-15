@@ -171,7 +171,7 @@
 
     ITSSessionEditor.prototype.loadSession = function() {
         this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
-        ITSInstance.UIController.showInterfaceAsWaitingOn();
+        ITSInstance.UIController.showInterfaceAsWaitingOn(0);
         this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this));
         this.loadAvailableTestsToAdd();
     };
@@ -197,28 +197,29 @@
     ITSSessionEditor.prototype.sessionLoadingFailed = function () {
         // go back to the previous page and show error
         ITSInstance.UIController.showInterfaceAsWaitingOff();
-        if (ITSInstance.companies.currentCompany.outOfCredits()) {
-            ITSInstance.UIController.showDialog("OutOfCredits", "Out of credits", "You have no credit units left. Please order new credit units.",
-                [
-                    {
-                        btnCaption: "Order credits later",
-                        btnType: "btn-success",
-                        btnOnClick: ""
-                    },
-                    {
-                        btnCaption: "Order credits now",
-                        btnType: "btn-success",
-                        btnOnClick: "ITSRedirectPath('CreditsOrderByMail');"
-                    }
-                ]);
-        } else {
-            if (ITSInstance.users.currentUser.HasPersonalCreditPool) {
-                ITSInstance.UIController.showError("SessionEditor.SessionLoadingFailedWithPersonalCreditPool", "The session could not be loaded, you may be out of personal credits. Refresh your browser page and try again. If you are out of personal credits then contact your ITR administrator.");
+        if ($('#AdminInterfaceEditSessionEditHeader').is(':visible')) {
+            if (ITSInstance.companies.currentCompany.outOfCredits()) {
+                ITSInstance.UIController.showDialog("OutOfCredits", "Out of credits", "You have no credit units left. Please order new credit units.",
+                    [
+                        {
+                            btnCaption: "Order credits later",
+                            btnType: "btn-success",
+                            btnOnClick: ""
+                        },
+                        {
+                            btnCaption: "Order credits now",
+                            btnType: "btn-success",
+                            btnOnClick: "ITSRedirectPath('CreditsOrderByMail');"
+                        }
+                    ]);
             } else {
-                ITSInstance.UIController.showError("SessionEditor.SessionLoadingFailed", "The session could not be loaded, please refresh your browser page and try again.");
+                if (ITSInstance.users.currentUser.HasPersonalCreditPool) {
+                    ITSInstance.UIController.showError("SessionEditor.SessionLoadingFailedWithPersonalCreditPool", "The session could not be loaded at this moment, you may be out of personal credits. Refresh your browser page and try again. If you are out of personal credits then contact your ITR administrator.", "", "history.back();");
+                } else {
+                    ITSInstance.UIController.showError("SessionEditor.SessionLoadingFailed", "The session could not be loaded at this moment, please refresh your browser page and try again.", "", "history.back();");
+                }
             }
         }
-        history.back();
     };
 
     ITSSessionEditor.prototype.toggleButtons = function () {

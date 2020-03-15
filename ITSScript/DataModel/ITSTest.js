@@ -304,14 +304,6 @@ ITSTest.prototype.preloadTestImages = function () {
       tempImg = new Image();
       tempImg.crossOrigin = "Anonymous";
 
-      //tempImg.onload = function () {
-      //      var canvas = document.createElement('canvas');
-      //      canvas.width = this.naturalWidth; // or 'width' if you want a special/scaled size
-      //      canvas.height = this.naturalHeight; // or 'height' if you want a special/scaled size
-
-      //      canvas.getContext('2d').drawImage(this, 0, 0);
-      //      tempImg.dataURL = canvas.toDataURL('image/png');
-      //  }.bind(tempImg);
       var tempSrc = this.createLinkForFile(i);
       if (ITSInstance.baseURL.indexOf("localhost") > 0) tempSrc = this.createLinkForFile(i).replace('/api/', ITSInstance.baseURL + '/api/');
       tempImg.src = tempSrc;
@@ -392,6 +384,7 @@ ITSTest.prototype.removeMediaFile = function (index, OnSucces, OnError) {
 
 ITSTest.prototype.loadTestDetailSucces = function () {
     console.log("Loaded test details " + this.TestName);
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
     this.currentlyLoading = false;
     this.detailsLoaded = true;
     this.newTest = false;

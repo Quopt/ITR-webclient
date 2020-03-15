@@ -157,8 +157,10 @@ ITSLoginToken.prototype.keepTokenFresh = function () {
             headers: {'SessionID': this.IssuedToken},
             type: 'POST',
             error: function () {
-                ITSInstance.UIController.showError('ITSLoginToken.tokenRefreshFailed', 'Your login has expired. Please login again.', '',
-                    'ITSInstance.logoutController.logout();');
+                if (! $('#LoginWindowHeading').is(':visible') ) {
+                    ITSInstance.UIController.showError('ITSLoginToken.tokenRefreshFailed', 'Your login has expired. Please login again.', '',
+                        'ITSInstance.logoutController.logout();');
+                }
             },
         });
         cookieHelper.setCookie("ITSLoginToken", this.IssuedToken, 6);

@@ -176,21 +176,16 @@ ITSUIController = function () {
     } ;
 
     this.scan_for_default_office_plugin_paths = function (Path) {
-        if (ITSInstance.UIController.registeredEditors.length == 0) {
+        //console.log("Showing " +ITSInstance.UIController.registeredEditors.length  );
+        var plugin_found = false;
+        for (var i=0; i < ITSInstance.UIController.registeredEditors.length; i++) {
+            if (ITSInstance.UIController.registeredEditors[i].path == Path) {
+                ITSInstance.UIController.registeredEditors[i].show();
+                plugin_found = true;
+            }
+        }
+        if (! plugin_found) {
             setTimeout(this.scan_for_default_office_plugin_paths.bind(this, Path), 1500); // the list of plugins is not registered yet, give the browser some time to register
-        } else {
-            //console.log("Showing " +ITSInstance.UIController.registeredEditors.length  );
-            ITSInstance.UIController.registeredEditors.forEach(
-                function (currentValue, index, arr) {
-                    //console.log(currentValue.path + "==" + Path);
-                    if (currentValue.path) {
-                        if (currentValue.path == Path) {
-                            console.log("Showing " + Path);
-                            currentValue.show();
-                        }
-                    }
-                }
-            );
         }
     };
 
@@ -233,13 +228,14 @@ ITSUIController = function () {
         }
     } ;
     this.showInterfaceAsWaitingOnForceShow= function () {
-        //console.log('showInterfaceAsWaitingOnForceShow ' + modalRequired);
-        //modalRequired = true;
-        if (modalRequired == true) { $("#waitModal").modal('show'); modalShows = true; };
+        setTimeout( function () {
+            if ( ! modalShows) {
+                $("#waitModal").modal('show');
+                modalShows = true;
+            }
+        }, 1);
     } ;
     this.showInterfaceAsWaitingOff = function () {
-        // hide the progress indicator and unblock the interface
-        //console.log('showInterfaceAsWaitingOff ' + modalRequired);
         modalRequired = false;
         if (modalShows == true) { setTimeout( this.showInterfaceAsWaitingOffForceShow , 500); }
     } ;
