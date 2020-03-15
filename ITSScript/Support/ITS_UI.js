@@ -228,19 +228,18 @@ ITSUIController = function () {
         }
     } ;
     this.showInterfaceAsWaitingOnForceShow= function () {
-        setTimeout( function () {
-            if ( ! modalShows) {
-                $("#waitModal").modal('show');
-                modalShows = true;
-            }
-        }, 1);
+        if ( ! modalShows) {
+            $("#waitModal").modal('show');
+            modalShows = true;
+        }
     } ;
     this.showInterfaceAsWaitingOff = function () {
         modalRequired = false;
         if (modalShows == true) { setTimeout( this.showInterfaceAsWaitingOffForceShow , 500); }
     } ;
     this.showInterfaceAsWaitingOffForceShow= function () {
-        if (modalShows == true) { $("#waitModal").modal('hide'); modalShows = false; };
+        $("#waitModal").modal('hide');
+        modalShows = false;
     } ;
     this.showError= function (errorID, errorMessage, MessageAddition, onClickFunctionAsText) {
         // show an error message to the user

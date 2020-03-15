@@ -384,7 +384,6 @@ ITSTest.prototype.removeMediaFile = function (index, OnSucces, OnError) {
 
 ITSTest.prototype.loadTestDetailSucces = function () {
     console.log("Loaded test details " + this.TestName);
-    ITSInstance.UIController.showInterfaceAsWaitingOff();
     this.currentlyLoading = false;
     this.detailsLoaded = true;
     this.newTest = false;

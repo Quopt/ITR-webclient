@@ -299,6 +299,7 @@ ITSTestTemplateEditor.prototype.show = function () {
     } else {
         var tempID = getUrlParameterValue('id');
         if (tempID && (tempID != "")) {
+            this.switchToTestEditView();
             this.redirectUrl(tempID);
         } else {
             $('#AdminInterfaceTestTemplateEditorEdit').hide();

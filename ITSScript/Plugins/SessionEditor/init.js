@@ -172,6 +172,7 @@
     ITSSessionEditor.prototype.loadSession = function() {
         this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
         ITSInstance.UIController.showInterfaceAsWaitingOn(0);
+        $('#AdminInterfaceEditSessionEditTestsList').empty();
         this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this));
         this.loadAvailableTestsToAdd();
     };
@@ -187,7 +188,6 @@
                 setTimeout( function () { $('#AdminInterfaceEditSessionEditHeaderCandidate')[0].innerHTML = this.currentSession.Person.createHailing(); }.bind(this),
                     3000);
             }
-            ITSInstance.UIController.showInterfaceAsWaitingOff();
             // to do : check if the session type is OK to be viewed with this viewer
             this.toggleButtons();
             this.generateTestsList();
@@ -245,6 +245,8 @@
         if (typeof alternateSession != "undefined") { cs = alternateSession; }
 
         $('#AdminInterfaceEditSessionEditTestsList').empty();
+        ITSInstance.UIController.showInterfaceAsWaitingOff();
+        console.log('generating test list');
         cs.SessionTests.sort(function (a, b) {
             return a.Sequence - b.Sequence;
         });
