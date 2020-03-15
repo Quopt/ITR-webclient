@@ -615,7 +615,7 @@
 
 
     ITSSessionEditor.prototype.downloadSession = function () {
-        ITSInstance.UIController.showInterfaceAsWaitingOn();
+        ITSInstance.UIController.showInterfaceAsWaitingOn(0);
 
         // add all results to a ZIP file and download that to the client
         var zip = new JSZip();
@@ -629,6 +629,7 @@
     };
 
     ITSSessionEditor.prototype.zipError = function () {
+        ITSInstance.UIController.showInterfaceAsWaitingOff();
         ITSInstance.UIController.showError('ITSSessionEditor.ZIPFailed', 'The session results could not be downloaded at this moment.');
     };
 
