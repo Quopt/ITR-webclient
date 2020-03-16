@@ -136,7 +136,7 @@
             $('#ITSOrganisationEditor_Costs_' + rowCounter)[0].value = this.currentOrganisation.PluginData.Invoicing[propt];
             rowCounter++;
         }
-        
+
         ITSInstance.translator.translateDiv("#OrganisationInterfaceSessionEdit");
     };
     ITSOrganisationEditor.prototype.addNewCostsOverrideLine = function () {

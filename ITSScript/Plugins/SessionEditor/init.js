@@ -244,68 +244,72 @@
         var cs = this.currentSession;
         if (typeof alternateSession != "undefined") { cs = alternateSession; }
 
-        $('#AdminInterfaceEditSessionEditTestsList').empty();
-        ITSInstance.UIController.showInterfaceAsWaitingOff();
-        console.log('generating test list');
-        cs.SessionTests.sort(function (a, b) {
-            return a.Sequence - b.Sequence;
-        });
-        var ct = {};
-        var template = "";
-        var allTestsDone = true;
-        if (typeof NoUIElements == "undefined") {NoUIElements = false;}
+        if ($('#AdminInterfaceEditSessionEditTestsList').is(':visible')) {
+            $('#AdminInterfaceEditSessionEditTestsList').empty();
+            ITSInstance.UIController.showInterfaceAsWaitingOff();
+            console.log('generating test list');
+            cs.SessionTests.sort(function (a, b) {
+                return a.Sequence - b.Sequence;
+            });
+            var ct = {};
+            var template = "";
+            var allTestsDone = true;
+            if (typeof NoUIElements == "undefined") {
+                NoUIElements = false;
+            }
 
-        for (var i = 0; i < cs.SessionTests.length; i++) {
-            ct = cs.SessionTests[i];
-            if (ct.Status <= 10) {
-                // not started
-                template = this.testCardElementWaitingForStart;
-                allTestsDone = false;
-            } else if (ct.Status <= 20) {
-                // in progress
-                template = this.testCardElementInProgress;
-                allTestsDone = false;
-            } else {
-                // done
-                if (NoUIElements) {
-                    template = this.testCardElementDoneNoUIElements;
+            for (var i = 0; i < cs.SessionTests.length; i++) {
+                ct = cs.SessionTests[i];
+                if (ct.Status <= 10) {
+                    // not started
+                    template = this.testCardElementWaitingForStart;
+                    allTestsDone = false;
+                } else if (ct.Status <= 20) {
+                    // in progress
+                    template = this.testCardElementInProgress;
+                    allTestsDone = false;
                 } else {
-                    template = this.testCardElementDone;
+                    // done
+                    if (NoUIElements) {
+                        template = this.testCardElementDoneNoUIElements;
+                    } else {
+                        template = this.testCardElementDone;
+                    }
+
+                    // make sure results are up to date and auto saved back to the server if not present yet
+                    ct.calculateScores(true, true);
                 }
 
-                // make sure results are up to date and auto saved back to the server if not present yet
-                ct.calculateScores(true, true);
+                // replace tokens
+                if (ITSInstance.reports.hasReportForTest(ct.testDefinition.ID)) {
+                    template = template.replace(this.testCardElementReportsButton, this.testCardElementButtonViewReports);
+                } else {
+                    template = template.replace(this.testCardElementReportsButton, "");
+                }
+                var percent = Math.round((ct.CurrentPage / ct.TotalPages) * 100);
+                template = template.replace(this.testCardElementID, i);
+                template = template.replace(this.testCardElementTitle, ct.testDefinition.Description);
+                template = template.replace(this.testCardElementScores, "<div id='AdminInterfaceEditSessionEditTestsTable" + i + "'></div>");
+                template = template.replace(this.testCardElementGraph, "<div id='AdminInterfaceEditSessionEditTestsGraph" + i + "'></div>");
+                template = template.replace(this.testCardElementProgress, percent);
+                template = template.replace(this.testCardElementStarted, ITSToDatePicker(ct.TestStart));
+                template = template.replace(this.testCardElementTracker, i);
+
+                $('#AdminInterfaceEditSessionEditTestsList').append(template);
+
+                if ((ct.Status > 10) && (ct.Status <= 20)) {
+                    // set the progress bar
+                    $('#AdminInterfaceEditSessionEditTestCardsProgress' + i)[0].setAttribute("aria-valuenow", percent);
+                    $('#AdminInterfaceEditSessionEditTestCardsProgress' + i).text(percent + "%");
+                }
+
+                this.generateNormTable(ct, i, $('#AdminInterfaceEditSessionEditTestsTable' + i), NoUIElements);
+                var resultsTable = "";
+                ITSInstance.translator.translateDiv("#AdminInterfaceSessionEdit");
             }
-
-            // replace tokens
-            if (ITSInstance.reports.hasReportForTest(ct.testDefinition.ID)) {
-                template = template.replace(this.testCardElementReportsButton, this.testCardElementButtonViewReports);
-            } else {
-                template = template.replace(this.testCardElementReportsButton, "");
+            if ((!allTestsDone) && ($('#AdminInterfaceSessionEdit').is(':visible'))) {
+                setTimeout(this.refreshSession.bind(this), 60000);
             }
-            var percent = Math.round((ct.CurrentPage / ct.TotalPages)  * 100);
-            template = template.replace(this.testCardElementID, i);
-            template = template.replace(this.testCardElementTitle, ct.testDefinition.Description);
-            template = template.replace(this.testCardElementScores, "<div id='AdminInterfaceEditSessionEditTestsTable" + i + "'></div>");
-            template = template.replace(this.testCardElementGraph, "<div id='AdminInterfaceEditSessionEditTestsGraph" + i + "'></div>");
-            template = template.replace(this.testCardElementProgress, percent);
-            template = template.replace(this.testCardElementStarted, ITSToDatePicker(ct.TestStart));
-            template = template.replace(this.testCardElementTracker, i);
-
-            $('#AdminInterfaceEditSessionEditTestsList').append(template);
-
-            if ((ct.Status > 10) && (ct.Status <= 20)) {
-                // set the progress bar
-                $('#AdminInterfaceEditSessionEditTestCardsProgress' + i)[0].setAttribute("aria-valuenow",percent);
-                $('#AdminInterfaceEditSessionEditTestCardsProgress' + i).text( percent + "%" );
-            }
-
-            this.generateNormTable(ct, i, $('#AdminInterfaceEditSessionEditTestsTable' + i), NoUIElements);
-            var resultsTable = "";
-            ITSInstance.translator.translateDiv("#AdminInterfaceSessionEdit");
-        }
-        if ( (!allTestsDone) && ( $('#AdminInterfaceSessionEdit').is(':visible') ) ) {
-            setTimeout( this.refreshSession.bind(this), 60000);
         }
     };
 
