@@ -21,7 +21,7 @@ var ITSSupportedLanguages = [ // these are internal ITS language codes, not the 
     {languageCode: "bg", languageDescription: "Bulgarian", translations_available : true},
     {languageCode: "yue", languageDescription: "Cantonese (Traditional)", translations_available : false},
     {languageCode: "ca", languageDescription: "Catalan", translations_available : true},
-    {languageCode: "zh-Hans", languageDescription: "Chinese Simplified", translations_available : true},
+    {languageCode: "zh", languageDescription: "Chinese Simplified", translations_available : true},
     {languageCode: "hr", languageDescription: "Croatian", translations_available : true},
     {languageCode: "cs", languageDescription: "Czech", translations_available : true},
     {languageCode: "da", languageDescription: "Danish", translations_available : true},
@@ -59,8 +59,8 @@ var ITSSupportedLanguages = [ // these are internal ITS language codes, not the 
     {languageCode: "ro", languageDescription: "Romanian", translations_available : true},
     {languageCode: "ru", languageDescription: "Russian", translations_available : true},
     {languageCode: "sm", languageDescription: "Samoan", translations_available : false},
-    {languageCode: "sr-Cyrl", languageDescription: "Serbian (Cyrillic)", translations_available : false},
-    {languageCode: "sr-Latn", languageDescription: "Serbian (Latin)", translations_available : true},
+    {languageCode: "sr-cyrl", languageDescription: "Serbian (Cyrillic)", translations_available : false},
+    {languageCode: "sr-latn", languageDescription: "Serbian (Latin)", translations_available : true},
     {languageCode: "sk", languageDescription: "Slovak", translations_available : true},
     {languageCode: "sl", languageDescription: "Slovenian", translations_available : true},
     {languageCode: "es", languageDescription: "Spanish", translations_available : true},
@@ -107,7 +107,6 @@ var ISO639ToLangCode = [
     {languageCode: "ch", ITSlanguageCode: "en"},
     {languageCode: "ce", ITSlanguageCode: "en"},
     {languageCode: "ny", ITSlanguageCode: "en"},
-    {languageCode: "zh", ITSlanguageCode: "en"},
     {languageCode: "cv", ITSlanguageCode: "en"},
     {languageCode: "kw", ITSlanguageCode: "en"},
     {languageCode: "co", ITSlanguageCode: "en"},
@@ -264,7 +263,7 @@ var ISO639ToLangCode = [
     {languageCode: "yi", ITSlanguageCode: "en"},
     {languageCode: "yo", ITSlanguageCode: "en"},
     {languageCode: "za", ITSlanguageCode: "en"},
-    {languageCode: "zh", ITSlanguageCode: "zh-Hans"},
+    {languageCode: "zh", ITSlanguageCode: "zh"},
     {languageCode: "zu", ITSlanguageCode: "en"}
 ];
 
