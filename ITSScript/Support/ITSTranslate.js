@@ -21,7 +21,7 @@ var ITSSupportedLanguages = [ // these are internal ITS language codes, not the 
     {languageCode: "bg", languageDescription: "Bulgarian", translations_available : true},
     {languageCode: "yue", languageDescription: "Cantonese (Traditional)", translations_available : false},
     {languageCode: "ca", languageDescription: "Catalan", translations_available : true},
-    {languageCode: "zh-hans", languageDescription: "Chinese Simplified", translations_available : true},
+    {languageCode: "zh-Hans", languageDescription: "Chinese Simplified", translations_available : true},
     {languageCode: "hr", languageDescription: "Croatian", translations_available : true},
     {languageCode: "cs", languageDescription: "Czech", translations_available : true},
     {languageCode: "da", languageDescription: "Danish", translations_available : true},
@@ -264,7 +264,7 @@ var ISO639ToLangCode = [
     {languageCode: "yi", ITSlanguageCode: "en"},
     {languageCode: "yo", ITSlanguageCode: "en"},
     {languageCode: "za", ITSlanguageCode: "en"},
-    {languageCode: "zh", ITSlanguageCode: "zh-Hans"},
+    {languageCode: "zh", ITSlanguageCode: "zh-hans"},
     {languageCode: "zu", ITSlanguageCode: "en"}
 ];
 
