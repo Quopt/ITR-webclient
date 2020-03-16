@@ -372,7 +372,9 @@ ITSUIController = function () {
         }
     } ; // please note that portlets must conform to the portlet interface
     this.registerEditor = function (editor) {
-        if (ITSInstance.UIController.registeredEditors.indexOf(editor)<0) { ITSInstance.UIController.registeredEditors.push(editor); }
+        if (ITSInstance.UIController.registeredEditors.indexOf(editor)<0) {
+            ITSInstance.UIController.registeredEditors.push(editor);
+        }
     } ; // please note that editors must conform to the editor interface
     this.initPortlets = function () {
         ITSInstance.UIController.registeredPortlets.forEach( function (currentValue, index, arr) {
@@ -381,6 +383,12 @@ ITSUIController = function () {
             }
         } )
     };
+    this.showEditors = function () {
+        // if all editors are loaded then translate and init them
+        if (loadEditorsCount == ITSInstance.UIController.registeredEditors.length) {
+            ITSInstance.translator.retranslateInterface();
+        }
+    },
     this.showPortlets = function () {
         // if all portlets are loaded then translate and init them
         if (loadPortletsCount == ITSInstance.UIController.registeredPortlets.length) {
