@@ -264,7 +264,7 @@ var ISO639ToLangCode = [
     {languageCode: "yi", ITSlanguageCode: "en"},
     {languageCode: "yo", ITSlanguageCode: "en"},
     {languageCode: "za", ITSlanguageCode: "en"},
-    {languageCode: "zh", ITSlanguageCode: "zh-hans"},
+    {languageCode: "zh", ITSlanguageCode: "zh-Hans"},
     {languageCode: "zu", ITSlanguageCode: "en"}
 ];
 
