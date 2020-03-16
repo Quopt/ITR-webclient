@@ -150,21 +150,23 @@ ITSLoginToken.prototype.acquire = function (userName, password, okFunction, erro
 };
 
 ITSLoginToken.prototype.keepTokenFresh = function () {
-    if (this.IssuedToken != '') {
-        console.log('Refresh token');
-        $.ajax({
-            url: this.ITSInstance.baseURLAPI + 'checktoken',
-            headers: {'SessionID': this.IssuedToken},
-            type: 'POST',
-            error: function () {
-                if (! $('#LoginWindowHeading').is(':visible') ) {
-                    ITSInstance.UIController.showError('ITSLoginToken.tokenRefreshFailed', 'Your login has expired. Please login again.', '',
-                        'ITSInstance.logoutController.logout();');
-                }
-            },
-        });
-        cookieHelper.setCookie("ITSLoginToken", this.IssuedToken, 6);
-    }
+    setTimeout( function () {
+        if (this.IssuedToken != '') {
+            console.log('Refresh token');
+            $.ajax({
+                url: this.ITSInstance.baseURLAPI + 'checktoken',
+                headers: {'SessionID': this.IssuedToken},
+                type: 'POST',
+                error: function () {
+                    if (!$('#LoginWindowHeading').is(':visible')) {
+                        ITSInstance.UIController.showError('ITSLoginToken.tokenRefreshFailed', 'Your login has expired. Please login again.', '',
+                            'ITSInstance.logoutController.logout();');
+                    }
+                },
+            });
+            cookieHelper.setCookie("ITSLoginToken", this.IssuedToken, 6);
+        }
+    }.bind(this),1);
 };
 
 // function to support setting and getting date & date/time
