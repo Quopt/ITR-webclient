@@ -306,7 +306,7 @@ ITSTranslator.prototype.getLanguageDescription = function (langCode) {
     return "";
 };
 
-ITSTranslator.prototype.load = function () {
+ITSTranslator.prototype.load = function (afterLoad) {
     this.languageFileLoaded = false;
     this.translatedStrings.length = 0;
     var self = this;
@@ -322,7 +322,7 @@ ITSTranslator.prototype.load = function () {
         }
     }
     // now load the available translations
-    this.loadAvailableTranslations();
+    this.loadAvailableTranslations(afterLoad);
 };
 
 ITSTranslator.prototype.loadAvailableTranslations = function (onSuccess, onError) {
@@ -331,6 +331,7 @@ ITSTranslator.prototype.loadAvailableTranslations = function (onSuccess, onError
     if (onError) { this.availableTranslationsOnError = onError; }
 
     if (!this.availableTranslationsLoading) {
+        this.availableTranslationsLoading = true;
         var transFile = ITSInstance.baseURLAPI + 'translations';
         $.ajax({
             url: transFile,
@@ -350,8 +351,9 @@ ITSTranslator.prototype.loadAvailableTranslations = function (onSuccess, onError
                 }
             }.bind(this)
         });
+    } else {
+        if (onSuccess) { onSuccess(); }
     }
-    this.availableTranslationsLoading = true;
 };
 
 ITSTranslator.prototype.storeCurrentLanguageInCookie = function () {
@@ -361,7 +363,9 @@ ITSTranslator.prototype.storeCurrentLanguageInCookie = function () {
 
 ITSTranslator.prototype.switchLanguage = function (langCode, postLoadFunction) {
     if (this.loadingLanguage) {
-        if (langCode != this.currentTranslatedLanguage) setTimeout(this.switchLanguage.bind(this, langCode, postLoadFunction, true), 500);
+        if (langCode != this.currentTranslatedLanguage) {
+            setTimeout(this.switchLanguage.bind(this, langCode, postLoadFunction), 500);
+        }
     } else {
         langCode = langCode.toLowerCase();
         if (langCode != "en") {
@@ -409,6 +413,7 @@ ITSTranslator.prototype.switchLanguage = function (langCode, postLoadFunction) {
             )
         } else {
             this.switchToEnglish();
+            if (postLoadFunction) postLoadFunction();
         }
     }
 };

@@ -56,8 +56,9 @@ ITSPasswordResetController.prototype.tryPasswordReset = function () {
 var redirectURLITSLoginController = '';
 ITSLoginController = function () {
     this.changeLanguage = function(langCode) {
-        ITSInstance.translator.switchLanguage(langCode, function () { ITSInstance.UIController.EnableLoginInterface(); ITSInstance.UIController.loadTranslationsDropDown(); }.bind(this) );
-        ITSInstance.UIController.EnableLoginInterface();
+        ITSInstance.translator.switchLanguage(langCode, function () {
+            ITSInstance.UIController.EnableLoginInterface();
+        }.bind(this) );
     };
     this.login = function (userName, password) { // acquires a login token from the server.
         if ((userName != "") && (password!="")) {

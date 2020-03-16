@@ -504,7 +504,7 @@ if (!ITSInstance) {
     ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", getActiveSessions);
 
     if (cookieHelper.getCookie('ITRLanguage') != "") {
-        ITSInstance.translator.switchLanguage(cookieHelper.getCookie('ITRLanguage'));
+        ITSInstance.translator.switchLanguage(cookieHelper.getCookie('ITRLanguage'), function () { ITSInstance.UIController.loadTranslationsDropDown(); });
     }
 }
 
