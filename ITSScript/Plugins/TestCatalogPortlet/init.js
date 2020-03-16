@@ -64,8 +64,6 @@
         // register the portlet
         ITSInstance.portletTestCatalog = Object.create(ITSPortletTestCatalog);
         ITSInstance.UIController.registerPortlet(ITSInstance.portletTestCatalog);
-
-
     })
 
 })() // iife

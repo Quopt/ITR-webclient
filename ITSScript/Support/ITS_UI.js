@@ -452,8 +452,7 @@ ITSUIController = function () {
                     if (currentValue) {
                         if (typeof currentValue.afterOfficeLogin == 'function') {
                             try {
-                                currentValue.afterOfficeLogin();
-                                //console.log("Init ok :  " + currentValue.path);
+                                setTimeout(currentValue.afterOfficeLogin, 1);
                             } catch (err) {
                                 console.log("Init of " + currentValue.path + "failed : " + err.message);
                             }
