@@ -140,6 +140,7 @@ ITSLoginToken.prototype.acquire = function (userName, password, okFunction, erro
             this.companyID = checkLogin.CompanyID;
             this.MultipleCompaniesFound = checkLogin.MultipleCompaniesFound;
             this.LoginProgress = "";
+            this.MFAStatus = checkLogin.MFAStatus;
             console.log('Login OK , token issued = ' + this.IssuedToken + ' ' + this.ITSInstance.ID);
 
             okFunction();

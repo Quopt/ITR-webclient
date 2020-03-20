@@ -69,6 +69,15 @@ ITSUIController = function () {
         $('#LoginWindowSelectCompany').show();
         ITSInstance.portletSelectCompany.init();
     } ;
+    this.EnableMfaQRSetupInterface = function () {
+        this.resetAllUIElements();
+        $('#LoginWindowMfaQRSetup').show();
+        ITSInstance.loginController.getQRCode();
+    } ;
+    this.EnableMfaQrCodeInterface = function () {
+        this.resetAllUIElements();
+        $('#LoginWindowEnterMfaCode').show();
+    } ;
     this.EnableLoginSelectSession = function () {
         this.resetAllUIElements();
         $('#LoginWindowSelectSession').show();
@@ -112,16 +121,16 @@ ITSUIController = function () {
     };
 
     // admin interface functions
-        this.EnableAdminInterface = function () {
-            this.resetAllUIElements();
-            $('#AdminInterface').show();
-            $('#NavbarsAdmin').show();
-            $('#NavbarsAdmin').visibility = 'visible';
-            $('#NavBarsFooter').show();
-            this.initNavBar();
-            ITSInstance.UIController.prepareOfficeSession();
-            //ITSTranslateInterface();
-        };
+    this.EnableAdminInterface = function () {
+        this.resetAllUIElements();
+        $('#AdminInterface').show();
+        $('#NavbarsAdmin').show();
+        $('#NavbarsAdmin').visibility = 'visible';
+        $('#NavBarsFooter').show();
+        this.initNavBar();
+        ITSInstance.UIController.prepareOfficeSession();
+        //ITSTranslateInterface();
+    };
 
     // common functions for generic usage
     this.activateScreenPath = function(Path){
@@ -166,6 +175,12 @@ ITSUIController = function () {
                 }
                 this.EnablePublicTestTakingInterface();
                 break;
+            case "MfaQrCodeSetup":
+                this.EnableMfaQRSetupInterface();
+                break;
+            case "MfaEnterCode":
+                this.EnableMfaQrCodeInterface();
+                break;
             default :
                 ITSInstance.UIController.showInterfaceAsWaitingOffForceShow();
                 if ((token == "") || (token=="empty")) this.ActivateScreenPath("Login");
@@ -208,6 +223,8 @@ ITSUIController = function () {
         $('#ITSTestTakingDivSessionEnded').hide();
         //$('#AdminInterfaceSessionEditNew').hide();
         ITSInstance.UIController.hideAllEditors();
+        $('#LoginWindowEnterMfaCode').hide();
+        $('#LoginWindowMfaQRSetup').hide();
     } ;
 
 

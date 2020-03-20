@@ -94,11 +94,19 @@ ITSLoginController = function () {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
 
         // check if there are multiple companies
-        if ( ITSInstance.token.MultipleCompaniesFound == "N") {
-            // show the correct interface and components
-            ITSInstance.xusername = "";
-            ITSInstance.xpassword = "";
-            ITSInstance.loginController.activateCurrentUser(true);
+        if (ITSInstance.token.MultipleCompaniesFound == "N") {
+            if  (ITSInstance.token.MFAStatus == "QR") {
+                // MFA is enabled and this is the first time the user logs in
+                ITSInstance.UIController.activateScreenPath('MfaQrCodeSetup');
+            } else if (ITSInstance.token.MFAStatus == "CODE") {
+                // MFA is enabled and the user needs to enter a time based code
+                ITSInstance.UIController.activateScreenPath('MfaEnterCode');
+            } else {
+                // show the correct interface and components
+                ITSInstance.xusername = "";
+                ITSInstance.xpassword = "";
+                ITSInstance.loginController.activateCurrentUser(true);
+            }
         }
         else {
             ITSInstance.UIController.activateScreenPath('LoginCompanySelect');
@@ -117,7 +125,55 @@ ITSLoginController = function () {
             },
             success: function (data) {
                 var checkLogin = JSON.parse(data);
-                //console.log(data, checkLogin);
+                if (checkLogin.MFAStatus == "QR") {
+                    // MFA is enabled and this is the first time the user logs in
+                    ITSInstance.UIController.activateScreenPath('MfaQrCodeSetup');
+                } else if (checkLogin.MFAStatus == "CODE") {
+                    // MFA is enabled and the user needs to enter a time based code
+                    ITSInstance.UIController.activateScreenPath('MfaEnterCode');
+                } else {
+                    //console.log(data, checkLogin);
+                    ITSInstance.token.set(checkLogin.SessionID);
+                    ITSInstance.loginController.loginOK();
+                }
+            }
+        });
+    };
+    this.getQRCode = function() {
+        $.ajax({
+            url: ITSInstance.baseURLAPI + 'login/qrcode',
+            headers: {
+                'UserID': ITSInstance.xusername,
+                'Password': ITSInstance.xpassword,
+                'CompanyID' : ITSInstance.token.companyID } ,
+            type: 'GET',
+            error: function () {
+                console.log('Getting QR code failed.');
+            },
+            success: function (data) {
+                var qr = new QRious({
+                    element: document.getElementById('LoginWindowMfaQRSetupImage'),
+                    value: data
+                });
+            }
+        });
+    };
+    this.validateMFACode = function () {
+        ITSInstance.token.MFAStatus = "";
+        $.ajax({
+            url: ITSInstance.baseURLAPI + 'login/mfacode',
+            headers: {
+                'UserID': ITSInstance.xusername,
+                'Password': ITSInstance.xpassword,
+                'CompanyID' : ITSInstance.token.companyID,
+                'MFACode' : $('#LoginWindowEnterMfaCodeValue').val()
+            } ,
+            type: 'POST',
+            error: function () {
+                ITSInstance.UIController.showError('ITSTestTakingController.LoadingMFATokenFailed', 'The token is not valid. Please try again.');
+            },
+            success: function (data) {
+                var checkLogin = JSON.parse(data);
                 ITSInstance.token.set(checkLogin.SessionID);
                 ITSInstance.loginController.loginOK();
             }

@@ -70,6 +70,21 @@
     </div>
 </div>
 
+<div class="bg-dark text-white well row col-12"><label id="OrganisationEditorEditKeySecurityHeader">Security settings</label></div>
+<div class="col-sm-12">
+    <div class="col-3" id="OrganisationEditorSecuritySettingsDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="MFAEnabled"
+                   onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );"
+                   class="form-check-input form-check-input-sm"
+                   id="OrganisationEditorSecuritySettingsCheck"/>
+        </div>
+        <label class="col-sm-11"
+               id="OrganisationEditorSecuritySettingsHeader"
+               for="OrganisationEditorSecuritySettingsCheck">Enable MFA login for consultants</label>
+    </div>
+</div>
+
 <div class="bg-dark text-white well row col-12"><label id="OrganisationEditorEditCreditInfoHeader">Credit information</label></div>
 <div class="col-sm-12">
     <div class="form-group row col-sm-12">
@@ -124,7 +139,7 @@
     </div>
 </div>
 
-<div class="bg-dark text-white well row col-12"><label id="OrganisationEditorEditKeyInfoHeader">Other information</label></div>
+<div class="bg-dark text-white well row col-12"><label id="OrganisationEditorEditOtherInfoHeader">Other information</label></div>
 <div class="col-sm-12">
     <div class="form-group row col-sm-12">
         <label for="OrganisationEditorInterfaceAdministrativeID"

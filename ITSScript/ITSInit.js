@@ -328,6 +328,8 @@ function setCopyrightMessage(CopyrightString) {
     $('#CopyrightText3').text(CopyrightString);
     $('#CopyrightText4').text(CopyrightString);
     $('#CopyrightText5').text(CopyrightString);
+    $('#CopyrightText6').text(CopyrightString);
+    $('#CopyrightText7').text(CopyrightString);
     $('#CopyrightTextSession').text(CopyrightString);
 
     $('#LoginWindowCompanyName').text(CompanyName);

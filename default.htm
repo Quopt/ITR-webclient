@@ -313,6 +313,45 @@
     </div>
 </div>
 
+<div class="form-check" id="LoginWindowEnterMfaCode" style="display: none;">
+    <div class="row d-flex align-items-center">
+        <div class="mx-auto" style="max-width:390px;min-width:190px;">
+            <h3 style="vertical-align:text-bottom;" id="LoginWindowEnterMfaCodeHeader">Enter MFA code</h3>
+            <div class="form-group">
+                <label id="LoginWindowEnterMfaCodeLabel">Start the authenticator app on your phone. Locate the code for this website. Enter the code below.</label> <br/><br/>
+                <label for="LoginWindowEnterMfaCodeValue" id="LoginWindowEnterMfaCodeFieldLabel">MFA code</label>
+                <input type="text" class="form-control" id="LoginWindowEnterMfaCodeValue"/>
+            </div>
+            <button class="btn btn-primary" id="LoginWindowEnterMfaCodeBackButton"
+                    onclick="ITSInstance.UIController.activateScreenPath('Login');">
+                Cancel
+            </button>
+            <button class="btn btn-primary" id="LoginWindowEnterMfaCodeProceedButton"
+                    onclick="ITSInstance.loginController.validateMFACode();">
+                Proceed with login
+            </button>
+            <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightText7" NoTranslate></label></p></div>
+        </div>
+    </div>
+</div>
+
+<div class="form-check" id="LoginWindowMfaQRSetup" style="display: none;">
+    <div class="row d-flex align-items-center">
+        <div class="mx-auto" style="max-width:390px;min-width:190px;">
+            <h3 style="vertical-align:text-bottom;" id="LoginWindowMfaQRSetupHeader">One-time setup for multi factor authentication for your account</h3>
+            <div class="form-group">
+                <label id="LoginWindowMfaQRSetupInstruction">Please use your smartphone. Install Google Authenticator, Microsoft Authenticator, or another OTP compatible application from the appstore. Scan the QR code below. When scanned press the back button and restart the login procedure. In case you do not scan the MFA code now ask your system administrator to remove your account and create your account again at a more convenient time. This QR code will be shown only once.</label> <br/><br/>
+                <canvas  id="LoginWindowMfaQRSetupImage" notranslate></canvas >
+            </div>
+            <button class="btn btn-primary" id="LoginWindowMfaQRBackButton"
+                    onclick="ITSInstance.UIController.activateScreenPath('Login');">
+                Back to login
+            </button>
+            <div id="NavBarsCopyright" style="z-index: -1;"><p><br/><label id="CopyrightText6" NoTranslate></label></p></div>
+        </div>
+    </div>
+</div>
+
 <div class="form-check" id="PasswordResetWindow" style="display: none;">
     <!-- Token=X&Path=PasswordReset -->
     <div class="row d-flex align-items-center">
@@ -1397,6 +1436,7 @@
 <script src="ITSScript/Support/simple-statistics.js" type="text/javascript" charset="utf-8"></script>
 <script src="ITSScript/Support/ITSStatistics.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/tagmanager.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/qrious.min.js" type="text/javascript" charset="utf-8"></script>
 
 <script>
     opacity = 0;

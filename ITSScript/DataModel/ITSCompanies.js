@@ -41,6 +41,7 @@ function ITSCompany (uParent) {
     this.LicenseEndDate = new Date(2100,1,1);
     this.InvoiceCurrency = "Euro";
     this.AdministrativeID = "";
+    this.MFAEnabled = false;
     this.CreditUsagesPerMonth = [];
     this.PluginData = {};
     this.PluginData.persistentProperties = "*ALL*";
@@ -50,7 +51,7 @@ function ITSCompany (uParent) {
         'YearlyLicenseFee','ConcurrentOpenSessions','CompanyName','CompanyCountry',
         'InternationalVATNr','InvoiceAddress','MailAddress','VisitingAddress','CompanyLogo','ContactPerson','ContactPhone',
         'ContactEMail','AllowNegativeCredits','NoPublicTests','VATPercentage','LicenseStartDate','LicenseEndDate',
-        'InvoiceCurrency','AdministrativeID', 'CCEMail', 'PluginData'
+        'InvoiceCurrency','AdministrativeID', 'CCEMail', 'PluginData', 'MFAEnabled'
     ];
     
     this.newCompany = false;
