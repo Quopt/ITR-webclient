@@ -32,16 +32,9 @@
             },
             init_after_load: function () {
                 if (ITSInstance.companies.currentCompany) {
-                    ITSInstance.companies.currentCompany.resetCreditUsagesPerMonth();
-                    ITSInstance.genericAjaxLoader(
-                        'creditusagespermonth',
-                        ITSInstance.companies.currentCompany.CreditUsagesPerMonth,
+                    ITSInstance.companies.currentCompany.reloadCreditUsagesPerMonth(
                         ITSInstance.portletCreditManagement.creditUsagesLoaded,
-                        ITSInstance.portletCreditManagement.creditUsagesError,
-                        function () {
-                            return ITSInstance.companies.currentCompany.newCreditUsagesPerMonth(ITSInstance.companies.currentCompany);
-                        });
-
+                        ITSInstance.portletCreditManagement.creditUsagesError);
                     ITSInstance.portletCreditManagement.currentCompanyLoaded();
                 }
             },

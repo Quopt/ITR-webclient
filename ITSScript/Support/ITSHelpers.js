@@ -142,31 +142,41 @@ ITSLoginToken.prototype.acquire = function (userName, password, okFunction, erro
             this.LoginProgress = "";
             console.log('Login OK , token issued = ' + this.IssuedToken + ' ' + this.ITSInstance.ID);
 
-            ITSInstance.token.keepTokenFresh();
             okFunction();
         },
         type: 'GET'
     });
 };
 
+var keepTokenFreshCounter = 0;
+
 ITSLoginToken.prototype.keepTokenFresh = function () {
-    setTimeout( function () {
-        if (this.IssuedToken != '') {
-            console.log('Refresh token');
-            $.ajax({
-                url: this.ITSInstance.baseURLAPI + 'checktoken',
-                headers: {'SessionID': this.IssuedToken},
-                type: 'POST',
-                error: function () {
-                    if (!$('#LoginWindowHeading').is(':visible')) {
-                        ITSInstance.UIController.showError('ITSLoginToken.tokenRefreshFailed', 'Your login has expired. Please login again.', '',
-                            'ITSInstance.logoutController.logout();');
+    if (keepTokenFreshCounter == 0) {
+        keepTokenFreshCounter = 3;
+        setTimeout(function () {
+            if (this.IssuedToken != '') {
+                $.ajax({
+                    url: this.ITSInstance.baseURLAPI + 'checktoken',
+                    headers: {'SessionID': this.IssuedToken},
+                    type: 'POST',
+                    error: function () {
+                        if (!$('#LoginWindowHeading').is(':visible')) {
+                            keepTokenFreshCounter = 0;
+                            ITSInstance.UIController.showError('ITSLoginToken.tokenRefreshFailed', 'Your login has expired. Please login again.', '',
+                                'ITSInstance.logoutController.logout();');
+                        }
+                    },
+                    success: function () {
+                        keepTokenFreshCounter = 0;
+                        console.log('Token refreshed');
                     }
-                },
-            });
-            cookieHelper.setCookie("ITSLoginToken", this.IssuedToken, 6);
-        }
-    }.bind(this),1);
+                });
+                cookieHelper.setCookie("ITSLoginToken", this.IssuedToken, 6);
+            }
+        }.bind(this), 1);
+    } else {
+        keepTokenFreshCounter -= 1;
+    }
 };
 
 // function to support setting and getting date & date/time

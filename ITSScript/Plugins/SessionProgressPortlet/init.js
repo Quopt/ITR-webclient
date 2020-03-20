@@ -58,26 +58,30 @@
                 //setTimeout(ITSInstance.portletBusySessions.reload, 60000);
                 ITSInstance.portletBusySessions.sessionsToShow.length = 0;
                 ITSInstance.portletBusySessions.sessionsToShowBusy.length = 0;
-                ITSInstance.genericAjaxLoader(
-                    'sessionsview',
-                    ITSInstance.portletBusySessions.sessionsToShow,
-                    ITSInstance.portletBusySessions.loadSuccess,
-                    ITSInstance.portletBusySessions.loadError,
-                    ITSInstance.portletBusySessions.newPortletSession,
-                    0,
-                    3,
-                    'CreateDate desc, AllowedStartDateTime desc', "N", "N", "Y", "Status=10,SessionType=0"
-                );
-                ITSInstance.genericAjaxLoader(
-                    'sessionsview',
-                    ITSInstance.portletBusySessions.sessionsToShowBusy,
-                    ITSInstance.portletBusySessions.loadSuccessBusy,
-                    ITSInstance.portletBusySessions.loadError,
-                    ITSInstance.portletBusySessions.newPortletBusySession,
-                    0,
-                    3,
-                    'StartedAt desc', "N", "N", "Y", "Status=20,Status=21,SessionType=0"
-                );
+                setTimeout( function () {
+                    ITSInstance.genericAjaxLoader(
+                        'sessionsview',
+                        ITSInstance.portletBusySessions.sessionsToShow,
+                        ITSInstance.portletBusySessions.loadSuccess,
+                        ITSInstance.portletBusySessions.loadError,
+                        ITSInstance.portletBusySessions.newPortletSession,
+                        0,
+                        3,
+                        'CreateDate desc, AllowedStartDateTime desc', "N", "N", "Y", "Status=10,SessionType=0"
+                    );
+                }.bind(this), 1);
+                setTimeout( function () {
+                    ITSInstance.genericAjaxLoader(
+                        'sessionsview',
+                        ITSInstance.portletBusySessions.sessionsToShowBusy,
+                        ITSInstance.portletBusySessions.loadSuccessBusy,
+                        ITSInstance.portletBusySessions.loadError,
+                        ITSInstance.portletBusySessions.newPortletBusySession,
+                        0,
+                        3,
+                        'StartedAt desc', "N", "N", "Y", "Status=20,Status=21,SessionType=0"
+                    );
+                }.bind(this), 1);
             },
             reloadAfterDelay: function () {
                  setTimeout(ITSInstance.portletBusySessions.reload, 1000);

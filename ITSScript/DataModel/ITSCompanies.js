@@ -69,6 +69,7 @@ ITSCompany.prototype.getCostsForTest = function(TestCode, DefaultCosts) {
     }
     return tempCosts;
 };
+
 ITSCompany.prototype.resetCreditUsagesPerMonth = function () {
     this.CreditUsagesPerMonth = [];
 };
@@ -77,6 +78,21 @@ ITSCompany.prototype.newCreditUsagesPerMonth = function () {
     newObj = new ITSCreditUsagePerMonth(this);
     this.CreditUsagesPerMonth[oldLength] = newObj;
     return newObj;
+};
+ITSCompany.prototype.reloadCreditUsagesPerMonth = function (creditUsagesLoaded, creditUsagesError) {
+    this.resetCreditUsagesPerMonth();
+
+    setTimeout( function () {
+        ITSInstance.genericAjaxLoader(
+            'creditusagespermonth',
+            this.CreditUsagesPerMonth,
+            creditUsagesLoaded,
+            creditUsagesError,
+            function () {
+                return this.newCreditUsagesPerMonth(this);
+            }.bind(this)
+        );
+    }.bind(this), 1 );
 };
 
 ITSCompany.prototype.loadDetails = function (OnSuccess, OnError) {

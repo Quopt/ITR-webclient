@@ -48,16 +48,18 @@
             reload: function () {
                 //setTimeout(ITSInstance.portletReadySessions.reload, 60000);
                 ITSInstance.portletReadySessions.sessionsToShow.length = 0;
-                ITSInstance.genericAjaxLoader(
-                    'sessionsview',
-                    ITSInstance.portletReadySessions.sessionsToShow,
-                    ITSInstance.portletReadySessions.loadSuccess,
-                    ITSInstance.portletReadySessions.loadError,
-                    ITSInstance.portletReadySessions.newPortletReadySession,
-                    0,
-                    3,
-                    'EndedAt desc', "N", "N", "Y", "Status=30,Status=31,SessionType=0"
-                );
+                setTimeout( function () {
+                    ITSInstance.genericAjaxLoader(
+                        'sessionsview',
+                        ITSInstance.portletReadySessions.sessionsToShow,
+                        ITSInstance.portletReadySessions.loadSuccess,
+                        ITSInstance.portletReadySessions.loadError,
+                        ITSInstance.portletReadySessions.newPortletReadySession,
+                        0,
+                        3,
+                        'EndedAt desc', "N", "N", "Y", "Status=30,Status=31,SessionType=0"
+                    );
+                }.bind(this), 1);
             },
             reloadAfterDelay: function () {
                  setTimeout(ITSInstance.portletReadySessions.reload, 1000);

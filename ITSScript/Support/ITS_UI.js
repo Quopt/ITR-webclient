@@ -129,7 +129,6 @@ ITSUIController = function () {
         //console.log("Activating path " + Path);
         // if the progress bar is showing then switch if off now
         var token = ITSInstance.token.get();
-        ITSInstance.token.keepTokenFresh();
 
         this.resetAllUIElements();
         switch(Path) {
@@ -352,7 +351,7 @@ ITSUIController = function () {
             ITSInstance.UIController.refreshCompanyInformationLastTimestamp = new Date();
             if (typeof ITSInstance.users.currentUser != "undefined") {
                 if (ITSInstance.users.currentUser.IsTestTakingUser) {
-                    // test taking users do not need a refresh
+                    // test taking users do not need a full refresh
                     ITSInstance.token.keepTokenFresh();
                     console.log("All information exchanged through this interface and website is copyrighted " + CopyrightString );
                 }
