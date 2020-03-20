@@ -247,7 +247,7 @@
         if ($('#AdminInterfaceEditSessionEditTestsList').is(':visible')) {
             $('#AdminInterfaceEditSessionEditTestsList').empty();
             ITSInstance.UIController.showInterfaceAsWaitingOff();
-            console.log('generating test list');
+            //console.log('generating test list');
             cs.SessionTests.sort(function (a, b) {
                 return a.Sequence - b.Sequence;
             });
@@ -475,7 +475,7 @@
     };
 
     ITSSessionEditor.prototype.viewAnswers = function (testIndex) {
-        console.log("viewanswers " + testIndex);
+        //console.log("viewanswers " + testIndex);
         if (this.currentSession.SessionTests.length > testIndex) {
             var testSessionID = this.currentSession.SessionTests[testIndex].ID;
             ITSInstance.SessionViewAnswersSessionController.currentSession = this.currentSession;
