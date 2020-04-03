@@ -555,8 +555,9 @@
         this.currentSession.SessionTests[index].Status = 30;
         this.currentSession.SessionTests[index].TestEnd = Date.now();
         this.currentSession.EndedAt = Date.now();
-        this.currentSession.SessionTests[index].calculateScores(true, true);
+        this.currentSession.SessionTests[index].calculateScores(false, true);
         $("#AdminInterfaceEditSessionEditEndTestIcon" + index)[0].outerHTML = '<i id="AdminInterfaceEditSessionEditEndTestIcon' + index + '" class=\"fa fa-fw fa-life-ring fa-spin \"></i>';
+
         this.currentSession.SessionTests[index].saveToServer(this.endTestOK.bind(this,index), this.endTestError.bind(this,index));
         if (this.currentSession.firstTestToTake() < 0) {
             this.currentSession.Status = 30;
