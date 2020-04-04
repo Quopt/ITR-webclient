@@ -97,6 +97,7 @@ function loadOfficeComponents() {
         $.getScript(ITSJavaScriptVersion + "/Plugins/CreditsUsedListerServer/init.js"); loadEditorsCount++;
         $.getScript(ITSJavaScriptVersion + "/Plugins/CreditsGrantedLister/init.js"); loadEditorsCount++;
         $.getScript(ITSJavaScriptVersion + "/Plugins/ServerLogs/init.js"); loadEditorsCount++;
+        $.getScript(ITSJavaScriptVersion + "/Plugins/SessionAuditTrail/init.js"); loadEditorsCount++;
         // %OFFICEEDITOREND%
     }
 };

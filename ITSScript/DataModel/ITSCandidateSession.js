@@ -70,6 +70,8 @@ ITSCandidateSession = function (session, ITSSession) {
 
     this.SessionTests = []; // a collection of ITSCandidateSessionTest objects
 
+    this.AuditTrail = []; // the audit trail for this session. This needs to be loaded on demand.
+
     this.newSession = true;
 
     this.persistentProperties = [
@@ -319,6 +321,7 @@ ITSCandidateSession.prototype.saveGroupSessionToServerCreateNew = function (Grou
     newSession.saveToServerIncludingTestsAndPerson(this.saveGroupSessionsToServerStageUpdateOK.bind(this),
         this.saveGroupSessionsToServerStageUpdateError.bind(this));
 };
+
 ITSCandidateSession.prototype.saveGroupSessionsToServerUpdateCounter = function (progressElementCounter) {
     if ((this.progressElement != "") && (progressElementCounter)) {
         $('#'+this.progressElement)[0].innerHTML = progressElementCounter + '/'+ this.PluginData.GroupMembers.length;
@@ -668,6 +671,11 @@ ITSCandidateSession.prototype.toarchiveGroupSessionsToServerUpdateCounter = func
             $('#'+this.toarchiveProgressElement).hide();
         }
     }
+};
+
+ITSCandidateSession.prototype.loadAuditTrail = function (loadSuccess, loadError) {
+    this.AuditTrail = [];
+    ITSInstance.JSONAjaxLoader('audittrail/session/' + this.ID , this.AuditTrail, loadSuccess, loadError, "ITSObject", 0, 99999, "CreateDate");
 };
 
 // the test definition belonging to the sessions

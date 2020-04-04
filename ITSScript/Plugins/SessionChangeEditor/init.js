@@ -508,6 +508,10 @@ ITSChangeExistingSessionEditor.prototype.startNowSessionCallback = function () {
     ITSInstance.logoutController.logout("UserID=" + $('#AdminInterfaceChangeSessionCandidateFor').val() + "&Password=" + this.currentSession.Person.Password);
 };
 
+ITSChangeExistingSessionEditor.prototype.showAuditTrail = function () {
+    ITSRedirectPath("SessionAuditTrail&SessionID=" + this.currentSession.ID);
+};
+
 (function() { // iife to prevent pollution of the global memspace
 
 // add the portlet at the proper place, add portlet.html to AdminInterfacePortlets

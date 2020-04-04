@@ -620,7 +620,7 @@ ITSTestTakingController.prototype.endSession = function () {
         setTimeout(this.endTest.bind(this, false),100);
     }
     // refresh session
-    setTimeout(function () { this.currentSession.loadSession(this.currentSession.ID, this.endSessionChecker.bind(this), this.endSessionChecker.bind(this), true, true); }.bind(this) ,100);
+    setTimeout(function () { this.currentSession.loadSession(this.currentSession.ID, this.endSessionChecker.bind(this), this.endSessionChecker.bind(this), true, true); }.bind(this) ,101);
 };
 
 ITSTestTakingController.prototype.endSessionChecker = function () {
