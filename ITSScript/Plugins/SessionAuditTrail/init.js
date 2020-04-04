@@ -160,6 +160,7 @@
 
         $('#SessionAuditTrailList').append(newTable);
         ITSInstance.UIController.showInterfaceAsWaitingOff();
+        ITSInstance.translator.translateDiv("#SessionAuditTrailInterfaceSessionEdit");
     };
 
     // register the portlet
