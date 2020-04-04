@@ -24,7 +24,12 @@
             <b>Start inviting the candidate</b> link below. </p>
         <label id="AdminInterfaceInviteNewCandidateUserName">E-mail address</label>
         <input type="text" class="form-control form-control-sm"
-               id="AdminInterfaceInviteNewCandidateInputUsername" style="text-align: center"/>
+               id="AdminInterfaceInviteNewCandidateInputUsername" style="text-align: center" onkeyup="
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    document.getElementById('AdminInterfaceInviteNewCandidateButton').click();
+                    }
+                "/>
         <br/>
         <button type="Button" class="btn btn-secondary btn-success tn-sm btn-block" id="AdminInterfaceInviteNewCandidateButton" onclick="ITSInstance.newCandidateSessionController.createNewSession( $('#AdminInterfaceInviteNewCandidateInputUsername').val()); ITSRedirectPath('NewSession');">Start
             inviting the candidate</button>
