@@ -940,6 +940,16 @@ function makeHTMLTable(myArray, headers) {
     return result;
 }
 
+function makeHTMLTableBasedOnObject(valueObjects) {
+    // extract the headers values, which are the properties on the object
+    var headerList = {};
+    var i, keys = Object.getOwnPropertyNames(valueObjects[0]);
+    for (i = 0; i < keys.length; i += 1) {
+        headerList[keys[i]] ="";
+    }
+    return makeHTMLTableBasedOnObjects(headerList, valueObjects, valueObjects.length);
+};
+
 function makeHTMLTableBasedOnObjects(headerObject, valueObjects, objectLimit) {
     var result = "<table class=\"table table-striped\">";
     result += "<thead class=\"thead-dark\">";

@@ -1,0 +1,93 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://raw.githubusercontent.com/Quopt/ITR-webclient/master/LICENSE
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<div class="row col-12" xmlns="http://www.w3.org/1999/html">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="ServerDataInterfaceEditHeader">View server data</h4>
+    <br/><br/>
+</div>
+
+<div class="bg-dark text-white well"><label id="ServerDataDiv-SettingsLabel">Data retrieval settings</label></div>
+
+<div class="form-group row col-12">
+    <label class="col-sm-4 col-form-label" for="ServerDataDiv-SourceSelect" id="ServerDataDiv-SourceSelectLabel">Data source</label>
+    <div class="col-sm-8">
+        <select class="form-control form-control-sm" id="ServerDataDiv-SourceSelect">
+        <option id="ServerDataDiv-DataOption-audittrail" value="audittrail">Audit trail</option>
+        <option id="ServerDataDiv-DataOption-batteries" value="batteries">Test batteries</option>
+        <option id="ServerDataDiv-DataOption-educations" value="educations">Educations</option>
+        <option id="ServerDataDiv-DataOption-groups" value="groups">Groups</option>
+        <option id="ServerDataDiv-DataOption-nationalities" value="nationalities">Nationalities</option>
+        <option id="ServerDataDiv-DataOption-organisations" value="organisations">Organisations</option>
+        <option id="ServerDataDiv-DataOption-persons" value="persons">Persons</option>
+        <option id="ServerDataDiv-DataOption-sessions" value="sessions">Sessions</option>
+        <option id="ServerDataDiv-DataOption-sessiontests" value="sessiontests">Session tests</option>
+        <option id="ServerDataDiv-DataOption-sessiontestsview" value="sessiontestsview">Session tests view</option>
+        <option id="ServerDataDiv-DataOption-sessionsview" value="sessionsview">Sessions view</option>
+        <option id="ServerDataDiv-DataOption-groupsessionsview" value="groupsessionsview">Group session view</option>
+        <option id="ServerDataDiv-DataOption-reportdefinitions" value="reportdefinitions">Report definitions</option>
+        <option id="ServerDataDiv-DataOption-companies" value="companies">Companies</option>
+        <option id="ServerDataDiv-DataOption-creditgrants" value="creditgrants">Credit grants</option>
+        <option id="ServerDataDiv-DataOption-creditusages" value="creditusages">Credit usages</option>
+        <option id="ServerDataDiv-DataOption-creditusagespermonth" value="creditusagespermonth">Credit usages per month</option>
+        <option id="ServerDataDiv-DataOption-datagathering" value="datagathering">Data gathering</option>
+        <option id="ServerDataDiv-DataOption-rightstemplates" value="rightstemplates">Rights templates</option>
+        <option id="ServerDataDiv-DataOption-logins" value="logins">Logins</option>
+        <option id="ServerDataDiv-DataOption-tokens" value="tokens">Tokens</option>
+        <option id="ServerDataDiv-DataOption-systemsettings" value="systemsettings">System settings</option>
+        <option id="ServerDataDiv-DataOption-screentemplates" value="screentemplates">Screen templates</option>
+        <option id="ServerDataDiv-DataOption-tests" value="tests">Tests</option>
+        </select>
+    </div>
+
+
+    <label class="col-sm-4 col-form-label" id="ServerDataDiv-PageNrLabel" for="ServerDataDiv-PageNr">Data page to retrieve</label>
+    <div class="col-sm-8"><input type="number" class="form-control" id="ServerDataDiv-PageNr" min="0" step="1" placeholder="Enter the data page number to retrieve. Page numbers start at 0.">
+    </div>
+
+
+    <label class="col-sm-4 col-form-label" id="ServerDataDiv-PageAmountLabel" for="ServerDataDiv-PageAmount">Amount of records to retrieve</label>
+    <div class="col-sm-8"><input type="number" class="form-control" id="ServerDataDiv-PageAmount" min="1" step="1" placeholder="Enter the amount of records to retrieve in the data page.">
+    </div>
+
+
+    <label class="col-sm-4 col-form-label" id="ServerDataDiv-FilterLabel" for="ServerDataDiv-Filter">Filter for the records</label>
+    <div class="col-sm-8"><input type="text" class="form-control" id="ServerDataDiv-Filter" placeholder="A comma separated list of expression pairs. Supported operators are = < > %. Example : Status=31 or Status=30,Status=31 to make an OR condition.">
+    </div>
+
+
+    <label class="col-sm-4 col-form-label" id="ServerDataDiv-SortLabel" for="ServerDataDiv-Sort">Sort order</label>
+    <div class="col-sm-8"><input type="text" class="form-control" id="ServerDataDiv-Sort" placeholder="Enter the field to sort on. Optional you can add DESC after the field to reverse sort. Example : CreateDate DESC.">
+    </div>
+</div>
+
+<div class="col-12 row form-group">
+    <label class="col-sm-3 form-check-label" id="ServerDataDiv-ArchivedCheck-label" for="ServerDataDiv-ArchivedCheck">Show archived records</label>
+    <input type="checkbox" class="col-sm-9 form-check-input" id="ServerDataDiv-ArchivedCheck">
+</div>
+
+<div class="col-12 row form-group">
+    <label class="col-sm-3 form-check-label" id="ServerDataDiv-MasterCheck-label" for="ServerDataDiv-MasterCheck">Master database instead of client</label>
+    <input type="checkbox" class="col-sm-9 form-check-input" id="ServerDataDiv-MasterCheck">
+</div>
+
+<div class="col-12 row form-group">
+<button id="ServerDataDiv-getButton" notranslate type="button" class="btn btn-warning" onclick="ITSInstance.ServerDataController.getData();"><i class="fa fa-fw fa-database"></i> <span id="ServerSettingsActions-getData-label">Retrieve data</span></button>&nbsp;
+</div>
+
+<div class="bg-dark text-white well"><label id="ServerDataDiv-ServerData">Data</label></div>
+<div class="col-12 row" id="ServerDataDiv-ServerDataTable"></div>
+
+</div>
