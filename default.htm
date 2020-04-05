@@ -60,10 +60,13 @@
 
 <div class="navbar navbar-toggleable-md navbar-inverse fixed-top" id="NavbarsTestTaking"
      style="background-color: #D3D3D3;display: none;max-height:49px;min-height:49px;">
-    <div class="form-inline col-8" id="NavbarsAdminLoginBlockTT" style="width:100%;color:white;vertical-align: bottom; left:10px;"><label
-            id="NavbarsLabelHeadingTT" NoTranslate><label
-            id="NavbarsLabelHeadingWelcomeTT">Welcome</label>&nbsp;<label id="welcomeUserNameTT" NoTranslate>...</label>&nbsp;<label
-            id="welcomeCompanyTT" NoTranslate>...</label></label></div>
+    <div class="form-inline col-8" id="NavbarsAdminLoginBlockTT" style="width:100%;color:white;vertical-align: bottom; left:10px;">
+        <label id="NavbarsLabelHeadingTT" NoTranslate>
+            <label id="NavbarsLabelHeadingWelcomeTT">Welcome</label>&nbsp;
+            <label id="welcomeUserNameTT" NoTranslate>...</label>&nbsp;
+            <label id="welcomeCompanyTT" NoTranslate>...</label></label>
+        <label id="TestTakingInterfaceConnectionLost" style="visibility: hidden">Saving the test failed. Your internet connection is temporarily unavailable. You may continue the test but the results will not be stored. Check your internet connection. If you see this error again then please press the logout button. Restore your internet connection and then login again. Your session will restart at the last saved question.</label>
+    </div>
     <div class="form-inline col-2" id="NavbarsAdminSearchButtonBlockTT" style="position:absolute; left:80%; top:1px; width:400px;min-width:400px;max-width:400px;">
         <button class="btn btn-warning" id="NavbarsAdminLogoutButtonTT"
                 onclick="processEvent('Logout');">Logout

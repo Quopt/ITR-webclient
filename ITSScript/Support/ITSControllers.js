@@ -867,7 +867,8 @@ ITSTestTakingController.prototype.saveCurrentTestRetry = function (sessionPostOb
         sessionPostObject.sessionTest.saveToServer(this.saveCurrentTestPickupNext.bind(this), this.saveCurrentTestRetry.bind(this, sessionPostObject), true);
     } else {
         this.saveCurrentTestObjectBusy = false;
-        ITSInstance.UIController.showError('ITSTestTakingController.SaveCurrentTestFailed', 'Saving the test failed. The server may be down or unavailable. You may continue the test but the results may not be stored. If you see this error again then please close your browser and try again.');
+        ITSInstance.UIController.showError('ITSTestTakingController.SaveCurrentTestFailed',
+            $('#TestTakingInterfaceConnectionLost').text());
     }
 };
 
