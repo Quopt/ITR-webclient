@@ -49,10 +49,10 @@
         $('#ServerDataDiv-ServerDataTable').empty();
         ITSInstance.JSONAjaxLoader($('#ServerDataDiv-SourceSelect').val() , this.dataLoaded,this.generateDataTable.bind(this), this.getDataError.bind(this),
             'ITSObject', $('#ServerDataDiv-PageNr').val(), $('#ServerDataDiv-PageAmount').val(),
-            $('#ServerDataDiv-PageSort').val(), $('#ServerDataDiv-ArchivedCheck').is(':checked') ? "Y": "N",
+            $('#ServerDataDiv-Sort').val(), $('#ServerDataDiv-ArchivedCheck').is(':checked') ? "Y": "N",
             $('#ServerDataDiv-MasterCheck').is(':checked') ? "Y": "N",
             $('#ServerDataDiv-MasterCheck').is(':checked') ? "N": "Y",
-            $('#ServerDataDiv-PageFilter').val() );
+            $('#ServerDataDiv-Filter').val() );
     };
 
     ITSServerDataEditor.prototype.getDataError = function () {
