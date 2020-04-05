@@ -349,6 +349,8 @@ function ITSTranslateInterface() {
     ITSInstance.translator.translateDiv('#PasswordResetWindow');
     ITSInstance.translator.translateDiv('#AdminInterface');
     ITSInstance.translator.translateDiv('#NavbarsTestTaking');
+    ITSInstance.translator.translateDiv('#LoginWindowMfaQRSetup');
+    ITSInstance.translator.translateDiv('#LoginWindowEnterMfaCode');
 }
 
 function moveFooterToRightPosition() {
