@@ -57,6 +57,7 @@
             reload: function () {
                 ITSInstance.portletBusySessions.sessionsToShow.length = 0;
                 ITSInstance.portletBusySessions.sessionsToShowBusy.length = 0;
+                ITSInstance.portletBusySessions.waitingForReloadAfterDelay = false;
                 setTimeout( function () {
                     ITSInstance.genericAjaxLoader(
                         'sessionsview',
@@ -83,7 +84,10 @@
                 }.bind(this), 1);
             },
             reloadAfterDelay: function () {
-                 setTimeout(ITSInstance.portletBusySessions.reload, 1000);
+                 if (! ITSInstance.portletBusySessions.waitingForReloadAfterDelay) {
+                     ITSInstance.portletBusySessions.waitingForReloadAfterDelay = true;
+                     setTimeout(ITSInstance.portletBusySessions.reload, 1000);
+                 }
             },
             sessionsToShow: [],
             sessionsToShowBusy: [],
@@ -97,6 +101,7 @@
 
         // register the portlet
         ITSInstance.portletBusySessions = Object.create(ITSportletBusySessions);
+        ITSInstance.portletBusySessions.waitingForReloadAfterDelay = false;
         ITSInstance.UIController.registerPortlet(ITSInstance.portletBusySessions);
 
         ITSInstance.MessageBus.subscribe("Session.Update", ITSInstance.portletBusySessions.reloadAfterDelay);
