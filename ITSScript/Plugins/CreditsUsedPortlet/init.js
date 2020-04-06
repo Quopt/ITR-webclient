@@ -21,7 +21,7 @@
             defaultShowOrder : 4,
             html : htmlLoaded,
             addToInterface : function () {
-                AdminInterfaceCreditManagementPortletDiv = $('<div class="col-md-4" id="AdminInterfaceCreditManagement">');
+                AdminInterfaceCreditManagementPortletDiv = $('<div class="col-md-4" id="AdminInterfaceCreditManagement" style="display:none">');
                 $('#AdminInterfacePortlets').append(AdminInterfaceCreditManagementPortletDiv);
                 $('#AdminInterfaceCreditManagement').append(this.html);
             },
@@ -39,9 +39,11 @@
                 }
             },
             hide: function () {
+                $("#AdminInterfaceCreditManagement").css("display", "none");
                 $('#AdminInterfaceCreditManagement').hide();
             },
             show: function () {
+                $("#AdminInterfaceCreditManagement").css("display", "block");
                 $('#AdminInterfaceCreditManagement').show();
             },
             currentCompanyLoaded: function () {
@@ -111,22 +113,27 @@
                 console.log('Portlet credit usages loading gives error');
             },
             loadPortletWhenCompanyKnown : function () {
-                $('#AdminInterfaceCreditManagementOrderButton').hide();
-                $('#AdminInterfaceCreditManagementViewButton').hide();
                 if ((ITSInstance.users.currentUser.IsOrganisationSupervisor) || (ITSInstance.users.currentUser.IsMasterUser) || (ITSInstance.users.currentUser.MayOrderCredits)) {
-                    ITSInstance.UIController.registerPortlet(ITSInstance.portletCreditManagement);
+                    $('#AdminInterfaceCreditManagementOrderButton').hide();
+                    ITSInstance.portletCreditManagement.show();
+                    ITSInstance.portletCreditManagement.init_after_load();
                     $('#AdminInterfaceCreditManagementViewButton').show();
                     if (ITSInstance.users.currentUser.MayOrderCredits) $('#AdminInterfaceCreditManagementOrderButton').show();
+                    ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletCreditManagement.init_after_load);
                 }
-                ITSInstance.portletCreditManagement.show();
-                ITSInstance.portletCreditManagement.init_after_load();
-                ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletCreditManagement.init_after_load);
             }
         }
 
         // register the portlet
         ITSInstance.portletCreditManagement = Object.create(ITSPortletCreditManagement);
         ITSInstance.UIController.registerPortlet(ITSInstance.portletCreditManagement);
-    })
+        ITSInstance.portletCreditManagement.hide();
+
+        ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
+            setTimeout(ITSInstance.portletCreditManagement.loadPortletWhenCompanyKnown,1000);
+        }, true);
+
+
+        })
 
 })() // iife

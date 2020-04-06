@@ -21,7 +21,7 @@
             defaultShowOrder : 5,
             html: htmlLoaded,
             addToInterface : function () {
-                AdminInterfaceInviteUserMngtDiv = $('<div class="col-md-4" id="AdminInterfaceInviteUserMngt">');
+                AdminInterfaceInviteUserMngtDiv = $('<div class="col-md-4" id="AdminInterfaceInviteUserMngt" style="display:none">');
                 $('#AdminInterfacePortlets').append(AdminInterfaceInviteUserMngtDiv);
                 $('#AdminInterfaceInviteUserMngt').append(this.html);
             },
@@ -58,27 +58,29 @@
                 return newObj;
             },
             reload: function () {
-                //ITSInstance.portletLoggedInUsers.init();
                 setTimeout(ITSInstance.portletLoggedInUsers.reload, 300000);
             },
             objectsToShow: [],
             hide: function () {
+                $("#AdminInterfaceInviteUserMngt").css("display", "none");
                 $('#AdminInterfaceInviteUserMngt').hide();
             },
             show: function () {
+                $("#AdminInterfaceInviteUserMngt").css("display", "block");
                 $('#AdminInterfaceInviteUserMngt').show();
             },
         }
 
         // register the portlet
         ITSInstance.portletLoggedInUsers = Object.create(ITSPortletLoggedInUsers);
-        ITSInstance.portletLoggedInUsers.hide();
+        ITSInstance.UIController.registerPortlet(ITSInstance.portletLoggedInUsers);
         ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
             if ( (ITSInstance.users.currentUser.IsOrganisationSupervisor) || (ITSInstance.users.currentUser.IsMasterUser) ) {
-                ITSInstance.portletLoggedInUsers.show();
+                setTimeout(ITSInstance.portletLoggedInUsers.show,1000);
                 ITSInstance.portletLoggedInUsers.init_after_load();
                 ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletLoggedInUsers.init_after_load.bind(ITSInstance.portletLoggedInUsers) );
             }
+
             // check if the current user's password has expired. If so redirect them to the password reset screen
             if (ITSInstance.ITRSessionType == "office") {
                 if (ITSInstance.users.currentUser.PasswordExpirationDate < new Date()) {
@@ -87,8 +89,6 @@
             }
             ITSInstance.translator.retranslateInterface();
         }, true);
-
-        ITSInstance.UIController.registerPortlet(ITSInstance.portletLoggedInUsers);
 
         // make sure the list is reloaded every 5 minutes
         setTimeout(ITSInstance.portletLoggedInUsers.reload, 300000);
