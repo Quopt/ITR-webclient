@@ -116,7 +116,7 @@
         this.organisationsList = {};
         ITSInstance.UIController.showInterfaceAsWaitingOn();
         ITSInstance.JSONAjaxLoader('companies' , this.organisationsList, this.listLoaded.bind(this), this.listLoadingFailed.bind(this), 'ITSObject', this.currentPage, 25,
-            this.sortField, this.archived, "N", "Y", this.filter, this.searchField);
+            this.sortField, this.archived, "Y", "N", this.filter, this.searchField);
     };
 
     ITSOrganisationListerEditor.prototype.listLoaded = function () {

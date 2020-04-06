@@ -28,7 +28,7 @@
             },
             afterOfficeLogin: function () {
                 console.log('Init portlet ready sessions');
-                ITSInstance.portletReadySessions.reload();
+                ITSInstance.portletReadySessions.reloadAfterDelay();
             },
             loadSuccess: function () {
                 console.log('Portlet sessions loaded');
@@ -77,8 +77,8 @@
         ITSInstance.portletReadySessions = Object.create(ITSPortletReadySessions);
         ITSInstance.UIController.registerPortlet(ITSInstance.portletReadySessions);
 
-        ITSInstance.MessageBus.subscribe("Session.Delete", ITSInstance.portletReadySessions.reloadAfterDelay.bind(ITSInstance.portletReadySessions));
-        ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletReadySessions.reload.bind(ITSInstance.portletReadySessions));
+        ITSInstance.MessageBus.subscribe("Session.Delete", ITSInstance.portletReadySessions.reloadAfterDelay);
+        ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletReadySessions.reload);
 
     })
 

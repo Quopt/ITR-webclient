@@ -55,7 +55,6 @@
                 return newObj;
             },
             reload: function () {
-                //setTimeout(ITSInstance.portletBusySessions.reload, 60000);
                 ITSInstance.portletBusySessions.sessionsToShow.length = 0;
                 ITSInstance.portletBusySessions.sessionsToShowBusy.length = 0;
                 setTimeout( function () {
@@ -100,9 +99,9 @@
         ITSInstance.portletBusySessions = Object.create(ITSportletBusySessions);
         ITSInstance.UIController.registerPortlet(ITSInstance.portletBusySessions);
 
-        ITSInstance.MessageBus.subscribe("Session.Update", ITSInstance.portletBusySessions.reloadAfterDelay.bind(ITSInstance.portletBusySessions));
-        ITSInstance.MessageBus.subscribe("Session.Delete", ITSInstance.portletBusySessions.reloadAfterDelay.bind(ITSInstance.portletBusySessions));
-        ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletBusySessions.reload.bind(ITSInstance.portletBusySessions));
+        ITSInstance.MessageBus.subscribe("Session.Update", ITSInstance.portletBusySessions.reloadAfterDelay);
+        ITSInstance.MessageBus.subscribe("Session.Delete", ITSInstance.portletBusySessions.reloadAfterDelay);
+        ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletBusySessions.reload);
 
 
     })
