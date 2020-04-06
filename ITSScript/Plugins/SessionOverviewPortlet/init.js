@@ -36,9 +36,11 @@
                 for (i = 0; (i < 3) && (i < ITSInstance.portletReadySessions.sessionsToShow.length); i++) {
                     $('#AdminInterfaceInviteRRSessionsTable').append('<tr><td onclick=ITSRedirectPath("Session&SessionID=' + ITSInstance.portletReadySessions.sessionsToShow[i].id + '");>' + ITSInstance.portletReadySessions.sessionsToShow[i].Description  + " / " + ITSInstance.portletReadySessions.sessionsToShow[i].EMail + '</td></tr>');
                 }
+                ITSInstance.portletReadySessions.waitingForReloadAfterDelay = false;
             },
             loadError: function () {
                 console.log('Sessions generated an error');
+                ITSInstance.portletReadySessions.waitingForReloadAfterDelay = false;
             },
             newPortletReadySession: function () {
                 newObj = Object.create(ITSCandidateSession);
@@ -62,7 +64,10 @@
                 }.bind(this), 1);
             },
             reloadAfterDelay: function () {
-                 setTimeout(ITSInstance.portletReadySessions.reload, 1000);
+                if (! ITSInstance.portletReadySessions.waitingForReloadAfterDelay) {
+                    ITSInstance.portletReadySessions.waitingForReloadAfterDelay = true;
+                    setTimeout(ITSInstance.portletReadySessions.reload, 1000);
+                }
             },
             sessionsToShow: [],
             hide: function () {
@@ -76,6 +81,7 @@
         // register the portlet
         ITSInstance.portletReadySessions = Object.create(ITSPortletReadySessions);
         ITSInstance.UIController.registerPortlet(ITSInstance.portletReadySessions);
+        ITSInstance.portletReadySessions.waitingForReloadAfterDelay = false;
 
         ITSInstance.MessageBus.subscribe("Session.Delete", ITSInstance.portletReadySessions.reloadAfterDelay);
         ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletReadySessions.reloadAfterDelay);
