@@ -78,7 +78,7 @@
         ITSInstance.UIController.registerPortlet(ITSInstance.portletReadySessions);
 
         ITSInstance.MessageBus.subscribe("Session.Delete", ITSInstance.portletReadySessions.reloadAfterDelay);
-        ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletReadySessions.reload);
+        ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletReadySessions.reloadAfterDelay);
 
     })
 
