@@ -34,12 +34,14 @@
                 for (i = 0; (i < 3) && (i < ITSInstance.portletBusySessions.sessionsToShow.length); i++) {
                     $('#AdminInterfaceSessionProgressPortletTable').append('<tr><td onclick=ITSRedirectPath("Session&SessionID=' + ITSInstance.portletBusySessions.sessionsToShow[i].id + '");>' + ITSInstance.portletBusySessions.sessionsToShow[i].Description + " / " + ITSInstance.portletBusySessions.sessionsToShow[i].EMail + '</td></tr>');
                 }
+                ITSInstance.portletBusySessions.waitingForReloadAfterDelay = false;
             },
             loadSuccessBusy: function () {
                 $('#AdminInterfaceSessionProgressBusyTable tr').remove();
                 for (i = 0; (i < 3) && (i < ITSInstance.portletBusySessions.sessionsToShowBusy.length); i++) {
                     $('#AdminInterfaceSessionProgressBusyTable').append('<tr><td onclick=ITSRedirectPath("Session&SessionID=' + ITSInstance.portletBusySessions.sessionsToShowBusy[i].id + '");>' + ITSInstance.portletBusySessions.sessionsToShowBusy[i].Description + " / " + ITSInstance.portletBusySessions.sessionsToShowBusy[i].EMail + '</td></tr>');
                 }
+                ITSInstance.portletBusySessions.waitingForReloadAfterDelay = false;
             },
             loadError: function () {
                 console.log('Sessions generated an error');
@@ -57,7 +59,7 @@
             reload: function () {
                 ITSInstance.portletBusySessions.sessionsToShow.length = 0;
                 ITSInstance.portletBusySessions.sessionsToShowBusy.length = 0;
-                ITSInstance.portletBusySessions.waitingForReloadAfterDelay = false;
+
                 setTimeout( function () {
                     ITSInstance.genericAjaxLoader(
                         'sessionsview',
