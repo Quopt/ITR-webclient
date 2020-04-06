@@ -45,6 +45,7 @@
             },
             loadError: function () {
                 console.log('Sessions generated an error');
+                ITSInstance.portletBusySessions.waitingForReloadAfterDelay = false;
             },
             newPortletSession: function () {
                 newObj = Object.create(ITSCandidateSession);
@@ -108,7 +109,7 @@
 
         ITSInstance.MessageBus.subscribe("Session.Update", ITSInstance.portletBusySessions.reloadAfterDelay);
         ITSInstance.MessageBus.subscribe("Session.Delete", ITSInstance.portletBusySessions.reloadAfterDelay);
-        ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletBusySessions.reload);
+        ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletBusySessions.reloadAfterDelay);
 
 
     })
