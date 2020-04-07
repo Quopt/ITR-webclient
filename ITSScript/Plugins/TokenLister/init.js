@@ -75,7 +75,7 @@
     };
 
     ITSTokenListerEditor.prototype.loadList = function () {
-        if ($('#NavbarsAdmin').is(':visible')) {
+        if ($('#TokenListerInterfaceEditTokenEditHeader').is(':visible')) {
             ITSInstance.JSONAjaxLoader('tokens', this.TokensList, this.listLoaded.bind(this), this.listLoadingFailed.bind(this), 'ITSObject', 0, 99999,
                 "CompanyID, UserID", "N", "Y", "N", this.filter, this.searchField);
         }
