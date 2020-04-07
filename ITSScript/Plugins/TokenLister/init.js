@@ -124,7 +124,7 @@
     // translate the portlet
     ITSInstance.translator.translateDiv("#TokenListerInterfaceTokenEdit");
 
-    ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.TokenListerController.loadList);
+    ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.TokenListerController.loadList.bind(ITSInstance.TokenListerController));
 
     // register the menu items if applicable
 
