@@ -200,7 +200,7 @@ ITSUsers.prototype.currentUserLoadedErrorcallback = function() {
 };
 
 ITSUsers.prototype.loadCurrentUser = function (whenLoaded, onError, forceReload ) {
-    //console.log("loading current user");
+    //ITSLogger.logMessage(logLevel.ERROR,"loading current user");
     if (forceReload) { this.currentUserLoaded = false; }
     if (!this.currentUserLoaded) {
         if (whenLoaded) { this.currentUserLoadedOK.push(whenLoaded); }

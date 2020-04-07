@@ -62,7 +62,7 @@ ITSCandidate = function (parent, ITSSession) {
 
 ITSCandidate.prototype.regeneratePassword = function () {
     this.Password = Math.random().toString(36).slice(-8);
-    console.log("Password for the user has been reset " + this.EMail);
+    ITSLogger.logMessage(logLevel.WARNING,"Password for the user has been reset " + this.EMail);
 };
 
 ITSCandidate.prototype.createHailing = function () {
@@ -124,7 +124,7 @@ ITSCandidate.prototype.checkForDuplicateLogins = function (Login, OnNoDuplicateF
             }
         }.bind(this),
         function () {
-            console.log("ITSCandidate.prototype.checkForDuplicateLogins unexpected error");
+            ITSLogger.logMessage(logLevel.ERROR,"ITSCandidate.prototype.checkForDuplicateLogins unexpected error");
             this.duplicateCandidatesCheckOnNoDuplicateFound();
         }.bind(this)
         , ITSCandidate, 0, 5, "", "N", "N", "Y", "EMail = '" + Login + "'");

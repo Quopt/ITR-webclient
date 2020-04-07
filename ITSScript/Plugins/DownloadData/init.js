@@ -127,7 +127,7 @@
                 includeResults = true;
             }
 
-            //console.log("Flattening " + i);
+            //ITSLogger.logMessage(logLevel.ERROR,"Flattening " + i);
             this.updateCounter(i);
             this.flattenDataSetRecursed("",myRec, this.headers, flatRec, includeResults, includeResultsValues, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'));
             this.flatteneddataset.push(flatRec);
@@ -186,7 +186,7 @@
 
     ITSDownloadDataEditor.prototype.showPreview = function () {
         var newTable = makeHTMLTableBasedOnObjects(this.headers, this.flatteneddataset, 3);
-        //console.log(newTable);
+        //ITSLogger.logMessage(logLevel.ERROR,newTable);
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         $('#DownloadDataSampleTable').html(newTable);
     };

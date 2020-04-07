@@ -31,11 +31,11 @@
                 $("#AdminInterfaceInviteNewCandidate").fadeTo("quick", 0.3);
             },
             afterOfficeLogin: function () {
-                console.log('Init portlet invite new candidate');
+                ITSLogger.logMessage(logLevel.INFO,'Init portlet invite new candidate');
                 ITSInstance.batteries.loadAvailableBatteries(function () {}, function () {});
                 ITSInstance.tests.loadAvailableTests(
                     function () {
-                        console.log('Tests loaded');
+                        ITSLogger.logMessage(logLevel.INFO,'Tests loaded');
                         $("#AdminInterfaceInviteNewCandidate").children().prop('disabled', false);
                         $("#AdminInterfaceInviteNewCandidate").prop('disabled', false);
                         $("#AdminInterfaceInviteNewCandidate").fadeTo("slow", 1);

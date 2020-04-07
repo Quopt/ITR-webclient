@@ -154,7 +154,7 @@ ITSBatteryEditorController.prototype.TestOrBatterySelected = function (textFound
 };
 
 ITSBatteryEditorController.prototype.createNewBattery= function (EmailAddress) {
-    console.log("Change test battery requested " + EmailAddress);
+    ITSLogger.logMessage(logLevel.INFO,"Change test battery requested " + EmailAddress);
     // create a new and empty battery
     this.currentBattery = ITSInstance.batteries.newBattery();
 
@@ -285,7 +285,7 @@ ITSBatteryEditorController.prototype.testsListDelete= function (index) {
 };
 
 ITSBatteryEditorController.prototype.normSelected = function (normSequence, selectElement, testArrayIndex) {
-    //console.log(normSequence, selectElement, testArrayIndex);
+    //ITSLogger.logMessage(logLevel.ERROR,normSequence, selectElement, testArrayIndex);
     if (normSequence == 1) {
         this.currentBattery.BatteryTests[testArrayIndex].NormID1 = selectElement.options[selectElement.options.selectedIndex].value;
     }

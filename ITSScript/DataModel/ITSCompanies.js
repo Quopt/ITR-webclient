@@ -150,7 +150,7 @@ function ITSCompanies (sess) {
 };
 
 ITSCompanies.prototype.loadCurrentCompany = function (whenLoaded, onError, refreshOnly ) {
-        //console.log("loading current company");
+    ITSLogger.logMessage(logLevel.INFO,"loading current company");
     this.currentCompanyLoaded = whenLoaded;
     this.currentCompanyError = onError;
     this.refreshOnly = refreshOnly;

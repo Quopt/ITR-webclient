@@ -329,10 +329,10 @@ ITSTest.prototype.loadFilesAsBinary = function () {
         xhr.open('GET', tempSrc, true);
         xhr.responseType = 'arraybuffer';
         xhr.onload = function(i, e) {
-            //console.log(e.currentTarget.response);
+            //ITSLogger.logMessage(logLevel.INFO,e.currentTarget.response);
             this.files_binary.list[i].data = binArrayToString(e.currentTarget.response);
             //var temp = stringToBinArray (this.files_binary.list[i]);
-            //console.log(temp);
+            //ITSLogger.logMessage(logLevel.INFO,temp);
             this.files_binary.loadcount ++;
         }.bind(this, i);
         this.files_binary.list.push({});
@@ -383,7 +383,7 @@ ITSTest.prototype.removeMediaFile = function (index, OnSucces, OnError) {
 };
 
 ITSTest.prototype.loadTestDetailSucces = function () {
-    console.log("Loaded test details " + this.TestName);
+    ITSLogger.logMessage(logLevel.INFO,"Loaded test details " + this.TestName);
     this.currentlyLoading = false;
     this.detailsLoaded = true;
     this.newTest = false;
@@ -400,7 +400,7 @@ ITSTest.prototype.loadTestDetailSucces = function () {
                 lastCheckedTemplateID = this.screens[i].screenComponents[j].templateID;
                 templateIndex = this.ITSSession.screenTemplates.findTemplateById(this.ITSSession.screenTemplates.screenTemplates, lastCheckedTemplateID);
                 if (templateIndex < 0) {
-                   console.log("Template missing ! " + lastCheckedTemplateID);
+                   ITSLogger.logMessage(logLevel.ERROR,"Template missing ! " + lastCheckedTemplateID);
                 }
                 else if (!this.ITSSession.screenTemplates.screenTemplates[templateIndex].detailsLoaded) {
                     waitForTemplateLoading = true;
@@ -462,7 +462,7 @@ ITSTest.prototype.loadTestDetailError = function () {
 };
 
 ITSTest.prototype.loadTestDetailDefinition = function (whenLoaded, OnError) {
-    //console.log("loading test details " + this.TestName);
+    //ITSLogger.logMessage(logLevel.INFO,"loading test details " + this.TestName);
     if (whenLoaded) {
         this.onSuccessCallbacks.push(whenLoaded);
     }
@@ -681,7 +681,7 @@ ITSTests.prototype.loadAvailableTestsError = function () {
 };
 
 ITSTests.prototype.loadAvailableTests = function (whenLoaded, onError) {
-    //console.log("loading available tests");
+    //ITSLogger.logMessage(logLevel.INFO,"loading available tests");
     if (whenLoaded) {
         this.onSuccessCallbacks.push(whenLoaded);
     }
@@ -691,7 +691,7 @@ ITSTests.prototype.loadAvailableTests = function (whenLoaded, onError) {
     if (!this.currentlyLoading) {
         if (! ITSInstance.companies.currentCompanyAvailable ) {
           setTimeout(this.loadAvailableTests.bind(this,whenLoaded,onError), 500);
-          //console.log("Loading tests deferred");
+          //ITSLogger.logMessage(logLevel.INFO,"Loading tests deferred");
         } else {
             this.currentlyLoading = true;
             ITSInstance.JSONAjaxLoader('tests', this.testList, this.loadAvailableTestsSucces.bind(this), this.loadAvailableTestsError.bind(this),
@@ -860,13 +860,13 @@ ITSTestNorm.prototype.normTest = function (session, sessionTest, candidate, resu
     try {
         eval("var func = function(session, sessiontest, candidate, testdefinition, scores, scales, itsinstance, normPostFix) { " + this.myParent.BeforeNormingScript + " }; ");
         func(session, sessionTest, candidate, this, results, scores, ITSInstance, normPostFix);
-    } catch (err) { console.log("Test before norming script failed for "  + this.TestName + " " + this.NormVarName + " " + err);  }
+    } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Test before norming script failed for "  + this.TestName + " " + this.NormVarName + " " + err);  }
 
     // Norm pre norm script
     try {
         eval("var func = function(session, sessiontest, candidate, testdefinition, scores, scales, itsinstance, normPostFix) { " + this.beforeNormScript + " }; ");
         func(session, sessionTest, candidate, this, results, scores, ITSInstance, normPostFix);
-    } catch (err) { console.log("Norm before norming script failed for "  + this.TestName + " " + this.NormVarName   + err);  }
+    } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Norm before norming script failed for "  + this.TestName + " " + this.NormVarName   + err);  }
 
     // use the norm columns to calculate the norm value
     for (var s =0; s < this.myParent.scales.length; s++){
@@ -947,7 +947,7 @@ ITSTestNorm.prototype.normTest = function (session, sessionTest, candidate, resu
                             }
                         }
                     }
-                } catch  (err) { console.log("Norm column calculations failed for "  + this.TestName + " " + this.NormVarName   + err);  }
+                } catch  (err) { ITSLogger.logMessage(logLevel.ERROR,"Norm column calculations failed for "  + this.TestName + " " + this.NormVarName   + err);  }
             }
         }
     }
@@ -956,13 +956,13 @@ ITSTestNorm.prototype.normTest = function (session, sessionTest, candidate, resu
     try {
         eval("var func = function(session, sessiontest, candidate, testdefinition, scores, scales, itsinstance, normPostFix) { " + this.afterNormScript + " }; ");
         func(session, sessionTest, candidate, this, results, scores, ITSInstance, normPostFix);
-    } catch (err) { console.log("Norm after norming script failed for "  + this.TestName + " " + this.NormVarName   + err);  }
+    } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Norm after norming script failed for "  + this.TestName + " " + this.NormVarName   + err);  }
 
     // Test post norm script
     try {
         eval("var func = function(session, sessiontest, candidate, testdefinition, scores, scales, itsinstance, normPostFix) { " + this.myParent.AfterNormingScript + " }; ");
         func(session, sessionTest, candidate, this, results, scores, ITSInstance, normPostFix);
-    } catch (err) { console.log("Test before norming script failed for "  + this.TestName + " " + this.NormVarName   + err);  }
+    } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Test before norming script failed for "  + this.TestName + " " + this.NormVarName   + err);  }
 
 };
 
@@ -1250,7 +1250,7 @@ ITSTestScreen.prototype.checkIsAnswered = function (storageObject, postfix) {
         checkMessage = "";
         try {
             var checkMessage = template.runtime_isanswered('X' + i + 'Y' + postfix, this.screenComponents[i].templateValues.RepeatBlockCount, 'TT', this.screenComponents[i].templateValues, ComponentResults);
-        } catch(err) { console.log("Is Answered script failed for "  + this.myParent.TestName + "(" +'X' + i + 'Y' + postfix + ") "  + err);   }
+        } catch(err) { ITSLogger.logMessage(logLevel.ERROR,"Is Answered script failed for "  + this.myParent.TestName + "(" +'X' + i + 'Y' + postfix + ") "  + err);   }
         if ( checkMessage != undefined) {
             if (checkMessage !== "") {
                 checkResult = Math.min(Number(checkMessage), checkResult);
@@ -1295,7 +1295,7 @@ ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, P
             try {
                 eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode, screen) { " + this.screens[i].beforeScreenScript + " }; ");
                 func(currentSession, currentSessionTest, candidate, this, undefined, ITSInstance, "PnPView", this.screens[i] );
-            } catch (err) { console.log("Screen pre script failed for "  + this.TestName + "(" + i + ")"  + err);  }
+            } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Screen pre script failed for "  + this.TestName + "(" + i + ")"  + err);  }
             this.screens[i].generateScreenInDiv(hostDiv, "PnPView", "_" + i + additionalText, PnP);
         }
         else {
@@ -1334,7 +1334,7 @@ ITSTest.prototype.scoreTest = function (session, sessionTest, candidate, results
                 if (( (String(source.Value) == String(rule.SourceValue)) ||
                     ((rule.SourceValue.indexOf('%%QuestionValue%%') >= 0) && (rule.TargetScaleValue.indexOf('%%QuestionValue%%') >= 0) ) ) && (s["__" + rule.TargetScale])) {
                     var target = s["__" + rule.TargetScale];
-                    //console.log(target);
+                    //ITSLogger.logMessage(logLevel.ERROR,target);
                     var thisScale = this.findScaleByID(rule.TargetScale);
 
                     var TargetScaleValue = rule.TargetScaleValue;
@@ -1354,7 +1354,7 @@ ITSTest.prototype.scoreTest = function (session, sessionTest, candidate, results
                             } else {
                                 eval("target.Score = " + TargetScaleValue)
                             }
-                        } catch (err) { console.log("Calculate scale failed for "  + this.TestName + "(" + i + ")"  + err);  }
+                        } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Calculate scale failed for "  + this.TestName + "(" + i + ")"  + err);  }
                     } else {
                         try {
                             if (thisScale.scaleType == "N") {
@@ -1362,7 +1362,7 @@ ITSTest.prototype.scoreTest = function (session, sessionTest, candidate, results
                             } else {
                                 eval("target.Score = " + TargetScaleValue );
                             }
-                        } catch (err) { console.log("Calculate scale failed for "  + this.TestName + "(" + i + ")"  + err);  }
+                        } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Calculate scale failed for "  + this.TestName + "(" + i + ")"  + err);  }
                     }
                 }
             }
@@ -1372,7 +1372,7 @@ ITSTest.prototype.scoreTest = function (session, sessionTest, candidate, results
     try {
         eval("var func = function(session, sessiontest, candidate, testdefinition, scores, scales, itsinstance) { " + this.ScoringScript + " }; ");
         func(session, sessionTest, candidate, this, results, scores, ITSInstance);
-    } catch (err) { console.log("Calculate scores script failed for "  + this.TestName + " "  + err);  }
+    } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Calculate scores script failed for "  + this.TestName + " "  + err);  }
 
     // and now round the scales when required
     try {
@@ -1385,7 +1385,7 @@ ITSTest.prototype.scoreTest = function (session, sessionTest, candidate, results
             }
 
         }
-    } catch (err) { console.log("Rounding scores failed for "  + this.TestName + " "  + err);  }
+    } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Rounding scores failed for "  + this.TestName + " "  + err);  }
 };
 
 ITSTest.prototype.prepareScalesStorage = function (storageObject, overwriteAllValues) {
@@ -1493,11 +1493,11 @@ ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, 
                         sessionStorageObject.sessionStorage._objectType = "ITSObject";
                         sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName] = ComponentResults.Value;
                         saveSessionNeeded = true;
-                        //console.log("S" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
+                        //ITSLogger.logMessage(logLevel.ERROR,"S" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
                     }
                 }
                 catch (err) {
-                    console.log("runtime_get_values failed for " +  this.screenComponents[j].varComponentName + " " + err.message );
+                    ITSLogger.logMessage(logLevel.ERROR,"runtime_get_values failed for " +  this.screenComponents[j].varComponentName + " " + err.message );
                 }
             }
         } catch (err) {};
@@ -1522,12 +1522,12 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
             if (sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]) {
                 // use the varComponentName instead of the id so it can be re-used over questions and tests in the session
                 ComponentResults.Value = sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName];
-                //console.log("U" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
+                //ITSLogger.logMessage(logLevel.ERROR,"U" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
             }
         }
         try {
             template.runtime_set_values('X' + j + 'Y' + postFix, this.screenComponents[j].templateValues.RepeatBlockCount, ComponentResults.Value, this.screenComponents[j].templateValues);
-        } catch (err) { console.log("Runtime set values failed " + err.message); }
+        } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Runtime set values failed " + err.message); }
         try {
             if (ComponentResults.Visible) {
                 this.screenComponents[j].show = ComponentResults.Visible;
@@ -1547,7 +1547,7 @@ ITSTestScreen.prototype.updateFromSessionStorage = function (storageObject, sess
             if (!sessionStorageObject.sessionStorage) sessionStorageObject.sessionStorage = {};
             if (sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]) {
                 ComponentResults.Value = sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName];
-                //console.log(this.screenComponents[j].varComponentName + "=" + ComponentResults.Value);
+                //ITSLogger.logMessage(logLevel.ERROR,this.screenComponents[j].varComponentName + "=" + ComponentResults.Value);
             }
         }
     }

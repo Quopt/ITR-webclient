@@ -56,7 +56,7 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
 
     if (template_values["Pre_graph_script"] != "") {
         var tempScript = envSubstitute(template_values["Pre_graph_script"], context,true);
-        try { eval(tempScript); } catch(err) { console.log('Pre script on graph failed : ' + err.message); }
+        try { eval(tempScript); } catch(err) { ITSLogger.logMessage(logLevel.ERROR,'Pre script on graph failed : ' + err.message); }
     }
 
     var dsets=[];

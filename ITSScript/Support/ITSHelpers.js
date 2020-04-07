@@ -119,7 +119,7 @@ ITSLoginToken.prototype.changeCompany = function (newCompanyId, OnSuccess, OnErr
 ITSLoginToken.prototype.acquire = function (userName, password, okFunction, errorFunction) { // acquires a login token from the server.
     this.LoginProgress = "InProgress";
     this.userID = userName;
-    console.log('Login started : ' + this.ITSInstance.baseURLAPI + 'login');
+    ITSLogger.logMessage(logLevel.ERROR,'Login started : ' + this.ITSInstance.baseURLAPI + 'login');
     var req = $.ajax({
         url: this.ITSInstance.baseURLAPI + 'login',
         context: this,
@@ -130,18 +130,18 @@ ITSLoginToken.prototype.acquire = function (userName, password, okFunction, erro
         },
         error: function () {
             this.LoginProgress = "LoginFailed";
-            console.log('Login failed.');
+            ITSLogger.logMessage(logLevel.ERROR,'Login failed.');
             errorFunction();
         },
         success: function (data, textStatus, xhr) {
             var checkLogin = JSON.parse(data);
-            //console.log(data, checkLogin);
+            //ITSLogger.logMessage(logLevel.ERROR,data, checkLogin);
             this.set(checkLogin.SessionID);
             this.companyID = checkLogin.CompanyID;
             this.MultipleCompaniesFound = checkLogin.MultipleCompaniesFound;
             this.LoginProgress = "";
             this.MFAStatus = checkLogin.MFAStatus;
-            console.log('Login OK , token issued = ' + this.IssuedToken + ' ' + this.ITSInstance.ID);
+            ITSLogger.logMessage(logLevel.ERROR,'Login OK , token issued = ' + this.IssuedToken + ' ' + this.ITSInstance.ID);
 
             okFunction();
         },
@@ -169,7 +169,7 @@ ITSLoginToken.prototype.keepTokenFresh = function () {
                     },
                     success: function () {
                         keepTokenFreshCounter = 0;
-                        console.log('Token refreshed');
+                        ITSLogger.logMessage(logLevel.INFO,'Token refreshed');
                     }
                 });
                 cookieHelper.setCookie("ITSLoginToken", this.IssuedToken, 6);
@@ -177,6 +177,31 @@ ITSLoginToken.prototype.keepTokenFresh = function () {
         }.bind(this), 1);
     } else {
         keepTokenFreshCounter -= 1;
+    }
+};
+
+// logger functions
+logLevel = {
+    ERROR : 0,
+    WARNING : 1,
+    INFO : 2
+};
+var ITSLogger = new ITSLoggerObject();
+function ITSLoggerObject() {
+    // log example : ITSLogger.logMessage(logLevel.INFO,"My message is %%here%%", "{'here':'there'}")
+    this.logLevel = logLevel.ERROR;
+    this.loggingEnabled = true;
+};
+
+ITSLoggerObject.prototype.logMessage=function (logLevel, message, messageParameters ) {
+    if (typeof messageParameters == "undefined") {
+        messageParameters = {};
+    }
+    if (messageParameters != {}) {
+        envSubstitute(message, messageParameters, true);
+    }
+    if ((logLevel <= this.logLevel) && (this.loggingEnabled)) {
+        console.log(message);
     }
 };
 
@@ -368,7 +393,7 @@ function DataBinderTo(parentObjectName, dataObject) {
             }
             catch (err) {
                 elm.setAttribute(attrToBind, "#BINDING_ERROR"); //#BINDING_ERROR
-                console.log(elm.id + "/" + attrToBind + "/" + tempType + "/" + dfieldexpr + " binding error (DataBinderTo)");
+                ITSLogger.logMessage(logLevel.ERROR,elm.id + "/" + attrToBind + "/" + tempType + "/" + dfieldexpr + " binding error (DataBinderTo)");
             }
         }
     }
@@ -454,7 +479,7 @@ function DataBinderFrom(parentObjectName, dataObject) {
                 }
             }
             catch (err) {
-                console.log(elm.id + "/" + attrToBind + "/" + tempType + "/" + dfieldexpr + " binding error (DataBinderFrom)");
+                ITSLogger.logMessage(logLevel.ERROR,elm.id + "/" + attrToBind + "/" + tempType + "/" + dfieldexpr + " binding error (DataBinderFrom)");
             }
         }
     }
@@ -543,7 +568,7 @@ function shallowCopy(original, target , propertiesOnly) {
             }
         }
     } catch (err) {
-        console.log("shallowCopy failed " + err.message);
+        ITSLogger.logMessage(logLevel.ERROR,"shallowCopy failed " + err.message);
     }
 }
 
@@ -627,7 +652,7 @@ function ITSJSONStringify(someITSObject) {
                 try {
                     return JSON.stringify(someITSObject);
                 } catch (err) {
-                    console.log("JSON.stringify failed for "  +  err);
+                    ITSLogger.logMessage(logLevel.ERROR,"JSON.stringify failed for "  +  err);
                     return "";
                 }
             }
@@ -645,7 +670,7 @@ function scanITSJsonLoadObject(tempObject, someITSObject, parentITSObject, ITSIn
     try {
         var i, keys = Object.getOwnPropertyNames(tempObject);
     } catch (err) {
-        console.log("scanITSJsonLoadObject loading object failed, retry as first element of array "  + err);
+        ITSLogger.logMessage(logLevel.ERROR,"scanITSJsonLoadObject loading object failed, retry as first element of array "  + err);
         if (tempObject) {
             var i, keys = Object.getOwnPropertyNames(tempObject[0]);
         } else { var keys = []; }
@@ -689,7 +714,7 @@ function ITSJSONLoad(someITSObject, JSONString, parentITSObject, ITSInstanceObje
     try {
         var tempObject = JSON.parse(JSONString);
     } catch (err) {
-        console.log("ITSJSONLoad loading failed : " + err )
+        ITSLogger.logMessage(logLevel.ERROR,"ITSJSONLoad loading failed : " + err )
     }
 
     if (someITSObject == null) {
@@ -811,7 +836,7 @@ function envSubstitute(textToScan, instanceObj, freeContext) {
                         result += eval(varFound);
                     }
                     catch (err) {
-                        console.log("eval failed for "  + varFound +  " with " + err );
+                        ITSLogger.logMessage(logLevel.ERROR,"eval failed for "  + varFound +  " with " + err );
                     }
                 }
                 else { throw "x"};

@@ -137,7 +137,7 @@
     ITSSessionEditor.prototype.init = function () {
     };
     ITSSessionEditor.prototype.editSession = function (Id) {
-        console.log("Edit test session requested " + Id);
+        ITSLogger.logMessage(logLevel.INFO,"Edit test session requested " + Id);
     };
     ITSSessionEditor.prototype.hide = function () {
         $('#AdminInterfaceSessionEdit').hide();
@@ -247,7 +247,7 @@
         if ($('#AdminInterfaceEditSessionEditTestsList').is(':visible')) {
             $('#AdminInterfaceEditSessionEditTestsList').empty();
             ITSInstance.UIController.showInterfaceAsWaitingOff();
-            //console.log('generating test list');
+            //ITSLogger.logMessage(logLevel.ERROR,'generating test list');
             cs.SessionTests.sort(function (a, b) {
                 return a.Sequence - b.Sequence;
             });
@@ -475,7 +475,7 @@
     };
 
     ITSSessionEditor.prototype.viewAnswers = function (testIndex) {
-        //console.log("viewanswers " + testIndex);
+        //ITSLogger.logMessage(logLevel.ERROR,"viewanswers " + testIndex);
         if (this.currentSession.SessionTests.length > testIndex) {
             var testSessionID = this.currentSession.SessionTests[testIndex].ID;
             ITSInstance.SessionViewAnswersSessionController.currentSession = this.currentSession;

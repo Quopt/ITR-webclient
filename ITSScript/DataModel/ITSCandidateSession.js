@@ -372,7 +372,7 @@ ITSCandidateSession.prototype.saveGroupSessionsToServerStageCheckSession = funct
     var counter = tempSession.SessionTests.length;
     for (var st = counter -1; st>=0; st--) {
         if (!tempSession.SessionTests[st] || !tempSession.SessionTests[st].Status) {
-            console.log("tempSession.SessionTests[st].Status does not exist");
+            ITSLogger.logMessage(logLevel.ERROR,"tempSession.SessionTests[st].Status does not exist");
         } else {
             if (tempSession.SessionTests[st].Status <= 10) {
                 tempSession.SessionTests.splice(st,1);

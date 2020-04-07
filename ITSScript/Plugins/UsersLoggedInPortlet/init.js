@@ -26,7 +26,7 @@
                 $('#AdminInterfaceInviteUserMngt').append(this.html);
             },
             afterOfficeLogin: function () {
-                console.log('Init portlet last logged in users');
+                ITSLogger.logMessage(logLevel.INFO,'Init portlet last logged in users');
                 ITSInstance.portletLoggedInUsers.objectsToShow.length = 0;
             },
             init_after_load : function () {
@@ -43,14 +43,14 @@
                 );
             },
             loadSuccess: function () {
-                console.log('Portlet last logged in users loaded');
+                ITSLogger.logMessage(logLevel.INFO,'Portlet last logged in users loaded');
                 $('#AdminInterfaceInviteUserMngtTable tr').remove();
                 for (i = 0; i < Math.min(3,ITSInstance.portletLoggedInUsers.objectsToShow.length); i++) {
                     $('#AdminInterfaceInviteUserMngtTable').append('<tr><td>' + ITSInstance.portletLoggedInUsers.objectsToShow[i].Email + '&nbsp;<small>(' + ITSInstance.portletLoggedInUsers.objectsToShow[i].UserName + ')</small></td></tr>');
                 }
             },
             loadError: function () {
-                console.log('Portlet loading last logged in users generated an error');
+                ITSLogger.logMessage(logLevel.INFO,'Portlet loading last logged in users generated an error');
             },
             newObject: function () {
                 newObj = Object.create(ITSUser);

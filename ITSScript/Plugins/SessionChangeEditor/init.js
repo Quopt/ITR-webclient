@@ -176,7 +176,7 @@ ITSChangeExistingSessionEditor.prototype.TestOrBatterySelected = function (textF
 };
 
 ITSChangeExistingSessionEditor.prototype.createNewSession= function (EmailAddress) {
-    console.log("Change test session requested " + EmailAddress);
+    ITSLogger.logMessage(logLevel.INFO,"Change test session requested " + EmailAddress);
     // create a new and empty session
     this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
     this.currentSession.Person.EMail = EmailAddress;
@@ -320,7 +320,7 @@ ITSChangeExistingSessionEditor.prototype.loadPersonDataIntoSession= function () 
 };
 
 ITSChangeExistingSessionEditor.prototype.normSelected = function (normSequence, selectElement, testArrayIndex) {
-    //console.log(normSequence, selectElement, testArrayIndex);
+    //ITSLogger.logMessage(logLevel.ERROR,normSequence, selectElement, testArrayIndex);
     if (normSequence == 1) {
         this.currentSession.SessionTests[testArrayIndex].NormID1 = selectElement.options[selectElement.options.selectedIndex].value;
     }

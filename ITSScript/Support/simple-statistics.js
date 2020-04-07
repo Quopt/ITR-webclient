@@ -2553,7 +2553,7 @@ PerceptronModel.prototype.train = function(features, label) {
  *   x_new = x_old - stepSize * fDerivative(x_old);
  * }
  *
- * console.log('Local minimum occurs at', x_new);
+ * ITSLogger.logMessage(logLevel.ERROR,'Local minimum occurs at', x_new);
  */
 var epsilon = 0.0001;
 

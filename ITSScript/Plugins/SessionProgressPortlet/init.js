@@ -26,7 +26,7 @@
                 $('#AdminInterfaceSessionProgressPortlet').append(this.html);
             },
             afterOfficeLogin: function () {
-                console.log('Init portlet prepared and busy sessions');
+                ITSLogger.logMessage(logLevel.INFO,'Init portlet prepared and busy sessions');
                 ITSInstance.portletBusySessions.reloadAfterDelay();
             },
             loadSuccess: function () {
@@ -44,7 +44,7 @@
                 ITSInstance.portletBusySessions.waitingForReloadAfterDelay = false;
             },
             loadError: function () {
-                console.log('Sessions generated an error');
+                ITSLogger.logMessage(logLevel.INFO,'Sessions generated an error');
                 ITSInstance.portletBusySessions.waitingForReloadAfterDelay = false;
             },
             newPortletSession: function () {

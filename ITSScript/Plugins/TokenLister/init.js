@@ -71,8 +71,14 @@
 
         this.TokensList = {};
         ITSInstance.UIController.showInterfaceAsWaitingOn();
-        ITSInstance.JSONAjaxLoader('tokens' , this.TokensList, this.listLoaded.bind(this), this.listLoadingFailed.bind(this), 'ITSObject', 0, 99999,
-            "CompanyID, UserID", "N", "Y", "N", this.filter, this.searchField);
+        this.loadList();
+    };
+
+    ITSTokenListerEditor.prototype.loadList = function () {
+        if $('#NavbarsAdmin').is(':visible') {
+            ITSInstance.JSONAjaxLoader('tokens', this.TokensList, this.listLoaded.bind(this), this.listLoadingFailed.bind(this), 'ITSObject', 0, 99999,
+                "CompanyID, UserID", "N", "Y", "N", this.filter, this.searchField);
+        }
     };
 
     ITSTokenListerEditor.prototype.listLoaded = function () {
@@ -117,6 +123,8 @@
 
     // translate the portlet
     ITSInstance.translator.translateDiv("#TokenListerInterfaceTokenEdit");
+
+    ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.TokenListerController.loadList);
 
     // register the menu items if applicable
 

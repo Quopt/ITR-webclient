@@ -135,7 +135,7 @@ ITSUIController = function () {
     // common functions for generic usage
     this.activateScreenPath = function(Path){
         // check if there is a session token, if not show the login path
-        //console.log("Activating path " + Path);
+        ITSLogger.logMessage(logLevel.INFO,"Activating path " + Path);
         // if the progress bar is showing then switch if off now
         var token = ITSInstance.token.get();
 
@@ -190,10 +190,11 @@ ITSUIController = function () {
     } ;
 
     this.scan_for_default_office_plugin_paths = function (Path) {
-        //console.log("Showing " +ITSInstance.UIController.registeredEditors.length  );
+        //ITSLogger.logMessage(logLevel.INFO,"Showing " +ITSInstance.UIController.registeredEditors.length  );
         var plugin_found = false;
         for (var i=0; i < ITSInstance.UIController.registeredEditors.length; i++) {
             if (ITSInstance.UIController.registeredEditors[i].path == Path) {
+				ITSLogger.logMessage(logLevel.INFO,"Showing " +ITSInstance.UIController.registeredEditors[i].path );
                 ITSInstance.UIController.registeredEditors[i].show();
                 plugin_found = true;
             }
@@ -355,7 +356,7 @@ ITSUIController = function () {
                     $('#welcomeUserName').text(ITSInstance.users.currentUser.UserName);
                 },
                 function () {
-                    console.log('Loading current user failed. ');
+                    ITSLogger.logMessage(logLevel.ERROR,'Loading current user failed. ');
                 })
         }
     } ;
@@ -470,7 +471,7 @@ ITSUIController = function () {
                             try {
                                 setTimeout(currentValue.afterOfficeLogin, 1);
                             } catch (err) {
-                                console.log("Init of " + currentValue.path + "failed : " + err.message);
+                                ITSLogger.logMessage(logLevel.ERROR,"Init of " + currentValue.path + "failed : " + err.message);
                             }
                         }
                     }

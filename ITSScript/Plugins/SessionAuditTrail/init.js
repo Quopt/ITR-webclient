@@ -144,7 +144,7 @@
             try {
                 newVal = JSON.parse(this.currentSession.AuditTrail[i].NewData);
                 newVal.TestID = ITSInstance.tests.testList[ITSInstance.tests.findTestById(ITSInstance.tests.testList,newVal.TestID)].Description;
-            } catch {};
+            } catch (err) {};
             // CurrentPage SessionStatus TestID
             var message = ITSInstance.translator.getTranslatedString("SessionAuditTrail.init.js",
                   this.currentSession.AuditTrail[i].ObjectType + "." + this.currentSession.AuditTrail[i].MessageID,

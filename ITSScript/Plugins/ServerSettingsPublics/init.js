@@ -94,7 +94,7 @@
     ITSServerSettingsPublicsEditor.prototype.translationTemplatesLoaded = function () {
         this.tblTranslationTemplates = this.tablePart1;
         for (var i=0; i < this.translationTemplates.length; i++) {
-            //console.log(this.testScreenTemplates[i].name);
+            //ITSLogger.logMessage(logLevel.ERROR,this.testScreenTemplates[i].name);
             var rowText = this.tablePart2;
             rowText = rowText.replace( this.mNR, i +1 );
             rowText = rowText.replace( this.mFEATURENAME, this.translationTemplates[i].name );
@@ -111,10 +111,10 @@
     };
 
     ITSServerSettingsPublicsEditor.prototype.testScreenTemplatesLoaded = function () {
-        console.log(this.testScreenTemplates);
+        ITSLogger.logMessage(logLevel.INFO,this.testScreenTemplates);
         this.tblTestScreenTemplates = this.tablePart1;
         for (var i=0; i < this.testScreenTemplates.length; i++) {
-            //console.log(this.testScreenTemplates[i].name);
+            //ITSLogger.logMessage(logLevel.ERROR,this.testScreenTemplates[i].name);
             var rowText = this.tablePart2;
             rowText = rowText.replace( this.mNR, i +1 );
             rowText = rowText.replace( this.mFEATURENAME, this.testScreenTemplates[i].name );
@@ -133,7 +133,7 @@
     ITSServerSettingsPublicsEditor.prototype.reportTemplatesLoaded = function () {
         this.tblReportTemplates = this.tablePart1;
         for (var i=0; i < this.reportTemplates.length; i++) {
-            //console.log(this.testScreenTemplates[i].name);
+            //ITSLogger.logMessage(logLevel.ERROR,this.testScreenTemplates[i].name);
             var rowText = this.tablePart2;
             rowText = rowText.replace( this.mNR, i +1 );
             rowText = rowText.replace( this.mFEATURENAME, this.reportTemplates[i].name );
@@ -152,7 +152,7 @@
     ITSServerSettingsPublicsEditor.prototype.testTemplatesLoaded = function () {
         this.tblTestTemplates = this.tablePart1;
         for (var i=0; i < this.testTemplates.length; i++) {
-            //console.log(this.testScreenTemplates[i].name);
+            //ITSLogger.logMessage(logLevel.ERROR,this.testScreenTemplates[i].name);
             var rowText = this.tablePart2;
             rowText = rowText.replace( this.mNR, i +1 );
             rowText = rowText.replace( this.mFEATURENAME, this.testTemplates[i].name );
@@ -171,7 +171,7 @@
     ITSServerSettingsPublicsEditor.prototype.pluginTemplatesLoaded = function () {
         this.tblPluginTemplates = this.tablePart1;
         for (var i=0; i < this.pluginTemplates.length; i++) {
-            //console.log(this.testScreenTemplates[i].name);
+            //ITSLogger.logMessage(logLevel.ERROR,this.testScreenTemplates[i].name);
             var rowText = this.tablePart2;
             rowText = rowText.replace( this.mNR, i +1 );
             rowText = rowText.replace( this.mFEATURENAME, this.pluginTemplates[i].name );

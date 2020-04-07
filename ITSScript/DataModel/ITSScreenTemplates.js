@@ -41,7 +41,7 @@ ITSScreenTemplates.prototype.loadAvailableError = function () {
 };
 
 ITSScreenTemplates.prototype.loadAvailableScreenTemplates = function (whenLoaded, onError) {
-    //console.log("loading available test screen templates");
+    ITSLogger.logMessage(logLevel.INFO,"loading available test screen templates");
     ITSInstance.screenTemplates.screenTemplates.length = 0;
     if (whenLoaded) {
         this.onSuccessCallbacks.push(whenLoaded);
@@ -174,7 +174,7 @@ ITSScreenTemplate.prototype.newScreenTemplateVariable = function () {
 };
 
 ITSScreenTemplate.prototype.loadDetailSucces = function () {
-    console.log("Loaded screen template details " + this.Description);
+    //ITSLogger.logMessage(logLevel.INFO,"Loaded screen template details " + this.Description);
     this.currentlyLoading = false;
     for (var i = 0; i < this.onSuccessCallbacks.length; i++) {
         setTimeout(this.onSuccessCallbacks[i], i);
@@ -194,7 +194,7 @@ ITSScreenTemplate.prototype.loadDetailError = function () {
 }
 
 ITSScreenTemplate.prototype.loadDetailDefinition = function (whenLoaded, OnError) {
-    //console.log("loading screen template details " + this.Description);
+    ITSLogger.logMessage(logLevel.INFO,"loading screen template details " + this.Description);
     if (whenLoaded) {
         this.onSuccessCallbacks.push(whenLoaded);
     }
@@ -229,7 +229,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
     try {
         eval("func = function(id, num_blocks, template_values) { " + this.get_value_snippet + " }; ");
     } catch (err) {
-        console.log("get_value_snippet contains error " + this.Description + " " + err.message );
+        ITSLogger.logMessage(logLevel.ERROR,"get_value_snippet contains error " + this.Description + " " + err.message );
     }
     this['runtime_get_values'] = func;
 
@@ -237,7 +237,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
     try {
         eval("func = function(id, num_blocks, varvalue, template_values) { " + this.set_value_snippet + " }; ");
     } catch (err) {
-        console.log("set_value_snippet contains error " + this.Description + " " + err.message );
+        ITSLogger.logMessage(logLevel.ERROR,"set_value_snippet contains error " + this.Description + " " + err.message );
     }
     this['runtime_set_values'] = func;
 
@@ -245,7 +245,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
     try {
         eval("func = function(id, num_blocks, test_mode, template_values) { " + this.init_value_snippet + " }; ");
     } catch (err) {
-        console.log("init_value_snippet contains error " + this.Description + " " + err.message );
+        ITSLogger.logMessage(logLevel.ERROR,"init_value_snippet contains error " + this.Description + " " + err.message );
     }
     this['runtime_init_values'] = func;
 
@@ -253,7 +253,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
     try {
         eval("func = function(id, num_blocks, template_values) { " + this.generator_snippet + " }; ");
     } catch (err) {
-        console.log("generator_snippet contains error " + this.Description + " " + err.message );
+        ITSLogger.logMessage(logLevel.ERROR,"generator_snippet contains error " + this.Description + " " + err.message );
     }
     this['runtime_generate'] = func;
 
@@ -261,7 +261,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
     try {
         eval("func = function(id, num_blocks, template_values) { " + this.generator_pnp_snippet + " }; ");
     } catch (err) {
-        console.log("generator_pnp_snippet contains error " + this.Description + " " + err.message );
+        ITSLogger.logMessage(logLevel.ERROR,"generator_pnp_snippet contains error " + this.Description + " " + err.message );
     }
     this['runtime_generate_pnp'] = func;
 
@@ -269,7 +269,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
     try {
         eval("func = function(id, num_blocks, template_values, current_values_array) { " + this.generator_summary_snippet + " }; ");
     } catch (err) {
-        console.log("generator_summary_snippet contains error " + this.Description + " " + err.message );
+        ITSLogger.logMessage(logLevel.ERROR,"generator_summary_snippet contains error " + this.Description + " " + err.message );
     }
     this['runtime_generate_summary'] = func;
 
@@ -277,7 +277,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
     try {
         eval("func = function(id, num_blocks, test_mode, template_values, runtime_values) { " + this.validation_snippet + " }; ");
     } catch (err) {
-        console.log("validation_snippet contains error " + this.Description + " " + err.message );
+        ITSLogger.logMessage(logLevel.ERROR,"validation_snippet contains error " + this.Description + " " + err.message );
     }
     this['runtime_validate'] = func;
 
@@ -285,7 +285,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
     try {
         eval("func = function(id, num_blocks, test_mode, template_values, runtime_values) { " + this.isanswered_snippet + " }; ");
     } catch (err) {
-        console.log("isanswered_snippet contains error " + this.Description + " " + err.message );
+        ITSLogger.logMessage(logLevel.ERROR,"isanswered_snippet contains error " + this.Description + " " + err.message );
     }
     this['runtime_isanswered'] = func;
 };

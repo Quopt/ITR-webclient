@@ -259,7 +259,7 @@ ITSBatteries.prototype.loadError = function () {
 };
 
 ITSBatteries.prototype.loadAvailableBatteries = function (whenLoaded, onError) {
-    //console.log("loading available batteries");
+    //ITSLogger.logMessage(logLevel.INFO,"loading available batteries");
     if (whenLoaded) {
         this.onSuccessCallbacks.push(whenLoaded);
     }

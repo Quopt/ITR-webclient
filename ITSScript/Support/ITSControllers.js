@@ -82,14 +82,14 @@ ITSLoginController = function () {
         }
     };
     this.loginError = function () {
-        console.log("loginError");
+        ITSLogger.logMessage(logLevel.ERROR,"loginError");
         // unblock the interface
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         // show the error
         setTimeout(function() { ITSInstance.UIController.showError('ITSLoginController.LoginFailed','Login failed'); }, 1000);
     };
     this.loginOK = function () {
-        console.log("loginOK " + ITSInstance.token.IssuedToken);
+        ITSLogger.logMessage(logLevel.INFO,"loginOK " + ITSInstance.token.IssuedToken);
         // unblock the interface
         ITSInstance.UIController.showInterfaceAsWaitingOff();
 
@@ -121,7 +121,7 @@ ITSLoginController = function () {
                 'SessionID' : ITSInstance.token.IssuedToken, 'CompanyID' : ITSInstance.token.companyID } ,
             type: 'GET',
             error: function () {
-                console.log('Selecting company failed.');
+                ITSLogger.logMessage(logLevel.ERROR,'Selecting company failed.');
             },
             success: function (data) {
                 var checkLogin = JSON.parse(data);
@@ -132,7 +132,7 @@ ITSLoginController = function () {
                     // MFA is enabled and the user needs to enter a time based code
                     ITSInstance.UIController.activateScreenPath('MfaEnterCode');
                 } else {
-                    //console.log(data, checkLogin);
+                    //ITSLogger.logMessage(logLevel.ERROR,data, checkLogin);
                     ITSInstance.token.set(checkLogin.SessionID);
                     ITSInstance.loginController.loginOK();
                 }
@@ -148,7 +148,7 @@ ITSLoginController = function () {
                 'CompanyID' : ITSInstance.token.companyID } ,
             type: 'GET',
             error: function () {
-                console.log('Getting QR code failed.');
+                ITSLogger.logMessage(logLevel.ERROR,'Getting QR code failed.');
             },
             success: function (data) {
                 var qr = new QRious({
@@ -202,14 +202,14 @@ ITSLoginController = function () {
                 }
             },
             function () {
-                console.log('Loading current user failed. ');
+                ITSLogger.logMessage(logLevel.ERROR,'Loading current user failed. ');
             });
     }
 };
 
 ITSLogoutController = function () {
     this.logout = function (additionalParameters) {
-        console.log("user logged out " + ITSInstance.users.currentUser.Email );
+        ITSLogger.logMessage(logLevel.INFO,"user logged out " + ITSInstance.users.currentUser.Email );
         ITSInstance.genericAjaxLoader('logout', '', '', function () {} , function () {}, undefined );
         ITSInstance.token.clear();
         ITSInstance.UIController.EnableLoginInterface();
@@ -235,7 +235,7 @@ ITSInitializePortlets = function () {
 
 ITSPortletSelectCompany = function () {
     this.init = function () {
-        console.log ('Init portlet select company');
+        ITSLogger.logMessage(logLevel.INFO,'Init portlet select company');
         ITSInstance.portletSelectCompany.objectsToShow.length =0;
         ITSInstance.genericAjaxLoader(
             'logins/currentuser/companies',
@@ -250,7 +250,7 @@ ITSPortletSelectCompany = function () {
         );
     };
     this.loadSuccess = function () {
-        console.log('Companies loaded');
+        ITSLogger.logMessage(logLevel.INFO,'Companies loaded');
         $('#LoginWindowSelectCompanyTable tr').remove();
         for (i=0; i < ITSInstance.portletSelectCompany.objectsToShow.length; i++) {
             $('#LoginWindowSelectCompanyTable').append('<tr><td onclick="ITSInstance.loginController.setCompanyID(\''+ITSInstance.portletSelectCompany.objectsToShow[i].ID+'\');">' + ITSInstance.portletSelectCompany.objectsToShow[i].CompanyName + '</td></tr>');
@@ -258,7 +258,7 @@ ITSPortletSelectCompany = function () {
         }
     };
     this.loadError = function () {
-        console.log('Loading available companies generated an error');
+        ITSLogger.logMessage(logLevel.ERROR,'Loading available companies generated an error');
     };
     this.newObject = function () {
         newObj = {};
@@ -270,7 +270,7 @@ ITSPortletSelectCompany = function () {
 
 ITSPortletSelectSession = function () {
     this.init = function () {
-        console.log ('Init portlet select session');
+        ITSLogger.logMessage(logLevel.INFO,'Init portlet select session');
         ITSInstance.portletSelectSession.objectsToShow.length =0;
         ITSInstance.genericAjaxLoader(
             'sessions',
@@ -284,14 +284,14 @@ ITSPortletSelectSession = function () {
         );
     };
     this.loadSuccess = function () {
-        console.log('Sessions loaded');
+        ITSLogger.logMessage(logLevel.INFO,'Sessions loaded');
         $('#LoginWindowSelectSessionTable tr').remove();
         for (i=0; i < ITSInstance.portletSelectSession.objectsToShow.length; i++) {
             $('#LoginWindowSelectSessionTable').append('<tr><td onclick="ITSInstance.testTakingController.setSessionID(\''+ITSInstance.portletSelectSession.objectsToShow[i].ID+'\');">' + ITSInstance.portletSelectSession.objectsToShow[i].Description + '</td></tr>');
         }
     };
     this.loadError = function () {
-        console.log('Loading available sessions generated an error');
+        ITSLogger.logMessage(logLevel.ERROR,'Loading available sessions generated an error');
     };
     this.newObject = function () {
         newObj = {};
@@ -449,17 +449,17 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
                     try {
                         comp = eval("sourceComponent.Value " + checkScreenDynamic.comparison + " checkScreenDynamic.sourceValue");
                     } catch(err) {
-                        console.log("Evaluating rule failed for  "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + "," + j + ")"  + err);
-                        console.log(""+ sourceComponent.Value + checkScreenDynamic.comparison + checkScreenDynamic.sourceValue + "=" + comp);
+                        ITSLogger.logMessage(logLevel.ERROR,"Evaluating rule failed for  "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + "," + j + ")"  + err);
+                        ITSLogger.logMessage(logLevel.ERROR,""+ sourceComponent.Value + checkScreenDynamic.comparison + checkScreenDynamic.sourceValue + "=" + comp);
                     }
-                    //console.log(""+ sourceComponent.Value + checkScreenDynamic.comparison + checkScreenDynamic.sourceValue + "=" + comp);
+                    //ITSLogger.logMessage(logLevel.ERROR,""+ sourceComponent.Value + checkScreenDynamic.comparison + checkScreenDynamic.sourceValue + "=" + comp);
                     if (comp) {
                         if (checkScreenDynamic.targetScript != "") {
                             try {
                                 eval("var func = function(sourceComponent, targetComponent, checkScreenDynamic, session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + checkScreenDynamic.targetScript + " }; ");
                                 func(sourceComponent, targetComponent, checkScreenDynamic, this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, this.currentSessionTest.CurrentPage, "TT" );
                             } catch(err) {
-                                console.log("Evaluating targetscript failed for  "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + "," + j + ")"  + err);
+                                ITSLogger.logMessage(logLevel.ERROR,"Evaluating targetscript failed for  "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + "," + j + ")"  + err);
                             }
                         } else {
                             targetComponent.Visible = checkScreenDynamic.targetVisible;
@@ -470,11 +470,11 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
                             updateComponent.show = checkScreenDynamic.targetVisible;
                         }
                     }
-                } catch (err) { console.log("Setting screen dynamics failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + "," + j + ")"  + err); }
+                } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Setting screen dynamics failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + "," + j + ")"  + err); }
             }
 
             if (visibilityState != currentScreen.getVisibilityStatusAsString()) { // some visibility state has changed for a component, rerender the screen
-                //console.log("Re-render");
+                //ITSLogger.logMessage(logLevel.ERROR,"Re-render");
                 $('#ITSTestTakingDiv').empty();
                 currentScreen.generateScreenInDiv('ITSTestTakingDiv', 'TT', this.generateScreenID);
                 currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results, this.generateScreenID, this.currentSession.PluginData);
@@ -500,14 +500,14 @@ ITSTestTakingController.prototype.renderTestPage = function () {
     } else {
         if (this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].show) {
             this.generateScreenID = "__" + newGuid();
-            //console.log(this.generateScreenID);
+            //ITSLogger.logMessage(logLevel.ERROR,this.generateScreenID);
             var currentScreen = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage];
             // now run the pre screen script and register that we need to run the post screen script
             this.screenNeedsFinalisation = true;
             try {
                 eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode, screen) { " + currentScreen.beforeScreenScript + " }; ");
                 func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, "TT", this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage] );
-            } catch (err) { console.log("Screen pre script failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
+            } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Screen pre script failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
             // check if we still need to show this screen after running the pre-screen script
             if (this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].show) {
                 // check if this screen has screen dynamics
@@ -545,20 +545,20 @@ ITSTestTakingController.prototype.startTest = function () {
     try {
         eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + this.currentTestDefinition.BeforeScript + " }; ");
         func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, "TT" );
-    } catch (err) { console.log("Test pre script failed for "  + this.currentTestDefinition.TestName + " "  + err);  }
+    } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Test pre script failed for "  + this.currentTestDefinition.TestName + " "  + err);  }
     // for 360 start the 360 testing
     if (this.currentTestDefinition.Supports360Degrees) {
         if (this.currentSession.Status == 10) {
             try {
                 eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + this.currentTestDefinition.Pre360 + " }; ");
                 func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, "TT" );
-            } catch (err) { console.log("Session Pre360 script failed for "  + this.currentTestDefinition.TestName + " "  + err);  }
+            } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Session Pre360 script failed for "  + this.currentTestDefinition.TestName + " "  + err);  }
             this.currentSession.StartedAt = new Date();
         }
         try {
             eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + this.currentTestDefinition.Per360 + " }; ");
             func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, "TT" );
-        } catch (err) { console.log("Test Per360 script failed for "  + this.currentTestDefinition.TestName + " "  + err);  }
+        } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Test Per360 script failed for "  + this.currentTestDefinition.TestName + " "  + err);  }
     }
     // make sure the test session is started
     this.currentSession.Status = 20;
@@ -580,7 +580,7 @@ ITSTestTakingController.prototype.endTest = function (forcedEnding) {
     try {
         eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + this.currentTestDefinition.AfterScript + " }; ");
         func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, "TT" );
-    } catch (err) { console.log("Test post script failed for "  + this.currentTestDefinition.TestName + " "  + err);  }
+    } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Test post script failed for "  + this.currentTestDefinition.TestName + " "  + err);  }
     this.currentSessionTest.Status = 30;
     this.currentSessionTest.TestEnd = Date.now();
     this.saveCurrentTest();
@@ -635,7 +635,7 @@ ITSTestTakingController.prototype.endSessionChecker = function () {
                 eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode) { " + this.currentTestDefinition.Post360 + " }; ");
                 func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, "TT");
             } catch (err) {
-                console.log("Session post360 script failed for " + this.currentTestDefinition.TestName + " " + err);
+                ITSLogger.logMessage(logLevel.ERROR,"Session post360 script failed for " + this.currentTestDefinition.TestName + " " + err);
             }
         }
         if (this.currentTestIndex == -1) {
@@ -720,7 +720,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
                     try {
                         eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode, screen) { " + this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].afterScreenScript + " }; ");
                         func(this.currentSession, this.currentSessionTest, this.candidate, this.currentTestDefinition, this, ITSInstance, "TT", this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage] );
-                    } catch (err) { console.log("Screen post script failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
+                    } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Screen post script failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
                 }
             }
         }
@@ -801,7 +801,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
      		if (this.InTestTaking) $('#NavbarsTestTaking').show();
             try {
                 this.currentSessionTest.CurrentPage = parseInt( eventParameters);
-            } catch (err) { console.log("Setting currentpage failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
+            } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Setting currentpage failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
             this.saveCurrentTest();
             this.renderTestPage();
             break;
@@ -815,7 +815,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             // no action needed already done
             break;
         default :
-            if (eventName != '') console.log("processEvent UNKNOWN event found : " + eventName + " " + eventParameters);
+            if (eventName != '') ITSLogger.logMessage(logLevel.ERROR,"processEvent UNKNOWN event found : " + eventName + " " + eventParameters);
             break;
     }
 };
@@ -854,7 +854,7 @@ ITSTestTakingController.prototype.saveCurrentTest = function () {
     if (this.saveCurrentTestObjectBusy) {
         this.saveCurrentTestObjectBacklog = {} ;
         this.saveCurrentTestObjectBacklog[this.currentSessionTest.ID] = sessionPostObject;
-        //console.log(sessionPostObject);
+        //ITSLogger.logMessage(logLevel.ERROR,sessionPostObject);
     } else {
         this.saveCurrentTestRetry(sessionPostObject);
     }
@@ -877,7 +877,7 @@ ITSTestTakingController.prototype.saveCurrentTestPickupNext = function () {
     if (this.saveCurrentTestObjectBacklog != undefined) {
         // and now start the save for any test posts that were there (multiple if for multiple tests)
         for (st in this.saveCurrentTestObjectBacklog) {
-            //console.log(this.saveCurrentTestObjectBacklog[st]);
+            //ITSLogger.logMessage(logLevel.ERROR,this.saveCurrentTestObjectBacklog[st]);
             this.saveCurrentTestRetry(this.saveCurrentTestObjectBacklog[st]);
         }
         this.saveCurrentTestObjectBacklog = undefined;

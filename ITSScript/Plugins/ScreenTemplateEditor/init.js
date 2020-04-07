@@ -28,7 +28,7 @@ ITSScreenTemplateEditor.prototype.info = new ITSPortletAndEditorRegistrationInfo
 ITSScreenTemplateEditor.prototype.afterOfficeLogin = function () {
     // load the available screen templates for this company. details of the template are loaded when the template is selected by the user
     ITSInstance.screenTemplates.loadAvailableScreenTemplates(this.populateTemplates, function () {
-        console.log('ITSScreenTemplateEditor : Loading screen templates failed.');
+        ITSLogger.logMessage(logLevel.INFO,'ITSScreenTemplateEditor : Loading screen templates failed.');
     });
 };
 

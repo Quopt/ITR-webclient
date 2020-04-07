@@ -27,11 +27,11 @@
                 $('#AdminInterfaceInviteRRSessions').append(this.html);
             },
             afterOfficeLogin: function () {
-                console.log('Init portlet ready sessions');
+                ITSLogger.logMessage(logLevel.INFO,'Init portlet ready sessions');
                 ITSInstance.portletReadySessions.reloadAfterDelay();
             },
             loadSuccess: function () {
-                console.log('Portlet sessions loaded');
+                ITSLogger.logMessage(logLevel.INFO,'Portlet sessions loaded');
                 $('#AdminInterfaceInviteRRSessionsTable tr').remove();
                 for (i = 0; (i < 3) && (i < ITSInstance.portletReadySessions.sessionsToShow.length); i++) {
                     $('#AdminInterfaceInviteRRSessionsTable').append('<tr><td onclick=ITSRedirectPath("Session&SessionID=' + ITSInstance.portletReadySessions.sessionsToShow[i].id + '");>' + ITSInstance.portletReadySessions.sessionsToShow[i].Description  + " / " + ITSInstance.portletReadySessions.sessionsToShow[i].EMail + '</td></tr>');
@@ -39,7 +39,7 @@
                 ITSInstance.portletReadySessions.waitingForReloadAfterDelay = false;
             },
             loadError: function () {
-                console.log('Sessions generated an error');
+                ITSLogger.logMessage(logLevel.INFO,'Sessions generated an error');
                 ITSInstance.portletReadySessions.waitingForReloadAfterDelay = false;
             },
             newPortletReadySession: function () {

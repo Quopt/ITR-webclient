@@ -242,10 +242,10 @@ ITSTestTemplateEditor.prototype.info = new ITSPortletAndEditorRegistrationInform
 ITSTestTemplateEditor.prototype.afterOfficeLogin = function () {
     // load the available tests for this company. details of the test are loaded when the template is selected by the user
     ITSInstance.tests.loadAvailableTests(this.populateTests.bind(this), function () {
-        console.log('ITSTestTemplateEditor : Loading screen tests failed.');
+        ITSLogger.logMessage(logLevel.ERROR,'ITSTestTemplateEditor : Loading screen tests failed.');
     });
     ITSInstance.screenTemplates.loadAvailableScreenTemplates(this.loadTestScreenTemplates.bind(this), function () {
-        console.log('ITSTestTemplateEditor : Loading screen test templates failed.');
+        ITSLogger.logMessage(logLevel.ERROR,'ITSTestTemplateEditor : Loading screen test templates failed.');
     });
 };
 
@@ -289,10 +289,10 @@ ITSTestTemplateEditor.prototype.show = function () {
     if (!ITSInstance.tests.testListLoaded) {
         if (!ITSInstance.tests.currentlyLoading) {
             ITSInstance.tests.loadAvailableTests(this.populateTests.bind(this), function () {
-                console.log('ITSTestTemplateEditor : Loading screen tests failed.');
+                ITSLogger.logMessage(logLevel.ERROR,'ITSTestTemplateEditor : Loading screen tests failed.');
             });
             ITSInstance.screenTemplates.loadAvailableScreenTemplates(this.loadTestScreenTemplates.bind(this), function () {
-                console.log('ITSTestTemplateEditor : Loading screen test templates failed.');
+                ITSLogger.logMessage(logLevel.ERROR,'ITSTestTemplateEditor : Loading screen test templates failed.');
             });
         }
         setTimeout(this.show.bind(this), 500);
@@ -319,7 +319,7 @@ ITSTestTemplateEditor.prototype.loadTest = function (testIndex) {
         this.currentTest.loadTestDetailDefinition(this.loadCurrentTestOnScreen.bind(this),
             function () {
                 ITSInstance.UIController.showInterfaceAsWaitingOff();
-                console.log('ITSTestTemplateEditor.loadTest : loading test detail information failed.');
+                ITSLogger.logMessage(logLevel.ERROR,'ITSTestTemplateEditor.loadTest : loading test detail information failed.');
                 ITSInstance.UIController.showDialog("ITSTestTemplateEditorLoadTestError", "Test could not be loaded", "The test could not be loaded. Please close your browser and try again.",
                     [{btnCaption: "OK"}]);
             })
@@ -1670,7 +1670,7 @@ ITSTestTemplateEditor.prototype.translateScreenComponentVariable = function (com
                 'CompanyID': ITSInstance.token.companyID
             };
             this.translate_calls++;
-            console.log(ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language);// + " " + toTranslate);
+            ITSLogger.logMessage(logLevel.INFO,ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language);// + " " + toTranslate);
             if ((toTranslate != undefined) && (toTranslate != "")) {
                 this.translateCall(this.translate_screen_index, this.translate_component_index, this.translate_component_variable_index, this.translate_template, postfix, tempHeaders, toTranslate);
             }

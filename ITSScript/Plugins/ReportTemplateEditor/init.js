@@ -31,7 +31,7 @@
         };
 
         ITSReportTemplateEditor.prototype.afterOfficeLogin = function () {
-            console.log('Init report editor');
+            ITSLogger.logMessage(logLevel.INFO,'Init report editor');
             ITSInstance.reports.loadAvailableReportsList(function () {
             }, function () {
             });

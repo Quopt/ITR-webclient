@@ -225,7 +225,7 @@ ITSReport.prototype.generateTestReport = function (candidateSession, candidateSe
     try {
         eval(this.BeforeReportScript);
     } catch (err) {
-        console.log("Before report script failed " + err.message);
+        ITSLogger.logMessage(logLevel.ERROR,"Before report script failed " + err.message);
     }
     // now substitute everything in the report
     if (! prepareOnly) {
@@ -248,7 +248,7 @@ ITSReport.prototype.generateSessionReport = function (candidateSession, prepareO
     try {
         eval(this.BeforeReportScript);
     } catch (err) {
-        console.log("Before report script failed " + err.message);
+        ITSLogger.logMessage(logLevel.ERROR,"Before report script failed " + err.message);
     }
     // now substitute everything in the report
     if (! prepareOnly) {
@@ -259,7 +259,7 @@ ITSReport.prototype.generateSessionReport = function (candidateSession, prepareO
 };
 
 ITSReport.prototype.loadDetailDefinition = function (whenLoaded, OnError) {
-    //console.log("loading report details " + this.TestName);
+    //ITSLogger.logMessage(logLevel.ERROR,"loading report details " + this.TestName);
     if (whenLoaded) {
         this.onSuccessCallbacks.push(whenLoaded);
     }
@@ -282,7 +282,7 @@ ITSReport.prototype.loadDetailDefinition = function (whenLoaded, OnError) {
 };
 
 ITSReport.prototype.loadDetailSuccess = function () {
-    console.log("Loaded report details " + this.Description);
+    ITSLogger.logMessage(logLevel.INFO,"Loaded report details " + this.Description);
     this.currentlyLoading = false;
     this.detailsLoaded = true;
     this.newReport = false;

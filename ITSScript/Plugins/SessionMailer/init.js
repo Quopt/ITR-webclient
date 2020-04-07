@@ -36,7 +36,7 @@
     };
 
     ITSSessionMailerEditor.prototype.editSession = function (Id) {
-        console.log("Edit test session requested " + Id);
+        ITSLogger.logMessage(logLevel.INFO,"Edit test session requested " + Id);
     };
 
     ITSSessionMailerEditor.prototype.hide = function () {

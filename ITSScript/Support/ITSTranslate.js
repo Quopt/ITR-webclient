@@ -343,7 +343,7 @@ ITSTranslator.prototype.loadAvailableTranslations = function (onSuccess, onError
                 }
             }.bind(this),
             error: function (xhr) {
-                console.log("Error loading available translations : " + xhr.status + ": " + xhr.statusText);
+                ITSLogger.logMessage(logLevel.ERROR,"Error loading available translations : " + xhr.status + ": " + xhr.statusText);
                 this.availableTranslationsLoading = false;
                 if (this.availableTranslationsOnError) {
                     this.availableTranslationsOnError();
@@ -380,7 +380,7 @@ ITSTranslator.prototype.switchLanguage = function (langCode, postLoadFunction) {
             this.currentTranslatedLanguage = transLang;
 
             var transFile = ITSInstance.baseURLAPI + 'translations/' + transLang;
-            console.log('Loading translation ' + transFile);
+            ITSLogger.logMessage(logLevel.INFO,'Loading translation ' + transFile);
             ITSLanguage = langCode;
             this.postLoadFunction = postLoadFunction;
 
@@ -402,7 +402,7 @@ ITSTranslator.prototype.switchLanguage = function (langCode, postLoadFunction) {
                     }.bind(this),
                     error: function (xhr) {
                         this.loadingLanguage = false;
-                        console.log("Error loading translations : " + xhr.status + ": " + xhr.statusText);
+                        ITSLogger.logMessage(logLevel.ERROR,"Error loading translations : " + xhr.status + ": " + xhr.statusText);
                         this.languageFileLoaded = true;
                         for (var i = 0; i < this.divsToTranslate.length; i++) {
                             this.translateDiv(this.divsToTranslate[i]);
@@ -484,7 +484,7 @@ ITSTranslator.prototype.translateDiv = function (divId, showLog) {
         var tN, tId;
         var self = this;
         $(divId + ' *').children().each(function () {
-            if (showLog) console.log(this.tagName);
+            if (showLog) ITSLogger.logMessage(logLevel.INFO,this.tagName);
             if (this.tagName) {
                 tN = this.tagName.toUpperCase();
                 tId = this.id.toUpperCase();
@@ -492,23 +492,23 @@ ITSTranslator.prototype.translateDiv = function (divId, showLog) {
                 if (((!this.hasAttribute("NoTranslate")) || (!this.hasAttribute("notranslate"))) && (this.id != "") && (tN != 'DIV') && (tId.indexOf('MCEU_') == -1) && (tId.indexOf('ACE-') == -1) && (tN != 'TEXTAREA-HTMLEDIT') && (tN != 'I') && (tN != 'B') && (tN != 'A') && (tN != 'TEXTAREA') && (tN != 'TBODY') && (tN != 'TABLE')) {
                     var transStr = divId + "." + this.id;
                     if (self.translatedStrings[transStr] == undefined) transStr = this.id; // try with just the id
-                    if (showLog) console.log(transStr);
+                    if (showLog) ITSLogger.logMessage(logLevel.INFO,transStr);
                     if (self.translatedStrings[transStr] != undefined) {
                         if (this.placeholder != undefined) {
                             this.placeholder = self.translate(transStr, this.placeholder);
-                            if (showLog) console.log(this.placeholder);
+                            if (showLog) ITSLogger.logMessage(logLevel.INFO,this.placeholder);
                         }
                         else if (this.text != undefined) {
                             this.text = self.translate(transStr, this.text);
-                            if (showLog) console.log(this.text);
+                            if (showLog) ITSLogger.logMessage(logLevel.INFO,this.text);
                         }
                         else if (this.innerHTML != undefined) {
                             this.innerHTML = self.translate(transStr, this.innerHTML);
-                            if (showLog) console.log(this.innerHTML);
+                            if (showLog) ITSLogger.logMessage(logLevel.INFO,this.innerHTML);
                         }
                         else if (this.val != undefined) {
                             this.val = self.translate(transStr, this.val);
-                            if (showLog) console.log(this.val);
+                            if (showLog) ITSLogger.logMessage(logLevel.INFO,this.val);
                         }
                     } else {
                         if (self.toTranslate[transStr] == undefined) {
@@ -527,14 +527,14 @@ ITSTranslator.prototype.translateDiv = function (divId, showLog) {
                                 tempObj.value = this.val;
                             }
                             if ( (tempObj.value.indexOf("<path") == 0) || (tempObj.value.indexOf("<svg id=") >= 0) || (tempObj.value.indexOf("<svg class=") >= 0) || (tempObj.value.indexOf("<option value=") >= 0)) {
-                                if (showLog) console.log(transStr + ' ignored for translation');
+                                if (showLog) ITSLogger.logMessage(logLevel.INFO,transStr + ' ignored for translation');
                             } else {
                                 if (tempObj.value != "") {
                                     if (!self.toTranslate.some(function (elem) {
                                         return elem.id == transStr;
                                     })) self.toTranslate.push(tempObj);
                                 }
-                                if (showLog) console.log(transStr + ' not present');
+                                if (showLog) ITSLogger.logMessage(logLevel.INFO,transStr + ' not present');
                             }
                         }
                     }
@@ -559,7 +559,7 @@ ITSTranslator.prototype.listNewTranslations = function () {
         }
     )
     var tempVal = JSON.stringify(newStrings, null, 1);
-    //console.log(tempVal);
+    //ITSLogger.logMessage(logLevel.ERROR,tempVal);
     return tempVal;
 };
 
@@ -574,7 +574,7 @@ ITSTranslator.prototype.postNewTranslations = function (langCode) {
         }
         if (tempLangCode != "en") {
             if (to_translate.trim().length > 3) {
-                console.log('New translations found for the current language. Posting for machine translation : ' + to_translate);
+                ITSLogger.logMessage(logLevel.INFO,'New translations found for the current language. Posting for machine translation : ' + to_translate);
                 ITSInstance.genericAjaxUpdate('translations/' + tempLangCode, to_translate, function () {
                     },
                     function () {
@@ -583,7 +583,7 @@ ITSTranslator.prototype.postNewTranslations = function (langCode) {
             this.toTranslate = []; // do not post twice
         }
     } else {
-        //console.log('PLEASE NOTE : new translations can only be successfully posted when logged is as master user or translator.');
+        //ITSLogger.logMessage(logLevel.ERROR,'PLEASE NOTE : new translations can only be successfully posted when logged is as master user or translator.');
     }
 };
 
@@ -592,7 +592,7 @@ ITSTranslator.prototype.postNewTranslationsNoPars  = function () {
 };
 
 ITSTranslator.prototype.postFullTranslations = function (langCode) {
-    console.log('PLEASE NOTE : new translations can only be successfully posted when logged is as master user or translator.');
+    ITSLogger.logMessage(logLevel.ERROR,'PLEASE NOTE : new translations can only be successfully posted when logged is as master user or translator.');
     var to_translate =  JSON.stringify(this.originalStrings);
     var tempLangCode = this.currentTranslatedLanguage;
     if (langCode) {

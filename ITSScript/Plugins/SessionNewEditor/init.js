@@ -124,7 +124,7 @@ ITSInviteNewCandidateEditor.prototype.TestOrBatterySelected = function (textFoun
 };
 
 ITSInviteNewCandidateEditor.prototype.createNewSession = function (EmailAddress) {
-    console.log("New test session requested " + EmailAddress);
+    ITSLogger.logMessage(logLevel.INFO,"New test session requested " + EmailAddress);
     // create a new and empty session
     this.newSession = ITSInstance.candidateSessions.newCandidateSession();
     this.newSession.Person.EMail = EmailAddress;
@@ -268,7 +268,7 @@ ITSInviteNewCandidateEditor.prototype.loadPersonDataIntoSession= function () {
 };
 
 ITSInviteNewCandidateEditor.prototype.normSelected = function (normSequence, selectElement, testArrayIndex) {
-    //console.log(normSequence, selectElement, testArrayIndex);
+    //ITSLogger.logMessage(logLevel.ERROR,normSequence, selectElement, testArrayIndex);
     if (normSequence == 1) {
         this.newSession.SessionTests[testArrayIndex].NormID1 = selectElement.options[selectElement.options.selectedIndex].value;
     }

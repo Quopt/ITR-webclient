@@ -35,7 +35,7 @@
             },
             testList: [],
             afterOfficeLogin: function () {
-                console.log('Init portlet test catalog');
+                ITSLogger.logMessage(logLevel.INFO,'Init portlet test catalog');
                 ITSInstance.tests.loadAvailableTests(
                     function () {
                         $("#AdminInterfaceInviteTCatalog").children().prop('disabled', false);

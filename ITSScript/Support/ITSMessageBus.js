@@ -42,7 +42,7 @@ ITSMessageBus.prototype.unsubscribe = function (MessageType, functionToCall) {
 };
 
 ITSMessageBus.prototype.publishMessage = function (MessageType, MessageParameters) {
-    //console.log("publishMessage " + MessageType + "(" + MessageParameters + ")");
+    //ITSLogger.logMessage(logLevel.ERROR,"publishMessage " + MessageType + "(" + MessageParameters + ")");
     this.eventsFired[MessageType] = true;
     if (this.subscriptions[MessageType]) {
         for (var i=0; i < this.subscriptions[MessageType].length; i++ ) {

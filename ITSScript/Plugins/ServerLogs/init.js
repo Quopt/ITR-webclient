@@ -99,7 +99,7 @@
             this.lastRefresh = dateNow;
             if ($('#ServerLogsDiv-AutoUpdate').is(':visible')) {
                 if ($('#ServerLogsDiv-AutoUpdate').is(':checked')) {
-                    console.log('Update logs check')
+                    ITSLogger.logMessage(logLevel.INFO,'Update logs check')
                     setTimeout(this.refreshLogs.bind(this), 30000);
                     if ($('#ServerLogsDiv-Now').is(":checked")) { // only update when current log is active
                         $('#ServerLogsDiv-LogText').scrollTop(this.logLines.length * 999);

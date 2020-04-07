@@ -26,7 +26,7 @@
                 $('#AdminInterfaceCreditManagement').append(this.html);
             },
             afterOfficeLogin: function () {
-                console.log('Init portlet credit management');
+                ITSLogger.logMessage(logLevel.INFO,'Init portlet credit management');
                 ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletCreditManagement.init_after_load);
                 ITSInstance.portletCreditManagement.init_after_load();
             },
@@ -55,7 +55,7 @@
                 } catch(err) {};
             },
             creditUsagesLoaded: function () {
-                console.log('Portlet credit usages loaded');
+                ITSLogger.logMessage(logLevel.INFO,'Portlet credit usages loaded');
                 // init the graph
                 $('#AdminInterfaceCreditManagementChart').empty();
                 if (ITSInstance.companies.currentCompany.CreditUsagesPerMonth.length > 0) {
@@ -110,7 +110,7 @@
                 }
             },
             creditUsagesError: function () {
-                console.log('Portlet credit usages loading gives error');
+                ITSLogger.logMessage(logLevel.INFO,'Portlet credit usages loading gives error');
             },
             loadPortletWhenCompanyKnown : function () {
                 if ((ITSInstance.users.currentUser.IsOrganisationSupervisor) || (ITSInstance.users.currentUser.IsMasterUser) || (ITSInstance.users.currentUser.MayOrderCredits)) {

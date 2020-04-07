@@ -62,7 +62,7 @@ ITSEmptyObject = function () {
 
 // generic support functions
 ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, OnNewChild, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
-    console.log('ajax load : ' + this.baseURLAPI + URL );
+    ITSLogger.logMessage(logLevel.INFO,'ajax load : ' + this.baseURLAPI + URL );
     tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
     tempHeaders['StartPage'] = "-1";
     tempHeaders['PageSize'] = "0";
@@ -102,14 +102,14 @@ ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuc
         url: this.baseURLAPI + URL,
         headers: tempHeaders,
         error: function (xhr, ajaxOptions, thrownError) {
-            console.log("Ajax error : " + xhr.status + " - " + thrownError);
-            console.log(URL + " = " + JSON.stringify(tempHeaders));
+            ITSLogger.logMessage(logLevel.ERROR,"Ajax error : " + xhr.status + " - " + thrownError);
+            //ITSLogger.logMessage(logLevel.ERROR,URL + " = " + JSON.stringify(tempHeaders));
             OnError(xhr, ajaxOptions, thrownError);
         },
         success: function (data, textStatus, xhr) {
-            //console.log(ITSInstance.baseURLAPI + URL + '=' + data + ' to ' + objectToPutDataIn);
+            //ITSLogger.logMessage(logLevel.ERROR,ITSInstance.baseURLAPI + URL + '=' + data + ' to ' + objectToPutDataIn);
             if ( (typeof objectToPutDataIn != "undefined") && (($.isArray(objectToPutDataIn) || (objectToPutDataIn != '')) ) ) {
-                //console.log(data);
+                //ITSLogger.logMessage(logLevel.ERROR,data);
                 //var checkForArray = JSON.parse(data);
                 if ($.isArray(data)) {
                     // this is an array, process it, objectToPutDataIn will be ignored in this cases
@@ -140,7 +140,7 @@ ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuc
 };
 
 ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, DefaultObjectType, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
-    console.log('ajax JSON load : ' + this.baseURLAPI + URL );
+    ITSLogger.logMessage(logLevel.INFO,'ajax JSON load : ' + this.baseURLAPI + URL );
     tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
     tempHeaders['StartPage'] = "-1";
     tempHeaders['PageSize'] = "0";
@@ -181,13 +181,13 @@ ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSucces
         url: this.baseURLAPI + URL,
         headers: tempHeaders,
         error: function (xhr, ajaxOptions, thrownError) {
-            console.log("Ajax error : " + xhr.status + " - " + thrownError);
-            console.log(URL + " = " + JSON.stringify(tempHeaders));
+            ITSLogger.logMessage(logLevel.ERROR,"Ajax error : " + xhr.status + " - " + thrownError);
+            //ITSLogger.logMessage(logLevel.ERROR,URL + " = " + JSON.stringify(tempHeaders));
             if (OnError) OnError(xhr, ajaxOptions, thrownError);
         },
         dataType: "text",
         success: function (data, textStatus, xhr) {
-            //console.log(ITSInstance.baseURLAPI + URL + '=' + data);
+            //ITSLogger.logMessage(logLevel.ERROR,ITSInstance.baseURLAPI + URL + '=' + data);
             if ((objectToPutDataIn) && (objectToPutDataIn !== "") ) {
                 ITSJSONLoad(objectToPutDataIn, data, objectToPutDataIn, ITSInstance, DefaultObjectType);
                 if (OnSuccess) OnSuccess();
@@ -200,7 +200,7 @@ ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSucces
 };
 
 ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSuccess, OnError, IncludeMaster, IncludeClient, dataType, ForceTranslation) {
-    console.log('ajax update or create : ' + this.baseURLAPI + URL);
+    ITSLogger.logMessage(logLevel.INFO,'ajax update or create : ' + this.baseURLAPI + URL);
     tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
     tempHeaders['IncludeMaster'] = "N";
     tempHeaders['IncludeClient'] = "Y";
@@ -227,11 +227,11 @@ ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSucces
         processData : processDataCall,
         data : objectToUpdate,
         error: function (xhr, ajaxOptions, thrownError) {
-            console.log("Ajax update or create error : " + xhr.status + " - " + thrownError);
+            ITSLogger.logMessage(logLevel.ERROR,"Ajax update or create error : " + xhr.status + " - " + thrownError);
             OnError(thrownError, xhr, ajaxOptions);
         },
         success: function (data, textStatus, xhr) {
-            //console.log(ITSInstance.baseURLAPI + URL + '=' + data);
+            //ITSLogger.logMessage(logLevel.ERROR,ITSInstance.baseURLAPI + URL + '=' + data);
             OnSuccess();
         },
         type: 'POST'
@@ -239,7 +239,7 @@ ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSucces
 };
 
 ITSSession.prototype.genericAjaxDelete = function (URL, OnSuccess, OnError, IncludeMaster, IncludeClient) {
-    console.log('ajax delete : ' + this.baseURLAPI + URL );
+    ITSLogger.logMessage(logLevel.INFO,'ajax delete : ' + this.baseURLAPI + URL );
     var tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
     if (IncludeMaster) {
         tempHeaders['IncludeMaster'] = IncludeMaster ;
@@ -255,12 +255,12 @@ ITSSession.prototype.genericAjaxDelete = function (URL, OnSuccess, OnError, Incl
         url: this.baseURLAPI + URL,
         headers: tempHeaders,
         error: function (xhr, ajaxOptions, thrownError) {
-            console.log("Ajax delete error : " + xhr.status + " - " + thrownError);
-            console.log(URL + " = " + JSON.stringify(tempHeaders));
+            ITSLogger.logMessage(logLevel.ERROR,"Ajax delete error : " + xhr.status + " - " + thrownError);
+            //ITSLogger.logMessage(logLevel.ERROR,URL + " = " + JSON.stringify(tempHeaders));
             OnError();
         },
         success: function (data, textStatus, xhr) {
-            //console.log(ITSInstance.baseURLAPI + URL + '=' + data);
+            //ITSLogger.logMessage(logLevel.ERROR,ITSInstance.baseURLAPI + URL + '=' + data);
             OnSuccess();
         },
         type: 'DELETE'
@@ -268,7 +268,7 @@ ITSSession.prototype.genericAjaxDelete = function (URL, OnSuccess, OnError, Incl
 };
 
 ITSSession.prototype.uploadFile = function(URL, data, OnSuccess, OnError) {
-    console.log('upload file: ' + this.baseURLAPIFiles + URL );
+    ITSLogger.logMessage(logLevel.INFO,'upload file: ' + this.baseURLAPIFiles + URL );
 
     var oReq = new XMLHttpRequest();
     oReq.open("POST", this.baseURLAPIFiles + URL, true);
@@ -291,7 +291,7 @@ ITSSession.prototype.uploadFile = function(URL, data, OnSuccess, OnError) {
 };
 
 ITSSession.prototype.downloadFile = function(URL, OnSuccess, OnError) {
-    console.log('download file: ' + this.baseURLAPIFiles + URL );
+    ITSLogger.logMessage(logLevel.INFO,'download file: ' + this.baseURLAPIFiles + URL );
 
     var oReq = new XMLHttpRequest();
     oReq.open("GET", this.baseURLAPIFiles + URL, true);
@@ -380,7 +380,7 @@ function getActiveSessions() {
             'SessionID' : ITSInstance.token.IssuedToken
         },
         error: function () {
-            console.log('Retrieving amount of active sessions failed.');
+            ITSLogger.logMessage(logLevel.ERROR,'Retrieving amount of active sessions failed.');
         },
         success: function (data, textStatus, xhr) {
             if (data != ""){
@@ -403,7 +403,7 @@ function getCopyrightMessage() {
             'CompanyID': companyID
         },
         error: function () {
-            console.log('Retrieving copyright information failed.');
+            ITSLogger.logMessage(logLevel.ERROR,'Retrieving copyright information failed.');
         },
         success: function (data, textStatus, xhr) {
             if (data != ""){
@@ -418,7 +418,7 @@ function getCopyrightMessage() {
         url: ITSInstance.baseURLAPI + 'companyname',
         context: this,
         error: function () {
-            console.log('Retrieving company name failed.');
+            ITSLogger.logMessage(logLevel.ERROR,'Retrieving company name failed.');
         },
         success: function (data, textStatus, xhr) {
             if (data != ""){
@@ -432,7 +432,7 @@ function getCopyrightMessage() {
         url: ITSInstance.baseURLAPI + 'companylogo',
         context: this,
         error: function () {
-            console.log('Retrieving company logo failed.');
+            ITSLogger.logMessage(logLevel.ERROR,'Retrieving company logo failed.');
         },
         success: function (data, textStatus, xhr) {
             if (data != ""){
@@ -536,7 +536,7 @@ parseURLandTakeAction();
 
 // init the ITS session and all the other required GLOBALS
 function ITSInitSession() {
-    console.log('Init ITS session');
+    ITSLogger.logMessage(logLevel.INFO,'Init ITS session');
     calcGlobalOriginalUrl();
     ITSInstance = new ITSSession(); // this object is always present in the global context
     if (getUrlParameterValue('Path') != 'Login' || getUrlParameterValue('Path') != 'Switchboard' || getUrlParameterValue('Path') != undefined) {

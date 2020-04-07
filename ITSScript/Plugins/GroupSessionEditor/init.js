@@ -220,7 +220,7 @@ ITSGroupSessionEditor.prototype.TestOrBatterySelected = function (textFound) {
 };
 
 ITSGroupSessionEditor.prototype.createNewSession= function (EmailAddress) {
-    console.log("Change test session requested " + EmailAddress);
+    ITSLogger.logMessage(logLevel.INFO,"Change test session requested " + EmailAddress);
     // create a new and empty session
     this.currentSession = ITSInstance.candidateSessions.newGroupSession();
     $('#AdminInterfaceGroupSessionCandidateFor').tagsManager('empty');
@@ -362,7 +362,7 @@ ITSGroupSessionEditor.prototype.loadPersonDataIntoSession= function () {
 };
 
 ITSGroupSessionEditor.prototype.normSelected = function (normSequence, selectElement, testArrayIndex) {
-    //console.log(normSequence, selectElement, testArrayIndex);
+    //ITSLogger.logMessage(logLevel.ERROR,normSequence, selectElement, testArrayIndex);
     if (normSequence == 1) {
         this.currentSession.SessionTests[testArrayIndex].NormID1 = selectElement.options[selectElement.options.selectedIndex].value;
     }
