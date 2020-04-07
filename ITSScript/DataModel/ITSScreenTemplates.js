@@ -174,7 +174,7 @@ ITSScreenTemplate.prototype.newScreenTemplateVariable = function () {
 };
 
 ITSScreenTemplate.prototype.loadDetailSucces = function () {
-    //ITSLogger.logMessage(logLevel.INFO,"Loaded screen template details " + this.Description);
+    ITSLogger.logMessage(logLevel.INFO,"Loaded screen template details " + this.Description);
     this.currentlyLoading = false;
     for (var i = 0; i < this.onSuccessCallbacks.length; i++) {
         setTimeout(this.onSuccessCallbacks[i], i);
@@ -194,7 +194,7 @@ ITSScreenTemplate.prototype.loadDetailError = function () {
 }
 
 ITSScreenTemplate.prototype.loadDetailDefinition = function (whenLoaded, OnError) {
-    ITSLogger.logMessage(logLevel.INFO,"loading screen template details " + this.Description);
+    //ITSLogger.logMessage(logLevel.INFO,"loading screen template details " + this.Description);
     if (whenLoaded) {
         this.onSuccessCallbacks.push(whenLoaded);
     }
