@@ -194,10 +194,7 @@ function ITSLoggerObject() {
 };
 
 ITSLoggerObject.prototype.logMessage=function (logLevel, message, messageParameters ) {
-    if (typeof messageParameters == "undefined") {
-        messageParameters = {};
-    }
-    if (messageParameters != {}) {
+    if (typeof messageParameters != "undefined") {
         envSubstitute(message, messageParameters, true);
     }
     if ((logLevel <= this.logLevel) && (this.loggingEnabled)) {
