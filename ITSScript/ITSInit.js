@@ -487,7 +487,6 @@ function parseURLandTakeAction() {
     setTimeout(parseURLandTakeAction, 500); // check for URL changes periodically
     init_html_editor(); // init any html editor components for the tinymce editor open source edition
     $('.bootstrap-toggle').bootstrapToggle(); // enable all bootstrap toggles
-    $('#ITRColorMode').unbind().change(ITSInstance.UIController.changeDarkMode);
     moveFooterToRightPosition();
 }
 
