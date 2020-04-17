@@ -341,6 +341,7 @@ ITSTranslator.prototype.loadAvailableTranslations = function (onSuccess, onError
                 if (this.availableTranslationsOnSuccess) {
                     this.availableTranslationsOnSuccess();
                 }
+                ITSInstance.MessageBus.publishMessage("Translations.AvailableTranslationsLoaded","");
             }.bind(this),
             error: function (xhr) {
                 ITSLogger.logMessage(logLevel.ERROR,"Error loading available translations : " + xhr.status + ": " + xhr.statusText);
@@ -399,6 +400,7 @@ ITSTranslator.prototype.switchLanguage = function (langCode, postLoadFunction) {
                         if (this.postLoadFunction) {
                             this.postLoadFunction();
                         }
+                        ITSInstance.MessageBus.publishMessage("Translations.LanguageSwitched",this.currentTranslatedLanguage);
                     }.bind(this),
                     error: function (xhr) {
                         this.loadingLanguage = false;

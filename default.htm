@@ -37,6 +37,8 @@
     <link href="fontawesome/css/all.css" rel="stylesheet">
     <link href="css/flatpickr.min.css" rel="stylesheet">
     <link href="css/tagmanager.css" rel="stylesheet">
+    <link href="css/dark-mode.css" rel="stylesheet">
+    <link href="css/bootstrap4-toggle.css" rel="stylesheet">
 </head>
 
 <body>
@@ -125,6 +127,12 @@
             <a class="nav-link small" id="NavBarActiveSessionsMenu"  style="color:white;">
                 <label id="NavBarActiveSessionsMenuLabel" style="display: none">There are {0} active sessions</label>
                 <label id="NavBarActiveSessionsMenuLabelDisplayed" NoTranslate onclick="$('div[MainMenu]').collapse('hide'); ITSRedirectPath('TokenLister');">...</label>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link small" id="NavBarActiveSessionsMenu"  style="color:white;">
+            <label id="ITRColorModeLabel">Dark mode</label>
+            <input id="ITRColorMode" type="checkbox" class="bootstrap-toggle" data-toggle="toggle" data-size="sm" data-onstyle="outline-success" data-offstyle="success" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-power-off'></i>">
             </a>
         </li>
     </div>
@@ -1312,7 +1320,7 @@
             },
             paste_data_images : true,
             fontsize_formats: "6pt 8pt 9pt 10pt 11pt 12pt 13pt 14pt 18pt 24pt 36pt",
-            lineheight_formats: "8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 20pt 22pt 24pt 26pt 36pt",
+            lineheight_formats: "4pt 5pt 6pt 7pt 8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 20pt 22pt 24pt 26pt 36pt",
             forced_root_block_attrs: {
                 'class': 'p_compressed'
             },
@@ -1322,7 +1330,8 @@
                 '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
                 '//fonts.googleapis.com/css?family=Roboto+Slab:300,300i,400,400i',
                 '//fonts.googleapis.com/css?family=Alegreya+Sans:300,300i,400,400i',
-                '//fonts.googleapis.com/css?family=Indie+Flower:300,300i,400,400i'
+                '//fonts.googleapis.com/css?family=Indie+Flower:300,300i,400,400i',
+                'css/dark-mode.css'
 //                'css/TinyMCE.css'
 //                '//www.tinymce.com/css/codepen.min.css'
             ],
@@ -1440,6 +1449,7 @@
 <script src="ITSScript/Support/ITSStatistics.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/tagmanager.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/qrious.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/bootstrap4-toggle.min.js" type="text/javascript" charset="utf-8"></script>
 
 <script>
     opacity = 0;

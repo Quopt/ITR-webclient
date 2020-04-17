@@ -391,6 +391,7 @@ ITSUIController = function () {
     this.registerEditor = function (editor) {
         if (ITSInstance.UIController.registeredEditors.indexOf(editor)<0) {
             ITSInstance.UIController.registeredEditors.push(editor);
+            ITSInstance.UIController.showEditors();
         }
     } ; // please note that editors must conform to the editor interface
     this.initPortlets = function () {
@@ -404,6 +405,7 @@ ITSUIController = function () {
         // if all editors are loaded then translate and init them
         if (loadEditorsCount == ITSInstance.UIController.registeredEditors.length) {
             ITSInstance.translator.retranslateInterface();
+            ITSInstance.UIController.afterOfficeLoginUI();
         }
     },
     this.showPortlets = function () {
@@ -494,8 +496,70 @@ ITSUIController = function () {
         //ITSInstance.UIController.registeredPortlets.forEach( function (currentValue, index, arr) { if(typeof currentValue.afterTestRunLogin == 'function') { currentValue.afterTestRunLogin(); } } )
         ITSInstance.testTakingController.startSession();
     };
+    this.enableDarkMode = function () {
+        document.body.setAttribute('data-theme', 'dark');
+        // chart js settings
+        Chart.defaults.scale.gridLines.color = '#fff';
+        Chart.defaults.global.elements.arc.borderColor = '#fff';
+        Chart.defaults.global.elements.point.borderColor = '#fff';
+        Chart.defaults.global.elements.rectangle.borderColor = '#fff';
+        Chart.defaults.global.elements.line.borderColor = '#fff';
+        Chart.defaults.global.defaultColor='#fff';
+        // mce iframes
+        $("iframe").each(function() {
+            var cssList = {};
+            cssList = getCSSClassesList( $(this)[0].contentWindow.document );
+            cssList[".mce-content-body"].style.color = "#fff";
+            cssList[".mce-content-body"].style.backgroundColor = "#000";
+            cssList[".mce-content-body"].style.borderColor = "#2f2f2f";
+        });
+    };
+    this.enableLightMode = function () {
+        document.body.removeAttribute('data-theme');
+        // chart js settings
+        Chart.defaults.scale.gridLines.color = "rgba(0,0,0,0.1)";
+        Chart.defaults.global.elements.arc.borderColor ="rgba(0,0,0,0.1)";
+        Chart.defaults.global.elements.point.borderColor = "rgba(0,0,0,0.1)";
+        Chart.defaults.global.elements.rectangle.borderColor = "rgba(0,0,0,0.1)";
+        Chart.defaults.global.elements.line.borderColor = "rgba(0,0,0,0.1)";
+        Chart.defaults.global.defaultColor="rgba(0,0,0,0.1)";
+        // mce iframes
+        $("iframe").each(function() {
+            var cssList = {};
+            cssList = getCSSClassesList( $(this)[0].contentWindow.document );
+            cssList[".mce-content-body"].style.color = "#000";
+            cssList[".mce-content-body"].style.backgroundColor = "#fff";
+            cssList[".mce-content-body"].style.borderColor = "#fff";
+        });
+    };
+    this.inChangeDarkMode = false;
+    this.changeDarkMode = function () {
+        if (! ITSInstance.UIController.inChangeDarkMode) {
+            ITSInstance.UIController.inChangeDarkMode = true;
+            if ($('#ITRColorMode').is(':checked')) {
+                ITSInstance.UIController.enableDarkMode();
+                $('#ITRColorMode').bootstrapToggle('off');
+            } else {
+                ITSInstance.UIController.enableLightMode();
+                $('#ITRColorMode').bootstrapToggle('on');
+            }
+            setTimeout(function () { ITSInstance.UIController.inChangeDarkMode = false; ITSInstance.MessageBus.publishMessage("CurrentCompany.Refreshed", ""); }, 100);
+            // save this as a user preference
+            if (typeof ITSInstance.users.currentUser.PluginData.UI == "undefined") ITSInstance.users.currentUser.PluginData.UI = {};
+            ITSInstance.users.currentUser.PluginData.UI.DarkMode = ! $('#ITRColorMode').is(':checked');
+            ITSInstance.users.currentUser.saveToServer(function () {}, function () {});
+        }
+    };
+    this.setDarkModeToUserPreference = function () {
+        if (ITSInstance.users.currentUser.PluginData.UI.DarkMode) {
+            ITSInstance.UIController.enableDarkMode();
+            $('#ITRColorMode').bootstrapToggle('on', true);
+        }
+    };
+    this.afterOfficeLoginUI = function () {
+        ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", ITSInstance.UIController.setDarkModeToUserPreference, true ) ;
+    };
 }
-
 
 ITSPortletAndEditorRegistrationInformation = function (ID, Name, Version, Copyright, Description) {
     this.ID = ID;

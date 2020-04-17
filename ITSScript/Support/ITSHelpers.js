@@ -1104,3 +1104,23 @@ function pad(num, size) {
     var sign = Math.sign(num) === -1 ? '-' : '';
     return sign + new Array(size).concat([Math.abs(num)]).join('0').slice(-size);
 }
+
+// function to retrieve all active css classes
+function getCSSClassesList(documentParent) {
+    var styleBySelector = {};
+    for (var j = 0; j < documentParent.styleSheets.length; j++) {
+        var styleList = {};
+        try {
+            styleList = documentParent.styleSheets[j].rules || documentParent.styleSheets[j].cssRules;
+            for (var i = 0; i < styleList.length; i++) {
+                styleBySelector[styleList[i].selectorText] = {};
+                styleBySelector[styleList[i].selectorText]["style"] = styleList[i].style;
+                styleBySelector[styleList[i].selectorText]["stylesheetIndex"] = j;
+                styleBySelector[styleList[i].selectorText]["stylelistIndex"] = i;
+                //console.log(document.styleSheets[j], styleList[i], styleList[i].selectorText + "=" + styleList[i].style);
+            }
+        }
+        catch (err) {  }
+    }
+    return styleBySelector;
+}
