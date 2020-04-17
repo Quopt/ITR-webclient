@@ -537,10 +537,10 @@ ITSUIController = function () {
         if (! ITSInstance.UIController.inChangeDarkMode) {
             ITSInstance.UIController.inChangeDarkMode = true;
             if (!$('#ITRColorMode').is(':checked')) {
-                ITSInstance.UIController.enableDarkMode();
+                ITSInstance.UIController.enableLightMode();
                 $('#ITRColorMode').bootstrapToggle('off');
             } else {
-                ITSInstance.UIController.enableLightMode();
+                ITSInstance.UIController.enableDarkMode();
                 $('#ITRColorMode').bootstrapToggle('on');
             }
             setTimeout(function () { ITSInstance.UIController.inChangeDarkMode = false; ITSInstance.MessageBus.publishMessage("CurrentCompany.Refreshed", ""); }, 100);
