@@ -553,7 +553,7 @@ ITSUIController = function () {
     this.setDarkModeToUserPreference = function () {
         if (ITSInstance.users.currentUser.PluginData.UI.DarkMode) {
             ITSInstance.UIController.enableDarkMode();
-            $('#ITRColorMode').bootstrapToggle('off', true);
+            $('#ITRColorMode').bootstrapToggle('on', true);
         }
     };
     this.afterOfficeLoginUI = function () {
