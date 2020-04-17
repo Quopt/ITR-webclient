@@ -538,10 +538,10 @@ ITSUIController = function () {
             ITSInstance.UIController.inChangeDarkMode = true;
             if ($('#ITRColorMode').is(':checked')) {
                 setTimeout( ITSInstance.UIController.enableLightMode, 100);
-                $('#ITRColorMode').bootstrapToggle('off');
+                $('#ITRColorMode').bootstrapToggle('off', true);
             } else {
                 setTimeout( ITSInstance.UIController.enableDarkMode, 100);
-                $('#ITRColorMode').bootstrapToggle('on');
+                $('#ITRColorMode').bootstrapToggle('on', true);
             }
             setTimeout(function () { ITSInstance.UIController.inChangeDarkMode = false; ITSInstance.MessageBus.publishMessage("CurrentCompany.Refreshed", ""); }, 100);
             // save this as a user preference
