@@ -546,7 +546,7 @@ ITSUIController = function () {
             setTimeout(function () { ITSInstance.UIController.inChangeDarkMode = false; ITSInstance.MessageBus.publishMessage("CurrentCompany.Refreshed", ""); }, 100);
             // save this as a user preference
             if (typeof ITSInstance.users.currentUser.PluginData.UI == "undefined") ITSInstance.users.currentUser.PluginData.UI = {};
-            ITSInstance.users.currentUser.PluginData.UI.DarkMode = ! $('#ITRColorMode').is(':checked');
+            ITSInstance.users.currentUser.PluginData.UI.DarkMode = $('#ITRColorMode').is(':checked');
             ITSInstance.users.currentUser.saveToServer(function () {}, function () {});
         }
     };
