@@ -536,7 +536,7 @@ ITSUIController = function () {
     this.changeDarkMode = function () {
         if (! ITSInstance.UIController.inChangeDarkMode) {
             ITSInstance.UIController.inChangeDarkMode = true;
-            if ($('#ITRColorMode').is(':checked')) {
+            if (!$('#ITRColorMode').is(':checked')) {
                 ITSInstance.UIController.enableDarkMode();
                 $('#ITRColorMode').bootstrapToggle('off');
             } else {
