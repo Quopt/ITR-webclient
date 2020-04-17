@@ -558,7 +558,6 @@ ITSUIController = function () {
     };
     this.afterOfficeLoginUI = function () {
         ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", ITSInstance.UIController.setDarkModeToUserPreference, true ) ;
-        $('#ITRColorMode').unbind().change(ITSInstance.UIController.changeDarkMode);
     };
 }
 
