@@ -536,11 +536,11 @@ ITSUIController = function () {
     this.changeDarkMode = function () {
         if (! ITSInstance.UIController.inChangeDarkMode) {
             ITSInstance.UIController.inChangeDarkMode = true;
-            if (!$('#ITRColorMode').is(':checked')) {
-                ITSInstance.UIController.enableLightMode();
+            if ($('#ITRColorMode').is(':checked')) {
+                setTimeout( ITSInstance.UIController.enableLightMode, 100);
                 $('#ITRColorMode').bootstrapToggle('off');
             } else {
-                ITSInstance.UIController.enableDarkMode();
+                setTimeout( ITSInstance.UIController.enableDarkMode, 100);
                 $('#ITRColorMode').bootstrapToggle('on');
             }
             setTimeout(function () { ITSInstance.UIController.inChangeDarkMode = false; ITSInstance.MessageBus.publishMessage("CurrentCompany.Refreshed", ""); }, 100);
@@ -553,7 +553,7 @@ ITSUIController = function () {
     this.setDarkModeToUserPreference = function () {
         if (ITSInstance.users.currentUser.PluginData.UI.DarkMode) {
             ITSInstance.UIController.enableDarkMode();
-            $('#ITRColorMode').bootstrapToggle('on', true);
+            $('#ITRColorMode').bootstrapToggle('off', true);
         }
     };
     this.afterOfficeLoginUI = function () {
