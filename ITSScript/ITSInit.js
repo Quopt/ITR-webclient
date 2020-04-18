@@ -351,6 +351,8 @@ function ITSTranslateInterface() {
     ITSInstance.translator.translateDiv('#NavbarsTestTaking');
     ITSInstance.translator.translateDiv('#LoginWindowMfaQRSetup');
     ITSInstance.translator.translateDiv('#LoginWindowEnterMfaCode');
+    ITSInstance.translator.translateDiv('#ITSTestTakingDivTestEnded');
+    ITSInstance.translator.translateDiv('#ITSTestTakingDivSessionEnded');
 }
 
 function moveFooterToRightPosition() {
