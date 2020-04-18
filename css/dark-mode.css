@@ -79,7 +79,7 @@
 }
 
 .mce-content-body {
-    color: #fff;
-    background-color: #000 !important;
+    color: #000;
+    background-color: #fff !important;
     border-color: #fff;
 }
