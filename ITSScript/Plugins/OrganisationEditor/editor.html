@@ -72,7 +72,7 @@
 
 <div class="bg-dark text-white well row col-12"><label id="OrganisationEditorEditKeySecurityHeader">Security settings</label></div>
 <div class="col-sm-12">
-    <div class="col-3" id="OrganisationEditorSecuritySettingsDiv">
+    <div class="col-12" id="OrganisationEditorSecuritySettingsDiv">
         <div class="col-1">
             <input type="checkbox" data-field="MFAEnabled"
                    onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );"
@@ -82,6 +82,33 @@
         <label class="col-sm-11"
                id="OrganisationEditorSecuritySettingsHeader"
                for="OrganisationEditorSecuritySettingsCheck">Enable MFA login for consultants</label>
+    </div>
+</div>
+
+<div class="bg-dark text-white well row col-12"><label id="OrganisationEditorEditKeyPreferencesHeader">Company preferences</label></div>
+<div class="col-sm-12">
+    <div class="col-12" id="OrganisationEditorPreferencesSettingsDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="PluginData.Preferences.SkipResearchQuestions"
+                   onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"
+                   class="form-check-input form-check-input-sm"
+                   id="OrganisationEditorPreferencesSettingsCheck"/>
+        </div>
+        <label class="col-sm-11"
+               id="OrganisationEditorPreferencesSettingsHeader"
+               for="OrganisationEditorPreferencesSettingsCheck">Skip research questions (if test supports that)</label>
+    </div>
+
+    <div class="col-12" id="OrganisationEditorInterfaceOrganisationNoPublicTestsDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="NoPublicTests"
+                   onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );"
+                   class="form-check-input form-check-input-sm"
+                   id="OrganisationEditorInterfaceOrganisationNoPublicTests"/>
+        </div>
+        <label class="col-sm-11"
+               id="OrganisationEditorInterfaceOrganisationNoPublicTestsHeader"
+               for="OrganisationEditorInterfaceOrganisationNoPublicTests">No public tests</label>
     </div>
 </div>
 
@@ -189,18 +216,6 @@
                id="OrganisationEditorInterfaceInvoiceAddressLabel" class="col-sm-2 col-form-label">Invoice address</label>
         <textarea  class="form-control col-sm-6" rows="3" data-field="InvoiceAddress" placeholder="" novalidate
                    onkeyup="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );" value="" id="OrganisationEditorInterfaceInvoiceAddress"/>
-    </div>
-
-    <div class="col-3" id="OrganisationEditorInterfaceOrganisationNoPublicTestsDiv">
-        <div class="col-1">
-            <input type="checkbox" data-field="NoPublicTests"
-                   onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );"
-                   class="form-check-input form-check-input-sm"
-                   id="OrganisationEditorInterfaceOrganisationNoPublicTests"/>
-        </div>
-        <label class="col-sm-11"
-               id="OrganisationEditorInterfaceOrganisationNoPublicTestsHeader"
-               for="OrganisationEditorInterfaceOrganisationNoPublicTests">No public tests</label>
     </div>
 
 </div>

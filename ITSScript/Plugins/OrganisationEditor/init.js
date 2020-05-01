@@ -157,6 +157,10 @@
         this.showTestCostsOverrideTable();
     };
     ITSOrganisationEditor.prototype.currentOrganisationLoaded = function () {
+        if (typeof this.currentOrganisation.PluginData.Preferences == "undefined") {
+            this.currentOrganisation.PluginData.Preferences = {};
+            this.currentOrganisation.PluginData.Preferences.SkipResearchQuestions = false;
+        }
         this.showCurrentOrganisation();
     };
     ITSOrganisationEditor.prototype.currentOrganisationLoadedError = function () {
