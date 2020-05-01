@@ -207,6 +207,26 @@ ITSCandidateSession.prototype.findTestById = function (id) {
     return foundIndex;
 };
 
+ITSCandidateSession.prototype.sessionTestById = function (id) {
+    var foundIndex = -1;
+    for (var i=0; i < this.SessionTests.length; i ++) {
+        if (this.SessionTests[i].TestID == id) {
+            return this.SessionTests[i];
+        }
+    }
+    return undefined;
+};
+
+ITSCandidateSession.prototype.sessionTest = function (testName) {
+    var foundIndex = -1;
+    for (var i=0; i < this.SessionTests.length; i ++) {
+        if (this.SessionTests[i].testDefinition.TestName == testName) {
+            return this.SessionTests[i];
+        }
+    }
+    return undefined;
+};
+
 ITSCandidateSession.prototype.relinkToCurrentPersonID= function () {
     for (var i=0; i < this.SessionTests.length; i ++) {
         this.SessionTests[i].PersID = this.Person.ID;

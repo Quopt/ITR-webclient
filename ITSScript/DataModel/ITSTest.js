@@ -1260,6 +1260,15 @@ ITSTestScreen.prototype.checkIsAnswered = function (storageObject, postfix) {
     return checkResult;
 };
 
+ITSTestScreen.prototype.screenComponent = function (nameToFind) {
+    for (i = 0; i < this.screenComponents.length; i++) {
+        if (this.screenComponents[i].varComponentName == nameToFind) {
+            return this.screenComponents[i];
+        }
+    }
+    return undefined;
+};
+
 ITSTest.prototype.findScreenByID = function (idToFind) {
     for (i = 0; i < this.screens.length; i++) {
         if (this.screens[i].id == idToFind) {
@@ -1276,6 +1285,15 @@ ITSTest.prototype.findScreenIndexByName = function (nameToFind) {
         }
     }
     return -1;
+};
+
+ITSTest.prototype.screen = function (nameToFind) {
+    for (i = 0; i < this.screens.length; i++) {
+        if (this.screens[i].varName == nameToFind) {
+            return this.screens[i];
+        }
+    }
+    return undefined;
 };
 
 ITSTest.prototype.findScaleByID = function (idToFind) {
