@@ -1470,6 +1470,8 @@ ITSTestTemplateEditor.prototype.uploadCurrentTemplate_process = function (fileCo
 };
 
 ITSTestTemplateEditor.prototype.saveCurrentTest = function () {
+    // make sure that the show status is true on all screens. During test development this may be changed when debugging the test
+    this.currentTest.resetScreensShowStatus();
     // update on the server
     $('#AdminInterfaceTestTemplateEditor-saveIcon')[0].outerHTML = "<i id='AdminInterfaceTestTemplateEditor-saveIcon' class='fa fa-fw fa-life-ring fa-spin fa-lg'></i>";
     this.currentTest.saveToServer(function () {

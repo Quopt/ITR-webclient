@@ -140,7 +140,7 @@ ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuc
 };
 
 ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, DefaultObjectType, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
-    ITSLogger.logMessage(logLevel.INFO,'ajax JSON load : ' + this.baseURLAPI + URL );
+    ITSLogger.logMessage(logLevel.INFO,'ajax JSON load : ' + this.baseURLAPI + URL + " M/C=" + IncludeMaster + "/" + IncludeClient);
     tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
     tempHeaders['StartPage'] = "-1";
     tempHeaders['PageSize'] = "0";

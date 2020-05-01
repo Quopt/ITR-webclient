@@ -1296,6 +1296,12 @@ ITSTest.prototype.screen = function (nameToFind) {
     return undefined;
 };
 
+ITSTest.prototype.resetScreensShowStatus = function () {
+    for (i = 0; i < this.screens.length; i++) {
+        this.screens[i].show = true; 
+    }
+};
+
 ITSTest.prototype.findScaleByID = function (idToFind) {
     for (i = 0; i < this.scales.length; i++) {
         if (this.scales[i].id == idToFind) {
