@@ -265,6 +265,7 @@ ITSTestTemplateEditor.prototype.populateTests = function () {
             }
         }
     }
+    this.loadTestScreenTemplates();
 };
 
 ITSTestTemplateEditor.prototype.redirectToTestIndex = function (testIndex) {
