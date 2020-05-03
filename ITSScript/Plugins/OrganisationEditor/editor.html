@@ -110,6 +110,18 @@
                id="OrganisationEditorInterfaceOrganisationNoPublicTestsHeader"
                for="OrganisationEditorInterfaceOrganisationNoPublicTests">No public tests</label>
     </div>
+
+    <div class="col-12" id="OrganisationEditorInterfaceOrganisationEnablePublicSessionsDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="PluginData.Preferences.EnablePublicSessions"
+                   onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );"
+                   class="form-check-input form-check-input-sm"
+                   id="OrganisationEditorInterfaceOrganisationEnablePublicSessions"/>
+        </div>
+        <label class="col-sm-11"
+               id="OrganisationEditorInterfaceOrganisationEnablePublicSessionsHeader"
+               for="OrganisationEditorInterfaceOrganisationEnablePublicSessions">Enable public sessions</label>
+    </div>
 </div>
 
 <div class="bg-dark text-white well row col-12"><label id="OrganisationEditorEditCreditInfoHeader">Credit information</label></div>

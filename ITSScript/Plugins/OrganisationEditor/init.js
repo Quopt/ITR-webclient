@@ -160,6 +160,7 @@
         if (typeof this.currentOrganisation.PluginData.Preferences == "undefined") {
             this.currentOrganisation.PluginData.Preferences = {};
             this.currentOrganisation.PluginData.Preferences.SkipResearchQuestions = false;
+            this.currentOrganisation.PluginData.Preferences.EnablePublicSessions = false;
         }
         this.showCurrentOrganisation();
     };

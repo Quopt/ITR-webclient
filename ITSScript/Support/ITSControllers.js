@@ -210,10 +210,13 @@ ITSLoginController = function () {
 ITSLogoutController = function () {
     this.logout = function (additionalParameters) {
         ITSLogger.logMessage(logLevel.INFO,"user logged out " + ITSInstance.users.currentUser.Email );
-        ITSInstance.genericAjaxLoader('logout', '', '', function () {} , function () {}, undefined );
+        ITSInstance.genericAjaxLoader('logout', '', function () {}, function () {} , function () {}, undefined );
         ITSInstance.token.clear();
+        var returnURL = cookieHelper.getCookie('ReturnURL');
+        cookieHelper.setCookie('ReturnURL', '', 600);
+
         ITSInstance.UIController.EnableLoginInterface();
-        ITSInitSession();
+
         var length=history.length;
         history.go(-length);
         if (additionalParameters) {
@@ -221,7 +224,15 @@ ITSLogoutController = function () {
         } else {
             history.pushState('Login', 'Login', Global_OriginalURL);
         }
-        location.reload(true);
+
+        if (returnURL.trim() == "") {
+            setTimeout( function () {
+                ITSInitSession();
+                location.reload();
+            }, 1000);
+        } else {
+            window.location.replace(returnURL);
+        }
     }
 };
 

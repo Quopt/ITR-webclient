@@ -149,7 +149,7 @@ ITSLoginToken.prototype.acquire = function (userName, password, okFunction, erro
     });
 };
 
-var keepTokenFreshCounter = 0;
+var keepTokenFreshCounter = 1;
 
 ITSLoginToken.prototype.keepTokenFresh = function () {
     if (keepTokenFreshCounter == 0) {

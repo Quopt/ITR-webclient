@@ -374,23 +374,29 @@ function getActiveSessions() {
     if (ITSInstance.companies.currentCompany) {
         companyID = ITSInstance.companies.currentCompany.ID;
     }
-    var req = $.ajax({
-        url: ITSInstance.baseURLAPI + 'activesessions',
-        context: this,
-        headers: {
-            'CompanyID': companyID,
-            'SessionID' : ITSInstance.token.IssuedToken
-        },
-        error: function () {
-            ITSLogger.logMessage(logLevel.ERROR,'Retrieving amount of active sessions failed.');
-        },
-        success: function (data, textStatus, xhr) {
-            if (data != ""){
-                $('#NavBarActiveSessionsMenuLabelDisplayed').text(format( $('#NavBarActiveSessionsMenuLabel').text(), [ data ]) );
-            }
-        },
-        type: 'GET'
-    });
+    var ttUser = false;
+    try {
+        ttUser = ITSInstance.users.currentUser.IsTestTakingUser;
+    } catch (err) { };
+    if (! ttUser) {
+        var req = $.ajax({
+            url: ITSInstance.baseURLAPI + 'activesessions',
+            context: this,
+            headers: {
+                'CompanyID': companyID,
+                'SessionID': ITSInstance.token.IssuedToken
+            },
+            error: function () {
+                ITSLogger.logMessage(logLevel.ERROR, 'Retrieving amount of active sessions failed.');
+            },
+            success: function (data, textStatus, xhr) {
+                if (data != "") {
+                    $('#NavBarActiveSessionsMenuLabelDisplayed').text(format($('#NavBarActiveSessionsMenuLabel').text(), [data]));
+                }
+            },
+            type: 'GET'
+        });
+    }
 }
 
 function getCopyrightMessage() {
@@ -522,21 +528,6 @@ function calcGlobalOriginalUrl() {
     }
 }
 
-// now check if there are parameters on the command line we need to parse
-// parse the command line parameters
-if (getUrlParameterValue('UserID')) {
-    $('#LoginWindowinputUsername').val(getUrlParameterValue('UserID'));
-}
-if (getUrlParameterValue('Password')) {
-    $('#LoginWindowinputPassword').val(getUrlParameterValue('Password'));
-}
-ITSURLToken = "";
-if (getUrlParameterValue('Token')) {
-    ITSURLToken = getUrlParameterValue('Token');
-}
-
-parseURLandTakeAction();
-
 // init the ITS session and all the other required GLOBALS
 function ITSInitSession() {
     ITSLogger.logMessage(logLevel.INFO,'Init ITS session');
@@ -553,3 +544,30 @@ function ITSInitSession() {
 
     ITSTranslateInterface();
 }
+
+// now check if there are parameters on the command line we need to parse
+// parse the command line parameters
+if (getUrlParameterValue('UserID')) {
+    $('#LoginWindowinputUsername').val(getUrlParameterValue('UserID'));
+}
+if (getUrlParameterValue('Password')) {
+    $('#LoginWindowinputPassword').val(getUrlParameterValue('Password'));
+}
+if (getUrlParameterValue('ReturnURL')) {
+    cookieHelper.setCookie('ReturnURL', getUrlParameterValue('ReturnURL'), 600);
+}
+if (getUrlParameterValue('AutoLogin')) {
+    OldURLparseURLandTakeAction = document.URL;
+    setTimeout(function () {
+        $('#LoginWindowLoginButton').click();
+      }, 100);
+}
+if (getUrlParameterValue('DarkMode')) {
+    ITSInstance.UIController.changeDarkMode();
+}
+ITSURLToken = "";
+if (getUrlParameterValue('Token')) {
+    ITSURLToken = getUrlParameterValue('Token');
+}
+
+parseURLandTakeAction();
