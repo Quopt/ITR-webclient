@@ -99,6 +99,7 @@ function loadOfficeComponents() {
         $.getScript(ITSJavaScriptVersion + "/Plugins/ServerLogs/init.js"); loadEditorsCount++;
         $.getScript(ITSJavaScriptVersion + "/Plugins/SessionAuditTrail/init.js"); loadEditorsCount++;
         $.getScript(ITSJavaScriptVersion + "/Plugins/ServerData/init.js"); loadEditorsCount++;
+        $.getScript(ITSJavaScriptVersion + "/Plugins/PublicSessionEditor/init.js"); loadEditorsCount++;
         // %OFFICEEDITOREND%
     }
 };

@@ -244,7 +244,7 @@
         var cs = this.currentSession;
         if (typeof alternateSession != "undefined") { cs = alternateSession; }
 
-        if ($('#AdminInterfaceEditSessionEditTestsList').is(':visible')) {
+        if ($('#AdminInterfaceEditSessionEditTestsList').is(':visible') || alternateSession) {
             $('#AdminInterfaceEditSessionEditTestsList').empty();
             ITSInstance.UIController.showInterfaceAsWaitingOff();
             //ITSLogger.logMessage(logLevel.ERROR,'generating test list');

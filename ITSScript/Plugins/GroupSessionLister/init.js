@@ -21,13 +21,37 @@
 
     $(EditorDiv).load(ITSJavaScriptVersion + '/Plugins/GroupSessionLister/editor.html', function () {
        // things to do after loading the html
+
+        // register the portlet
+        ITSInstance.GroupSessionListerController = new ITSGroupSessionListerEditor();
+        ITSInstance.UIController.registerEditor(ITSInstance.GroupSessionListerController);
+        ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
+            ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', '#GroupSessionListerController.GroupSessionMenu', ITSInstance.translator.translate("#GroupSessionListerController.GroupSessionReadyMenu", "Group sessions"), "fa-user-plus", "ITSRedirectPath(\'GroupSessionLister&SessionType=100\');");
+            ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#GroupSessionListerController.GroupSessionArchivedMenu", ITSInstance.translator.translate("#GroupSessionListerController.GroupSessionArchivedMenu", "Group sessions archive"), "fa-archive", "ITSRedirectPath(\'GroupSessionLister&SessionType=100&Status=Archived\');");
+        }, true);
+
+        ITSInstance.MessageBus.subscribe("CurrentCompany.Loaded", function () {
+            if (ITSInstance.companies.currentCompany.PluginData.Preferences.EnablePublicSessions) {
+                ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', '#GroupSessionListerController.PublicSessionMenu', ITSInstance.translator.translate("#GroupSessionListerController.PublicSessionReadyMenu", "Public sessions"), "fa-user-plus", "ITSRedirectPath(\'GroupSessionLister&SessionType=200\');");
+                ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#GroupSessionListerController.PublicSessionArchivedMenu", ITSInstance.translator.translate("#GroupSessionListerController.PublicSessionArchivedMenu", "Public sessions archive"), "fa-archive", "ITSRedirectPath(\'GroupSessionLister&SessionType=200&Status=Archived\');");
+            }
+        }, true);
+
+        // messagebus subscriptions
+        ITSInstance.MessageBus.subscribe("Session.Delete", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
+        ITSInstance.MessageBus.subscribe("Session.Create", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
+        ITSInstance.MessageBus.subscribe("Session.Update", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
+
+        // translate the portlet
+        ITSInstance.translator.translateDiv("#GroupSessionListerInterfaceSessionEdit");
+
     });
 
     var ITSGroupSessionListerEditor = function () {
         this.info = new ITSPortletAndEditorRegistrationInformation('ff85d554-29f3-4460-8006-f258b3842107', 'GroupSessionLister editor', '1.0', 'Copyright 2018 Quopt IT Services BV', 'List group sessions in various session states (ready, in progress, done, archived)');
         this.path = "GroupSessionLister";
 
-        this.tablePart1 = "  <table notranslate class=\"table col-12 table-responsive w-100 d-block d-md-table\">" +
+        this.tablePart1 = "<table notranslate class=\"table col-12 table-responsive w-100 d-block d-md-table\">" +
             "  <thead>" +
             "<tr><th colspan='10' class='text-right text-nowrap'>" +
             "<input type=\"text\" maxlength=\"100\" onkeydown=\"if (event.keyCode == 13) ITSInstance.GroupSessionListerController.search();\"" +
@@ -36,11 +60,11 @@
             "  <tr>" +
             "   <th scope=\"col\">#</th>" +
             "   <th id=\"ITSGroupSessionListerEditor_DescriptionHeader\" scope=\"col\">Session description</th>" +
-            "   <th class='d-none d-sm-table-cell' id=\"ITSGroupSessionListerEditor_ReadyHeader\" scope=\"col\"># ready sessions</th>" +
-            "   <th class='d-none d-sm-table-cell' id=\"ITSGroupSessionListerEditor_StartedHeader\" scope=\"col\"># started sessions</th>" +
-            "   <th class='d-none d-sm-table-cell' id=\"ITSGroupSessionListerEditor_EndedHeader\" scope=\"col\"># done sessions</th>" +
-            "   <th class='d-none d-sm-table-cell' id=\"ITSGroupSessionListerEditor_AllowedStartDateTimeHeader\" scope=\"col\">Allowed start date & time</th>" +
-            "   <th class='d-none d-sm-table-cell' id=\"ITSGroupSessionListerEditor_AllowedEndDateTimeHeader\" scope=\"col\">Allowed end date & time</th>" +
+            "   <th class='d-none d-sm-table-cell' col='GroupSessionListerInterfaceSessionEdit.A' id=\"ITSGroupSessionListerEditor_ReadyHeader\" scope=\"col\"># ready sessions</th>" +
+            "   <th class='d-none d-sm-table-cell' col='GroupSessionListerInterfaceSessionEdit.B' id=\"ITSGroupSessionListerEditor_StartedHeader\" scope=\"col\"># started sessions</th>" +
+            "   <th class='d-none d-sm-table-cell' col='GroupSessionListerInterfaceSessionEdit.C' id=\"ITSGroupSessionListerEditor_EndedHeader\" scope=\"col\"># done sessions</th>" +
+            "   <th class='d-none d-sm-table-cell' col='GroupSessionListerInterfaceSessionEdit.D' id=\"ITSGroupSessionListerEditor_AllowedStartDateTimeHeader\" scope=\"col\">Allowed start date & time</th>" +
+            "   <th class='d-none d-sm-table-cell' col='GroupSessionListerInterfaceSessionEdit.E' id=\"ITSGroupSessionListerEditor_AllowedEndDateTimeHeader\" scope=\"col\">Allowed end date & time</th>" +
             "   <th scope=\"col\"></th>" +
             "  </tr>" +
             "  </thead>" +
@@ -48,11 +72,11 @@
         this.tablePart2 = "  <tr>" +
             "   <th scope=\"row\">%%NR%%</th>" +
             "   <td><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%DESCRIPTION%%</span></td>" +
-            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%READY%%</span></td>" +
-            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%Started%%</span></td>" +
-            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%Ended%%</span></td>" +
-            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ALLOWEDSTART%%</span></td>" +
-            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ALLOWEDEND%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell' col='GroupSessionListerInterfaceSessionEdit.A'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%READY%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell' col='GroupSessionListerInterfaceSessionEdit.B'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%Started%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell' col='GroupSessionListerInterfaceSessionEdit.C'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%Ended%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell' col='GroupSessionListerInterfaceSessionEdit.D'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ALLOWEDSTART%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell' col='GroupSessionListerInterfaceSessionEdit.E'><span notranslate onclick='ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");'>%%ALLOWEDEND%%</span></td>" +
             "   <td nowrap>" +
             "   <button type=\"button\" class=\"btn-xs btn-success\"" +
             "    onclick=\'ITSInstance.GroupSessionListerController.viewSession(\"%%SESSIONID%%\");\'>" +
@@ -142,19 +166,7 @@
         this.filter = "";
         $('#GroupSessionListerInterfaceEditSessionEditHeaderStatus')[0].innerText =
            ITSInstance.translator.translate("GroupSessionListerController.SessionStatusCommon", "available in the system");
-/*        if (this.status == "Ready") { this.filter = "Status=10";
-            $('#GroupSessionListerInterfaceEditSessionEditHeaderStatus')[0].innerText =
-                ITSInstance.translator.translate("GroupSessionListerController.SessionStatusReady", "ready for test taking");
-        }
-        if (this.status == "Busy") { this.filter = "Status=20,Status=21";
-            $('#GroupSessionListerInterfaceEditSessionEditHeaderStatus')[0].innerText =
-                ITSInstance.translator.translate("GroupSessionListerController.SessionStatusBusy", "in progress");
-        }
-        if (this.status == "Done") { this.filter = "Status=30,Status=31";
-            $('#GroupSessionListerInterfaceEditSessionEditHeaderStatus')[0].innerText =
-                ITSInstance.translator.translate("GroupSessionListerController.SessionStatusDone", "ready for reporting");
-        }
- */
+
         if (this.status == "Archived") {
             this.archived = "Y";
             $('#GroupSessionListerInterfaceEditSessionEditHeaderStatus')[0].innerText =
@@ -162,6 +174,7 @@
         } else {
             this.Archived = "N";
         }
+
         this.filter = this.filter == "" ? "SessionType=" + this.sessionType : this.filter + ",SessionType=" + this.sessionType
         if ( this.personID.trim() != "") this.filter = this.filter == "" ? "PersonID=" + this.personID : this.filter + ",PersonID=" + this.personID;
         if ( this.groupID.trim() != "") this.filter = this.filter == "" ? "GroupID=" + this.groupID : this.filter + ",GroupID=" + this.groupID;
@@ -184,6 +197,20 @@
         if (this.currentPage ==0) {
             // generate table header
             this.generatedTable = this.tablePart1;
+        }
+
+        // switch on/off the correct headers and buttons
+        var SessionType = getUrlParameterValue("SessionType");
+        if (SessionType == "200") {
+            $('#GroupSessionListerTableAddPublicButton').show();
+            $('#GroupSessionListerTableAddButton').hide();
+            $('#GroupSessionListerInterfaceEditSessionEditHeader').hide();
+            $('#GroupSessionListerInterfaceEditSessionPublicHeader').show();
+        } else {
+            $('#GroupSessionListerTableAddPublicButton').hide();
+            $('#GroupSessionListerTableAddButton').show();
+            $('#GroupSessionListerInterfaceEditSessionEditHeader').show();
+            $('#GroupSessionListerInterfaceEditSessionPublicHeader').hide();
         }
 
         // generate the records for the returned data
@@ -215,7 +242,18 @@
         $('#GroupSessionListerTable').empty();
         $('#GroupSessionListerTable').append(this.generatedTable + this.tablePart3);
 
+        // re translate
         ITSInstance.translator.translateDiv("#GroupSessionListerInterfaceSessionEdit");
+
+        // hide columns for public session
+        if (getUrlParameterValue("SessionType") == "200") {
+            $("[col='GroupSessionListerInterfaceSessionEdit.A']").hide();
+            $("[col='GroupSessionListerInterfaceSessionEdit.A']").removeClass('d-sm-table-cell');
+            $("[col='GroupSessionListerInterfaceSessionEdit.A']").removeClass('d-none');
+        } else {
+            $("[col='GroupSessionListerInterfaceSessionEdit.A']").addClass('d-sm-table-cell');
+            $("[col='GroupSessionListerInterfaceSessionEdit.A']").addClass('d-none');
+        }
 
         $('#GroupSessionListerTableSearchText').val(this.searchField);
         if (this.setFocusOnSearchField) {
@@ -250,31 +288,24 @@
 
     ITSGroupSessionListerEditor.prototype.viewSession = function (sessionID) {
         this.alreadyLoaded = document.URL;
-        ITSRedirectPath("GroupSession&SessionID=" + sessionID);
+        var SessionType = getUrlParameterValue("SessionType");
+        if (SessionType == "200") {
+            ITSRedirectPath("PublicSession&SessionID=" + sessionID + "&SessionType=" + getUrlParameterValue("SessionType"));
+        } else {
+            ITSRedirectPath("GroupSession&SessionID=" + sessionID + "&SessionType=" + getUrlParameterValue("SessionType"));
+        }
     };
 
 
     ITSGroupSessionListerEditor.prototype.addNewGroupSession = function () {
-        ITSRedirectPath("GroupSession" );
+        var SessionType = getUrlParameterValue("SessionType");
+        if (SessionType == "200") {
+            ITSRedirectPath("PublicSession" );
+        } else {
+            ITSRedirectPath("GroupSession" );
+        }
     };
 
-    // register the portlet
-    ITSInstance.GroupSessionListerController = new ITSGroupSessionListerEditor();
-    ITSInstance.UIController.registerEditor(ITSInstance.GroupSessionListerController);
-    ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
-        ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', '#GroupSessionListerController.GroupSessionMenu', ITSInstance.translator.translate("#GroupSessionListerController.GroupSessionReadyMenu", "Group sessions"), "fa-user-plus", "ITSRedirectPath(\'GroupSessionLister&SessionType=100\');");
-        ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#GroupSessionListerController.GroupSessionArchivedMenu", ITSInstance.translator.translate("#GroupSessionListerController.GroupSessionArchivedMenu", "Group sessions archive"), "fa-archive", "ITSRedirectPath(\'GroupSessionLister&SessionType=100&Status=Archived\');");
-    }, true);
 
-
-    // messagebus subscriptions
-    ITSInstance.MessageBus.subscribe("Session.Delete", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
-    ITSInstance.MessageBus.subscribe("Session.Create", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
-    ITSInstance.MessageBus.subscribe("Session.Update", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
-
-    // translate the portlet
-    ITSInstance.translator.translateDiv("#GroupSessionListerInterfaceSessionEdit");
-
-    // register the menu items if applicable
 
 })()// IIFE

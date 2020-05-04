@@ -562,6 +562,12 @@ if (getUrlParameterValue('AutoLogin')) {
         $('#LoginWindowLoginButton').click();
       }, 100);
 }
+if (getUrlParameterValue('NoTTHeader')) {
+    cookieHelper.setCookie('NoTTHeader', 'Y', 600);
+}
+if (getUrlParameterValue('Coupon')) {
+    cookieHelper.setCookie('Coupon', getUrlParameterValue('Coupon'), 5);
+}
 if (getUrlParameterValue('DarkMode')) {
     ITSInstance.UIController.changeDarkMode();
 }

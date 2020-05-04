@@ -213,7 +213,9 @@ ITSLogoutController = function () {
         ITSInstance.genericAjaxLoader('logout', '', function () {}, function () {} , function () {}, undefined );
         ITSInstance.token.clear();
         var returnURL = cookieHelper.getCookie('ReturnURL');
-        cookieHelper.setCookie('ReturnURL', '', 600);
+        cookieHelper.setCookie('ReturnURL', '', 1);
+        cookieHelper.setCookie('NoTTHeader', '', 1);
+        cookieHelper.setCookie('Coupon', '', 1);
 
         ITSInstance.UIController.EnableLoginInterface();
 
@@ -346,7 +348,7 @@ ITSTestTakingController.prototype.startSession = function () {
 
     // load the session list for this user
     ITSInstance.JSONAjaxLoader('sessions', this.sessionList, this.sessionLoader.bind(this), this.sessionLoadingFailed.bind(this),
-        'ITSCandidateSession', 0, 99999, "", "N", "N", "Y", "Status=10, Status=20, Active=True");
+        'ITSCandidateSession', 0, 99999, "", "N", "N", "Y", "Status=10, Status=20, SessionType!=1, Active=True");
 };
 
 ITSTestTakingController.prototype.sessionLoader = function () {
@@ -368,6 +370,18 @@ ITSTestTakingController.prototype.sessionLoader = function () {
     }
 };
 
+ITSTestTakingController.prototype.switchNavBar = function () {
+    if (this.currentSession.SessionType == "1") {
+        $('#NavbarsTestTaking').hide();
+        if (! this.cookieNavBarSet) {
+            cookieHelper.setCookie('NoTTHeader', 'Y', 600);
+            this.cookieNavBarSet = true;
+        }
+    } else {
+        if (this.InTestTaking) $('#NavbarsTestTaking').show();
+    }
+};
+
 ITSTestTakingController.prototype.sessionLoadingSucceeded = function () {
     ITSInstance.UIController.showInterfaceAsWaitingOff();
     // the session, tests in the session and test/screens definitions have been loaded. We are ready to start.
@@ -377,10 +391,20 @@ ITSTestTakingController.prototype.sessionLoadingSucceeded = function () {
         $('#LoginWindow').hide();
         $('#LoginWindowSelectSession').hide();
         $('#LoginWindowSelectCompany').hide();
-        if (this.InTestTaking) $('#NavbarsTestTaking').show();
+        this.switchNavBar();
         this.prepareTest(this.currentTestIndex);
         setTimeout(this.updateHeaders.bind(this), 200);
 
+        // if there is a coupon the user wants to redeem then save it now
+        if (cookieHelper.getCookie('Coupon').trim() != '') {
+            if (typeof this.currentSession.PluginData == "undefined") {
+                this.currentSession.PluginData = {};
+            }
+            if (typeof this.currentSession.PluginData.CandidateParameters == "undefined") {
+                this.currentSession.PluginData.CandidateParameters = {};
+            }
+            this.currentSession.PluginData.CandidateParameters.Coupon = cookieHelper.getCookie('Coupon');
+        }
         // now render the current page and wait for the candidate to do something or a screen component to fire some event
         this.startTest();
         this.renderTestPage();
@@ -764,19 +788,19 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             this.saveCurrentTest();
             break;
         case "EndTest" :
-     		if (this.InTestTaking) $('#NavbarsTestTaking').show();
+     		if (this.InTestTaking) this.switchNavBar();
             setTimeout(this.endTest.bind(this, false),100);
             break;
         case "EndTestTimeOut" :
-     		if (this.InTestTaking) $('#NavbarsTestTaking').show();
+     		if (this.InTestTaking) this.switchNavBar();
             setTimeout(this.endTest.bind(this, true),100);
             break;
         case "EndSession" :
-     		if (this.InTestTaking) $('#NavbarsTestTaking').show();
+     		if (this.InTestTaking) this.switchNavBar();
             this.endSession();
             break;
         case "NextScreen" :
-     		if (this.InTestTaking) $('#NavbarsTestTaking').show();
+     		if (this.InTestTaking) this.switchNavBar();
             this.currentSessionTest.CurrentPage++;
             this.saveCurrentTest();
             setTimeout(this.renderTestPage.bind(this),100);
@@ -785,7 +809,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             var oldPage = this.currentSessionTest.CurrentPage;
             this.currentSessionTest.CurrentPage++;
         case "NextUnansweredScreen" :
-            if (this.InTestTaking) $('#NavbarsTestTaking').show();
+            if (this.InTestTaking) this.switchNavBar();
             if (eventName == "NextUnansweredScreen") { var oldPage = this.currentSessionTest.CurrentPage; }
             while ( (this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].show) &&
                     (this.currentSessionTest.CurrentPage < this.currentTestDefinition.screens.length) &&
@@ -796,7 +820,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             setTimeout(this.renderTestPage.bind(this),100);
             break;
         case "PreviousScreen" :
-     		if (this.InTestTaking) $('#NavbarsTestTaking').show();
+     		if (this.InTestTaking) this.switchNavBar();
             var oldCurrentPage = this.currentSessionTest.CurrentPage;
             if (this.currentSessionTest.CurrentPage > 0) { this.currentSessionTest.CurrentPage--; }
             while ( (! this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].show) && this.currentSessionTest.CurrentPage > 0 ) {
@@ -809,7 +833,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             this.renderTestPage();
             break;
         case "GotoScreen" :
-     		if (this.InTestTaking) $('#NavbarsTestTaking').show();
+     		if (this.InTestTaking) this.switchNavBar();
             try {
                 this.currentSessionTest.CurrentPage = parseInt( eventParameters);
             } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Setting currentpage failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
@@ -817,7 +841,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             this.renderTestPage();
             break;
         case "Logout" :
-     		if (this.InTestTaking) $('#NavbarsTestTaking').show();
+     		if (this.InTestTaking) this.switchNavBar();
             this.saveSession();
             this.saveCurrentTest();
             ITSInstance.logoutController.logout();

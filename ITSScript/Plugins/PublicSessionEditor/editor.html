@@ -1,0 +1,264 @@
+<!--
+ Copyright 2019 by Quopt IT Services BV
+
+  Licensed under the Artistic License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    https://raw.githubusercontent.com/Quopt/ITR-webclient/master/LICENSE
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<div class="row col-12">
+    <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
+    <h4 id="AdminInterfacePublicSessionHeader">Create or change public session</h4>
+</div>
+<div id="AdminInterfacePublicSession" class="needs-validation" novalidate class="row">
+    <div class="panel-body col-sm-12">
+        <div id="AdminInterfacePublicSessionDescription" class="form-group row">
+            <label for="AdminInterfacePublicSessionDescriptionFor" id="AdminInterfacePublicSessionDescriptionLabel" class="col-sm-3 col-form-label">Public session
+                description</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="text" required placeholder="Enter a session description" data-field="Description" value=""
+                       id="AdminInterfacePublicSessionDescriptionFor">
+                <div id="AdminInterfacePublicSessionDescriptionForIF" class="invalid-tooltip">
+                    <label id="AdminInterfacePublicSessionDescriptionTT">Please enter a description for this public session.</label>
+                </div>
+            </div>
+        </div>
+        <div id="AdminInterfacePublicSessionTests" class="form-group row">
+            <label for="AdminInterfacePublicSessionTestsInputList" id="AdminInterfacePublicSessionTestsInputListLabel" class="col-sm-3 col-form-label">Tests in this public session</label>
+            <div class="col-sm-9">
+                <div class="form-group">
+                    <select id="AdminInterfacePublicSessionTestsInputList" novalidate class="combobox form-control" style="display: none;">
+                        <option value="" selected="selected">Select a test</option>
+                    </select>
+                </div>
+                <label class="form-check-label">
+                    &nbsp;&nbsp;&nbsp;<input class="form-check-input" id="AdminInterfacePublicSessionTestsIncludeOtherLanguages" type="checkbox" onchange="ITSInstance.PublicSessionController.loadTestAndBatteriesList();" value="">
+                    <label id="AdminInterfacePublicSessionTestsIncludeOtherLanguagesLabel">Include tests in other languages</label>
+                </label>
+                <table class="table table-sm table-striped table-hover" style="text-align: left"
+                       id="AdminInterfacePublicSessionTestsSelection" NoTranslate>
+                    <thead NoTranslate id="AdminInterfacePublicSessionTestsSelectionHead">
+                    <tr>
+                        <td id="AdminInterfacePublicSessionTestsSelectionH1">Test name</td>
+                        <td id="AdminInterfacePublicSessionTestsSelectionH2">Test language</td>
+                        <td id="AdminInterfacePublicSessionTestsSelectionH3">Norm 1</td>
+                        <td id="AdminInterfacePublicSessionTestsSelectionH4">Norm 2</td>
+                        <td id="AdminInterfacePublicSessionTestsSelectionH5">Norm 3</td>
+                        <td id="AdminInterfacePublicSessionTestsSelectionH6">Actions</td>
+                    </tr>
+                    </thead>
+                    <tbody id="AdminInterfacePublicSessionTestsSelectionBody">
+                    <tr>
+                        <td id="AdminInterfacePublicSessionTestsSelectionC1">No tests added yet</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-group row col-12">
+                <label class="col-sm-3 col-form-label" for="AdminInterfacePublicSession-ReportSelect"
+                       id="AdminInterfacePublicSession-ReportSelectLabel">Report to show when session completes</label>
+                <div class="col-sm-9"><select notranslate class="form-control form-control-sm"
+                                              id="AdminInterfacePublicSession-ReportSelect" onchange="ITSInstance.PublicSessionController.selectReportInEditor(this);">
+                </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="AdminInterfacePublicSessionAccordion" role="tablist" aria-multiselectable="true">
+            <div class="card">
+                <div class="card-header" role="tab" id="AdminInterfacePublicSessionheadingOne">
+                    <h5 class="mb-0">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#AdminInterfacePublicSessioncollapseOne"
+                           aria-expanded="false" aria-controls="AdminInterfacePublicSessioncollapseOne">
+                            <i class="fa fa-fw fa-arrow-down" NoTranslate></i><label id="AdminInterfacePublicSessionAccordionLabel">Session validity</label>
+                        </a>
+                    </h5>
+                </div>
+                <div id="AdminInterfacePublicSessioncollapseOne" class="collapse" role="tabpanel" aria-labelledby="AdminInterfacePublicSessionheadingOne" class="col-sm-12">
+                    <div class="card-block">
+
+                        <div class="form-group row">
+                            <label for="AdminInterfacePublicSessionStartDate" id="AdminInterfacePublicSessionStartDateLabel"
+                                   class="col-sm-3 col-form-label">Session cannot start <b>before</b> this date & time</label>
+                            <div class="col-sm-3">
+                                <input class="form-control" type="text"
+                                       placeholder="" value="" name="dateTimePicker"  novalidate data-field="AllowedStartDateTime"
+                                       id="AdminInterfacePublicSessionStartDate">
+                            </div>
+                            <label for="AdminInterfacePublicSessionEndDate" id="AdminInterfacePublicSessionEndDateLabel"
+                                   class="col-sm-3 col-form-label">Session cannot start <b>after</b> this date & time</label>
+                            <div class="col-sm-3">
+                                <input class="form-control" type="text"
+                                       placeholder="" value="" name="dateTimePicker" novalidate  data-field="AllowedEndDateTime"
+                                       id="AdminInterfacePublicSessionEndDate">
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-7"></label>
+                            <label class="col-sm-5">
+                                <input id="AdminInterfacePublicSessionEndDateEnforced"  novalidate data-field="EnforceSessionEndDateTime" type="checkbox">
+                                <label id="AdminInterfacePublicSessionEndDateEnforcedLabel" >Stop the session when still in progress at this date and time</label>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" role="tab" id="AdminInterfacePublicSessionheadingThree">
+                <h5 class="mb-0">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#AdminInterfacePublicSessioncollapseThree"
+                       aria-expanded="false" aria-controls="AdminInterfacePublicSessioncollapseThree" class="col-sm-12">
+                        <i class="fa fa-fw fa-arrow-down aria-hidden='true'"></i><label id="AdminInterfacePublicSessionNotificationLabel">Session notification settings</label>
+                    </a>
+                </h5>
+            </div>
+            <div id="AdminInterfacePublicSessioncollapseThree" class="collapse col-sm-12" role="tabpanel" aria-labelledby="AdminInterfacePublicSessionheadingThree">
+                <div class="form-group row">
+                    <label class="col-sm-4">
+                        <input id="AdminInterfacePublicSessionMailMe"  novalidate type="checkbox"> <label id="AdminInterfacePublicSessionMailMeLabel">Mail me when a session completes at</label>
+                    </label>
+                    <input class="form-control col-sm-8" type="text"
+                           placeholder="" value=""  novalidate data-field="EMailNotificationAdresses"
+                           id="AdminInterfacePublicSessionMail">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <label for="AdminInterfacePublicSessionRemarks" id="AdminInterfacePublicSessionRemarksLabel">Remarks</label>
+        <textarea class="form-control" id="AdminInterfacePublicSessionRemarks" data-field="Remarks"
+                  rows="3"></textarea>
+    </div>
+
+</div>
+<div id="AdminInterfacePublicSessionButtonBar">
+    <br/>
+    <button  type="button" class="btn btn-default btn-success" id="AdminInterfacePublicSessionSaveButton" onclick="ITSInstance.PublicSessionController.saveCurrentSession();">
+        <i id="AdminInterfacePublicSession-saveIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="AdminInterfacePublicSessionSaveButtonLabel">Save session</span>
+    </button>&nbsp;
+    <button  type="button" class="btn btn-default btn-success" id="AdminInterfacePublicSessionURLButton" onclick="ITSInstance.PublicSessionController.getCurrentSessionURL();">
+        <i id="AdminInterfacePublicSessionURL-saveIcon" class="fa fa-fw fa-link"></i><span id="AdminInterfacePublicSessionURLButtonLabel">Get URL to start this session</span>
+    </button>&nbsp;
+    <button type="button" class="btn btn-default btn-success" id="AdminInterfacePublicSessionShowRelatedButton" onclick="ITSInstance.PublicSessionController.showPublicSessions();">
+        <i id="AdminInterfacePublicSessionShowRelatedButton-saveIcon" class="fa fa-fw fa-tasks"></i> <span id="AdminInterfacePublicSessionShowRelatedButtonLabel">Show filled in person sessions</span>
+    </button>&nbsp;
+    <button id="AdminInterfacePublicSessionArchiveTest" type="button" data-toggle="modal" data-target="#AdminInterfacePublicSessionArchive-dialog" class="btn btn-warning">
+        <i id="AdminInterfacePublicSessionArchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfacePublicSessionArchive">Archive this session</span></button>
+    <button id="AdminInterfacePublicSessionDeleteTest" type="button" data-toggle="modal" data-target="#AdminInterfacePublicSessionDelete-dialog" class="btn btn-warning">
+        <i id="AdminInterfacePublicSessionDeleteTestIcon" class="fa fa-fw fa-trash"></i><span id="AdminInterfacePublicSessionDelete">Delete this session</span></button>
+    <button id="AdminInterfacePublicSessionUnArchiveTest" type="button" data-toggle="modal" data-target="#AdminInterfacePublicSessionUnArchive-dialog" class="btn btn-warning">
+        <i id="AdminInterfacePublicSessionUnArchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfacePublicSessionUnArchive">Unarchive this session</span></button>
+    &nbsp;
+    <button type="button" onclick="ITSInstance.PublicSessionController.downloadSession();" class="btn btn-success" id="AdminInterfacePublicSessionDownloadButton"><i class="fa fa-fw fa-download "></i><span id="AdminInterfacePublicSessionDownload">Download results archive</span></button>
+
+</div>
+
+<div class="modal fade" id="AdminInterfacePublicSessionDelete-dialog" tabindex="-1" role="dialog" aria-labelledby="AdminInterfacePublicSessionDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AdminInterfacePublicSessionDeleteLabel">Please confirm that you want to delete the following</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="AdminInterfacePublicSessionDelete-All" name="AdminInterfacePublicSessionDelete-list" value="all" checked>
+                        <label class="form-check-label" id="AdminInterfacePublicSessionDelete-Alllabel" for="AdminInterfacePublicSessionDelete-All">
+                            Delete this public session and all related person sessions
+                        </label>
+                    </div>
+            </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfacePublicSessionDelete-CloseButton">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="AdminInterfacePublicSessionDelete-DeleteButton" onclick="ITSInstance.PublicSessionController.deletePublicSessionNow();" notranslate>
+                    <i id="AdminInterfacePublicSessionDeleteTestIcon2" class="fa fa-fw fa-trash"></i>
+                    <span id="AdminInterfacePublicSessionDelete-buttonlabel">Delete public session</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="AdminInterfacePublicSessionArchive-dialog" tabindex="-1" role="dialog" aria-labelledby="AdminInterfacePublicSessionArchiveLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AdminInterfacePublicSessionArchiveLabel">Please confirm that you want to archive the following</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="AdminInterfacePublicSessionArchive-All" name="AdminInterfacePublicSessionArchive-list" value="all" checked>
+                        <label class="form-check-label" id="AdminInterfacePublicSessionArchive-Alllabel" for="AdminInterfacePublicSessionArchive-All">
+                            Archive this public session and all related person sessions
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfacePublicSessionArchive-CloseButton">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="AdminInterfacePublicSessionArchive-ArchiveButton" onclick="ITSInstance.PublicSessionController.archivePublicSessionNow(false);" notranslate>
+                    <i id="AdminInterfacePublicSessionArchiveTestIcon2" class="fa fa-fw fa-archive"></i>
+                    <span id="AdminInterfacePublicSessionArchive-buttonlabel">Archive public session</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AdminInterfacePublicSessionUnArchive-dialog" tabindex="-1" role="dialog" aria-labelledby="AdminInterfacePublicSessionUnArchiveLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AdminInterfacePublicSessionUnArchiveLabel">Please confirm that you want to unarchive the following</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="AdminInterfacePublicSessionUnArchive-All" name="AdminInterfacePublicSessionUnArchive-list" value="all" checked>
+                        <label class="form-check-label" id="AdminInterfacePublicSessionUnArchive-Alllabel"  for="AdminInterfacePublicSessionUnArchive-All">
+                            Unarchive this public session and all related person sessions
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfacePublicSessionUnArchive-CloseButton">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="AdminInterfacePublicSessionUnArchive-UnArchiveButton" onclick="ITSInstance.PublicSessionController.archivePublicSessionNow(true);" notranslate>
+                    <i id="AdminInterfacePublicSessionUnArchiveTestIcon2" class="fa fa-fw fa-archive"></i>
+                    <span id="AdminInterfacePublicSessionUnArchive-buttonlabel">Unarchive public session</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

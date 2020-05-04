@@ -718,6 +718,24 @@ ITSTests.prototype.findTestById = function (testCollectionToSearch, TestID) {
     }
 };
 
+ITSTests.prototype.test = function (testName) {
+    for (var i=0; i < this.testList.length; i++){
+        if (this.testList[i].Description == testName) {
+            return this.testList[i];
+        }
+    };
+    return undefined;
+};
+
+ITSTests.prototype.testByID = function (testID) {
+    for (var i=0; i < this.testList.length; i++){
+        if (this.testList[i].ID == testID) {
+            return this.testList[i];
+        }
+    };
+    return undefined;
+};
+
 ITSTests.prototype.addNewTest = function () {
     var newtest = new ITSTest(this, this.ITSSession);
     this.testList.push(newtest);

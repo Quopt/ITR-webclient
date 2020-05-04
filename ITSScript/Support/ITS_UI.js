@@ -95,8 +95,10 @@ ITSUIController = function () {
 
     this.EnableTestTakingInterface = function () {
         this.resetAllUIElements();
-        $('#NavbarsTestTaking').show();
-        $('#NavbarsTestTaking').visibility = 'visible';
+        if (cookieHelper.getCookie('NoTTHeader') != 'Y') {
+            $('#NavbarsTestTaking').show();
+            $('#NavbarsTestTaking').visibility = 'visible';
+        }
         $('#NavBarsFooter').show();
         $('#ITSTestTakingDiv').show();
         $('#LoginWindowSelectSession').hide();
@@ -107,15 +109,14 @@ ITSUIController = function () {
 
     this.EnablePublicTestTakingInterface = function () {
         this.resetAllUIElements();
-        $('#NavbarsTestTaking').show();
-        $('#NavbarsTestTaking').visibility = 'visible';
+        $('#NavbarsTestTaking').hide();
+        $('#NavbarsTestTaking').visibility = 'none';
         $('#NavBarsFooter').show();
         $('#NavbarsAdminSearchButtonBlockTT').visibility = 'hidden';
         $('#NavbarsAdminSearchButtonBlockTT').hide();
         $('#NavbarsAdminLoginBlockTT').visibility = 'hidden';
         $('#NavbarsAdminLoginBlockTT').hide();
         $('#ITSTestTakingDiv').show();
-        $('#NavbarsTestTaking').hide();
         this.initNavBar();
         ITSTranslateInterface();
     };

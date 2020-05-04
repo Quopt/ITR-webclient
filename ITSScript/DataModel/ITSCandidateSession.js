@@ -34,7 +34,7 @@ ITSCandidateSession = function (session, ITSSession) {
     //this.PersonID = this.Person.ID;
     this.regenerateCandidate();
 
-    this.SessionType = 0; // 0 = PersonSession. 100 = Group session.
+    this.SessionType = 0; // 0 = PersonSession. 1=Public (might be temporary) session. 100 = Group session. 200 = public base session.
     this.Description = "";
     this.Goal = "";
     this.UsedBatteryIDs = "";
@@ -61,6 +61,8 @@ ITSCandidateSession = function (session, ITSSession) {
 
     this.PluginData = {};
     this.PluginData.persistentProperties = "*ALL*";
+    this.PluginData.sessionParameters = {};
+    this.PluginData.sessionStorage = {};
 
     var currentTime = new Date.now();
     this.SessionStartDateTime = currentTime;
@@ -138,6 +140,21 @@ ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixF
     var folderName = prefixForPath == "" ? "" : prefixForPath + "/" ;
     zip.file( folderName + fileName + ".html", openingTag + $('#AdminInterfaceEditSessionEditTestsList')[0].outerHTML + closingTag);
     ITSInstance.editSessionController.generateTestsList(false, this);
+
+    // add the response overview
+    $("#SessionViewAnswersInterfaceEditTestAnswers").empty();
+    var genNumber = "" + getNewSimpleGeneratorNumber('SessionViewAnswersInterfaceEdit_gen', 9999)
+    for (var found=0; found < this.SessionTests.length; found ++) {
+        try {
+            folderName = prefixForPath == "" ? "" : prefixForPath + "/" ;
+            folderName = folderName + ITSInstance.tests.testList[ITSInstance.tests.findTestById(ITSInstance.tests.testList, reportsList[i].TestID)].Description + "/";
+        } catch (err) { /* do nothing */ }
+        fileName = ITSInstance.translator.getTranslatedString("ITSCandidateSession", "AnswerOverview", "Answers overview") ;
+        this.SessionTests[found].testDefinition.generateQuestionOverview("SessionViewAnswersInterfaceEditTestAnswers",
+            this.SessionTests[found].Results, true, "_" + genNumber,
+            this, this.SessionTests[found], this.Person);
+        zip.file( folderName + fileName + ".html", openingTag + $('#SessionViewAnswersInterfaceEditTestAnswers')[0].outerHTML + closingTag);
+    }
 
     // generate and add the reports per test
     var folderName = "";
@@ -468,25 +485,33 @@ ITSCandidateSession.prototype.loadSession = function (sessionID, OnSuccess, OnEr
     if (excludeDoneTests) {
         ITSInstance.JSONAjaxLoader('sessions/' + sessionID, this, function () {
             // load the candidate information
-            if (this.SessionType < 100) {
+            if (this.SessionType != 100) {
                 ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, function () {
+                    this.Person.detailsLoaded = true;
                 }, this.sessionLoadingFailed.bind(this));
+            }
+            // load the tests in the session
+            if (this.InTestTaking) {
+                ITSInstance.JSONAjaxLoader('sessionteststaking/' + this.ID, this.SessionTests, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this), 'ITSCandidateSessionTest');
+            } else {
+                ITSInstance.JSONAjaxLoader('sessiontests/' + this.ID, this.SessionTests, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this), 'ITSCandidateSessionTest');
             }
         }.bind(this), this.sessionLoadingFailed.bind(this), 'ITSObject', 0, 99999, "", "N", "N", "Y", "Status=10, Status=20");
     } else {
         ITSInstance.JSONAjaxLoader('sessions/' + sessionID, this, function () {
             // load the candidate information
-            if (this.SessionType < 100) {
+            if (this.SessionType != 100) {
                 ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, function () {
+                    this.Person.detailsLoaded = true;
                 }, this.sessionLoadingFailed.bind(this));
             }
+            // load the tests in the session
+            if (this.InTestTaking) {
+                ITSInstance.JSONAjaxLoader('sessionteststaking/' + this.ID, this.SessionTests, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this), 'ITSCandidateSessionTest');
+            } else {
+                ITSInstance.JSONAjaxLoader('sessiontests/' + this.ID, this.SessionTests, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this), 'ITSCandidateSessionTest');
+            }
         }.bind(this), this.sessionLoadingFailed.bind(this), 'ITSObject');
-    }
-    // load the tests in the session
-    if (InTestTaking) {
-        ITSInstance.JSONAjaxLoader('sessionteststaking/' + sessionID, this.SessionTests, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this), 'ITSCandidateSessionTest');
-    } else {
-        ITSInstance.JSONAjaxLoader('sessiontests/' + sessionID, this.SessionTests, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this), 'ITSCandidateSessionTest');
     }
 };
 
@@ -502,11 +527,8 @@ ITSCandidateSession.prototype.sessionLoaded = function () {
         this.SessionTests[i].SessionID = this.ID;
         this.SessionTests[i].ITSSession = this.ITSSession;
 
-        //this.SessionTests[i].loadTest(this.testLoadedFine.bind(this,i), this.sessionLoadingFailed.bind(this));
-
         this.SessionTests[i].loadDetails(this.testLoadedFine.bind(this,i), this.sessionLoadingFailed.bind(this), this.InTestTaking);
     }
-    //if (this.SessionTests.length == 0) this.sessionLoadingFailed(); xxx
 };
 
 ITSCandidateSession.prototype.testLoadedFine = function (testIndex) {
@@ -526,7 +548,7 @@ ITSCandidateSession.prototype.testLoadedFine = function (testIndex) {
     }
 
     if (allOK && this.OnSucces) {
-        this.OnSucces();
+        setTimeout(this.OnSucces,1);
         this.OnSucces = undefined;
     }
 };
@@ -1056,6 +1078,14 @@ ITSCandidateSessions.prototype.newGroupSession = function () {
     var x = new ITSCandidateSession(this, this.ITSSession);
     x.SessionType = 100;
     x.PluginData.GroupMembers = []; // array of groupmembers
+    return x;
+};
+
+ITSCandidateSessions.prototype.newPublicSession = function () {
+    var x = new ITSCandidateSession(this, this.ITSSession);
+    x.SessionType = 200;
+    x.PluginData.CandidateParameters = {};
+    x.Person.EMail = x.Person.ID;
     return x;
 };
 

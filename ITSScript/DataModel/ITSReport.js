@@ -103,10 +103,12 @@ ITSReports.prototype.hasReportForTest = function (testID) {
 ITSReports.prototype.findReportsForTests = function (testIDs) {
     // testIDs contains an array of test id's to get the reports for
     testIDs.sort();
-    var testList = testIDs.join(",");
+    var testList = testIDs;
     var toReturn = [];
     // check if there are reports available for this test
+    //console.log(this.reportsList);
     for (var i=0; i < this.reportsList.length; i++) {
+        //console.log(this.reportsList[i].TestID);
         if ( testList.indexOf(this.reportsList[i].TestID) >= 0) {
             toReturn.push(this.reportsList[i]);
         } else {
@@ -114,7 +116,10 @@ ITSReports.prototype.findReportsForTests = function (testIDs) {
                 var toCheckList = this.reportsList[i].TestIDs.split(',');
                 var noneMissing = true;
                 for (var tcl=0; tcl < toCheckList.length; tcl++) {
-                    if (testList.indexOf(toCheckList[tcl]) == -1) { noneMissing = false; break; }
+                    if (testList.indexOf(toCheckList[tcl]) == -1) {
+                        noneMissing = false;
+                        break;
+                    }
                 }
                 if (noneMissing) {
                     toReturn.push(this.reportsList[i]);
