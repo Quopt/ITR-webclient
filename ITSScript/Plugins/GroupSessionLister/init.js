@@ -33,12 +33,12 @@
         ITSInstance.MessageBus.subscribe("CurrentCompany.Loaded", function () {
             if (ITSInstance.companies.currentCompany.PluginData.Preferences.EnablePublicSessions) {
                 ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', '#GroupSessionListerController.PublicSessionMenu', ITSInstance.translator.translate("#GroupSessionListerController.PublicSessionReadyMenu", "Public sessions"), "fa-user-plus", "ITSRedirectPath(\'GroupSessionLister&SessionType=200\');");
-                ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#GroupSessionListerController.PublicSessionArchivedMenu", ITSInstance.translator.translate("#GroupSessionListerController.PublicSessionArchivedMenu", "Public sessions archive"), "fa-archive", "ITSRedirectPath(\'GroupSessionLister&SessionType=200&Status=Archived\');");
             }
         }, true);
 
         // messagebus subscriptions
         ITSInstance.MessageBus.subscribe("Session.Delete", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
+        ITSInstance.MessageBus.subscribe("SessionGroup.Delete", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
         ITSInstance.MessageBus.subscribe("Session.Create", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
         ITSInstance.MessageBus.subscribe("Session.Update", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
 

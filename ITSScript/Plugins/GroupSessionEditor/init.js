@@ -651,9 +651,7 @@ ITSGroupSessionEditor.prototype.deleteGroupSessionNow = function () {
     ITSInstance.UIController.showInterfaceAsWaitingOn();
 
     if ($('#AdminInterfaceGroupSessionDelete-All:checked').val() == "all") {
-        this.currentSession.deleteGroupSessionsOnServer(function () {
-            this.currentSession.deleteFromServer(this.deleteSessionsDone.bind(this), this.deleteSessionsError.bind(this));
-          }.bind(this), this.deleteSessionsError.bind(this), 'waitModalProgress', false);
+        this.currentSession.deleteGroupSessionQuick( function () { window.history.back(); }, function () { window.history.back(); });
     }
     else if ($('#AdminInterfaceGroupSessionDelete-Unstarted:checked').val() == "unstarted") {
         this.currentSession.deleteGroupSessionsOnServer(function () {
@@ -757,33 +755,75 @@ ITSGroupSessionEditor.prototype.downloadSession = function () {
     this.archiveDownloadCounter = 0;
     this.tempCounter =0;
     ITSInstance.UIController.showInterfaceAsWaitingOn();
-    var zip = new JSZip();
+    this.downloadPreferenceReports = $('#AdminInterfaceGroupDownload-reports:checked').val() == "reports";
+    this.downloadPreferenceAnswers = $('#AdminInterfaceGroupDownload-Answers:checked').val() == "answers";
+    this.zip = new JSZip();
+
+    this.resultsFile = {};
+    this.couponsFile = [];
+    var tempSession = {};
 
     for (var i=0; i < this.currentSession.PluginData.GroupMembers.length; i++) {
         if (this.currentSession.PluginData.GroupMembers[i].sessionstatus >= 30) {
-          this.archiveDownloadCounter ++;
-          this.tempCounter ++;
-          var tempSession = new ITSCandidateSession(undefined, ITSInstance);
-          tempSession.loadSession(this.currentSession.PluginData.GroupMembers[i].sessionid, function (tempSession, zip, tempCounter) {
-                  tempSession.createReportOverviewInZip(zip, pad(tempCounter,2) + " " + tempSession.Person.createHailing(),
-                      function(tempSession,zip) {
-                          this.archiveDownloadCounter --;
-                          if (this.archiveDownloadCounter == 0) {
-                              ITSInstance.UIController.showInterfaceAsWaitingOff();
-                              var fileName = ITSInstance.translator.getTranslatedString("ITSSessionEditor", "ScoreOverview", "Score overview");
-                              zip.generateAsync({type : "blob"}).
-                              then(function (blob) { saveFileLocally(fileName + " " + this.currentSession.Description + ".zip" , blob, "application/zip"); }.bind(this));
-                          }
-                      }.bind(this,tempSession, zip),
-                      this.zipError);
-                }.bind(this, tempSession, zip, this.tempCounter),
-                this.zipError);
-      }
+            this.archiveDownloadCounter++;
+            this.tempCounter++;
+        }
     }
+
+    ITSInstance.UIController.showInterfaceAsWaitingProgress( "" + this.archiveDownloadCounter );
+
 
     if (this.tempCounter == 0) {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
-        ITSInstance.UIController.showError('ITSGroupSessionEditor.ZIPNothingYet', 'No sessions are done yet, please retry downloading the archive once one or more sessions are done.');
+        ITSInstance.UIController.showError('ITSPublicGroupEditor.ZIPNothingYet', 'No sessions are done yet, please retry downloading the archive once one or more sessions are done.');
+    } else {
+        this.tempCounter =  0;
+        this.loadSessionForDownload();
+    }
+};
+
+
+ITSGroupSessionEditor.prototype.loadSessionForDownload = function () {
+    if (this.currentSession.PluginData.GroupMembers[this.tempCounter].sessionstatus >= 30) {
+        var tempSession = new ITSCandidateSession(undefined, ITSInstance);
+        tempSession.loadSession(this.currentSession.PluginData.GroupMembers[this.tempCounter].sessionid, function () {
+
+            // process this record
+            tempSession.createReportOverviewInZip(this.zip, pad(this.tempCounter, 2) + " " + tempSession.Person.createHailing() + " " + tempSession.Description,
+                function (tempSession, zip) {
+                    console.log(tempSession, this, this.tempCounter);
+                    this.couponsFile.concat(tempSession.couponsFile);
+                    shallowCopy(tempSession.resultsFile, this.resultsFile);
+                    this.archiveDownloadCounter--;
+                    ITSInstance.UIController.showInterfaceAsWaitingProgress("" + this.archiveDownloadCounter);
+                    if (this.archiveDownloadCounter == 0) {
+                        // we are done
+                        this.zip.file('data.json', JSON.stringify(this.resultsFile));
+                        if (this.couponsFile.length > 0) {
+                            this.zip.file('coupons.txt', this.couponsFile.join('\n\r'));
+                        }
+                        var fileName = ITSInstance.translator.getTranslatedString("ITSSessionEditor", "ScoreOverview", "Score overview");
+                        this.zip.generateAsync({type: "blob"}).then(function (blob) {
+                            saveFileLocally(fileName + " " + this.currentSession.Description + ".zip", blob, "application/zip");
+                            ITSInstance.UIController.showInterfaceAsWaitingOff();
+                        }.bind(this));
+                    } else {
+                        // process the next
+                        this.tempCounter = this.tempCounter+1;
+                        ITSInstance.UIController.showInterfaceAsWaitingOn();
+                        ITSInstance.UIController.showInterfaceAsWaitingProgress("" + this.archiveDownloadCounter);
+                        tempSession.loadSession(this.currentSession.PluginData.GroupMembers[this.tempCounter].sessionid, this.loadSessionForDownload.bind(this), this.zipError);
+                    }
+
+
+                }.bind(this), this.zipError, this.downloadPreferenceReports, this.downloadPreferenceAnswers);
+
+        }.bind(this), this.zipError);
+    } else {
+        this.tempCounter = this.tempCounter+1;
+        ITSInstance.UIController.showInterfaceAsWaitingOn();
+        ITSInstance.UIController.showInterfaceAsWaitingProgress("" + this.archiveDownloadCounter);
+        tempSession.loadSession(this.currentSession.PluginData.GroupMembers[this.tempCounter].sessionid, this.loadSessionForDownload.bind(this), this.zipError);
     }
 };
 

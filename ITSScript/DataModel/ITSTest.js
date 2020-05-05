@@ -1509,7 +1509,7 @@ ITSTestScreen.prototype.screenTemplatesLoaded = function () {
     return allLoaded;
 };
 
-ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, postfix, PnP, sessionStorageObject) {
+ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, postfix, PnP, sessionStorageObject, includeCookies) {
     var saveSessionNeeded = false;
     var TestResults = {};
     TestResults = storageObject["__" + this.id] ;
@@ -1534,6 +1534,10 @@ ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, 
                         if (!sessionStorageObject.sessionStorage) sessionStorageObject.sessionStorage = {};
                         sessionStorageObject.sessionStorage._objectType = "ITSObject";
                         sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName] = ComponentResults.Value;
+                        if (includeCookies) {
+                            //console.log("Cookie %s %s", this.screenComponents[j].varComponentName, ComponentResults.Value);
+                            cookieHelper.setCookie(this.screenComponents[j].varComponentName, ComponentResults.Value, 31536000);
+                        }
                         saveSessionNeeded = true;
                         //ITSLogger.logMessage(logLevel.ERROR,"S" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
                     }
@@ -1547,7 +1551,7 @@ ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, 
     return saveSessionNeeded;
 };
 
-ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, postFix, sessionStorageObject) {
+ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, postFix, sessionStorageObject, includeCookies) {
     var TestResults = {};
     TestResults = storageObject["__" + this.id] ;
 
@@ -1564,6 +1568,11 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
             if (sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]) {
                 // use the varComponentName instead of the id so it can be re-used over questions and tests in the session
                 ComponentResults.Value = sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName];
+                if (includeCookies) {
+                    if ( (cookieHelper.getCookie(this.screenComponents[j].varComponentName) != '') && (ComponentResults.Value == '')) {
+                        ComponentResults.Value = cookieHelper.getCookie(this.screenComponents[j].varComponentName);
+                    }
+                }
                 //ITSLogger.logMessage(logLevel.ERROR,"U" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
             }
         }
@@ -1578,7 +1587,7 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
     }
 };
 
-ITSTestScreen.prototype.updateFromSessionStorage = function (storageObject, sessionStorageObject) {
+ITSTestScreen.prototype.updateFromSessionStorage = function (storageObject, sessionStorageObject, includeCookies) {
     var TestResults = {};
     TestResults = storageObject["__" + this.id] ;
 
@@ -1589,6 +1598,9 @@ ITSTestScreen.prototype.updateFromSessionStorage = function (storageObject, sess
             if (!sessionStorageObject.sessionStorage) sessionStorageObject.sessionStorage = {};
             if (sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]) {
                 ComponentResults.Value = sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName];
+                if (includeCookies) {
+                    cookieHelper.setCookie(this.screenComponents[j].varComponentName, ComponentResults.Value, 0);
+                }
                 //ITSLogger.logMessage(logLevel.ERROR,this.screenComponents[j].varComponentName + "=" + ComponentResults.Value);
             }
         }

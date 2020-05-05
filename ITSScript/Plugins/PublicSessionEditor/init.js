@@ -454,7 +454,7 @@ ITSPublicSessionEditor.prototype.saveSessionsDone = function () {
 };
 
 ITSPublicSessionEditor.prototype.showPublicSessions = function () {
-    ITSRedirectPath('SessionLister&SessionType=1&PublicSessionID=' + this.currentSession.ID);
+    ITSRedirectPath('SessionLister&SessionType=1&GroupSessionID=' + this.currentSession.ID);
 };
 
 ITSPublicSessionEditor.prototype.archivePublicSessionNow = function (archiveStatus) {
@@ -462,13 +462,13 @@ ITSPublicSessionEditor.prototype.archivePublicSessionNow = function (archiveStat
     this.archiveStatus = archiveStatus;
 
     if ($('#AdminInterfacePublicSessionArchive-All:checked').val() == "all") {
-        this.currentSession.archivePublicSessionsOnServer(function () {
+        this.currentSession.archiveGroupSessionsOnServer(function () {
             this.currentSession.Active = this.archiveStatus;
             this.currentSession.saveToServer(this.archiveSessionsDone.bind(this), this.archiveSessionsError.bind(this));
         }.bind(this), this.archiveSessionsError.bind(this), 'waitModalProgress', false, this.archiveStatus);
     }
     else if ($('#AdminInterfacePublicSessionArchive-Unstarted:checked').val() == "unstarted") {
-        this.currentSession.archivePublicSessionsOnServer(function () {
+        this.currentSession.archiveGroupSessionsOnServer(function () {
             this.currentSession.Active = this.archiveStatus;
             this.currentSession.saveToServer(this.archiveSessionsDone.bind(this), this.archiveSessionsError.bind(this));
         }.bind(this), this.archiveSessionsError.bind(this), 'waitModalProgress', true, this.archiveStatus);
@@ -499,21 +499,7 @@ ITSPublicSessionEditor.prototype.archiveSessionsError = function () {
 };
 
 ITSPublicSessionEditor.prototype.deletePublicSessionNow = function () {
-    ITSInstance.UIController.showInterfaceAsWaitingOn();
-
-    if ($('#AdminInterfacePublicSessionDelete-All:checked').val() == "all") {
-        this.currentSession.deletePublicSessionsOnServer(function () {
-            this.currentSession.deleteFromServer(this.deleteSessionsDone.bind(this), this.deleteSessionsError.bind(this));
-          }.bind(this), this.deleteSessionsError.bind(this), 'waitModalProgress', false);
-    }
-    else if ($('#AdminInterfacePublicSessionDelete-Unstarted:checked').val() == "unstarted") {
-        this.currentSession.deletePublicSessionsOnServer(function () {
-            this.currentSession.deleteFromServer(this.deleteSessionsDone.bind(this), this.deleteSessionsError.bind(this));
-        }.bind(this), this.deleteSessionsError.bind(this), 'waitModalProgress', true);
-    }
-    else if ($('#AdminInterfacePublicSessionDelete-OnlyThis:checked').val() == "onlygroup") {
-        this.currentSession.deleteFromServer(this.deleteSessionsDone.bind(this), this.deleteSessionsError.bind(this));
-    }
+    this.currentSession.deleteGroupSessionQuick( function () { window.history.back(); }, function () { window.history.back(); });
 };
 ITSPublicSessionEditor.prototype.deleteSessionsDone = function () {
     ITSInstance.UIController.showInterfaceAsWaitingOff();
@@ -562,35 +548,75 @@ ITSPublicSessionEditor.prototype.downloadSessionProcessError = function () {
 ITSPublicSessionEditor.prototype.downloadSessionProcess = function () {
     this.archiveDownloadCounter = 0;
     this.tempCounter =0;
+    this.downloadPreferenceReports = $('#AdminInterfacePublicSessionDownload-reports:checked').val() == "reports";
+    this.downloadPreferenceAnswers = $('#AdminInterfacePublicSessionDownload-Answers:checked').val() == "answers";
     ITSInstance.UIController.showInterfaceAsWaitingOn();
-    var zip = new JSZip();
+    this.zip = new JSZip();
 
-    console.log(this.sessionsList);
+    this.resultsFile = {};
+    this.couponsFile = [];
+    var tempSession = {};
+
     for (var i=0; i < this.sessionsList.length; i++) {
         if (this.sessionsList[i].Status >= 30) {
-          this.archiveDownloadCounter ++;
-          this.tempCounter ++;
-          var tempSession = new ITSCandidateSession(undefined, ITSInstance);
-          tempSession.loadSession(this.sessionsList[i].ID, function (tempSession, zip, tempCounter) {
-                  tempSession.createReportOverviewInZip(zip, pad(tempCounter,2) + " " + tempSession.Person.createHailing(),
-                      function(tempSession,zip) {
-                          this.archiveDownloadCounter --;
-                          if (this.archiveDownloadCounter == 0) {
-                              ITSInstance.UIController.showInterfaceAsWaitingOff();
-                              var fileName = ITSInstance.translator.getTranslatedString("ITSSessionEditor", "ScoreOverview", "Score overview");
-                              zip.generateAsync({type : "blob"}).
-                              then(function (blob) { saveFileLocally(fileName + " " + this.currentSession.Description + ".zip" , blob, "application/zip"); }.bind(this));
-                          }
-                      }.bind(this,tempSession, zip),
-                      this.zipError);
-                }.bind(this, tempSession, zip, this.tempCounter),
-                this.zipError);
-      }
+            this.archiveDownloadCounter++;
+            this.tempCounter++;
+        }
     }
+
+    ITSInstance.UIController.showInterfaceAsWaitingProgress( "" + this.archiveDownloadCounter );
+
 
     if (this.tempCounter == 0) {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         ITSInstance.UIController.showError('ITSPublicSessionEditor.ZIPNothingYet', 'No sessions are done yet, please retry downloading the archive once one or more sessions are done.');
+    } else {
+        this.tempCounter =  0;
+        this.loadSessionForDownload();
+    }
+};
+
+ITSPublicSessionEditor.prototype.loadSessionForDownload = function () {
+    if (this.sessionsList[this.tempCounter].Status >= 30) {
+        var tempSession = new ITSCandidateSession(undefined, ITSInstance);
+        tempSession.loadSession(this.sessionsList[this.tempCounter].ID, function () {
+
+            // process this record
+            tempSession.createReportOverviewInZip(this.zip, pad(this.tempCounter, 2) + " " + tempSession.Person.createHailing() + " " + tempSession.Description,
+                function (tempSession, zip) {
+                    console.log(tempSession, this, this.tempCounter);
+                    this.couponsFile.concat(tempSession.couponsFile);
+                    shallowCopy(tempSession.resultsFile, this.resultsFile);
+                    this.archiveDownloadCounter--;
+                    ITSInstance.UIController.showInterfaceAsWaitingProgress("" + this.archiveDownloadCounter);
+                    if (this.archiveDownloadCounter == 0) {
+                        // we are done
+                        this.zip.file('data.json', JSON.stringify(this.resultsFile));
+                        if (this.couponsFile.length > 0) {
+                            this.zip.file('coupons.txt', this.couponsFile.join('\n\r'));
+                        }
+                        var fileName = ITSInstance.translator.getTranslatedString("ITSSessionEditor", "ScoreOverview", "Score overview");
+                        this.zip.generateAsync({type: "blob"}).then(function (blob) {
+                            saveFileLocally(fileName + " " + this.currentSession.Description + ".zip", blob, "application/zip");
+                            ITSInstance.UIController.showInterfaceAsWaitingOff();
+                        }.bind(this));
+                    } else {
+                        // process the next
+                        this.tempCounter = this.tempCounter+1;
+                        ITSInstance.UIController.showInterfaceAsWaitingOn();
+                        ITSInstance.UIController.showInterfaceAsWaitingProgress("" + this.archiveDownloadCounter);
+                        tempSession.loadSession(this.sessionsList[this.tempCounter].ID, this.loadSessionForDownload.bind(this), this.zipError);
+                    }
+
+
+                }.bind(this), this.zipError, this.downloadPreferenceReports, this.downloadPreferenceAnswers);
+
+        }.bind(this), this.zipError);
+    } else {
+        this.tempCounter = this.tempCounter+1;
+        ITSInstance.UIController.showInterfaceAsWaitingOn();
+        ITSInstance.UIController.showInterfaceAsWaitingProgress("" + this.archiveDownloadCounter);
+        tempSession.loadSession(this.sessionsList[this.tempCounter].ID, this.loadSessionForDownload.bind(this), this.zipError);
     }
 };
 

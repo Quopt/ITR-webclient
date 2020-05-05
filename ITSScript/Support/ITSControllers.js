@@ -208,32 +208,39 @@ ITSLoginController = function () {
 };
 
 ITSLogoutController = function () {
-    this.logout = function (additionalParameters) {
+    this.logout = function (additionalParameters, redirectAfterLogout) {
+        if (typeof redirectAfterLogout == "undefined") redirectAfterLogout = true;
+
         ITSLogger.logMessage(logLevel.INFO,"user logged out " + ITSInstance.users.currentUser.Email );
         ITSInstance.genericAjaxLoader('logout', '', function () {}, function () {} , function () {}, undefined );
         ITSInstance.token.clear();
         var returnURL = cookieHelper.getCookie('ReturnURL');
-        cookieHelper.setCookie('ReturnURL', '', 1);
         cookieHelper.setCookie('NoTTHeader', '', 1);
         cookieHelper.setCookie('Coupon', '', 1);
-
-        ITSInstance.UIController.EnableLoginInterface();
+        cookieHelper.setCookie('SessionID', '', 1);
 
         var length=history.length;
         history.go(-length);
-        if (additionalParameters) {
-            history.pushState('Login', 'Login', Global_OriginalURL + "?" + additionalParameters);
-        } else {
-            history.pushState('Login', 'Login', Global_OriginalURL);
-        }
 
-        if (returnURL.trim() == "") {
-            setTimeout( function () {
-                ITSInitSession();
-                location.reload();
-            }, 1000);
-        } else {
-            window.location.replace(returnURL);
+        if (redirectAfterLogout) {
+            cookieHelper.setCookie('ReturnURL', '', 1);
+
+            ITSInstance.UIController.EnableLoginInterface();
+
+            if (additionalParameters) {
+                history.pushState('Login', 'Login', Global_OriginalURL + "?" + additionalParameters);
+            } else {
+                history.pushState('Login', 'Login', Global_OriginalURL);
+            }
+
+            if (returnURL.trim() == "") {
+                setTimeout(function () {
+                    ITSInitSession();
+                    location.reload();
+                }, 1000);
+            } else {
+                window.location.replace(returnURL);
+            }
         }
     }
 };
@@ -347,8 +354,13 @@ ITSTestTakingController.prototype.startSession = function () {
     // if the user is also an office user then give the user the option to login to the office as well
 
     // load the session list for this user
-    ITSInstance.JSONAjaxLoader('sessions', this.sessionList, this.sessionLoader.bind(this), this.sessionLoadingFailed.bind(this),
-        'ITSCandidateSession', 0, 99999, "", "N", "N", "Y", "Status=10, Status=20, SessionType!=1, Active=True");
+    if (cookieHelper.getCookie('SessionID').trim() != ''){
+        ITSInstance.JSONAjaxLoader('sessions', this.sessionList, this.sessionLoader.bind(this), this.sessionLoadingFailed.bind(this),
+            'ITSCandidateSession', 0, 99999, "", "N", "N", "Y", "Status=10, Status=20, Active=True, ID="+cookieHelper.getCookie('SessionID').trim());
+    } else {
+        ITSInstance.JSONAjaxLoader('sessions', this.sessionList, this.sessionLoader.bind(this), this.sessionLoadingFailed.bind(this),
+            'ITSCandidateSession', 0, 99999, "", "N", "N", "Y", "Status=10, Status=20, SessionType!=1, Active=True");
+    }
 };
 
 ITSTestTakingController.prototype.sessionLoader = function () {
@@ -360,12 +372,18 @@ ITSTestTakingController.prototype.sessionLoader = function () {
         // start this session now ...
         if (this.sessionList.length >0) {
             this.currentSession = new ITSCandidateSession(this, this.myInstance);
+            cookieHelper.setCookie('SessionID',this.sessionList[0].ID,9);
             this.currentSession.loadSession(this.sessionList[0].ID, this.sessionLoadingSucceeded.bind(this), this.sessionLoadingFailed.bind(this), true, true);
         } else {
-            ITSInstance.UIController.showInterfaceAsWaitingOff();
-            ITSInstance.UIController.showError('ITSTestTakingController.LoadingSessionFailed', 'There are no tests in the session for you to take.', '',
-                'ITSInstance.logoutController.logout();');
-            if (typeof endTestFunction !== "undefined") endTestFunction();
+            if (cookieHelper.getCookie('SessionID').trim() != '') {
+                cookieHelper.setCookie('SessionID','',1);
+                this.startSession();
+            } else {
+                ITSInstance.UIController.showInterfaceAsWaitingOff();
+                ITSInstance.UIController.showError('ITSTestTakingController.LoadingSessionFailed', 'There are no tests in the session for you to take.', '',
+                    'ITSInstance.logoutController.logout();');
+                if (typeof endTestFunction !== "undefined") endTestFunction();
+            }
         }
     }
 };
@@ -373,6 +391,8 @@ ITSTestTakingController.prototype.sessionLoader = function () {
 ITSTestTakingController.prototype.switchNavBar = function () {
     if (this.currentSession.SessionType == "1") {
         $('#NavbarsTestTaking').hide();
+        $('#ITSTestTakingDiv').css("top","20px");
+        $('#ITSTestTakingDiv').css("position","absolute");
         if (! this.cookieNavBarSet) {
             cookieHelper.setCookie('NoTTHeader', 'Y', 600);
             this.cookieNavBarSet = true;
@@ -380,6 +400,7 @@ ITSTestTakingController.prototype.switchNavBar = function () {
     } else {
         if (this.InTestTaking) $('#NavbarsTestTaking').show();
     }
+    cookieHelper.setCookie('SessionID',this.currentSession.ID,9);
 };
 
 ITSTestTakingController.prototype.sessionLoadingSucceeded = function () {
@@ -461,7 +482,7 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
         setTimeout(this.checkScreenDynamics.bind(this), 350);
 
         var currentScreen = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage];
-        if (!screenNotRenderedYet) this.saveSessionNeeded = currentScreen.updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID, false, this.currentSession.PluginData);
+        if (!screenNotRenderedYet) this.saveSessionNeeded = currentScreen.updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID, false, this.currentSession.PluginData, this.currentSession.SessionType==1);
 
         // get the visibility status of the current screen components
         visibilityState = currentScreen.getVisibilityStatusAsString();
@@ -512,7 +533,7 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
                 //ITSLogger.logMessage(logLevel.ERROR,"Re-render");
                 $('#ITSTestTakingDiv').empty();
                 currentScreen.generateScreenInDiv('ITSTestTakingDiv', 'TT', this.generateScreenID);
-                currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results, this.generateScreenID, this.currentSession.PluginData);
+                currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results, this.generateScreenID, this.currentSession.PluginData, this.currentSession.SessionType==1);
             }
 
             this.checkScreenDynamicsLastResultsChecked = JSON.stringify(this.currentSessionTest.Results);
@@ -680,13 +701,28 @@ ITSTestTakingController.prototype.endSessionChecker = function () {
         }
         this.saveSession();
 
+        var showReport = false;
+        try {
+            if (this.currentSession.PluginData.sessionParameters.reportID != "") {
+                showReport = true;
+                $('#ITSTestTakingDiv').hide();
+                $('#ITSTestTakingDivSessionEnded').hide();
+                $('#NavbarsAdminLogoutButtonTT').hide();
+                $('#ITSTestTakingDivSessionEndedShowReport').show();
+                this.generateReport();
+            }
+        }
+        catch (err) {}
+
         // show session ended screen to allow the system to store all data and handle possible retries
-        $('#ITSTestTakingDiv').hide();
-        $('#ITSTestTakingDivSessionEnded').show();
-        $('#NavbarsAdminLogoutButtonTT').hide();
-        setTimeout(function () {
-            ITSInstance.logoutController.logout();
-        }, 60000);
+        if (!showReport) {
+            $('#ITSTestTakingDiv').hide();
+            $('#ITSTestTakingDivSessionEnded').show();
+            $('#NavbarsAdminLogoutButtonTT').hide();
+            setTimeout(function () {
+                ITSInstance.logoutController.logout();
+            }, 60000);
+        }
 
         // show a message when the test time has ended
         if (this.currentSession.EnforceSessionEndDateTime) {
@@ -697,6 +733,24 @@ ITSTestTakingController.prototype.endSessionChecker = function () {
             }
         }
     }
+};
+
+ITSTestTakingController.prototype.generateReport = function() {
+    try {
+        if (typeof this.repToGen == "undefined") this.repToGen = ITSInstance.reports.newReport(false);
+        if (!this.repToGen.detailsLoaded) {
+            this.repToGen.ID = this.currentSession.PluginData.sessionParameters.reportID;
+            this.repToGen.loadDetailDefinition(this.generateReport.bind(this), ITSInstance.logoutController.logout.bind(this));
+            return;
+        }
+
+        var cst = this.currentSession.sessionTestById( this.repToGen.TestID);
+        cst.calculateScores(true, true);
+        var reportText = this.repToGen.generateTestReport(this.currentSession, cst, false);
+        $('#ITSTestTakingDivSessionEndedShowReportContent')[0].innerHTML = reportText;
+    } catch (err) {}
+
+    setTimeout( function () { ITSInstance.logoutController.logout('',false); }, 1000);
 };
 
 function processEvent (eventName, eventParameters) {
@@ -714,7 +768,7 @@ ITSTestTakingController.prototype.autoStore = function (InTestTaking) {
     if ((Math.abs(dateNow.getTime() - this.AutoStoreLastTimestamp.getTime()) ) > 60000) {
         this.AutoStoreLastTimestamp = new Date();
         if (InTestTaking) {
-            this.saveSessionNeeded = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID, false, this.currentSession.PluginData);
+            this.saveSessionNeeded = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID, false, this.currentSession.PluginData, this.currentSession.SessionType==1);
             this.saveCurrentTest();
         } else {
             if (this.autoStoreSessionTest) {
@@ -740,7 +794,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
     if (this.currentTestDefinition && this.currentSessionTest) {
         // save the results
         if (eventName != "UpdateCurrentScreenFromSessionStorage") {
-            this.saveSessionNeeded = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID, false, this.currentSession.PluginData);
+            this.saveSessionNeeded = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID, false, this.currentSession.PluginData, this.currentSession.SessionType==1);
         }
         if ((eventName!="Store") && (eventName != "AutoStore") && (eventName != "UpdateCurrentScreenFromSessionStorage")) {
             // check the screen validations
@@ -775,7 +829,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
     switch(eventName) {
         case "Store" :
             // results are only stored. do nothing else
-            this.saveSessionNeeded = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID, false, this.currentSession.PluginData);
+            this.saveSessionNeeded = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID, false, this.currentSession.PluginData, this.currentSession.SessionType==1);
             this.saveCurrentTest();
             break;
         case "AutoStore" :
@@ -784,7 +838,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             break;
         case "UpdateCurrentScreenFromSessionStorage":
             var currentScreen = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage];
-            currentScreen.updateFromSessionStorage(this.currentSessionTest.Results, this.currentSession.PluginData);
+            currentScreen.updateFromSessionStorage(this.currentSessionTest.Results, this.currentSession.PluginData, this.currentSession.SessionType==1);
             this.saveCurrentTest();
             break;
         case "EndTest" :

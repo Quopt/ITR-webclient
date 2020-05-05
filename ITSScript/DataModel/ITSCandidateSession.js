@@ -89,36 +89,51 @@ ITSCandidateSession = function (session, ITSSession) {
     this.generatedReports = new ITSCandidateSessionGeneratedReports(this, ITSSession); // the list of generated reports for this session
 };
 
-ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixForPath, callWhenDone, callOnError) {
-    // make sure all needed reports and possible changed reports are loaded first
-    if (! ITSInstance.reports.listLoaded) {
-        ITSInstance.reports.loadAvailableReportsList(function () { this.createReportOverviewInZip(zip,prefixForPath, callWhenDone); }.bind(this,zip,prefixForPath, callWhenDone), callOnError);
-        return;
-    }
+ITSCandidateSession.prototype.createReportOverviewInZipStart = function (zip, prefixForPath, callWhenDone, callOnError, includeReports, includeAnswers) {
+    this.couponsFile = [];
+    this.resultsFile = {};
+}
 
-    // loop through all reports that are applicable for this session and load them
-    var testLists = [];
-    for (var i = 0; i < this.SessionTests.length; i++) {
-        ct = this.SessionTests[i];
-        testLists.push(ct.testDefinition.ID);
-    }
-    var reportsList = ITSInstance.reports.findReportsForTests(testLists);
-    for (var i = 0; i < reportsList.length; i++) {
-        if (! reportsList[i].detailsLoaded) {
-            reportsList[i].loadDetailDefinition(function () { this.createReportOverviewInZip(zip,prefixForPath, callWhenDone); }.bind(this,zip,prefixForPath, callWhenDone), callOnError);
+ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixForPath, callWhenDone, callOnError, includeReports, includeAnswers) {
+    if (includeReports) {
+        // make sure all needed reports and possible changed reports are loaded first
+        if (!ITSInstance.reports.listLoaded) {
+            ITSInstance.reports.loadAvailableReportsList(function () {
+                this.createReportOverviewInZip(zip, prefixForPath, callWhenDone, callOnError, includeReports, includeAnswers);
+            }.bind(this, zip, prefixForPath, callWhenDone, callOnError, includeReports, includeAnswers));
             return;
         }
-    }
 
-    // check if the generatedReports for this session is loaded
-    if (! this.generatedReports.listLoaded) {
-        this.generatedReports.loadGeneratedReportsForSession(function () { this.createReportOverviewInZip(zip,prefixForPath, callWhenDone,zip,prefixForPath, callWhenDone); }.bind(this), callOnError );
-        return;
-    }
-    for (var i=0; i < this.generatedReports.reportCount(); i++) {
-        if (! this.generatedReports.generatedReports[i].detailsLoaded) {
-            this.generatedReports.generatedReports[i].loadDetail(function () { this.createReportOverviewInZip(zip,prefixForPath, callWhenDone,zip,prefixForPath, callWhenDone); }.bind(this), callOnError );
+        // loop through all reports that are applicable for this session and load them
+        var testLists = [];
+        for (var i = 0; i < this.SessionTests.length; i++) {
+            ct = this.SessionTests[i];
+            testLists.push(ct.testDefinition.ID);
+        }
+        var reportsList = ITSInstance.reports.findReportsForTests(testLists);
+        for (var i = 0; i < reportsList.length; i++) {
+            if (!reportsList[i].detailsLoaded) {
+                reportsList[i].loadDetailDefinition(function () {
+                    this.createReportOverviewInZip(zip, prefixForPath, callWhenDone, callOnError, includeReports, includeAnswers);
+                }.bind(this, zip, prefixForPath, callWhenDone, callOnError, includeReports, includeAnswers));
+                return;
+            }
+        }
+
+        // check if the generatedReports for this session is loaded
+        if (!this.generatedReports.listLoaded) {
+            this.generatedReports.loadGeneratedReportsForSession(function () {
+                this.createReportOverviewInZip(zip, prefixForPath, callWhenDone, callOnError, includeReports, includeAnswers);
+            }.bind(this, zip, prefixForPath, callWhenDone, callOnError, includeReports, includeAnswers));
             return;
+        }
+        for (var i = 0; i < this.generatedReports.reportCount(); i++) {
+            if (!this.generatedReports.generatedReports[i].detailsLoaded) {
+                this.generatedReports.generatedReports[i].loadDetail(function () {
+                    this.createReportOverviewInZip(zip, prefixForPath, callWhenDone, callOnError, includeReports, includeAnswers);
+                }.bind(this, zip, prefixForPath, callWhenDone, callOnError, includeReports, includeAnswers));
+                return;
+            }
         }
     }
 
@@ -141,43 +156,78 @@ ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixF
     zip.file( folderName + fileName + ".html", openingTag + $('#AdminInterfaceEditSessionEditTestsList')[0].outerHTML + closingTag);
     ITSInstance.editSessionController.generateTestsList(false, this);
 
+    var fileNameAnswers, fileNameScores;
+    // add the tests to the results file
+    for (var found = 0; found < this.SessionTests.length; found++) {
+        if (typeof this.resultsFile == "undefined") this.resultsFile = {};
+        if (typeof this.resultsFile[prefixForPath] == "undefined") this.resultsFile[prefixForPath] = {};
+        fileNameAnswers = this.SessionTests[found].testDefinition.TestName + ".answers";
+        if (typeof this.resultsFile[prefixForPath][fileNameAnswers] == "undefined") {
+            this.resultsFile[prefixForPath][fileNameAnswers] = {};
+        } else {
+            fileNameAnswers = this.SessionTests[found].testDefinition.TestName + ".answers." + found;
+            this.resultsFile[prefixForPath][fileNameAnswers] = {};
+        }
+        fileNameScores = this.SessionTests[found].testDefinition.TestName + ".scores";
+        if (typeof this.resultsFile[prefixForPath][fileNameScores] == "undefined") {
+            this.resultsFile[prefixForPath][fileNameScores] = {};
+        } else {
+            fileNameScores = this.SessionTests[found].testDefinition.TestName + ".scores." + found;
+            this.resultsFile[prefixForPath][fileNameScores] = {};
+        }
+
+        this.resultsFile[prefixForPath][fileNameAnswers] = this.SessionTests[found].Results;
+        this.resultsFile[prefixForPath][fileNameScores] = this.SessionTests[found].Scores;
+    }
+    // add the coupons to the coupons file
+    if (typeof this.couponsFile == "undefined") this.couponsFile = [];
+    try {
+        if (this.PluginData.CandidateParameters.Coupon != "") this.couponsFile.push(this.PluginData.CandidateParameters.Coupon);
+    } catch(err) {};
+
     // add the response overview
-    $("#SessionViewAnswersInterfaceEditTestAnswers").empty();
-    var genNumber = "" + getNewSimpleGeneratorNumber('SessionViewAnswersInterfaceEdit_gen', 9999)
-    for (var found=0; found < this.SessionTests.length; found ++) {
-        try {
-            folderName = prefixForPath == "" ? "" : prefixForPath + "/" ;
-            folderName = folderName + ITSInstance.tests.testList[ITSInstance.tests.findTestById(ITSInstance.tests.testList, reportsList[i].TestID)].Description + "/";
-        } catch (err) { /* do nothing */ }
-        fileName = ITSInstance.translator.getTranslatedString("ITSCandidateSession", "AnswerOverview", "Answers overview") ;
-        this.SessionTests[found].testDefinition.generateQuestionOverview("SessionViewAnswersInterfaceEditTestAnswers",
-            this.SessionTests[found].Results, true, "_" + genNumber,
-            this, this.SessionTests[found], this.Person);
-        zip.file( folderName + fileName + ".html", openingTag + $('#SessionViewAnswersInterfaceEditTestAnswers')[0].outerHTML + closingTag);
+    if (includeAnswers) {
+        var genNumber = "" + getNewSimpleGeneratorNumber('SessionViewAnswersInterfaceEdit_gen', 9999)
+        for (var found = 0; found < this.SessionTests.length; found++) {
+            $("#SessionViewAnswersInterfaceEditTestAnswers").empty();
+            try {
+                folderName = prefixForPath == "" ? "" : prefixForPath + "/";
+                folderName = folderName + this.SessionTests[found].testDefinition.Description + "/";
+            } catch (err) { /* do nothing */
+            }
+            fileName = ITSInstance.translator.getTranslatedString("ITSCandidateSession", "AnswerOverview", "Answers overview");
+            this.SessionTests[found].testDefinition.generateQuestionOverview("SessionViewAnswersInterfaceEditTestAnswers",
+                this.SessionTests[found].Results, true, "_" + genNumber,
+                this, this.SessionTests[found], this.Person);
+            zip.file(folderName + fileName + ".html", openingTag + $('#SessionViewAnswersInterfaceEditTestAnswers')[0].outerHTML + closingTag);
+        }
     }
 
     // generate and add the reports per test
-    var folderName = "";
-    for (var i = 0; i < reportsList.length; i++) {
-        folderName = "";
-        if (reportsList[i].TestID != "") {
-            // locate the test and use that as folder name
-            try {
-                folderName = prefixForPath == "" ? "" : prefixForPath + "/" ;
-                folderName = folderName + ITSInstance.tests.testList[ITSInstance.tests.findTestById(ITSInstance.tests.testList, reportsList[i].TestID)].Description + "/";
-            } catch (err) { /* do nothing */ }
-            // find the test for this report
-            var reportFound = undefined;
-            for (var tc=0; tc < this.SessionTests.length; tc++) {
-                if (this.SessionTests[tc].TestID == reportsList[i].TestID) {
-                    reportFound = this.generatedReports.findFirst(reportsList[i].ID);
-                    if (typeof reportFound == "undefined") {
-                        zip.file(folderName + reportsList[i].Description + ".html", openingTag + reportsList[i].generateTestReport(this, this.SessionTests[tc], false) + closingTag);
-                    } else {
-                        var org = ITSInstance.translator.getTranslatedString("ITSCandidateSession", "Original", "original");
+    if (includeReports) {
+        var folderName = "";
+        for (var i = 0; i < reportsList.length; i++) {
+            folderName = "";
+            if (reportsList[i].TestID != "") {
+                // locate the test and use that as folder name
+                try {
+                    folderName = prefixForPath == "" ? "" : prefixForPath + "/";
+                    folderName = folderName + ITSInstance.tests.testList[ITSInstance.tests.findTestById(ITSInstance.tests.testList, reportsList[i].TestID)].Description + "/";
+                } catch (err) { /* do nothing */
+                }
+                // find the test for this report
+                var reportFound = undefined;
+                for (var tc = 0; tc < this.SessionTests.length; tc++) {
+                    if (this.SessionTests[tc].TestID == reportsList[i].TestID) {
+                        reportFound = this.generatedReports.findFirst(reportsList[i].ID);
+                        if (typeof reportFound == "undefined") {
+                            zip.file(folderName + reportsList[i].Description + ".html", openingTag + reportsList[i].generateTestReport(this, this.SessionTests[tc], false) + closingTag);
+                        } else {
+                            var org = ITSInstance.translator.getTranslatedString("ITSCandidateSession", "Original", "original");
 
-                        zip.file(folderName + reportsList[i].Description + ".html", openingTag + reportFound.ReportText + closingTag);
-                        zip.file(folderName + reportsList[i].Description + "." + org + ".html", openingTag + reportsList[i].generateTestReport(this, this.SessionTests[tc], false) + closingTag);
+                            zip.file(folderName + reportsList[i].Description + ".html", openingTag + reportFound.ReportText + closingTag);
+                            zip.file(folderName + reportsList[i].Description + "." + org + ".html", openingTag + reportsList[i].generateTestReport(this, this.SessionTests[tc], false) + closingTag);
+                        }
                     }
                 }
             }
@@ -255,6 +305,12 @@ ITSCandidateSession.prototype.deleteSession = function(OnSuccess, OnError) {
     ITSInstance.genericAjaxDelete('sessions/' + this.ID, OnSuccess, OnError, false, true);
     this.ITSSession.MessageBus.publishMessage("Session.Delete", this);
 };
+
+ITSCandidateSession.prototype.deleteGroupSessionQuick = function(OnSuccess, OnError) {
+    ITSInstance.genericAjaxDelete('sessions/group/' + this.ID, OnSuccess, OnError, false, true);
+    this.ITSSession.MessageBus.publishMessage("SessionGroup.Delete", this);
+};
+
 
 ITSCandidateSession.prototype.saveToServer = function (OnSuccess, OnError) {
     this.lastSavedJSON = ITSJSONStringify(this);
@@ -486,9 +542,8 @@ ITSCandidateSession.prototype.loadSession = function (sessionID, OnSuccess, OnEr
         ITSInstance.JSONAjaxLoader('sessions/' + sessionID, this, function () {
             // load the candidate information
             if (this.SessionType != 100) {
-                ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, function () {
-                    this.Person.detailsLoaded = true;
-                }, this.sessionLoadingFailed.bind(this));
+                this.personRequired = true;
+                ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, this.testLoadedFine.bind(this), this.sessionLoadingFailed.bind(this));
             }
             // load the tests in the session
             if (this.InTestTaking) {
@@ -501,9 +556,8 @@ ITSCandidateSession.prototype.loadSession = function (sessionID, OnSuccess, OnEr
         ITSInstance.JSONAjaxLoader('sessions/' + sessionID, this, function () {
             // load the candidate information
             if (this.SessionType != 100) {
-                ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, function () {
-                    this.Person.detailsLoaded = true;
-                }, this.sessionLoadingFailed.bind(this));
+                this.personRequired = true;
+                ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, this.testLoadedFine.bind(this), this.sessionLoadingFailed.bind(this));
             }
             // load the tests in the session
             if (this.InTestTaking) {
@@ -532,14 +586,19 @@ ITSCandidateSession.prototype.sessionLoaded = function () {
 };
 
 ITSCandidateSession.prototype.testLoadedFine = function (testIndex) {
-    var allOK = true;
+    var allOK = false;
     if (this.SessionTests.length > testIndex) {
         for (var j=0; j < this.SessionTests.length; j++) {
-            if ((!this.SessionTests[j].testDefinition) || (!this.SessionTests[j].testDefinition.detailsLoaded) || (!this.SessionTests[j].testDefinition.screenTemplatesLoaded()) || (!this.SessionTests[j].detailsLoaded)) {
+            allOK = false;
+            try {
+                allOK = (this.SessionTests[j].testDefinition.detailsLoaded && this.SessionTests[j].testDefinition.screenTemplatesLoaded() && this.SessionTests[j].detailsLoaded);
+            } catch (err) {};
+            if (!(allOK)) {
                 allOK=false;
                 break;
             }
         }
+        if (this.personRequired) { allOK = this.PersonID == this.Person.ID; }
         if (allOK) {
             // order tests in sequence
             this.SessionTests.sort(function(a, b){return a.Sequence - b.Sequence});

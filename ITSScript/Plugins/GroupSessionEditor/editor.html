@@ -170,7 +170,7 @@
     <button id="AdminInterfaceGroupSessionUnArchiveTest" type="button" data-toggle="modal" data-target="#AdminInterfaceGroupSessionUnArchive-dialog" class="btn btn-warning">
         <i id="AdminInterfaceGroupSessionUnArchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceGroupSessionUnArchive">Unarchive this session</span></button>
     &nbsp;
-    <button type="button" onclick="ITSInstance.groupSessionController.downloadSession();" class="btn btn-success" id="AdminInterfaceGroupSessionDownloadButton"><i class="fa fa-fw fa-download "></i><span id="AdminInterfaceGroupSessionDownload">Download session results archive</span></button>
+    <button type="button" data-toggle="modal" data-target="#AdminInterfaceGroupDownload-dialog" class="btn btn-success" id="AdminInterfaceGroupSessionDownloadButton"><i class="fa fa-fw fa-download "></i><span id="AdminInterfaceGroupSessionDownload">Download session results archive</span></button>
 
 </div>
 
@@ -326,6 +326,43 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfaceGroupSessionLoginOverview-CloseButton">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AdminInterfaceGroupDownload-dialog" tabindex="-1" role="dialog" aria-labelledby="AdminInterfaceGroupDownloadLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AdminInterfaceGroupDownloadLabel">Please confirm what you want to download</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="AdminInterfaceGroupDownload-Answers" name="AdminInterfaceGroupUnArchive-list" value="answers">
+                        <label class="form-check-label" id="AdminInterfaceGroupDownload-AnswersLabel"  for="AdminInterfaceGroupDownload-Answers">
+                            Include answers overview
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="AdminInterfaceGroupDownload-reports" name="AdminInterfaceGroupUnArchive-list" value="reports">
+                        <label class="form-check-label" id="AdminInterfaceGroupDownload-ReportsLabel"  for="AdminInterfaceGroupDownload-reports">
+                            Include all reports
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfaceGroupDownload-CloseButton">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="AdminInterfaceGroupDownload-Button" onclick="ITSInstance.groupSessionController.downloadSession();"  notranslate>
+                    <i id="AdminInterfaceGroupDownloadIcon" class="fa fa-fw fa-archive"></i>
+                    <span id="AdminInterfaceGroupDownload-buttonlabel">Download archive</span>
+                </button>
             </div>
         </div>
     </div>

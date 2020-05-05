@@ -625,12 +625,19 @@
 
         // add all results to a ZIP file and download that to the client
         var zip = new JSZip();
+        this.currentSession.createReportOverviewInZipStart();
         this.currentSession.createReportOverviewInZip(zip,"", function(currentSession,zip) {
             // download
             ITSInstance.UIController.showInterfaceAsWaitingOff();
             var fileName = ITSInstance.translator.getTranslatedString("ITSSessionEditor", "ScoreOverview", "Score overview");
             zip.generateAsync({type : "blob"}).
-             then(function (blob) { saveFileLocally(fileName + " " + this.currentSession.Description + " - " + this.currentSession.Person.createHailing() + ".zip" , blob, "application/zip"); }.bind(this));
+             then(function (blob) {
+                zip.file('data.json',JSON.stringify(currentSession.resultsFile));
+                if (currentSession.couponsFile.length > 0) {
+                    zip.file('coupons.txt', currentSession.couponsFile.join('\n\r'));
+                }
+                saveFileLocally(fileName + " " + this.currentSession.Description + " - " + this.currentSession.Person.createHailing() + ".zip" , blob, "application/zip");
+             }.bind(this));
         }.bind(this), this.zipError);
     };
 

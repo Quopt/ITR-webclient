@@ -253,11 +253,20 @@ ITSUIController = function () {
             $("#waitModal").modal('show');
         }
     } ;
+    this.showInterfaceAsWaitingProgress= function (indicator) {
+        $("#waitModalProgress").css('display','');
+        $("#waitModalProgress")[0].innerHTML = indicator;
+    } ;
+    this.showInterfaceAsWaitingProgressOff= function () {
+        $("#waitModalProgress").css('display','none');
+    } ;
     this.showInterfaceAsWaitingOff = function () {
         modalRequired = false;
+        $("#waitModalProgress").css('display','none');
         setTimeout( this.showInterfaceAsWaitingOffForceShow , 100);
     } ;
     this.showInterfaceAsWaitingOffForceShow= function () {
+        $("#waitModalProgress").css('display','none');
         $("#waitModal").modal('hide');
         modalShows = false;
     } ;
@@ -451,6 +460,7 @@ ITSUIController = function () {
         $(menuPosition).append(newLI);
         };
     this.prepareOfficeSession = function () {
+        cookieHelper.setCookie('SessionID','',0);
         if (!this.OfficeSessionPrepared) {
             this.OfficeSessionPrepared = true;
             // load all data that is required by the system

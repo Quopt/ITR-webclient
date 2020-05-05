@@ -160,14 +160,10 @@
     <button type="button" class="btn btn-default btn-success" id="AdminInterfacePublicSessionShowRelatedButton" onclick="ITSInstance.PublicSessionController.showPublicSessions();">
         <i id="AdminInterfacePublicSessionShowRelatedButton-saveIcon" class="fa fa-fw fa-tasks"></i> <span id="AdminInterfacePublicSessionShowRelatedButtonLabel">Show filled in person sessions</span>
     </button>&nbsp;
-    <button id="AdminInterfacePublicSessionArchiveTest" type="button" data-toggle="modal" data-target="#AdminInterfacePublicSessionArchive-dialog" class="btn btn-warning">
-        <i id="AdminInterfacePublicSessionArchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfacePublicSessionArchive">Archive this session</span></button>
     <button id="AdminInterfacePublicSessionDeleteTest" type="button" data-toggle="modal" data-target="#AdminInterfacePublicSessionDelete-dialog" class="btn btn-warning">
         <i id="AdminInterfacePublicSessionDeleteTestIcon" class="fa fa-fw fa-trash"></i><span id="AdminInterfacePublicSessionDelete">Delete this session</span></button>
-    <button id="AdminInterfacePublicSessionUnArchiveTest" type="button" data-toggle="modal" data-target="#AdminInterfacePublicSessionUnArchive-dialog" class="btn btn-warning">
-        <i id="AdminInterfacePublicSessionUnArchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfacePublicSessionUnArchive">Unarchive this session</span></button>
-    &nbsp;
-    <button type="button" onclick="ITSInstance.PublicSessionController.downloadSession();" class="btn btn-success" id="AdminInterfacePublicSessionDownloadButton"><i class="fa fa-fw fa-download "></i><span id="AdminInterfacePublicSessionDownload">Download results archive</span></button>
+
+    <button type="button" data-toggle="modal" data-target="#AdminInterfacePublicSessionDownload-dialog" class="btn btn-success" id="AdminInterfacePublicSessionDownloadButton"><i class="fa fa-fw fa-download "></i><span id="AdminInterfacePublicSessionDownload">Download results archive</span></button>
 
 </div>
 
@@ -262,3 +258,40 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="AdminInterfacePublicSessionDownload-dialog" tabindex="-1" role="dialog" aria-labelledby="AdminInterfacePublicSessionDownloadLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AdminInterfacePublicSessionDownloadLabel">Please confirm what you want to download</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="AdminInterfacePublicSessionDownload-Answers" name="AdminInterfacePublicSessionUnArchive-list" value="answers">
+                        <label class="form-check-label" id="AdminInterfacePublicSessionDownload-AnswersLabel"  for="AdminInterfacePublicSessionDownload-Answers">
+                            Include answers overview
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="AdminInterfacePublicSessionDownload-reports" name="AdminInterfacePublicSessionUnArchive-list" value="reports">
+                        <label class="form-check-label" id="AdminInterfacePublicSessionDownload-ReportsLabel"  for="AdminInterfacePublicSessionDownload-reports">
+                            Include all reports
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfacePublicSessionDownload-CloseButton">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="AdminInterfacePublicSessionDownload-Button" onclick="ITSInstance.PublicSessionController.downloadSession();"  notranslate>
+                    <i id="AdminInterfacePublicSessionDownloadIcon" class="fa fa-fw fa-archive"></i>
+                    <span id="AdminInterfacePublicSessionDownload-buttonlabel">Download archive</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

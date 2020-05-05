@@ -353,15 +353,17 @@ function ITSTranslateInterface() {
     ITSInstance.translator.translateDiv('#LoginWindowEnterMfaCode');
     ITSInstance.translator.translateDiv('#ITSTestTakingDivTestEnded');
     ITSInstance.translator.translateDiv('#ITSTestTakingDivSessionEnded');
+    ITSInstance.translator.translateDiv('#ITSTestTakingDivSessionEndedShowReport');
 }
 
 function moveFooterToRightPosition() {
     if ($(document).height() > $(window).height()) {
-        $('#NavBarsFooter').css({'top': '50px'})
+        //$('#NavBarsFooter').css({'top': '50px'})
         $('#NavBarsFooter').css({'position': 'relative'})
+        $('#NavBarsFooter').css({'top': Math.min($(document).height(), $(window).height()) + $('#NavBarsFooter').height() + 50 + 'px'})
     } else {
         $('#NavBarsFooter').css({'position': 'absolute'})
-        $('#NavBarsFooter').css({'top': Math.min($(document).height(), $(window).height()) - $('#NavBarsFooter').height() + 'px'})
+        $('#NavBarsFooter').css({'top': Math.min($(document).height(), $(window).height()) + $('#NavBarsFooter').height() + 50 + 'px'})
     }
 };
 
