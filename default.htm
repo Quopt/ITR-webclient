@@ -436,12 +436,13 @@
 <div class="modal" tabindex="-1" role="dialog" id="waitModal">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header bg-faded">
+            <div class="modal-header bg-faded d-flex justify-content-center">
                 <h5 class="modal-title" id="waitModalHeader">Processing</h5>
             </div>
-            <div class="modal-body">
-                <center><i id="waitModalIcon" class="fa fa-spinner fa-spin fa-5x"></i>
-                </center><br/>
+            <div class="modal-body d-flex justify-content-center">
+                <i id="waitModalIcon" class="fa fa-spinner fa-spin fa-5x"></i>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
                 <div id="waitModalProgress" notranslate class="progress-bar progress-bar-striped progress-bar-animated w-100" style="display: none;" aria-valuemin="0" aria-valuemax="100">&nbsp;</div>
             </div>
         </div>

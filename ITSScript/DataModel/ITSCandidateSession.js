@@ -311,6 +311,17 @@ ITSCandidateSession.prototype.deleteGroupSessionQuick = function(OnSuccess, OnEr
     this.ITSSession.MessageBus.publishMessage("SessionGroup.Delete", this);
 };
 
+ITSCandidateSession.prototype.archiveGroupSessionQuick = function(OnSuccess, OnError) {
+    ITSInstance.genericAjaxUpdate('sessions/group/' + this.ID + '/archive', {}, OnSuccess, OnError);
+    this.ITSSession.MessageBus.publishMessage("SessionGroup.Archived", this);
+    this.Active = false;
+};
+
+ITSCandidateSession.prototype.unarchiveGroupSessionQuick = function(OnSuccess, OnError) {
+    ITSInstance.genericAjaxUpdate('sessions/group/' + this.ID + '/unarchive', {}, OnSuccess, OnError);
+    this.ITSSession.MessageBus.publishMessage("SessionGroup.Unarchived", this);
+    this.Active = true;
+};
 
 ITSCandidateSession.prototype.saveToServer = function (OnSuccess, OnError) {
     this.lastSavedJSON = ITSJSONStringify(this);

@@ -354,6 +354,7 @@ function ITSTranslateInterface() {
     ITSInstance.translator.translateDiv('#ITSTestTakingDivTestEnded');
     ITSInstance.translator.translateDiv('#ITSTestTakingDivSessionEnded');
     ITSInstance.translator.translateDiv('#ITSTestTakingDivSessionEndedShowReport');
+    ITSInstance.translator.translateDiv('#waitModal');
 }
 
 function moveFooterToRightPosition() {

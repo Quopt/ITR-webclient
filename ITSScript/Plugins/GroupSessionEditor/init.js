@@ -603,7 +603,8 @@ ITSGroupSessionEditor.prototype.showUserAndPasswordOverview = function () {
 };
 
 ITSGroupSessionEditor.prototype.showGroupSessions = function () {
-    ITSRedirectPath('SessionLister&SessionType=0&GroupSessionID=' + this.currentSession.ID);
+    var x = this.currentSession.Active ? "" : "&Status=Archived";
+    ITSRedirectPath('SessionLister&SessionType=0&GroupSessionID=' + this.currentSession.ID + x);
 };
 
 ITSGroupSessionEditor.prototype.archiveGroupSessionNow = function (archiveStatus) {
@@ -611,10 +612,7 @@ ITSGroupSessionEditor.prototype.archiveGroupSessionNow = function (archiveStatus
     this.archiveStatus = archiveStatus;
 
     if ($('#AdminInterfaceGroupSessionArchive-All:checked').val() == "all") {
-        this.currentSession.archiveGroupSessionsOnServer(function () {
-            this.currentSession.Active = this.archiveStatus;
-            this.currentSession.saveToServer(this.archiveSessionsDone.bind(this), this.archiveSessionsError.bind(this));
-        }.bind(this), this.archiveSessionsError.bind(this), 'waitModalProgress', false, this.archiveStatus);
+        this.currentSession.archiveGroupSessionQuick(this.archiveSessionsDone.bind(this), this.archiveSessionsError.bind(this));
     }
     else if ($('#AdminInterfaceGroupSessionArchive-Unstarted:checked').val() == "unstarted") {
         this.currentSession.archiveGroupSessionsOnServer(function () {
@@ -627,19 +625,31 @@ ITSGroupSessionEditor.prototype.archiveGroupSessionNow = function (archiveStatus
         this.currentSession.saveToServer(this.archiveSessionsDone.bind(this), this.archiveSessionsError.bind(this));
     }
 };
+
+
+ITSGroupSessionEditor.prototype.unarchiveGroupSessionNow = function (archiveStatus) {
+    ITSInstance.UIController.showInterfaceAsWaitingOn();
+    this.archiveStatus = archiveStatus;
+
+    if ($('#AdminInterfaceGroupSessionUnArchive-All:checked').val() == "all") {
+        this.currentSession.unarchiveGroupSessionQuick(this.archiveSessionsDone.bind(this), this.archiveSessionsError.bind(this));
+    }
+    else if ($('#AdminInterfaceGroupSessionUnArchive-Unstarted:checked').val() == "unstarted") {
+        this.currentSession.archiveGroupSessionsOnServer(function () {
+            this.currentSession.Active = this.archiveStatus;
+            this.currentSession.saveToServer(this.archiveSessionsDone.bind(this), this.archiveSessionsError.bind(this));
+        }.bind(this), this.archiveSessionsError.bind(this), 'waitModalProgress', true, this.archiveStatus);
+    }
+    else if ($('#AdminInterfaceGroupSessionUnArchive-OnlyThis:checked').val() == "onlygroup") {
+        this.currentSession.Active = this.archiveStatus;
+        this.currentSession.saveToServer(this.archiveSessionsDone.bind(this), this.archiveSessionsError.bind(this));
+    }
+};
+
 ITSGroupSessionEditor.prototype.archiveSessionsDone = function () {
     this.switchUIState();
-    if (this.archiveStatus) {
-        // process the save session logic completely so that all logins are created again as well
-        this.currentSession.Active = true;
-        this.saveCurrentSession(function () {
-            ITSInstance.UIController.showInterfaceAsWaitingOff();
-            ITSInstance.UIController.showInfo("ITSGroupSessionEditor.ArchiveSessionOK", "The session has been successfully (un)archived. Please review the session and the save it.");
-        });
-    } else {
-        ITSInstance.UIController.showInterfaceAsWaitingOff();
-        ITSInstance.UIController.showInfo("ITSGroupSessionEditor.ArchiveSessionOK", "The session has been successfully (un)archived. Please review the session and the save it.");
-    }
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+    ITSInstance.UIController.showInfo("ITSGroupSessionEditor.ArchiveSessionOK", "The session has been successfully (un)archived. Please review the session and the save it.");
 };
 ITSGroupSessionEditor.prototype.archiveSessionsError = function () {
     ITSInstance.UIController.showInterfaceAsWaitingOff();

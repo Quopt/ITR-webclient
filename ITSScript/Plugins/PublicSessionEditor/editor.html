@@ -163,6 +163,11 @@
     <button id="AdminInterfacePublicSessionDeleteTest" type="button" data-toggle="modal" data-target="#AdminInterfacePublicSessionDelete-dialog" class="btn btn-warning">
         <i id="AdminInterfacePublicSessionDeleteTestIcon" class="fa fa-fw fa-trash"></i><span id="AdminInterfacePublicSessionDelete">Delete this session</span></button>
 
+    <button id="AdminInterfacePublicSessionArchiveTest" type="button" data-toggle="modal" data-target="#AdminInterfacePublicSessionArchive-dialog" class="btn btn-warning">
+        <i id="AdminInterfacePublicSessionArchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfacePublicSessionArchive">Archive this session</span></button>
+    <button id="AdminInterfacePublicSessionUnArchiveTest" type="button" data-toggle="modal" data-target="#AdminInterfacePublicSessionUnArchive-dialog" class="btn btn-warning">
+        <i id="AdminInterfacePublicSessionUnArchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfacePublicSessionUnArchive">Unarchive this session</span></button>
+    
     <button type="button" data-toggle="modal" data-target="#AdminInterfacePublicSessionDownload-dialog" class="btn btn-success" id="AdminInterfacePublicSessionDownloadButton"><i class="fa fa-fw fa-download "></i><span id="AdminInterfacePublicSessionDownload">Download results archive</span></button>
 
 </div>
@@ -219,7 +224,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfacePublicSessionArchive-CloseButton">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="AdminInterfacePublicSessionArchive-ArchiveButton" onclick="ITSInstance.PublicSessionController.archivePublicSessionNow(false);" notranslate>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="AdminInterfacePublicSessionArchive-ArchiveButton" onclick="ITSInstance.PublicSessionController.archivePublicSessionNow(true);" notranslate>
                     <i id="AdminInterfacePublicSessionArchiveTestIcon2" class="fa fa-fw fa-archive"></i>
                     <span id="AdminInterfacePublicSessionArchive-buttonlabel">Archive public session</span>
                 </button>
@@ -249,7 +254,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfacePublicSessionUnArchive-CloseButton">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="AdminInterfacePublicSessionUnArchive-UnArchiveButton" onclick="ITSInstance.PublicSessionController.archivePublicSessionNow(true);" notranslate>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="AdminInterfacePublicSessionUnArchive-UnArchiveButton" onclick="ITSInstance.PublicSessionController.archivePublicSessionNow(false);" notranslate>
                     <i id="AdminInterfacePublicSessionUnArchiveTestIcon2" class="fa fa-fw fa-archive"></i>
                     <span id="AdminInterfacePublicSessionUnArchive-buttonlabel">Unarchive public session</span>
                 </button>

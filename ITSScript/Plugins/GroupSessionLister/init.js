@@ -33,6 +33,7 @@
         ITSInstance.MessageBus.subscribe("CurrentCompany.Loaded", function () {
             if (ITSInstance.companies.currentCompany.PluginData.Preferences.EnablePublicSessions) {
                 ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', '#GroupSessionListerController.PublicSessionMenu', ITSInstance.translator.translate("#GroupSessionListerController.PublicSessionReadyMenu", "Public sessions"), "fa-user-plus", "ITSRedirectPath(\'GroupSessionLister&SessionType=200\');");
+                ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#GroupSessionListerController.PublicSessionArchivedMenu", ITSInstance.translator.translate("#PublicSessionListerController.PublicSessionArchivedMenu", "Public sessions archive"), "fa-archive", "ITSRedirectPath(\'GroupSessionLister&SessionType=200&Status=Archived\');");
             }
         }, true);
 
@@ -41,6 +42,8 @@
         ITSInstance.MessageBus.subscribe("SessionGroup.Delete", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
         ITSInstance.MessageBus.subscribe("Session.Create", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
         ITSInstance.MessageBus.subscribe("Session.Update", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
+        ITSInstance.MessageBus.subscribe("SessionGroup.Archived", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
+        ITSInstance.MessageBus.subscribe("SessionGroup.Unarchived", function () { ITSInstance.GroupSessionListerController.alreadyLoaded = false; ITSInstance.GroupSessionListerController.currentPage=0; } );
 
         // translate the portlet
         ITSInstance.translator.translateDiv("#GroupSessionListerInterfaceSessionEdit");
