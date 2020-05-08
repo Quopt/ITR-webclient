@@ -55,8 +55,10 @@ ITSSession = function () {
     this.MessageBus = new ITSMessageBus();
 
     // generic support functions
-    this.loadQueue = [];
+    this.genericLoadQueue = [];
+    this.genericJSONLoadQueue = [];
     this.callProcessing = false;
+    this.callJSONLoaderProcessing = false;
 };
 
 ITSEmptyObject = function () {
@@ -64,7 +66,7 @@ ITSEmptyObject = function () {
 }
 
 ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, OnNewChild, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
-    this.loadQueue.push(
+    this.genericLoadQueue.push(
         {
             "URL": URL,
             "objectToPutDataIn" : objectToPutDataIn,
@@ -81,31 +83,31 @@ ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuc
             "UnifiedSearchString" : UnifiedSearchString
         }
     );
-    //console.log("Push",URL, this.loadQueue.length);
+    //console.log("Push",URL, this.genericLoadQueue.length);
     this.genericAjaxLoaderProcessQueue();
 };
 
 ITSSession.prototype.genericAjaxLoaderProcessQueue = function () {
     if (!this.callProcessing) {
-        if (this.loadQueue.length > 0) {
+        if (this.genericLoadQueue.length > 0) {
             this.callProcessing = true;
-            var x = this.loadQueue[0];
+            var x = this.genericLoadQueue[0];
             //console.log("Acquiring", x);
             this.genericAjaxLoaderRunner(x.URL,
                 x.objectToPutDataIn,
                 function () {
-                    var x = this.loadQueue[0];
+                    var x = this.genericLoadQueue[0];
                     this.callProcessing = false;
                     //console.log("OK", x);
                     setTimeout(x.OnSuccess,1);
-                    this.loadQueue.splice(0,1);
+                    this.genericLoadQueue.splice(0,1);
                     this.genericAjaxLoaderProcessQueue();
                 }.bind(this),
                 function () {
-                    var x = this.loadQueue[0];
+                    var x = this.genericLoadQueue[0];
                     this.callProcessing = false;
                     setTimeout(x.OnError,1);
-                    this.loadQueue.splice(0,1);
+                    this.genericLoadQueue.splice(0,1);
                     this.genericAjaxLoaderProcessQueue();
                 }.bind(this),
                 x.OnNewChild,
@@ -198,8 +200,65 @@ ITSSession.prototype.genericAjaxLoaderRunner = function (URL, objectToPutDataIn,
         type: 'GET'
     });
 };
-
 ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, DefaultObjectType, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
+    this.genericJSONLoadQueue.push(
+        {
+            "URL": URL,
+            "objectToPutDataIn" : objectToPutDataIn,
+            "OnSuccess" : OnSuccess,
+            "OnError" : OnError,
+            "DefaultObjectType" : DefaultObjectType,
+            "PageNumber" : PageNumber,
+            "PageSize" : PageSize,
+            "PageSort" : PageSort,
+            "IncludeArchived" : IncludeArchived,
+            "IncludeMaster" : IncludeMaster,
+            "IncludeClient" : IncludeClient,
+            "Filter" : Filter,
+            "UnifiedSearchString" : UnifiedSearchString
+        }
+    );
+    //console.log("Push",URL, this.genericJSONLoadQueue.length);
+    this.JSONAjaxLoaderProcessQueue();
+};
+
+ITSSession.prototype.JSONAjaxLoaderProcessQueue = function () {
+    if (!this.callJSONLoaderProcessing) {
+        if (this.genericJSONLoadQueue.length > 0) {
+            this.callJSONLoaderProcessing = true;
+            var x = this.genericJSONLoadQueue[0];
+            //console.log("Acquiring", x);
+            this.JSONAjaxLoaderRunner(x.URL,
+                x.objectToPutDataIn,
+                function () {
+                    var x = this.genericJSONLoadQueue[0];
+                    this.callJSONLoaderProcessing = false;
+                    //console.log("OK", x);
+                    setTimeout(x.OnSuccess,1);
+                    this.genericJSONLoadQueue.splice(0,1);
+                    this.JSONAjaxLoaderProcessQueue();
+                }.bind(this),
+                function () {
+                    var x = this.genericJSONLoadQueue[0];
+                    this.callJSONLoaderProcessing = false;
+                    setTimeout(x.OnError,1);
+                    this.genericJSONLoadQueue.splice(0,1);
+                    this.JSONAjaxLoaderProcessQueue();
+                }.bind(this),
+                x.DefaultObjectType,
+                x.PageNumber,
+                x.PageSize,
+                x.PageSort,
+                x.IncludeArchived,
+                x.IncludeMaster,
+                x.IncludeClient,
+                x.Filter,
+                x.UnifiedSearchString);
+        }
+    }
+};
+
+ITSSession.prototype.JSONAjaxLoaderRunner = function (URL, objectToPutDataIn, OnSuccess, OnError, DefaultObjectType, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
     ITSLogger.logMessage(logLevel.INFO,'ajax JSON load : ' + this.baseURLAPI + URL + " M/C=" + IncludeMaster + "/" + IncludeClient);
     tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
     tempHeaders['StartPage'] = "-1";

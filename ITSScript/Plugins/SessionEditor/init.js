@@ -174,7 +174,6 @@
         ITSInstance.UIController.showInterfaceAsWaitingOn(0);
         $('#AdminInterfaceEditSessionEditTestsList').empty();
         this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this));
-        this.loadAvailableTestsToAdd();
     };
 
     ITSSessionEditor.prototype.sessionLoaded = function () {

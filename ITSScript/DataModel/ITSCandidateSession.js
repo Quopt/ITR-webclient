@@ -593,18 +593,20 @@ ITSCandidateSession.prototype.sessionLoaded = function () {
 
 ITSCandidateSession.prototype.testLoadedFine = function (testIndex) {
     var allOK = false;
+    if (typeof testIndex == "undefined") testIndex = -1;
     if (this.SessionTests.length > testIndex) {
         for (var j=0; j < this.SessionTests.length; j++) {
             allOK = false;
             try {
                 allOK = (this.SessionTests[j].testDefinition.detailsLoaded && this.SessionTests[j].testDefinition.screenTemplatesLoaded() && this.SessionTests[j].detailsLoaded);
             } catch (err) {};
-            if (!(allOK)) {
-                allOK=false;
+            if (! allOK) {
                 break;
             }
         }
-        if (this.personRequired) { allOK = this.PersonID == this.Person.ID; }
+        if (this.personRequired && allOK) {
+            allOK = this.PersonID == this.Person.ID;
+        }
         if (allOK) {
             // order tests in sequence
             this.SessionTests.sort(function(a, b){return a.Sequence - b.Sequence});
@@ -612,9 +614,12 @@ ITSCandidateSession.prototype.testLoadedFine = function (testIndex) {
 
     }
 
-    if (allOK && this.OnSucces) {
+    if (allOK && typeof this.OnSucces != "undefined") {
+        //console.log("= OK");
         setTimeout(this.OnSucces,1);
         this.OnSucces = undefined;
+    } else {
+        //console.log("= NOT OK " + allOK);
     }
 };
 
