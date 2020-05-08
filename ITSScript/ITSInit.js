@@ -54,14 +54,74 @@ ITSSession = function () {
     // messagebus
     this.MessageBus = new ITSMessageBus();
 
+    // generic support functions
+    this.loadQueue = [];
+    this.callProcessing = false;
 };
 
 ITSEmptyObject = function () {
     this.ID = "";
 }
 
-// generic support functions
 ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, OnNewChild, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
+    this.loadQueue.push(
+        {
+            "URL": URL,
+            "objectToPutDataIn" : objectToPutDataIn,
+            "OnSuccess" : OnSuccess,
+            "OnError" : OnError,
+            "OnNewChild" : OnNewChild,
+            "PageNumber" : PageNumber,
+            "PageSize" : PageSize,
+            "PageSort" : PageSort,
+            "IncludeArchived" : IncludeArchived,
+            "IncludeMaster" : IncludeMaster,
+            "IncludeClient" : IncludeClient,
+            "Filter" : Filter,
+            "UnifiedSearchString" : UnifiedSearchString
+        }
+    );
+    //console.log("Push",URL, this.loadQueue.length);
+    this.genericAjaxLoaderProcessQueue();
+};
+
+ITSSession.prototype.genericAjaxLoaderProcessQueue = function () {
+    if (!this.callProcessing) {
+        if (this.loadQueue.length > 0) {
+            this.callProcessing = true;
+            var x = this.loadQueue[0];
+            //console.log("Acquiring", x);
+            this.genericAjaxLoaderRunner(x.URL,
+                x.objectToPutDataIn,
+                function () {
+                    var x = this.loadQueue[0];
+                    this.callProcessing = false;
+                    //console.log("OK", x);
+                    setTimeout(x.OnSuccess,1);
+                    this.loadQueue.splice(0,1);
+                    this.genericAjaxLoaderProcessQueue();
+                }.bind(this),
+                function () {
+                    var x = this.loadQueue[0];
+                    this.callProcessing = false;
+                    setTimeout(x.OnError,1);
+                    this.loadQueue.splice(0,1);
+                    this.genericAjaxLoaderProcessQueue();
+                }.bind(this),
+                x.OnNewChild,
+                x.PageNumber,
+                x.PageSize,
+                x.PageSort,
+                x.IncludeArchived,
+                x.IncludeMaster,
+                x.IncludeClient,
+                x.Filter,
+                x.UnifiedSearchString);
+        }
+    }
+};
+
+ITSSession.prototype.genericAjaxLoaderRunner = function (URL, objectToPutDataIn, OnSuccess, OnError, OnNewChild, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
     ITSLogger.logMessage(logLevel.INFO,'ajax load : ' + this.baseURLAPI + URL );
     tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
     tempHeaders['StartPage'] = "-1";

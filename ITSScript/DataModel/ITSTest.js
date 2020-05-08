@@ -1361,11 +1361,6 @@ ITSTest.prototype.scoreTest = function (session, sessionTest, candidate, results
     // first process the scoring rules
     this.prepareScalesStorage(scores, true);
     for (var i=0; i < this.scoreRules.length; i++) {
-        //this.SourceScreenID = "";
-        //this.SourceQuestionID = "";
-        //this.SourceValue = "";
-        //this.TargetScale = "";
-        //this.TargetScaleValue = "";
         var r = results;
         var s = scores;
         var rule = this.scoreRules[i];

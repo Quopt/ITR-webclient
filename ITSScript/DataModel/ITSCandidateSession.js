@@ -551,11 +551,6 @@ ITSCandidateSession.prototype.loadSession = function (sessionID, OnSuccess, OnEr
     // load the session
     if (excludeDoneTests) {
         ITSInstance.JSONAjaxLoader('sessions/' + sessionID, this, function () {
-            // load the candidate information
-            if (this.SessionType != 100) {
-                this.personRequired = true;
-                ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, this.testLoadedFine.bind(this), this.sessionLoadingFailed.bind(this));
-            }
             // load the tests in the session
             if (this.InTestTaking) {
                 ITSInstance.JSONAjaxLoader('sessionteststaking/' + this.ID, this.SessionTests, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this), 'ITSCandidateSessionTest');
@@ -565,11 +560,6 @@ ITSCandidateSession.prototype.loadSession = function (sessionID, OnSuccess, OnEr
         }.bind(this), this.sessionLoadingFailed.bind(this), 'ITSObject', 0, 99999, "", "N", "N", "Y", "Status=10, Status=20");
     } else {
         ITSInstance.JSONAjaxLoader('sessions/' + sessionID, this, function () {
-            // load the candidate information
-            if (this.SessionType != 100) {
-                this.personRequired = true;
-                ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, this.testLoadedFine.bind(this), this.sessionLoadingFailed.bind(this));
-            }
             // load the tests in the session
             if (this.InTestTaking) {
                 ITSInstance.JSONAjaxLoader('sessionteststaking/' + this.ID, this.SessionTests, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this), 'ITSCandidateSessionTest');
@@ -593,6 +583,11 @@ ITSCandidateSession.prototype.sessionLoaded = function () {
         this.SessionTests[i].ITSSession = this.ITSSession;
 
         this.SessionTests[i].loadDetails(this.testLoadedFine.bind(this,i), this.sessionLoadingFailed.bind(this), this.InTestTaking);
+    }
+    // load the candidate information
+    if (this.SessionType != 100) {
+        this.personRequired = true;
+        ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, this.testLoadedFine.bind(this), this.sessionLoadingFailed.bind(this));
     }
 };
 
