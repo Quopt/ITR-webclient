@@ -228,6 +228,16 @@
         ITSInstance.genericAjaxUpdate('systemsettings/SMTP_SENDER', newVal, function () {}, function () {}, "N", "Y");
     };
 
+    ITSCustomerSettingsEditor.prototype.deleteUnusedCandidatesWarning = function () {
+        ITSInstance.UIController.showDialog("CustomerSettingsEditor.CandidateDelete","Delete unused candidated", "Are you sure you want to ALL unused candidates? Please make sure that you are the only user on your system before performing this action.",
+            [ {btnCaption : "Yes", btnType : "btn-warning", btnOnClick : "ITSInstance.CustomerSettingsController.deleteUnusedCandidates();"}, {btnCaption : "No"} ]);
+
+    };
+
+    ITSCustomerSettingsEditor.prototype.deleteUnusedCandidates = function () {
+        ITSInstance.candidates.removeUnusedCandidates(function () {}, function () {});
+    };
+
     // register the portlet
     ITSInstance.CustomerSettingsController = new ITSCustomerSettingsEditor();
     ITSInstance.UIController.registerEditor(ITSInstance.CustomerSettingsController);

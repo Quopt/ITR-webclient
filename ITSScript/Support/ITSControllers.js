@@ -490,6 +490,7 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
             // change the Visible property for the screencomponents we can find
             var checkScreenDynamic = {};
             var sourceComponent = {};
+            var targetComponentScreen = {};
             var targetComponent = {};
             var results = this.currentSessionTest.Results;
             var updateComponent = {};
@@ -498,8 +499,11 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
                 try {
                     sourceComponent = results[ "__" + checkScreenDynamic.sourceScreenID];
                     sourceComponent = sourceComponent[ "__" + checkScreenDynamic.sourceVariableID ];
-                    targetComponent = results[ "__" + checkScreenDynamic.targetScreenID];
-                    targetComponent = targetComponent[ "__" + checkScreenDynamic.targetVariableID ];
+                    targetComponentScreen = results[ "__" + checkScreenDynamic.targetScreenID];
+                    targetComponent = "";
+                    if (checkScreenDynamic.targetVariableID != "") {
+                        targetComponent = targetComponentScreen["__" + checkScreenDynamic.targetVariableID];
+                    }
                     var comp = false;
                     if (checkScreenDynamic.comparison == "=") { checkScreenDynamic.comparison = "==";}
                     try {
@@ -518,7 +522,15 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
                                 ITSLogger.logMessage(logLevel.ERROR,"Evaluating targetscript failed for  "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + "," + j + ")"  + err);
                             }
                         } else {
-                            targetComponent.Visible = checkScreenDynamic.targetVisible;
+                            if (targetComponent != "") {
+                                targetComponent.Visible = checkScreenDynamic.targetVisible;
+                            } else {
+                                try {
+                                    this.currentTestDefinition.findScreenByID(checkScreenDynamic.targetScreenID).show = checkScreenDynamic.targetVisible;
+                                } catch (err) {
+                                    ITSLogger.logMessage(logLevel.ERROR,"Screen dynamics settings screen visibility failed for  "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + "," + j + ")"  + err);
+                                }
+                            }
                         }
                         // if this component is in the current screen set the visible value
                         updateComponent = currentScreen.findComponentByID(checkScreenDynamic.targetVariableID);
@@ -529,7 +541,7 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
                 } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Setting screen dynamics failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + "," + j + ")"  + err); }
             }
 
-            if (visibilityState != currentScreen.getVisibilityStatusAsString()) { // some visibility state has changed for a component, rerender the screen
+            if (visibilityState != currentScreen.getVisibilityStatusAsString() || screenNotRenderedYet) { // some visibility state has changed for a component, rerender the screen
                 //ITSLogger.logMessage(logLevel.ERROR,"Re-render");
                 $('#ITSTestTakingDiv').empty();
                 currentScreen.generateScreenInDiv('ITSTestTakingDiv', 'TT', this.generateScreenID);
@@ -853,6 +865,10 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
      		if (this.InTestTaking) this.switchNavBar();
             this.endSession();
             break;
+        case "NextScreenIfAnswered" :
+            if (this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].checkIsAnswered( this.currentSessionTest.Results ) < 1  ) {
+                break;
+            }
         case "NextScreen" :
      		if (this.InTestTaking) this.switchNavBar();
             this.currentSessionTest.CurrentPage++;

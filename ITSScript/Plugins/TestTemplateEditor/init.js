@@ -805,11 +805,23 @@ ITSTestTemplateEditor.prototype.copyToNewScreen = function (sourceIndex) {
 ITSTestTemplateEditor.prototype.fillScreenDynamicsTable = function () {
     // build the list of options
     var optionList = "";
+    var optionListTarget = "";
+    var newVal = "";
     for (var i = 0; i < this.currentTest.screens.length; i++) {
-        for (var j = 0; j < this.currentTest.screens[i].screenComponents.length; j++) {
-            optionList = optionList + "<option value ='" + this.currentTest.screens[i].id + "." + this.currentTest.screens[i].screenComponents[j].id + "'>" +
-                this.currentTest.screens[i].varName + "." + this.currentTest.screens[i].screenComponents[j].varComponentName +
-                "</option>";
+        for (var j = -1; j < this.currentTest.screens[i].screenComponents.length; j++) {
+            if (j == -1) {
+                newVal = "<option value ='" + this.currentTest.screens[i].id + "'>" +
+                    this.currentTest.screens[i].varName +
+                    "</option>";
+                optionListTarget = optionListTarget + newVal;
+            }
+            else {
+                newVal = "<option value ='" + this.currentTest.screens[i].id + "." + this.currentTest.screens[i].screenComponents[j].id + "'>" +
+                    this.currentTest.screens[i].varName + "." + this.currentTest.screens[i].screenComponents[j].varComponentName +
+                    "</option>";
+                optionList = optionList + newVal;
+                optionListTarget = optionListTarget + newVal;
+            }
         }
     }
     // go through all screens and their variables and add them to the table lines
@@ -831,13 +843,17 @@ ITSTestTemplateEditor.prototype.fillScreenDynamicsTable = function () {
             tempSDSourceComponent = tempSDSourceScreen.findComponentByID(tempSD.sourceVariableID);
         }
         if (tempSDTargetScreen != null) {
-            tempSDTargetComponent = tempSDTargetScreen.findComponentByID(tempSD.targetVariableID);
+            if (tempSD.targetVariableID != "") {
+                tempSDTargetComponent = tempSDTargetScreen.findComponentByID(tempSD.targetVariableID);
+            } else {
+                tempSDTargetComponent = "";
+            }
         }
         // check for line removal
         if ((tempSDSourceScreen == null) || (tempSDTargetScreen == null) || (tempSDSourceComponent == null) || (tempSDTargetComponent == null)) {
             this.currentScreen.screenDynamics.splice(i, 1);
             this.fillScreenDynamicsTable();
-            exit;
+            return;
         }
         // now generate the line
         var newScreenElement = this.screenDynamics;
@@ -852,8 +868,12 @@ ITSTestTemplateEditor.prototype.fillScreenDynamicsTable = function () {
 
         var listID = "'" + tempSDSourceScreen.id + '.' + tempSDSourceComponent.id + "'";
         $('#AdminInterfaceTestTemplateEditorScreenDynamics_sourcecomponentlist_' + i)[0].innerHTML = optionList.replace(listID, listID + ' selected ');
-        var listID = "'" + tempSDTargetScreen.id + '.' + tempSDTargetComponent.id + "'";
-        $('#AdminInterfaceTestTemplateEditorScreenDynamics_targetcomponentlist_' + i)[0].innerHTML = optionList.replace(listID, listID + ' selected ');
+        if (typeof tempSDTargetComponent.id != "undefined") {
+            var listID = "'" + tempSDTargetScreen.id + '.' + tempSDTargetComponent.id + "'";
+        } else {
+            var listID = "'" + tempSDTargetScreen.id + "'" ;
+        }
+        $('#AdminInterfaceTestTemplateEditorScreenDynamics_targetcomponentlist_' + i)[0].innerHTML = optionListTarget.replace(listID, listID + ' selected ');
     }
 
     // finally bind the scripts
@@ -893,7 +913,10 @@ ITSTestTemplateEditor.prototype.changeScreenDynamicsTarget = function (nr, newIn
     var newScreenID = newIndex.split('.')[0];
     var newVarID = newIndex.split('.')[1];
     this.currentScreen.screenDynamics[nr].targetScreenID = newScreenID;
-    this.currentScreen.screenDynamics[nr].targetVariableID = newVarID;
+    this.currentScreen.screenDynamics[nr].targetVariableID = "";
+    if (typeof newVarID != "undefined") {
+        this.currentScreen.screenDynamics[nr].targetVariableID = newVarID;
+    }
 };
 
 

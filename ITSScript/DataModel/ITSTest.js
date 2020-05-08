@@ -1539,6 +1539,9 @@ ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, 
                 }
                 catch (err) {
                     ITSLogger.logMessage(logLevel.ERROR,"runtime_get_values failed for " +  this.screenComponents[j].varComponentName + " " + err.message );
+                    ITSLogger.logMessage(logLevel.ERROR,ComponentResults.Value, j, this.screenComponents[j].storeAtSessionLevel);
+                    ITSLogger.logMessage(logLevel.ERROR,sessionStorageObject);
+                    ITSLogger.logMessage(logLevel.ERROR,this.screenComponents[j]);
                 }
             }
         } catch (err) {};

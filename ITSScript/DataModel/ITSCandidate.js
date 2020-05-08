@@ -163,6 +163,10 @@ ITSCandidates.prototype.loadCurrentCandidateByLogin = function (Login, OnSuccess
     }
 };
 
+ITSCandidates.prototype.removeUnusedCandidates = function (OnSuccess,OnError) {
+    ITSInstance.genericAjaxUpdate('/persons/deleteunused', {}, OnSuccess,OnError)
+};
+
 ITSCandidates.prototype.newCandidate = function () {
     return new ITSCandidate(this, this.ITSSession);
 };
