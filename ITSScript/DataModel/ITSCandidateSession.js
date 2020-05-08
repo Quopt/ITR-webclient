@@ -903,6 +903,8 @@ ITSCandidateSessionTest.prototype.loadDetails = function (OnSucces, OnError, InT
             // load test
             this.loadTest(this.loadDetailsAfterTestLoad.bind(this), this.detailsLoadedError.bind(this));
         }
+    } else {
+        OnSucces();
     }
 };
 
