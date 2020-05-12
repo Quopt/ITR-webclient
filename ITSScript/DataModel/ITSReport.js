@@ -339,10 +339,13 @@ ITSReport.prototype.saveToServerRequired = function () {
     return (this.lastSavedJSON != ITSJSONStringify(this)) ;
 };
 
-
 ITSReport.prototype.copyReport = function () {
     var newReport = new ITSReport(this.myParent, this.ITSSession);
     ITSJSONLoad(newReport, ITSJSONStringify(this), this.myParent, this.ITSSession, 'ITSReport');
     newReport.ID = newGuid();
     return newReport;
+};
+
+ITSReport.prototype.getTranslatableReportText = function () {
+   return xxx (this.ReportText);
 };

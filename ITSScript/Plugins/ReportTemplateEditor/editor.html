@@ -195,19 +195,63 @@
         <button NoTranslate id="ReportTemplateInterfaceEditTabReportWriter_ActionButtonSave" type="button" class="btn btn-success"
                 onclick="ITSInstance.ReportTemplateSessionController.saveCurrentReport();"><i
                 id="ReportTemplateInterfaceEditTabReportWriter_saveIcon" class="fa fa-fw fa-thumbs-up"></i>
-            <span id="AdminInterfaceScreenTemplate-saveButtonLabel">Save report definition</span>
+            <span id="ReportTemplateInterfaceEdit-saveButtonLabel">Save report definition</span>
         </button>&nbsp;
         <button NoTranslate id="ReportTemplateInterfaceEditTabReportWriter_ActionButtonCopy" type="button" class="btn btn-success"
                 onclick="ITSInstance.ReportTemplateSessionController.copyCurrentReport();"><i class="fa fa-fw fa-copy"></i>
-            <span id="AdminInterfaceScreenTemplate-copyButtonLabel">Copy this report</span>
+            <span id="ReportTemplateInterfaceEdit-copyButtonLabel">Copy this report</span>
         </button>&nbsp;
         <button NoTranslate id="ReportTemplateInterfaceEditTabReportWriter_ActionButtonDelete" type="button" class="btn btn-warning"
                 onclick="ITSInstance.ReportTemplateSessionController.deleteCurrentReportWarning();"><i
-                class="fa fa-fw fa-trash"></i><span id="AdminInterfaceScreenTemplate-deleteButtonLabel"> Delete this report definition</span>
+                class="fa fa-fw fa-trash"></i><span id="ReportTemplateInterfaceEdit-deleteButtonLabel"> Delete this report definition</span>
         </button>&nbsp;
-        <button NoTranslateid="AdminInterfaceScreenTemplate-downloadButton" type="button" class="btn btn-success" onclick="ITSInstance.ReportTemplateSessionController.downloadCurrentTemplate();"><i class="fa fa-fw fa-download"></i><span id="AdminInterfaceScreenTemplate-downloadButtonLabel"> Download report definition</span></button>&nbsp;
-        <button NoTranslate id="AdminInterfaceScreenTemplate-uploadButton" type="button" class="btn btn-success" onclick="if ('FileReader' in window) { document.getElementById('AdminInterfaceReportTemplate-files').click(); } else { alert('Your browser does not support this function. Please upgrade your browser.'); }"><i class="fa fa-fw fa-upload"></i><span id="AdminInterfaceScreenTemplate-uploadButtonLabel"> Upload report definition</span></button>&nbsp;
-        <input NoTranslate type="file" onchange="ITSInstance.ReportTemplateSessionController.uploadCurrentTemplate(event.target.files[0]);" style="visibility: hidden" id="AdminInterfaceReportTemplate-files" accept=".itrreporttemplate"/>
 
+        <button id="ReportTemplateInterfaceEditTranslateButton" type="button"
+                class="btn btn-success"
+                data-toggle="modal" data-target="#ReportTemplateInterfaceEditTranslate">
+            <i class="fa fa-fw fa-language"></i> Translate report
+        </button>&nbsp;
+
+        <button NoTranslateid="ReportTemplateInterfaceEdit-downloadButton" type="button" class="btn btn-success" onclick="ITSInstance.ReportTemplateSessionController.downloadCurrentTemplate();"><i class="fa fa-fw fa-download"></i><span id="ReportTemplateInterfaceEdit-downloadButtonLabel"> Download report definition</span></button>&nbsp;
+        <button NoTranslate id="ReportTemplateInterfaceEdit-uploadButton" type="button" class="btn btn-success" onclick="if ('FileReader' in window) { document.getElementById('ReportTemplateInterfaceEdit-files').click(); } else { alert('Your browser does not support this function. Please upgrade your browser.'); }"><i class="fa fa-fw fa-upload"></i><span id="ReportTemplateInterfaceEdit-uploadButtonLabel"> Upload report definition</span></button>&nbsp;
+        <input NoTranslate type="file" onchange="ITSInstance.ReportTemplateSessionController.uploadCurrentTemplate(event.target.files[0]);" style="visibility: hidden" id="ReportTemplateInterfaceEdit-files" accept=".itrreporttemplate"/>
+    </div>
+</div>
+
+<div class="modal fade" id="ReportTemplateInterfaceEditTranslate" tabindex="-1" role="dialog" aria-labelledby="ReportTemplateInterfaceEditTranslateLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ReportTemplateInterfaceEditTranslateLabel">Translate</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <label class="col-sm-6 col-form-label" for="ReportTemplateInterfaceEdit-SourceLanguageSelect"
+                               id="ReportTemplateInterfaceEdit-SourceLanguageSelectLabel">Source language</label>
+                        <div class="col-sm-6"><select notranslate class="form-control form-control-sm"
+                                                      id="ReportTemplateInterfaceEdit-SourceLanguageSelect" onchange="ITSInstance.ReportTemplateSessionController.selectSourceLanguageForTranslation(this.value);">
+                        </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-6 col-form-label" for="ReportTemplateInterfaceEdit-TargetLanguageSelect"
+                               id="ReportTemplateInterfaceEdit-TargetLanguageSelectLabel">Target language</label>
+                        <div class="col-sm-6"><select notranslate class="form-control form-control-sm"
+                                                      id="ReportTemplateInterfaceEdit-TargetLanguageSelect" onchange="ITSInstance.ReportTemplateSessionController.selectTargetLanguageForTranslation(this.value);">
+                        </select>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="ReportTemplateInterfaceEditTranslateCloseButton">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="ReportTemplateInterfaceEditTranslateTranslateNowButton" onclick="ITSInstance.ReportTemplateSessionController.startTranslation();">Start translation</button>
+            </div>
+        </div>
     </div>
 </div>

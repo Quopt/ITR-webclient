@@ -853,6 +853,70 @@ function envSubstitute(textToScan, instanceObj, freeContext) {
     return result;
 };
 
+function envSubstituteToArray(textToScan) {
+    // substitute fields with values
+    if (!textToScan) textToScan = "";
+    var tagCounter = 0;
+    var envSubstArr = [];
+
+    var scanPos = textToScan.indexOf("%%");
+    var oldScanPos = 0;
+    var varFound = "";
+    if (scanPos == -1) {
+        result = textToScan;
+    } else {
+        var result = "" + textToScan.substring(0, Math.min(scanPos, textToScan.length));
+    }
+    while (scanPos > -1) {
+        varFound = textToScan.substring(scanPos + 2, textToScan.indexOf("%%", scanPos + 2));
+        // check if the property can be found in the instance object
+        envSubstArr.push(varFound);
+        result += "%%" + tagCounter + "%%"
+        tagCounter++;
+
+        // next
+        oldScanPos = scanPos + varFound.length + 4;
+        scanPos = textToScan.indexOf("%%", oldScanPos);
+        if (scanPos == -1) {
+            result += textToScan.substring(oldScanPos);
+        } else {
+            result += textToScan.substring(oldScanPos, scanPos);
+        }
+    }
+    return {"result": result, "envSubstArr": envSubstArr};
+};
+
+function envSubstituteFromArray(textToScan, envSubstArr) {
+    // substitute fields with values
+    if (!textToScan) textToScan="";
+
+    var scanPos = textToScan.indexOf("%%");
+    var oldScanPos =0;
+    var varFound = "";
+    if (scanPos == -1) {
+        result = textToScan;
+    }
+    else {
+        var result = "" + textToScan.substring(0, Math.min(scanPos, textToScan.length));
+    }
+    while (scanPos > -1 ) {
+        varFound = textToScan.substring(scanPos +2, textToScan.indexOf("%%", scanPos+2));
+        // check if the property can be found in the instance object
+
+        result += "%%" + envSubstArr[Number(varFound)] + "%%";
+
+        // next
+        oldScanPos = scanPos+varFound.length+4;
+        scanPos = textToScan.indexOf("%%", oldScanPos );
+        if (scanPos == -1) {
+            result += textToScan.substring(oldScanPos);
+        } else {
+            result += textToScan.substring(oldScanPos, scanPos);
+        }
+    }
+    return result;
+};
+
 function RGBconvert(integer) {
     var str = Number(integer).toString(16);
     return str.length == 1 ? "0" + str : str;
@@ -1123,4 +1187,4 @@ function getCSSClassesList(documentParent) {
         catch (err) {  }
     }
     return styleBySelector;
-}
+};

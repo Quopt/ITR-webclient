@@ -833,7 +833,8 @@ ITSGroupSessionEditor.prototype.loadSessionForDownload = function () {
         this.tempCounter = this.tempCounter+1;
         ITSInstance.UIController.showInterfaceAsWaitingOn();
         ITSInstance.UIController.showInterfaceAsWaitingProgress("" + this.archiveDownloadCounter);
-        tempSession.loadSession(this.currentSession.PluginData.GroupMembers[this.tempCounter].sessionid, this.loadSessionForDownload.bind(this), this.zipError);
+        this.loadSessionForDownload();
+        //tempSession.loadSession(this.currentSession.PluginData.GroupMembers[this.tempCounter].sessionid, this.loadSessionForDownload.bind(this), this.zipError);
     }
 };
 

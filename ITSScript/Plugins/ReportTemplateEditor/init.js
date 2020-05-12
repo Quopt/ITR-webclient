@@ -229,6 +229,8 @@
                     this.fillGraphsTab();
                     break;
             }
+
+            this.fillLanguagesInEditor();
         };
 
         ITSReportTemplateEditor.prototype.fillReportInformationTab = function () {
@@ -249,6 +251,7 @@
                     desc + '</option>'
                 );
             }
+            this.fillLanguagesInEditorForTranslation();
         };
 
         ITSReportTemplateEditor.prototype.selectLanguageInEditor = function (i) {
@@ -495,6 +498,67 @@
             for (var i=0; i < report.length; i++) { resStr +=  "%%" + report[i] + "%%\n";  }
             $('#ReportTemplateInterfaceEdit_ReportWriterFields').text(resStr);
             $('#ReportTemplateInterfaceEdit_GraphFields').text(resStr);
+        };
+
+        ITSReportTemplateEditor.prototype.fillLanguagesInEditorForTranslation = function () {
+            $('#ReportTemplateInterfaceEdit-SourceLanguageSelect').empty();
+            $('#ReportTemplateInterfaceEdit-TargetLanguageSelect').empty();
+            var desc = "";
+            var selected = "";
+            for (var i = 0; i < ITSSupportedLanguages.length; i++) {
+                desc = ITSInstance.translator.getLanguageDescription(ITSSupportedLanguages[i].languageCode);
+                selected = "";
+                if (ITSSupportedLanguages[i].languageCode == this.currentReport.ReportLanguage) {
+                    selected = " selected='selected' ";
+
+                    this.translate_source_language = ITSSupportedLanguages[i].languageCode;
+                    this.translate_target_language = ITSSupportedLanguages[i].languageCode;
+                }
+                $('#ReportTemplateInterfaceEdit-LanguageSelect').append(
+                    '<option NoTranslate ' + selected + 'value=\"' + ITSSupportedLanguages[i].languageCode + '\">' +
+                    desc + '</option>'
+                );
+                if (ITSSupportedLanguages[i].translations_available) {
+                    $('#ReportTemplateInterfaceEdit-SourceLanguageSelect').append(
+                        '<option NoTranslate ' + selected + 'value=\"' + ITSSupportedLanguages[i].languageCode + '\">' +
+                        desc + '</option>'
+                    );
+                    $('#ReportTemplateInterfaceEdit-TargetLanguageSelect').append(
+                        '<option NoTranslate ' + selected + 'value=\"' + ITSSupportedLanguages[i].languageCode + '\">' +
+                        desc + '</option>'
+                    );
+                }
+            }
+        };
+
+        ITSReportTemplateEditor.prototype.selectSourceLanguageForTranslation = function (value){
+            this.translate_source_language = value;
+        };
+
+        ITSReportTemplateEditor.prototype.selectTargetLanguageForTranslation = function (value){
+            this.translate_target_language = value;
+        };
+
+        ITSReportTemplateEditor.prototype.startTranslation = function () {
+            this.toTranslate = envSubstituteToArray(tinyMCE.get("ReportTemplateInterfaceEdit_ReportWriter").getContent().toString());
+
+            var toTranslate = encodeURI(this.toTranslate.result);
+
+            var tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID, 'ToTranslate' : toTranslate};
+
+            $.ajax({
+                url: ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language,
+                headers: tempHeaders,
+                error: function () {
+                    ITSInstance.UIController.showError("ITSReportTemplateEditor.TranslationFailed", "The report could not be translated at this moment.");
+                },
+                success: function (data) {
+                    //console.log(data);
+                    this.currentReport.ReportText = envSubstituteFromArray(data, this.toTranslate.envSubstArr) ;
+                    tinyMCE.get("ReportTemplateInterfaceEdit_ReportWriter").setContent(this.currentReport.ReportText);
+                }.bind(this),
+                type: 'GET'
+            });
         };
 
         // register the portlet
