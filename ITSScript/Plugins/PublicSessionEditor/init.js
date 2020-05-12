@@ -599,7 +599,8 @@ ITSPublicSessionEditor.prototype.loadSessionForDownload = function () {
         this.tempCounter = this.tempCounter+1;
         ITSInstance.UIController.showInterfaceAsWaitingOn();
         ITSInstance.UIController.showInterfaceAsWaitingProgress("" + this.archiveDownloadCounter);
-        tempSession.loadSession(this.sessionsList[this.tempCounter].ID, this.loadSessionForDownload.bind(this), this.zipError);
+        this.loadSessionForDownload();
+        //tempSession.loadSession(this.sessionsList[this.tempCounter].ID, this.loadSessionForDownload.bind(this), this.zipError);
     }
 };
 
