@@ -522,7 +522,11 @@
         this.mailsToSend--;
         if (this.mailsToSend <= 0) {
             ITSInstance.UIController.showInterfaceAsWaitingOff();
-            ITSInstance.UIController.showInfo('ITSSessionMailerEditor.MailOK', 'The e-mail has been sent.', "", "window.history.back();");
+            if (getUrlParameterValue("PopStack") == "2") {
+                ITSInstance.UIController.showInfo('ITSSessionMailerEditor.MailOK', 'The e-mail has been sent.', "", "window.history.go(-2);");
+            } else {
+                ITSInstance.UIController.showInfo('ITSSessionMailerEditor.MailOK', 'The e-mail has been sent.', "", "window.history.back();");
+            }
         }
     };
 

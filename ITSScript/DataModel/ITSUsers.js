@@ -257,6 +257,22 @@ ITSUsers.prototype.findUserByID = function (userID) {
     return undefined;
 };
 
+ITSUsers.prototype.findUserByLogin = function (userID, caseInsensitive) {
+    var found = false;
+    userID = userID.trim();
+    if (this.listLoaded) {
+        for (var i = 0; i < this.userList.length; i++) {
+            if (caseInsensitive) {
+                found = this.userList[i].Email.toLocaleUpperCase() == userID.toLocaleUpperCase();
+            } else  {
+                found = this.userList[i].Email == userID;
+            }
+            if (found) return this.userList[i];
+        }
+    }
+    return undefined;
+};
+
 ITSUsers.prototype.createNewUser = function () {
     var nwUser = new ITSUser(this, this.myITSInstance);
     nwUser.regeneratePassword();

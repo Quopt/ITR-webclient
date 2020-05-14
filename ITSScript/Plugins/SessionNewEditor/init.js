@@ -20,6 +20,7 @@ function ITSInviteNewCandidateEditor (session) {
     this.newSession = ITSInstance.candidateSessions.newCandidateSession(); // the new session that we are building up with this object
     this.path = "NewSession";
     $('#AdminInterfaceSessionNewWarningExistsLabel').hide();
+    $('#AdminInterfaceSessionNewAccountExists').hide();
     $('#AdminInterfaceSessionNewSessionDeleteButton').hide();
 };
 
@@ -38,6 +39,8 @@ ITSInviteNewCandidateEditor.prototype.afterOfficeLogin = function () {
             this.loadTestAndBatteriesList();
         }.bind(this), function () {
         });
+
+        ITSInstance.users.loadUsers(function () {}, function (){});
     }
 };
 
@@ -124,6 +127,7 @@ ITSInviteNewCandidateEditor.prototype.TestOrBatterySelected = function (textFoun
 };
 
 ITSInviteNewCandidateEditor.prototype.createNewSession = function (EmailAddress) {
+    EmailAddress = EmailAddress.trim();
     ITSLogger.logMessage(logLevel.INFO,"New test session requested " + EmailAddress);
     // create a new and empty session
     this.newSession = ITSInstance.candidateSessions.newCandidateSession();
@@ -139,7 +143,7 @@ ITSInviteNewCandidateEditor.prototype.createNewSession = function (EmailAddress)
     // for the tests and batteries
     this.loadTestAndBatteriesList();
 
-    if (EmailAddress != '')  this.emailAddressChanged(EmailAddress);
+    if (EmailAddress != '')  setTimeout(this.emailAddressChanged.bind(this,EmailAddress),200);
 };
 
 ITSInviteNewCandidateEditor.prototype.repopulateTestsLists =  function (animate) {
@@ -294,6 +298,7 @@ ITSInviteNewCandidateEditor.prototype.show = function () {
     this.afterOfficeLogin();
     this.repopulateTestsLists();
     this.UpdateEMailAddress();
+    ITSInstance.users.loadUsers(function (){}, function (){});
 };
 
 
@@ -338,6 +343,9 @@ ITSInviteNewCandidateEditor.prototype.saveNewSession = function ( onSuccessCallb
     if (this.newSession.SessionTests.length == 0) {
         ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','TestMissing','Please add a test to this session.')
     }
+    if (typeof ITSInstance.users.findUserByLogin($('#AdminInterfaceSessionNewSessionCandidateFor').val(), true) != "undefined") {
+        ValidationMessage = $('#AdminInterfaceSessionNewAccountExists').text();
+    }
 
     // get the date & time fields from the interface
     // check for invalid dates
@@ -378,7 +386,15 @@ ITSInviteNewCandidateEditor.prototype.saveNewSession = function ( onSuccessCallb
 
 ITSInviteNewCandidateEditor.prototype.emailAddressChanged = function ( newValue ) {
     // the email address has changed. check if this is a known user. If so then update the password, name etc and stored persid. If not generate a new person id.
-    ITSInstance.candidates.loadCurrentCandidateByLogin( newValue, this.emailAddressChangedFound.bind(this), this.emailAddressChangedNotFound.bind(this) );
+    // is this a consultant? That is NOT allowed.
+    $('#AdminInterfaceSessionNewAccountExists').hide();
+    if (typeof ITSInstance.users.findUserByLogin(newValue, true) != "undefined") {
+        this.existingUserFound = true;
+        $('#AdminInterfaceSessionNewAccountExists').show();
+    } else {
+        // otherwise check the candidates list
+        ITSInstance.candidates.loadCurrentCandidateByLogin(newValue, this.emailAddressChangedFound.bind(this), this.emailAddressChangedNotFound.bind(this));
+    }
 };
 
 ITSInviteNewCandidateEditor.prototype.emailAddressChangedFound = function () {
@@ -442,7 +458,8 @@ ITSInviteNewCandidateEditor.prototype.forcePasswordReset = function () {
 
 ITSInviteNewCandidateEditor.prototype.clearSession = function () {
     // this.saveNewSession(this.clearSessionCallback.bind(this));
-    this.clearSessionCallback();
+    //this.clearSessionCallback();
+    this.createNewSession("");
 };
 
 ITSInviteNewCandidateEditor.prototype.clearSessionCallback = function () {
@@ -457,6 +474,7 @@ ITSInviteNewCandidateEditor.prototype.deleteNewSession = function () {
         function () {
          this.clearSessionCallback();
          $('#AdminInterfaceSessionNewWarningExistsLabel').hide();
+         $('#AdminInterfaceSessionNewAccountExists').hide();
          $('#AdminInterfaceSessionNewSessionDeleteButton').hide();}.bind(this),
         function () {});
 
@@ -478,7 +496,7 @@ ITSInviteNewCandidateEditor.prototype.mailSessionInvitation = function () {
     ITSInstance.SessionMailerSessionController.currentSession = this.newSession;
     ITSInstance.SessionMailerSessionController.currentPerson = undefined;
 
-    this.saveNewSession(function () {  ITSRedirectPath('SessionMailer', 'SessionID=' + this.newSession.ID + '&Template=defaultSession'); }.bind(this) );
+    this.saveNewSession(function () {  ITSRedirectPath('SessionMailer', 'SessionID=' + this.newSession.ID + '&Template=defaultSession&PopStack=2'); }.bind(this) );
 };
 
 (function() { // iife to prevent pollution of the global memspace
