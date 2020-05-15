@@ -577,6 +577,7 @@ ITSCandidateSession.prototype.deleteFromServer = function (OnSuccess, OnError) {
 
 ITSCandidateSession.prototype.sessionLoaded = function () {
     // now load all the tests in this session
+    ITSLogger.logMessage(logLevel.INFO, "Loaded session %%ID%%", this);
     for (var i=0; i < this.SessionTests.length; i++ ) {
         this.SessionTests[i].myParent = this;
         this.SessionTests[i].SessionID = this.ID;

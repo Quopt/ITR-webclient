@@ -99,14 +99,14 @@ ITSSession.prototype.genericAjaxLoaderProcessQueue = function () {
                     var x = this.genericLoadQueue[0];
                     this.callProcessing = false;
                     //console.log("OK", x);
-                    setTimeout(x.OnSuccess(data, textStatus, xhr),1);
+                    setTimeout(x.OnSuccess.bind(x,data, textStatus, xhr),1);
                     this.genericLoadQueue.splice(0,1);
                     this.genericAjaxLoaderProcessQueue();
                 }.bind(this),
                 function (xhr, ajaxOptions, thrownError) {
                     var x = this.genericLoadQueue[0];
                     this.callProcessing = false;
-                    setTimeout(x.OnError(xhr, ajaxOptions, thrownError),1);
+                    setTimeout(x.OnError.bind(x,xhr, ajaxOptions, thrownError),1);
                     this.genericLoadQueue.splice(0,1);
                     this.genericAjaxLoaderProcessQueue();
                 }.bind(this),
@@ -234,14 +234,14 @@ ITSSession.prototype.JSONAjaxLoaderProcessQueue = function () {
                     var x = this.genericJSONLoadQueue[0];
                     this.callJSONLoaderProcessing = false;
                     //console.log("OK", x);
-                    setTimeout(x.OnSuccess(data),1);
+                    setTimeout(x.OnSuccess.bind(x, data),1);
                     this.genericJSONLoadQueue.splice(0,1);
                     this.JSONAjaxLoaderProcessQueue();
                 }.bind(this),
                 function (xhr, ajaxOptions, thrownError) {
                     var x = this.genericJSONLoadQueue[0];
                     this.callJSONLoaderProcessing = false;
-                    setTimeout(x.OnError(xhr, ajaxOptions, thrownError),1);
+                    setTimeout(x.OnError.bind(x,xhr, ajaxOptions, thrownError),1);
                     this.genericJSONLoadQueue.splice(0,1);
                     this.JSONAjaxLoaderProcessQueue();
                 }.bind(this),

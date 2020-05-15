@@ -170,6 +170,7 @@
     };
 
     ITSSessionEditor.prototype.loadSession = function() {
+        ITSLogger.logMessage(logLevel.INFO,"loading session %%SessionID%%", this);
         this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
         ITSInstance.UIController.showInterfaceAsWaitingOn(0);
         $('#AdminInterfaceEditSessionEditTestsList').empty();
@@ -177,6 +178,7 @@
     };
 
     ITSSessionEditor.prototype.sessionLoaded = function () {
+        ITSLogger.logMessage(logLevel.INFO, "Session completely loaded %%SessionID%%", this);
         if (! ITSInstance.reports.listLoaded) {
             ITSInstance.reports.loadAvailableReportsList(this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this));
         } else {
