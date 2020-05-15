@@ -95,18 +95,18 @@ ITSSession.prototype.genericAjaxLoaderProcessQueue = function () {
             //console.log("Acquiring", x);
             this.genericAjaxLoaderRunner(x.URL,
                 x.objectToPutDataIn,
-                function () {
+                function (data, textStatus, xhr) {
                     var x = this.genericLoadQueue[0];
                     this.callProcessing = false;
                     //console.log("OK", x);
-                    setTimeout(x.OnSuccess,1);
+                    setTimeout(x.OnSuccess(data, textStatus, xhr),1);
                     this.genericLoadQueue.splice(0,1);
                     this.genericAjaxLoaderProcessQueue();
                 }.bind(this),
-                function () {
+                function (xhr, ajaxOptions, thrownError) {
                     var x = this.genericLoadQueue[0];
                     this.callProcessing = false;
-                    setTimeout(x.OnError,1);
+                    setTimeout(x.OnError(xhr, ajaxOptions, thrownError),1);
                     this.genericLoadQueue.splice(0,1);
                     this.genericAjaxLoaderProcessQueue();
                 }.bind(this),
@@ -230,18 +230,18 @@ ITSSession.prototype.JSONAjaxLoaderProcessQueue = function () {
             //console.log("Acquiring", x);
             this.JSONAjaxLoaderRunner(x.URL,
                 x.objectToPutDataIn,
-                function () {
+                function (data) {
                     var x = this.genericJSONLoadQueue[0];
                     this.callJSONLoaderProcessing = false;
                     //console.log("OK", x);
-                    setTimeout(x.OnSuccess,1);
+                    setTimeout(x.OnSuccess(data),1);
                     this.genericJSONLoadQueue.splice(0,1);
                     this.JSONAjaxLoaderProcessQueue();
                 }.bind(this),
-                function () {
+                function (xhr, ajaxOptions, thrownError) {
                     var x = this.genericJSONLoadQueue[0];
                     this.callJSONLoaderProcessing = false;
-                    setTimeout(x.OnError,1);
+                    setTimeout(x.OnError(xhr, ajaxOptions, thrownError),1);
                     this.genericJSONLoadQueue.splice(0,1);
                     this.JSONAjaxLoaderProcessQueue();
                 }.bind(this),
