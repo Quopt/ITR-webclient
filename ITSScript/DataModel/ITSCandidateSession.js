@@ -351,10 +351,10 @@ ITSCandidateSession.prototype.saveToServerIncludingTests = function (OnSuccess, 
     }
 };
 
-ITSCandidateSession.prototype.saveToServerIncludingTestsAndPerson = function (OnSuccess, OnError, deleteAllUnstartedTests) {
+ITSCandidateSession.prototype.saveToServerIncludingTestsAndPerson = function (OnSuccess, OnError, deleteAllUnstartedTests, forcePasswordToClear) {
     if (deleteAllUnstartedTests) {
         ITSInstance.genericAjaxDelete('sessions/' + this.ID + "/deletealltests",
-            this.saveToServerIncludingTestsAndPerson.bind(this,OnSuccess,OnError), OnError );
+            this.saveToServerIncludingTestsAndPerson.bind(this,OnSuccess,OnError, false, forcePasswordToClear), OnError );
     } else {
         this.lastSavedJSON = ITSJSONStringify(this);
         this.newSession = false;
@@ -363,6 +363,10 @@ ITSCandidateSession.prototype.saveToServerIncludingTestsAndPerson = function (On
                     this.SessionTests[i].saveToServer(function () {
                     }, function () {
                     });
+                }
+
+                if (forcePasswordToClear) {
+                    this.Person.Password = "";
                 }
 
                 this.Person.saveToServer(
@@ -423,7 +427,7 @@ ITSCandidateSession.prototype.saveGroupSessionToServerCreateNew = function (Grou
         tempTestSession.SessionID = newSession.ID;
     }
     newSession.saveToServerIncludingTestsAndPerson(this.saveGroupSessionsToServerStageUpdateOK.bind(this),
-        this.saveGroupSessionsToServerStageUpdateError.bind(this));
+        this.saveGroupSessionsToServerStageUpdateError.bind(this), false, true);
 };
 
 ITSCandidateSession.prototype.saveGroupSessionsToServerUpdateCounter = function (progressElementCounter) {
@@ -526,7 +530,7 @@ ITSCandidateSession.prototype.saveGroupSessionsToServerStageCheckSession = funct
     }
 
     tempSession.saveToServerIncludingTestsAndPerson(this.saveGroupSessionsToServerStageUpdateOK.bind(this),
-        this.saveGroupSessionsToServerStageUpdateError.bind(this), true);
+        this.saveGroupSessionsToServerStageUpdateError.bind(this), true, true);
     this.progressElementCounter++;
     this.saveGroupSessionsToServerUpdateCounter(this.progressElementCounter);
 };

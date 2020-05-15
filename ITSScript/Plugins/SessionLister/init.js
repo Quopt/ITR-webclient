@@ -92,54 +92,52 @@
             $('#SessionListerInterfaceSessionEdit').show();
             ITSInstance.UIController.initNavBar();
 
-            if ((!this.alreadyLoaded) || (this.alreadyLoaded != document.URL)) {
-                this.currentPage = 0;
+            this.currentPage = 0;
 
-                // sessiontype
-                // groupid
-                // personid
-                this.sessionType = "0";
-                this.groupID = "";
-                this.groupSessionID = "";
-                this.personID = "";
-                this.consultantID = "";
-                this.sortField = "EndedAt desc, Description";
-                this.archived = "N"; // N No Y Yes
-                this.status = -1; // no status selection
+            // sessiontype
+            // groupid
+            // personid
+            this.sessionType = "0";
+            this.groupID = "";
+            this.groupSessionID = "";
+            this.personID = "";
+            this.consultantID = "";
+            this.sortField = "EndedAt desc, Description";
+            this.archived = "N"; // N No Y Yes
+            this.status = -1; // no status selection
 
-                if (getUrlParameterValue('SessionType')) {
-                    this.sessionType = getUrlParameterValue('SessionType');
-                }
-                if (getUrlParameterValue('GroupID')) {
-                    this.groupID = getUrlParameterValue('GroupID');
-                }
-                if (getUrlParameterValue('GroupSessionID')) {
-                    this.groupSessionID = getUrlParameterValue('GroupSessionID');
-                }
-                if (getUrlParameterValue('PersonID')) {
-                    this.personID = getUrlParameterValue('PersonID');
-                }
-                if (getUrlParameterValue('Status')) {
-                    this.status = getUrlParameterValue('Status');
-                    if (this.status == "Busy") {
-                        this.sortField = "StartedAt desc, Description";
-                    }
-                    if (this.status == "Ready") {
-                        this.sortField = "CreateDate desc, AllowedStartDateTime desc, Description";
-                    }
-                    if (this.status == "Done") {
-                        this.sortField = "EndedAt desc, Description";
-                    }
-                }
-                if (getUrlParameterValue('ConsultantID')) {
-                    this.consultantID = getUrlParameterValue('ConsultantID');
-                }
-
-                // fields to show in the list for a session : Description, StartedAt, EndedAt, AllowedStartDateTime, AllowedEndDateTime
-                $('#SessionListerTable').empty();
-                this.searchField = "";
-                this.buildFilter(true);
+            if (getUrlParameterValue('SessionType')) {
+                this.sessionType = getUrlParameterValue('SessionType');
             }
+            if (getUrlParameterValue('GroupID')) {
+                this.groupID = getUrlParameterValue('GroupID');
+            }
+            if (getUrlParameterValue('GroupSessionID')) {
+                this.groupSessionID = getUrlParameterValue('GroupSessionID');
+            }
+            if (getUrlParameterValue('PersonID')) {
+                this.personID = getUrlParameterValue('PersonID');
+            }
+            if (getUrlParameterValue('Status')) {
+                this.status = getUrlParameterValue('Status');
+                if (this.status == "Busy") {
+                    this.sortField = "StartedAt desc, Description";
+                }
+                if (this.status == "Ready") {
+                    this.sortField = "CreateDate desc, AllowedStartDateTime desc, Description";
+                }
+                if (this.status == "Done") {
+                    this.sortField = "EndedAt desc, Description";
+                }
+            }
+            if (getUrlParameterValue('ConsultantID')) {
+                this.consultantID = getUrlParameterValue('ConsultantID');
+            }
+
+            // fields to show in the list for a session : Description, StartedAt, EndedAt, AllowedStartDateTime, AllowedEndDateTime
+            $('#SessionListerTable').empty();
+            this.searchField = "";
+            this.buildFilter(true);
         }
         else // no parameter will not work for this screen
         {
