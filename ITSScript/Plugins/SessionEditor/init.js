@@ -637,7 +637,7 @@
                 }
                 saveFileLocally(fileName + " " + this.currentSession.Description + " - " + this.currentSession.Person.createHailing() + ".zip" , blob, "application/zip");
              }.bind(this));
-        }.bind(this), this.zipError);
+        }.bind(this), this.zipError, true , true);
     };
 
     ITSSessionEditor.prototype.zipError = function () {
