@@ -31,7 +31,15 @@
                     }
                 "/>
         <br/>
-        <button type="Button" class="btn btn-secondary btn-success tn-sm btn-block" id="AdminInterfaceInviteNewCandidateButton" onclick="ITSInstance.newCandidateSessionController.createNewSession($('#AdminInterfaceInviteNewCandidateInputUsername').val());$('#AdminInterfaceInviteNewCandidateInputUsername').val(''); ITSRedirectPath('NewSession');">Start
+        <button type="Button" class="btn btn-secondary btn-success tn-sm btn-block" id="AdminInterfaceInviteNewCandidateButton" onclick="
+                    if ($('#AdminInterfaceInviteNewCandidateInputUsername').val().trim() != '') {
+                        ITSInstance.newCandidateSessionController.createNewSession($('#AdminInterfaceInviteNewCandidateInputUsername').val());
+                        $('#AdminInterfaceInviteNewCandidateInputUsername').val('');
+                        ITSRedirectPath('NewSession');
+                    } else {
+                        ITSInstance.UIController.showWarning('ITSInviteNewCandidatePortlet.NoLoginGiven', 'Please enter an email address or unique login id for your candidate.');
+                    }
+              ">Start
             inviting the candidate</button>
         <br/><br/>
     </div>

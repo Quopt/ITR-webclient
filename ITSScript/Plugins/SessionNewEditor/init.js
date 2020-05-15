@@ -298,7 +298,7 @@ ITSInviteNewCandidateEditor.prototype.show = function () {
     this.afterOfficeLogin();
     this.repopulateTestsLists();
     this.UpdateEMailAddress();
-    ITSInstance.users.loadUsers(function (){}, function (){});
+    if (!ITSInstance.users.userListLoaded) ITSInstance.users.loadUsers(function (){}, function (){});
 };
 
 
@@ -393,6 +393,7 @@ ITSInviteNewCandidateEditor.prototype.emailAddressChanged = function ( newValue 
         $('#AdminInterfaceSessionNewAccountExists').show();
     } else {
         // otherwise check the candidates list
+        $('#AdminInterfaceSessionNewSessionSaveButton')[0].disabled  = true;
         ITSInstance.candidates.loadCurrentCandidateByLogin(newValue, this.emailAddressChangedFound.bind(this), this.emailAddressChangedNotFound.bind(this));
     }
 };
@@ -429,6 +430,7 @@ ITSInviteNewCandidateEditor.prototype.emailAddressChangedFound = function () {
     }
     // relink all sessiontests to the correct person id
     this.newSession.relinkToCurrentPersonID();
+    $('#AdminInterfaceSessionNewSessionSaveButton')[0].disabled  = false;
 };
 
 ITSInviteNewCandidateEditor.prototype.UpdatePasswordOnScreen = function () {
@@ -449,6 +451,7 @@ ITSInviteNewCandidateEditor.prototype.emailAddressChangedNotFound = function () 
     this.forcePasswordReset();
     // relink all sessiontests to the correct person id
     this.newSession.relinkToCurrentPersonID();
+    $('#AdminInterfaceSessionNewSessionSaveButton')[0].disabled  = false;
 };
 
 ITSInviteNewCandidateEditor.prototype.forcePasswordReset = function () {

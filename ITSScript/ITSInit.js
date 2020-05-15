@@ -637,6 +637,11 @@ if (!ITSInstance) {
     ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", getCopyrightMessage);
     // update the amount of active sessions
     ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", getActiveSessions);
+    // refresh the consultant list
+    ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", function () {
+        ITSInstance.users.loadUsers(function (){}, function (){});
+     });
+
 
     if (cookieHelper.getCookie('ITRLanguage') != "") {
         ITSInstance.translator.switchLanguage(cookieHelper.getCookie('ITRLanguage'), function () { ITSInstance.UIController.loadTranslationsDropDown(); });

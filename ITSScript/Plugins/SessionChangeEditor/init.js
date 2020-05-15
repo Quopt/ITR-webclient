@@ -20,6 +20,7 @@ function ITSChangeExistingSessionEditor (session) {
     this.currentSession = ITSInstance.candidateSessions.newCandidateSession(); // the session we are changing with this object
     this.path = "ChangeSession";
     $('#AdminInterfaceChangeSessionWarningExistsLabel').hide();
+    $('#AdminInterfaceSessionChangeAccountExists').hide();
     //$('#AdminInterfaceChangeSessionDeleteButton').hide();
 };
 
@@ -38,6 +39,8 @@ ITSChangeExistingSessionEditor.prototype.show = function () {
         $('#NavBarsFooter').show();
         $('#AdminInterfaceChangeSession').show();
         ITSInstance.UIController.initNavBar();
+        $('#AdminInterfaceSessionChangeAccountExists').hide();
+
 
         // load the session
         if ( (!this.currentSession) || (this.currentSession.ID != this.SessionID)) {
@@ -75,6 +78,8 @@ ITSChangeExistingSessionEditor.prototype.sessionLoadingSucceeded = function () {
     } else {
         $('#AdminInterfaceChangeSessionStartButton').show();
     }
+
+    if (! ITSInstance.users.userListLoaded) ITSInstance.users.loadUsers(function () {}, function (){});
 };
 
 ITSChangeExistingSessionEditor.prototype.sessionLoadingFailed = function () {
@@ -343,8 +348,17 @@ ITSChangeExistingSessionEditor.prototype.UIToInvalidated = function () {
 ITSChangeExistingSessionEditor.prototype.emailAddressChanged = function ( newValue ) {
     // the email address has changed. check if this is a known user. If so then update the password, name etc and stored persid. If not generate a new person id.
     // the session cannot be saved until this check is complete
-    $('#AdminInterfaceChangeSessionSaveButton')[0].disabled  = true;
-    ITSInstance.candidates.loadCurrentCandidateByLogin( newValue, this.emailAddressChangedFound.bind(this), this.emailAddressChangedNotFound.bind(this) );
+
+    // is this a consultant? That is NOT allowed.
+    $('#AdminInterfaceSessionChangeAccountExists').hide();
+    if (typeof ITSInstance.users.findUserByLogin(newValue, true) != "undefined") {
+        this.existingUserFound = true;
+        $('#AdminInterfaceSessionChangeAccountExists').show();
+    } else {
+        // otherwise check the candidates list
+        $('#AdminInterfaceChangeSessionSaveButton')[0].disabled  = true;
+        ITSInstance.candidates.loadCurrentCandidateByLogin(newValue, this.emailAddressChangedFound.bind(this), this.emailAddressChangedNotFound.bind(this));
+    }
 };
 
 ITSChangeExistingSessionEditor.prototype.saveCurrentSession = function ( onSuccessCallback ) {
@@ -375,6 +389,10 @@ ITSChangeExistingSessionEditor.prototype.saveCurrentSession = function ( onSucce
     if (this.currentSession.SessionTests.length == 0) {
         ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','TestMissing','Please add a test to this session.')
     }
+    if (typeof ITSInstance.users.findUserByLogin($('#AdminInterfaceChangeSessionCandidateFor').val(), true) != "undefined") {
+        ValidationMessage = $('#AdminInterfaceSessionChangeAccountExists').text();
+    }
+
     // get the date & time fields from the interface
     var tempValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','DatesInvalid','Please check the date fields in the birthdate and session validity fields. The values are no valid dates.');
     // check for invalid dates
@@ -386,15 +404,6 @@ ITSChangeExistingSessionEditor.prototype.saveCurrentSession = function ( onSucce
     if ( $('#AdminInterfaceChangeSessionEditMailMe').is(':checked') ) {
         this.currentSession.EMailNotificationAdresses = $('#AdminInterfaceChangeSessionMail').val();
     }
-    /*
-    if (!ITSInstance.users.currentUser.PluginData.MailSettings) ITSInstance.users.currentUser.PluginData.MailSettings = {};
-    if (this.currentSession.EMailNotificationAdresses != ITSInstance.users.currentUser.PluginData.MailSettings.Notifications ) {
-        if (this.currentSession.EMailNotificationAdresses.trim() != "") {
-            ITSInstance.users.currentUser.PluginData.MailSettings.Notifications = this.currentSession.EMailNotificationAdresses;
-            ITSInstance.users.saveCurrentUser();
-        }
-    }
-    */
 
     if (ValidationMessage == "") {
         if ((this.currentSession.Status >= 30) && (this.currentSession.firstTestToTake() > -1) ) this.currentSession.Status = 20;
