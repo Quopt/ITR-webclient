@@ -617,11 +617,11 @@ ITSCandidateSession.prototype.testLoadedFine = function (testIndex) {
     }
 
     if (allOK && typeof this.OnSucces != "undefined") {
-        console.log("= OK");
+        //console.log("= OK");
         setTimeout(this.OnSucces,1);
         this.OnSucces = undefined;
     } else {
-        console.log("= NOT OK " + allOK);
+        //console.log("= NOT OK " + allOK);
     }
 };
 
