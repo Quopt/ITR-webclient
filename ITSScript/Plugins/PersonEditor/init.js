@@ -76,7 +76,7 @@
     };
 
     ITSPersonEditor.prototype.showSessions=function () {
-        ITSRedirectPath("SessionLister&SessionType=0&PersonID=" + this.personID);
+        ITSRedirectPath("SessionLister&SessionType=0&Status=All&PersonID=" + this.personID);
     };
 
     ITSPersonEditor.prototype.resetPassword=function () {

@@ -189,6 +189,7 @@
                 setTimeout( function () { $('#AdminInterfaceEditSessionEditHeaderCandidate')[0].innerHTML = this.currentSession.Person.createHailing(); }.bind(this),
                     3000);
             }
+            $('#AdminInterfaceEditSessionEditHeaderCandidate')[0].setAttribute("onclick","ITSRedirectPath('Person&PersonID="+this.currentSession.Person.ID+"');");
             // to do : check if the session type is OK to be viewed with this viewer
             this.toggleButtons();
             this.generateTestsList();

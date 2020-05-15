@@ -605,6 +605,7 @@ ITSCandidateSession.prototype.testLoadedFine = function (testIndex) {
                 break;
             }
         }
+        if (! allOK) allOK = this.SessionTests.length ==0;
         if (this.personRequired && allOK) {
             allOK = this.PersonID == this.Person.ID;
         }
@@ -616,11 +617,11 @@ ITSCandidateSession.prototype.testLoadedFine = function (testIndex) {
     }
 
     if (allOK && typeof this.OnSucces != "undefined") {
-        //console.log("= OK");
+        console.log("= OK");
         setTimeout(this.OnSucces,1);
         this.OnSucces = undefined;
     } else {
-        //console.log("= NOT OK " + allOK);
+        console.log("= NOT OK " + allOK);
     }
 };
 
@@ -898,6 +899,7 @@ ITSCandidateSessionTest.prototype.deleteFromServer = function (OnSuccess, OnErro
 };
 
 ITSCandidateSessionTest.prototype.loadDetails = function (OnSucces, OnError, InTestTaking) {
+    ITSLogger.logMessage(logLevel.INFO, "Loading sessionttest %%ID%%", this);
     if (!this.detailsLoaded) {
         this.detailsLoadedSucces = OnSucces;
         this.detailsLoadedError = OnError;
@@ -939,6 +941,7 @@ ITSCandidateSessionTest.prototype.loadDetailsError = function () {
 
 ITSCandidateSessionTest.prototype.loadTest = function (OnSucces, OnError) {
     // load the test definition (including all screen definitions) from the server
+    ITSLogger.logMessage(logLevel.INFO, "Loading test %%ID%%", this);
     var testIndex = this.ITSSession.tests.findTestById(this.ITSSession.tests.testList, this.TestID);
     if (testIndex  < 0) {
         this.testDefinition = new ITSTest(this, this.ITSSession);

@@ -171,6 +171,10 @@
             $('#SessionListerInterfaceEditSessionEditHeaderStatus')[0].innerText =
                 ITSInstance.translator.translate("SessionListerController.SessionStatusArchived", "archived");
         }
+        if (this.status == "All") { this.archived = "B";
+            $('#SessionListerInterfaceEditSessionEditHeaderStatus')[0].innerText =
+                ITSInstance.translator.translate("SessionListerController.SessionStatusAll", "present");
+        }
         this.filter = this.filter == "" ? "SessionType=" + this.sessionType : this.filter + ",SessionType=" + this.sessionType
         if ( this.personID.trim() != "") this.filter = this.filter == "" ? "PersonID=" + this.personID : this.filter + ",PersonID=" + this.personID;
         if ( this.groupID.trim() != "") this.filter = this.filter == "" ? "GroupID=" + this.groupID : this.filter + ",GroupID=" + this.groupID;
