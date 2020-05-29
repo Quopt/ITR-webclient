@@ -549,6 +549,7 @@ ITSCandidateSession.prototype.saveGroupSessionsToServerStageUpdateError = functi
 };
 
 ITSCandidateSession.prototype.loadSession = function (sessionID, OnSuccess, OnError, excludeDoneTests, InTestTaking) {
+    this.detailsLoaded = false;
     if (OnError) this.OnError = OnError;
     if (OnSuccess) this.OnSucces = OnSuccess;
     this.InTestTaking = InTestTaking;
@@ -619,6 +620,8 @@ ITSCandidateSession.prototype.testLoadedFine = function (testIndex) {
         }
 
     }
+
+    this.detailsLoaded = allOK;
 
     if (allOK && typeof this.OnSucces != "undefined") {
         //console.log("= OK");

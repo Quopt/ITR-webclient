@@ -34,7 +34,7 @@
             "   <th id=\"ITSTranslationEditor_ID\" scope=\"col\">ID</th>" +
             "   <th id=\"ITSTranslationEditor_Original\" scope=\"col\">Original text</th>" +
             "   <th id=\"ITSTranslationEditor_Translation\" scope=\"col\">Translated text</th>" +
-            "   <th id=\"ITSTranslationEditor_NewTranslation\" scope=\"col\">New text</th>" +
+            "   <th style='width:25%' id=\"ITSTranslationEditor_NewTranslation\" scope=\"col\">New text</th>" +
             "  </tr>" +
             "  </thead>" +
             "  <tbody>" ;
