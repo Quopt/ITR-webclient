@@ -967,6 +967,7 @@ ITSTestTakingController.prototype.saveCurrentTest = function () {
 
 ITSTestTakingController.prototype.saveCurrentTestRetry = function (sessionPostObject) {
     this.saveCurrentTestObjectBusy = true;
+    setTimeout(this.resetBusyFlag.bind(this), 3000); // make sure to reset this flag after a few secs so saves will be retried anyway
     if (sessionPostObject.numberOfRetries > 0) {
         sessionPostObject.numberOfRetries --;
         sessionPostObject.sessionTest.saveToServer(this.saveCurrentTestPickupNext.bind(this), this.saveCurrentTestRetry.bind(this, sessionPostObject), true);
@@ -975,6 +976,10 @@ ITSTestTakingController.prototype.saveCurrentTestRetry = function (sessionPostOb
         ITSInstance.UIController.showError('ITSTestTakingController.SaveCurrentTestFailed',
             $('#TestTakingInterfaceConnectionLost').text());
     }
+};
+
+ITSTestTakingController.prototype.resetBusyFlag = function () {
+    this.saveCurrentTestObjectBusy = false;
 };
 
 ITSTestTakingController.prototype.saveCurrentTestPickupNext = function () {

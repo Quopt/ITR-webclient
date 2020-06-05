@@ -65,6 +65,8 @@
             $('#NavbarsAdmin').visibility = 'visible';
             $('#NavBarsFooter').show();
             $('#SessionAuditTrailInterfaceSessionEdit').show();
+            $('#SessionAuditTrailObjectTypeHeader').hide();
+            $('#SessionAuditTrailInterfaceEditHeader').show()
             ITSInstance.UIController.initNavBar();
 
             // make sure all necessary stuff is loaded
@@ -88,6 +90,18 @@
             $('#SessionAuditTrailList').empty();
             this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this));
         }
+        else if (getUrlParameterValue('ObjectType')) {
+            $('#NavbarsAdmin').show();
+            $('#NavbarsAdmin').visibility = 'visible';
+            $('#NavBarsFooter').show();
+            $('#SessionAuditTrailInterfaceSessionEdit').show();
+            ITSInstance.UIController.initNavBar();
+            ITSInstance.UIController.showInterfaceAsWaitingOn();
+            $('#SessionAuditTrailInterfaceEditHeader').hide();
+            $('#SessionAuditTrailObjectTypeHeader').show();
+
+            this.loadByObjectType(getUrlParameterValue('ObjectType'));
+        }
         else // no parameter will not work for this screen
         {
             ITSInstance.UIController.activateScreenPath('Switchboard');
@@ -104,21 +118,32 @@
         ITSInstance.UIController.showError("SessionAuditTrail.SessionLoadingFailed", "The session could not be loaded at this moment, please refresh your browser page and try again.", "", "history.back();");
     };
 
+    ITSSessionAuditTrailEditor.prototype.loadByObjectType = function (otype) {
+        this.currentSession = {};
+        this.currentSession.AuditTrail = {};
+        this.personArray = {};
+        ITSInstance.JSONAjaxLoader('audittrail/objecttype/' + otype, this.currentSession.AuditTrail, this.auditTrailLoaded.bind(this), this.sessionLoadingFailed.bind(this), "ITSObject", 0, 999, "CreateDate desc");
+    };
+
     ITSSessionAuditTrailEditor.prototype.auditTrailLoaded = function () {
         // session and audit trail are loaded, check if we have all persons
         for (var i=0; i < this.currentSession.AuditTrail.length; i++) {
-            if (typeof this.personArray[this.currentSession.AuditTrail[i].UserID] == "undefined") {
-                // first load the person and then try again
-                this.personArray[this.currentSession.AuditTrail[i].UserID] = {};
-                this.personArray[this.currentSession.AuditTrail[i].UserID].EMail =
-                    ITSInstance.translator.getTranslatedString("SessionAuditTrail.init.js", "PersonNotFound", "Unknown");
-                ITSInstance.JSONAjaxLoader('persons/' + this.currentSession.AuditTrail[i].UserID,
-                      this.personArray[this.currentSession.AuditTrail[i].UserID],
-                      this.auditTrailLoaded.bind(this), this.auditTrailLoaded.bind(this));
-                ITSInstance.JSONAjaxLoader('logins/' + this.currentSession.AuditTrail[i].UserID,
-                    this.personArray[this.currentSession.AuditTrail[i].UserID],
-                    function () {}, function () {});
-                return;
+            if (this.currentSession.AuditTrail[i].UserID != '00000000-0000-0000-0000-000000000000') {
+                if (typeof this.personArray[this.currentSession.AuditTrail[i].UserID] == "undefined") {
+                    // first load the person and then try again
+                    this.personArray[this.currentSession.AuditTrail[i].UserID] = {};
+                    this.personArray[this.currentSession.AuditTrail[i].UserID].EMail =
+                        ITSInstance.translator.getTranslatedString("SessionAuditTrail.init.js", "PersonNotFound", "Unknown");
+                    ITSInstance.JSONAjaxLoader('persons/' + this.currentSession.AuditTrail[i].UserID,
+                        this.personArray[this.currentSession.AuditTrail[i].UserID],
+                        this.auditTrailLoaded.bind(this), this.auditTrailLoaded.bind(this));
+                    ITSInstance.JSONAjaxLoader('logins/' + this.currentSession.AuditTrail[i].UserID,
+                        this.personArray[this.currentSession.AuditTrail[i].UserID],
+                        function () {
+                        }, function () {
+                        });
+                    return;
+                }
             }
         }
         setTimeout(this.generateAuditTrail.bind(this), 1000);
@@ -134,7 +159,10 @@
 
             rowText = rowText.replace( this.mNR, i+1);
             rowText = rowText.replace( this.mDATETIME, convertISOtoITRDate(this.currentSession.AuditTrail[i].CreateDate));
-            if (typeof this.personArray[this.currentSession.AuditTrail[i].UserID].Email == "undefined") {
+            if (this.currentSession.AuditTrail[i].UserID == '00000000-0000-0000-0000-000000000000') {
+                rowText = rowText.replace(this.mWHO, ITSInstance.translator.getTranslatedString("SessionAuditTrail.init.js", "PersonNotFound", "Unknown"));
+            }
+            else if (typeof this.personArray[this.currentSession.AuditTrail[i].UserID].Email == "undefined") {
                 rowText = rowText.replace(this.mWHO, this.personArray[this.currentSession.AuditTrail[i].UserID].EMail);
             } else {
                 rowText = rowText.replace(this.mWHO, this.personArray[this.currentSession.AuditTrail[i].UserID].Email);
@@ -169,4 +197,12 @@
 
     // translate the portlet
     ITSInstance.translator.translateDiv("#SessionAuditTrailInterfaceSessionEdit");
+
+    // register the menu items if applicable
+    ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
+        if (ITSInstance.users.currentUser.IsOrganisationSupervisor) {
+            ITSInstance.UIController.registerMenuItem('#submenuCompaniesLI', "#AdminInterfaceEMailAuditTrail.ViewMenu", ITSInstance.translator.translate("#AdminInterfaceEMailAuditTrail.ViewMenu", "View mail log"), "fa-envelope", "ITSRedirectPath(\'SessionAuditTrail&ObjectType=1001\');");
+        }
+    }, true);
+
 })()// IIFE
