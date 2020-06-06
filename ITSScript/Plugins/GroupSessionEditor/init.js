@@ -808,7 +808,7 @@ ITSGroupSessionEditor.prototype.loadSessionForDownload = function () {
                     ITSInstance.UIController.showInterfaceAsWaitingProgress("" + this.archiveDownloadCounter);
                     if (this.archiveDownloadCounter == 0) {
                         // we are done
-                        this.zip.file('data.json', JSON.stringify(this.resultsFile));
+                        this.zip.file('data.json', JSON.stringify(replaceCircular(this.resultsFile)));
                         if (this.couponsFile.length > 0) {
                             this.zip.file('coupons.txt', this.couponsFile.join('\n\r'));
                         }
