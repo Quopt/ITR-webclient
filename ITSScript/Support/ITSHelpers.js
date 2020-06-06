@@ -662,6 +662,31 @@ function ITSJSONStringify(someITSObject) {
     return toReturn;
 }
 
+// in case of circular references in objects this function can be used
+const replaceCircular = (obj, level = 0, already = new WeakSet()) => {
+    switch (typeof obj) {
+        case 'object':
+            if (!obj)
+                return obj
+            if (already.has(obj)) {
+                return "CIRCULAR"
+            }
+            already.add(obj)
+            if (Array.isArray(obj)) {
+                return obj.map(item => replaceCircular(item, level + 1, already))
+            }
+            const newObj = {}
+            Object.keys(obj).forEach(key => {
+                const val = replaceCircular(obj[key], level + 1, already)
+                newObj[key] = val
+            })
+            already.delete(obj)
+            return newObj
+        default:
+            return obj;
+    }
+}
+
 function scanITSJsonLoadObject(tempObject, someITSObject, parentITSObject, ITSInstanceObject, DefaultObjectType) {
     // copy the arrays and sub objects
     try {

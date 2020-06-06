@@ -156,28 +156,29 @@ ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixF
     zip.file( folderName + fileName + ".html", openingTag + $('#AdminInterfaceEditSessionEditTestsList')[0].outerHTML + closingTag);
     ITSInstance.editSessionController.generateTestsList(false, this);
 
-    var fileNameAnswers, fileNameScores;
+    var fileNameAnswers, fileNameScores, filePrefixForPath;
     // add the tests to the results file
     for (var found = 0; found < this.SessionTests.length; found++) {
         if (typeof this.resultsFile == "undefined") this.resultsFile = {};
-        if (typeof this.resultsFile[prefixForPath] == "undefined") this.resultsFile[prefixForPath] = {};
+        filePrefixForPath = prefixForPath == "" ? this.SessionTests[found].testDefinition.TestName : prefixForPath;
+        if (typeof this.resultsFile[filePrefixForPath] == "undefined") this.resultsFile[filePrefixForPath] = {};
         fileNameAnswers = this.SessionTests[found].testDefinition.TestName + ".answers";
-        if (typeof this.resultsFile[prefixForPath][fileNameAnswers] == "undefined") {
-            this.resultsFile[prefixForPath][fileNameAnswers] = {};
+        if (typeof this.resultsFile[filePrefixForPath][fileNameAnswers] == "undefined") {
+            this.resultsFile[filePrefixForPath][fileNameAnswers] = {};
         } else {
             fileNameAnswers = this.SessionTests[found].testDefinition.TestName + ".answers." + found;
-            this.resultsFile[prefixForPath][fileNameAnswers] = {};
+            this.resultsFile[filePrefixForPath][fileNameAnswers] = {};
         }
         fileNameScores = this.SessionTests[found].testDefinition.TestName + ".scores";
-        if (typeof this.resultsFile[prefixForPath][fileNameScores] == "undefined") {
-            this.resultsFile[prefixForPath][fileNameScores] = {};
+        if (typeof this.resultsFile[filePrefixForPath][fileNameScores] == "undefined") {
+            this.resultsFile[filePrefixForPath][fileNameScores] = {};
         } else {
             fileNameScores = this.SessionTests[found].testDefinition.TestName + ".scores." + found;
-            this.resultsFile[prefixForPath][fileNameScores] = {};
+            this.resultsFile[filePrefixForPath][fileNameScores] = {};
         }
 
-        this.resultsFile[prefixForPath][fileNameAnswers] = this.SessionTests[found].Results;
-        this.resultsFile[prefixForPath][fileNameScores] = this.SessionTests[found].Scores;
+        this.resultsFile[filePrefixForPath][fileNameAnswers] = this.SessionTests[found].Results;
+        this.resultsFile[filePrefixForPath][fileNameScores] = this.SessionTests[found].Scores;
     }
     // add the coupons to the coupons file
     if (typeof this.couponsFile == "undefined") this.couponsFile = [];

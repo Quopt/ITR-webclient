@@ -274,12 +274,14 @@
                     // done
                     if (NoUIElements) {
                         template = this.testCardElementDoneNoUIElements;
+
+                        ct.calculateScores(false, true);
                     } else {
                         template = this.testCardElementDone;
-                    }
 
-                    // make sure results are up to date and auto saved back to the server if not present yet
-                    ct.calculateScores(true, true);
+                        // make sure results are up to date and auto saved back to the server if not present yet
+                        ct.calculateScores(true, true);
+                    }
                 }
 
                 // replace tokens
@@ -630,15 +632,15 @@
         this.currentSession.createReportOverviewInZipStart();
         this.currentSession.createReportOverviewInZip(zip,"", function(currentSession,zip) {
             // download
-            ITSInstance.UIController.showInterfaceAsWaitingOff();
             var fileName = ITSInstance.translator.getTranslatedString("ITSSessionEditor", "ScoreOverview", "Score overview");
+            zip.file('data.json',JSON.stringify(replaceCircular(currentSession.resultsFile)));
+            if (currentSession.couponsFile.length > 0) {
+                zip.file('coupons.txt', currentSession.couponsFile.join('\n\r'));
+            }
             zip.generateAsync({type : "blob"}).
              then(function (blob) {
-                zip.file('data.json',JSON.stringify(currentSession.resultsFile));
-                if (currentSession.couponsFile.length > 0) {
-                    zip.file('coupons.txt', currentSession.couponsFile.join('\n\r'));
-                }
-                saveFileLocally(fileName + " " + this.currentSession.Description + " - " + this.currentSession.Person.createHailing() + ".zip" , blob, "application/zip");
+                 ITSInstance.UIController.showInterfaceAsWaitingOff();
+                 saveFileLocally(fileName + " " + this.currentSession.Description + " - " + this.currentSession.Person.createHailing() + ".zip" , blob, "application/zip");
              }.bind(this));
         }.bind(this), this.zipError, true , true);
     };
