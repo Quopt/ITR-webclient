@@ -544,21 +544,29 @@
 
             var toTranslate = encodeURI(this.toTranslate.result);
 
-            var tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID, 'ToTranslate' : toTranslate};
+            if (toTranslate.length > 5000) {
+                ITSInstance.UIController.showError('ReportTemplateEditor.TranslationTooLong', "The text in the report is too long to translate. Please split it up in smaller pieces of 5000 characters maximum for translation.")
+            } else {
+                var tempHeaders = {
+                    'SessionID': ITSInstance.token.IssuedToken,
+                    'CompanyID': ITSInstance.token.companyID,
+                    'ToTranslate': toTranslate
+                };
 
-            $.ajax({
-                url: ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language,
-                headers: tempHeaders,
-                error: function () {
-                    ITSInstance.UIController.showError("ITSReportTemplateEditor.TranslationFailed", "The report could not be translated at this moment.");
-                },
-                success: function (data) {
-                    //console.log(data);
-                    this.currentReport.ReportText = envSubstituteFromArray(data, this.toTranslate.envSubstArr) ;
-                    tinyMCE.get("ReportTemplateInterfaceEdit_ReportWriter").setContent(this.currentReport.ReportText);
-                }.bind(this),
-                type: 'GET'
-            });
+                $.ajax({
+                    url: ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language,
+                    headers: tempHeaders,
+                    error: function () {
+                        ITSInstance.UIController.showError("ITSReportTemplateEditor.TranslationFailed", "The report could not be translated at this moment.");
+                    },
+                    success: function (data) {
+                        //console.log(data);
+                        this.currentReport.ReportText = envSubstituteFromArray(data, this.toTranslate.envSubstArr);
+                        tinyMCE.get("ReportTemplateInterfaceEdit_ReportWriter").setContent(this.currentReport.ReportText);
+                    }.bind(this),
+                    type: 'GET'
+                });
+            }
         };
 
         // register the portlet
