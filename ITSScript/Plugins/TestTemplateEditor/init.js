@@ -1685,6 +1685,7 @@ ITSTestTemplateEditor.prototype.translateScreenComponent = function (componentIn
 ITSTestTemplateEditor.prototype.translateScreenComponentVariable = function (componentVariableIndex) {
     this.translate_component_variable_index = componentVariableIndex;
 
+    console.log(this.translate_template.TemplateVariables[this.translate_component_variable_index]);
     if (this.translate_template.TemplateVariables[this.translate_component_variable_index].translatable) {
         for (var i=1; i <= this.currentTest.screens[this.translate_screen_index].screenComponents[this.translate_component_index].templateValues.RepeatBlockCount; i++) {
             var postfix = "";
@@ -1696,7 +1697,7 @@ ITSTestTemplateEditor.prototype.translateScreenComponentVariable = function (com
                 'CompanyID': ITSInstance.token.companyID
             };
             this.translate_calls++;
-            ITSLogger.logMessage(logLevel.INFO,ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language);// + " " + toTranslate);
+            ITSLogger.logMessage(logLevel.INFO,ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language + " " + toTranslate);
             if ((toTranslate != undefined) && (toTranslate != "")) {
                 this.translateCall(this.translate_screen_index, this.translate_component_index, this.translate_component_variable_index, this.translate_template, postfix, tempHeaders, toTranslate);
             }
@@ -1711,7 +1712,7 @@ ITSTestTemplateEditor.prototype.translateCall = function (translate_screen_index
     context.translate_template = translate_template;
     context.postfix = postfix;
     context.tempHeaders = tempHeaders;
-    context.data = toTranslate.replace(/(\r\n|\n|\r|\t)/gm, "");;
+    context.data = toTranslate.replace(/(\r\n|\n|\r|\t)/gm, "");
     context.url =  ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language;
     this.translation_calls.push(context);
 };
