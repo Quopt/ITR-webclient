@@ -150,53 +150,22 @@ ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixF
         '<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/4/tinymce.min.js" referrerpolicy="origin"></script>'   ;
     var closingTag = '</body>'+
         `<script>
-        customElements.define('textarea-htmledit', TAHTML, { extends: 'textarea' });
-        function TAHTML() {
-            this.prototype = HTMLTextAreaElement;
-        }
-        function init_html_editor(specificId) {
-            if (!specificId) { specificId = "textarea-htmledit"; }
-            tinymce.init({
-                selector: specificId,
-                theme: 'modern',
-                plugins: 'print preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media code codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount imagetools  contextmenu colorpicker textpattern help',
-                toolbar1: 'formatselect | undo redo | bold italic strikethrough forecolor backcolor fontselect fontsizeselect | link | alignleft aligncenter alignright alignjustify lineheightselect | numlist bullist outdent indent  | removeformat | FMathEditor',
-                image_advtab: true,
-                images_dataimg_filter: function(img) {
-                    return img.hasAttribute('internal-blob');
-                },
-                paste_data_images : true,
-                fontsize_formats: "6pt 8pt 9pt 10pt 11pt 12pt 13pt 14pt 18pt 24pt 36pt",
-                lineheight_formats: "4pt 5pt 6pt 7pt 8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 20pt 22pt 24pt 26pt 36pt",
-                forced_root_block_attrs: {
-                    'class': 'p_compressed'
-                },
-                extended_valid_elements : 'i[class|border|hspace|vspace|width|height|align|onmouseover|onmouseout|name]',
-                allow_html_in_named_anchor: true,
-                content_css: [
-                    '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-                    '//fonts.googleapis.com/css?family=Roboto+Slab:300,300i,400,400i',
-                    '//fonts.googleapis.com/css?family=Alegreya+Sans:300,300i,400,400i',
-                    '//fonts.googleapis.com/css?family=Indie+Flower:300,300i,400,400i',
-                    'css/dark-mode.css'
-    //                'css/TinyMCE.css'
-    //                '//www.tinymce.com/css/codepen.min.css'
-                ],
-                font_formats: 'Arial Black=arial black,avant garde;Arial=arial,avant garde;Times New Roman=times new roman,times;Lato=Lato;Roboto slab=Roboto Slab;Alegreya Sans=Alegreya Sans;Indie Flower=indie flower, cursive;',
-                // cascade onkeyup event to embedded element
-                init_instance_callback: function (editor) {
-                    editor.on('KeyUp', function (e) {
-                        if ($('#'+this.id)[0].onkeyup) {
-                            $('#'+this.id)[0].onkeyup() ;
-                        }
+            $('textarea-htmledit').removeClass('form-control');
+            (function($) {
+                $.fn.changeElementType = function(newType) {
+                    var attrs = {};
+            
+                    $.each(this[0].attributes, function(idx, attr) {
+                        attrs[attr.nodeName] = attr.nodeValue;
+                    });
+            
+                    this.replaceWith(function() {
+                        return $("<" + newType + "/>", attrs).append($(this).contents()).css("border", "solid");
                     });
                 }
-            });
-        }\t
-    \tsetTimeout(init_html_editor, 1000);
-    </script>
-    ` +
-        '</html>';
+            })(jQuery);
+            $('textarea-htmledit').changeElementType('div');
+        </script></html>';
 
     // add the score overview
     ITSInstance.editSessionController.generateTestsList(true, this);
