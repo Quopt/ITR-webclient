@@ -632,17 +632,6 @@ ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_di
 
     if(!preferHTML) preferHTML = false;
 
-    if (preload) {
-        var x = '';
-        try {
-            x = this.runtime_get_values_as_html(id, RepeatBlockCount, actual_values, "", "", this, pnp_view ? "PNP" : "TT", preload, preloadCallback);
-        }
-        catch (err) {
-            ITSLogger.logMessage(logLevel.ERROR,"runtime_get_values_as_html failed for " +  id + " " + err.message );
-        }
-        return x;
-    }
-
     var __ret = this.generate_template_and_scan_for_repeatblocks(templatevalues, pnp_view, id, div);
 
     templatevalues = __ret.templatevalues;
@@ -668,6 +657,8 @@ ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_di
         catch (err) {
                 ITSLogger.logMessage(logLevel.ERROR,"runtime_get_values_as_html failed for " +  id + " " + err.message );
         }
+
+        if (preload) return x; // when preloading return the amount of objects to preload, even when it excepts
 
         if (typeof x != "undefined") {
             $('#' + div).append(x);
