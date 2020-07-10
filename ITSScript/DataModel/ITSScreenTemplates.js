@@ -115,6 +115,7 @@ function ITSScreenTemplate(parent, session) {
 
     // generator and get/set value snippets
     this.get_value_snippet = "";
+    this.get_value_as_html_snippet = "";
     this.set_value_snippet = "";
     this.init_value_snippet = "";
     this.generator_snippet = "";
@@ -134,7 +135,7 @@ function ITSScreenTemplate(parent, session) {
 
     this.persistentProperties = ['ID', 'Description', 'Explanation', 'Remarks', 'TemplateVariables',
         'HTMLContent', 'HTMLContentPnP', 'HTMLContentSummary', 'get_value_snippet', 'set_value_snippet', 'TemplateType',
-        'init_value_snippet', 'generator_snippet', 'generator_pnp_snippet', 'generator_summary_snippet',
+        'init_value_snippet', 'generator_snippet', 'generator_pnp_snippet', 'generator_summary_snippet', 'get_value_as_html_snippet',
         'validation_snippet', 'isanswered_snippet', 'PluginData'];
 }
 
@@ -232,6 +233,14 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
         ITSLogger.logMessage(logLevel.ERROR,"get_value_snippet contains error " + this.Description + " " + err.message );
     }
     this['runtime_get_values'] = func;
+
+    var func = emptyfunc;
+    try {
+        eval("func = function(id, num_blocks, varvalue, current_values, template_values, template, test_mode) { " + this.get_value_as_html_snippet + " }; ");
+    } catch (err) {
+        ITSLogger.logMessage(logLevel.ERROR,"get_value_as_html_snippet contains error " + this.Description + " " + err.message );
+    }
+    this['runtime_get_values_as_html'] = func;
 
     var func = emptyfunc;
     try {
@@ -614,12 +623,14 @@ ITSScreenTemplate.prototype.check_value_for_specials = function (variableType, i
     return newVal;
 };
 
-ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_div, id, templatevalues, pnp_view, full_initialisation, init_mode) {
+ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_div, id, templatevalues, pnp_view, full_initialisation, init_mode, preferHTML, actual_values) {
     // div - place to generate the view in the html page
     // id - id of this template
     // templatesvalues - any already filled in values for this template (js object)
     // varvalues as set by the candidate
     // full_initialisation if true init script is called
+
+    if(!preferHTML) preferHTML = false;
 
     var __ret = this.generate_template_and_scan_for_repeatblocks(templatevalues, pnp_view, id, div);
 
@@ -638,18 +649,38 @@ ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_di
     template = this.expand_repeat_block_and_parameters_with_blockcount(RepeatBlockCount, template, repeat_block_vars);
     template = this.replace_variables_with_actual_values(repeat_block_vars, template, templatevalues, RepeatBlockCount, id);
 
-    // generate the template in the correct position
-    if (!add_to_div) {
-        $('#' + div)[0].innerHTML = template;
-    } else {
-        $('#' + div).append(template);
+    if (preferHTML) {
+        var x = '';
+        try {
+            x = this.runtime_get_values_as_html(id, RepeatBlockCount, actual_values, templatevalues, template, this, pnp_view ? "PNP" : "TT");
+        }
+        catch (err) {
+                ITSLogger.logMessage(logLevel.ERROR,"runtime_get_values_as_html failed for " +  id + " " + err.message );
+        }
+
+        if (typeof x != "undefined") {
+            $('#' + div).append(x);
+        }
+        preferHTML = typeof x == "undefined" ? false : true;
     }
 
-    // init the values
-    if (full_initialisation) {
-        if (!init_mode) {init_mode="";}
-        this.runtime_init_values(id, RepeatBlockCount, init_mode, templatevalues);
-    }};
+    if (!preferHTML) {
+        // generate the template in the correct position
+        if (!add_to_div) {
+            $('#' + div)[0].innerHTML = template;
+        } else {
+            $('#' + div).append(template);
+        }
+
+        // init the values
+        if (full_initialisation) {
+            if (!init_mode) {
+                init_mode = "";
+            }
+            this.runtime_init_values(id, RepeatBlockCount, init_mode, templatevalues);
+        }
+    }
+};
 
 function ITSScreenTemplateVariable(parent, session) {
     this.ITSSession = session;

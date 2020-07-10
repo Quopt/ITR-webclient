@@ -165,7 +165,7 @@ ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixF
                 }
             })(jQuery);
             $('textarea-htmledit').changeElementType('div');
-        </script></html>';
+        </script></html>`;
 
     // add the score overview
     ITSInstance.editSessionController.generateTestsList(true, this);
@@ -217,7 +217,7 @@ ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixF
             fileName = ITSInstance.translator.getTranslatedString("ITSCandidateSession", "AnswerOverview", "Answers overview");
             this.SessionTests[found].testDefinition.generateQuestionOverview("SessionViewAnswersInterfaceEditTestAnswers",
                 this.SessionTests[found].Results, true, "_" + genNumber,
-                this, this.SessionTests[found], this.Person);
+                this, this.SessionTests[found], this.Person, true);
             zip.file(folderName + fileName + ".html", openingTag + $('#SessionViewAnswersInterfaceEditTestAnswers')[0].outerHTML + closingTag);
         }
     }

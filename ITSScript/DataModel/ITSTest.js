@@ -1329,7 +1329,8 @@ ITSTest.prototype.findScaleByID = function (idToFind) {
     return null;
 };
 
-ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, PnP, additionalText, currentSession, currentSessionTest, candidate) {
+ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, PnP, additionalText, currentSession, currentSessionTest, candidate, preferHTML) {
+    if (!preferHTML) preferHTML = false;
     if (! additionalText) additionalText = "";
     for (var i=0; i < this.screens.length; i ++) {
         if (PnP) {
@@ -1338,10 +1339,10 @@ ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, P
                 eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode, screen) { " + this.screens[i].beforeScreenScript + " }; ");
                 func(currentSession, currentSessionTest, candidate, this, undefined, ITSInstance, "PnPView", this.screens[i] );
             } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Screen pre script failed for "  + this.TestName + "(" + i + ")"  + err);  }
-            this.screens[i].generateScreenInDiv(hostDiv, "PnPView", "_" + i + additionalText, PnP);
+            this.screens[i].generateScreenInDiv(hostDiv, "PnPView", "_" + i + additionalText, PnP, preferHTML, resultsToLoad);
         }
         else {
-            this.screens[i].generateScreenInDiv(hostDiv, "TE", "_" + i + additionalText, PnP);
+            this.screens[i].generateScreenInDiv(hostDiv, "TE", "_" + i + additionalText, PnP, preferHTML, resultsToLoad);
         }
         $('#'+ hostDiv).append('<hr/>');
         if (resultsToLoad) {
@@ -1626,11 +1627,13 @@ ITSTestScreen.prototype.newTestDynamicsRule = function () {
     return newRule;
 };
 
-ITSTestScreen.prototype.generateScreenInDiv = function (divId, context, divPostfix, PnP) {
+ITSTestScreen.prototype.generateScreenInDiv = function (divId, context, divPostfix, PnP, preferHTML, storageObject) {
     // load screen component list
     if (!context) { context = "TT";}
     if (!divPostfix) { divPostfix = ""; }
     if (!PnP) { PnP = false; }
+    if (!preferHTML) preferHTML = false;
+
     for (var i = 0; i < this.screenComponents.length; i++) {
         if (this.screenComponents[i].show) {
             // now generate the screen component with the resultsToLoad
@@ -1652,8 +1655,14 @@ ITSTestScreen.prototype.generateScreenInDiv = function (divId, context, divPostf
             var template = this.ITSSession.screenTemplates.findTemplateById(this.ITSSession.screenTemplates.screenTemplates, this.screenComponents[i].templateID);
             if (template >= 0) {
                 myTemplate = this.ITSSession.screenTemplates.screenTemplates[template];
-                //(div, add_to_div, id, templatevalues, pnp_view, full_initialisation, init_mode)
-                myTemplate.generate_test_taking_view(newDivID, true, 'X' + i + 'Y' + divPostfix, this.screenComponents[i].templateValues, PnP, true, context);
+                var ComponentResults = {};
+                ComponentResults.Value = '';
+                try {
+                    var TestResults = {};
+                    TestResults = storageObject["__" + this.id] ;
+                    var ComponentResults = TestResults["__" + this.screenComponents[i].id];
+                } catch(err) {};
+                myTemplate.generate_test_taking_view(newDivID, true, 'X' + i + 'Y' + divPostfix, this.screenComponents[i].templateValues, PnP, true, context, preferHTML, ComponentResults.Value);
             }
         }
     }

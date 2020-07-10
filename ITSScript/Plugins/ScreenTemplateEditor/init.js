@@ -85,6 +85,7 @@ ITSScreenTemplateEditor.prototype.addNewTemplate = function () {
 
     this.currentTemplate.HTMLContent = $('#AdminInterfaceScreenTemplate-htmltemplate').val();
     this.currentTemplate.get_value_snippet = $('#AdminInterfaceScreenTemplate-getvalue').val();
+    this.currentTemplate.get_value_as_html_snippet = $('#AdminInterfaceScreenTemplate-genscript-HTML').val();
     this.currentTemplate.set_value_snippet = $('#AdminInterfaceScreenTemplate-setvalue').val();
     this.currentTemplate.init_value_snippet = $('#AdminInterfaceScreenTemplate-initscript').val();
     this.currentTemplate.validation_snippet = $('#AdminInterfaceScreenTemplate-validatescript').val();
@@ -92,7 +93,6 @@ ITSScreenTemplateEditor.prototype.addNewTemplate = function () {
     this.currentTemplate.generator_snippet = $('#AdminInterfaceScreenTemplate-genscript').val();
     this.currentTemplate.generator_pnp_snippet = $('#AdminInterfaceScreenTemplate-genscript-PnP').val();
     this.currentTemplate.generator_summary_snippet = $('#AdminInterfaceScreenTemplate-genscript-summary').val();
-
 };
 
 ITSScreenTemplateEditor.prototype.populateTemplates = function () {
@@ -160,6 +160,7 @@ ITSScreenTemplateEditor.prototype.selectTemplateShowDetails = function () {
     $('#AdminInterfaceScreenTemplate-pnptemplate').val(this.currentTemplate.HTMLContentPnP);
     $('#AdminInterfaceScreenTemplate-summarytemplate').val(this.currentTemplate.HTMLContentSummary);
     $('#AdminInterfaceScreenTemplate-getvalue').val(this.currentTemplate.get_value_snippet);
+    $('#AdminInterfaceScreenTemplate-genscript-HTML').val(this.currentTemplate.get_value_as_html_snippet);
     $('#AdminInterfaceScreenTemplate-setvalue').val(this.currentTemplate.set_value_snippet);
     $('#AdminInterfaceScreenTemplate-initscript').val(this.currentTemplate.init_value_snippet);
     $('#AdminInterfaceScreenTemplate-validatescript').val(this.currentTemplate.validation_snippet);
@@ -260,29 +261,23 @@ ITSScreenTemplateEditor.prototype.generatePreviews = function () {
         'ITSInstance.newITSScreenTemplateEditorController.updatePreviews();',
         'ITSInstance.newITSScreenTemplateEditorController.addRepeatBlock();',
         'ITSInstance.newITSScreenTemplateEditorController.removeRepeatBlock();');
-    //xxx this.currentTemplate.runtime_init_values(this.testEditorID, this.currentTemplate.RepeatBlockCount, 'ST');
 
-    //  (div, add_to_div, id, templatevalues, varvalues, pnp_view)
     this.currentTemplate.generate_test_taking_view('AdminInterfaceScreenTemplate-TTPreview', false, this.testTakingID,
         this.currentTemplate.extract_test_editor_view_templatevalues('AdminInterfaceScreenTemplate-TEPreview', this.testEditorID, false), false, true, 'ST');
-    //this.currentTemplate.runtime_init_values(this.testTakingID, this.currentTemplate.RepeatBlockCount, 'ST');
 
     this.currentTemplate.generate_test_taking_view('AdminInterfaceScreenTemplate-PnPPreview', false, this.testTakingPnPID,
         this.currentTemplate.extract_test_editor_view_templatevalues('AdminInterfaceScreenTemplate-TEPreview', this.testEditorID, false), true, true, 'ST');
-    //this.currentTemplate.runtime_init_values(this.testTakingPnPID, this.currentTemplate.RepeatBlockCount, 'ST');
 };
 
 ITSScreenTemplateEditor.prototype.updatePreviews = function () {
     var tempval = this.currentTemplate.runtime_get_values(this.testTakingID, this.currentTemplate.RepeatBlockCount, this.currentTemplate);
     this.currentTemplate.generate_test_taking_view('AdminInterfaceScreenTemplate-TTPreview', false, this.testTakingID,
         this.currentTemplate.extract_test_editor_view_templatevalues('AdminInterfaceScreenTemplate-TEPreview', this.testEditorID, false), false, true, 'ST');
-    //this.currentTemplate.runtime_init_values(this.testTakingID, this.currentTemplate.RepeatBlockCount, 'ST');
     this.currentTemplate.runtime_set_values(this.testTakingID, this.currentTemplate.RepeatBlockCount, tempval, this.currentTemplate );
 
     var tempval = this.currentTemplate.runtime_get_values(this.testTakingPnPID, this.currentTemplate.RepeatBlockCount, this.currentTemplate);
     this.currentTemplate.generate_test_taking_view('AdminInterfaceScreenTemplate-PnPPreview', false, this.testTakingPnPID,
         this.currentTemplate.extract_test_editor_view_templatevalues('AdminInterfaceScreenTemplate-TEPreview', this.testEditorID, false), true, true, 'ST');
-    //this.currentTemplate.runtime_init_values(this.testTakingPnPID, this.currentTemplate.RepeatBlockCount, 'ST');
     this.currentTemplate.runtime_set_values(this.testTakingPnPID, this.currentTemplate.RepeatBlockCount, tempval, this.currentTemplate );
 };
 
@@ -293,8 +288,6 @@ ITSScreenTemplateEditor.prototype.addRepeatBlock = function () {
         'ITSInstance.newITSScreenTemplateEditorController.updatePreviews();',
         'ITSInstance.newITSScreenTemplateEditorController.addRepeatBlock();',
         'ITSInstance.newITSScreenTemplateEditorController.removeRepeatBlock();');
-    //xxx this.currentTemplate.runtime_init_values(this.testEditorID, this.currentTemplate.RepeatBlockCount, 'ST');
-
     this.updatePreviews();
 };
 
@@ -306,8 +299,6 @@ ITSScreenTemplateEditor.prototype.removeRepeatBlock = function () {
             'ITSInstance.newITSScreenTemplateEditorController.updatePreviews();',
             'ITSInstance.newITSScreenTemplateEditorController.addRepeatBlock();',
             'ITSInstance.newITSScreenTemplateEditorController.removeRepeatBlock();');
-        //xxx this.currentTemplate.runtime_init_values(this.testEditorID, this.currentTemplate.RepeatBlockCount, 'ST');
-
         this.updatePreviews();
     }
 };

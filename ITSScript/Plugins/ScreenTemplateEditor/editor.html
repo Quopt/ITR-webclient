@@ -217,6 +217,10 @@
                 <label id="AdminInterfaceScreenTemplate-labelGeneratorSummary" for="AdminInterfaceScreenTemplate-genscript-summary">Generator snippet summary view (id, num_blocks, template_values, current_values_array) return { "html" : ..., "values" : ... } </label>
                 <textarea class="form-control" id="AdminInterfaceScreenTemplate-genscript-summary" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.generator_summary_snippet = this.value;">/* no generator script needed */</textarea>
             </div>
+            <div class="form-group">
+                <label id="AdminInterfaceScreenTemplate-labelGeneratorGetAsHTMLValue" for="AdminInterfaceScreenTemplate-genscript-HTML">Generator snippet plain HTML only view (id, num_blocks, varvalue, current_values, template_values, template, test_mode) return { "html" : ..., "values" : ... } </label>
+                <textarea class="form-control" id="AdminInterfaceScreenTemplate-genscript-HTML" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.get_value_as_html_snippet = this.value;">/* no generator script needed */</textarea>
+            </div>
         </div>
     </div>
     <!-- preview section (test editor, test taking, PnP input) -->
