@@ -1329,9 +1329,11 @@ ITSTest.prototype.findScaleByID = function (idToFind) {
     return null;
 };
 
-ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, PnP, additionalText, currentSession, currentSessionTest, candidate, preferHTML) {
+ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, PnP, additionalText, currentSession, currentSessionTest, candidate, preferHTML, preload, preloadCallback) {
     if (!preferHTML) preferHTML = false;
     if (! additionalText) additionalText = "";
+    var preloadCount = 0 ;
+
     for (var i=0; i < this.screens.length; i ++) {
         if (PnP) {
             // execute the screen pre script for PnP view initialisation
@@ -1339,16 +1341,18 @@ ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, P
                 eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode, screen) { " + this.screens[i].beforeScreenScript + " }; ");
                 func(currentSession, currentSessionTest, candidate, this, undefined, ITSInstance, "PnPView", this.screens[i] );
             } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Screen pre script failed for "  + this.TestName + "(" + i + ")"  + err);  }
-            this.screens[i].generateScreenInDiv(hostDiv, "PnPView", "_" + i + additionalText, PnP, preferHTML, resultsToLoad);
+            preloadCount = this.screens[i].generateScreenInDiv(hostDiv, "PnPView", "_" + i + additionalText, PnP, preferHTML, resultsToLoad, preload, preloadCallback);
         }
         else {
-            this.screens[i].generateScreenInDiv(hostDiv, "TE", "_" + i + additionalText, PnP, preferHTML, resultsToLoad);
+            preloadCount = this.screens[i].generateScreenInDiv(hostDiv, "TE", "_" + i + additionalText, PnP, preferHTML, resultsToLoad, preload, preloadCallback);
         }
         $('#'+ hostDiv).append('<hr/>');
         if (resultsToLoad) {
             this.screens[i].updateDivsFromResultStorage(resultsToLoad, "_" + i + additionalText);
         }
     }
+
+    return preloadCount;
 };
 
 ITSTest.prototype.updateResultsStorageFromQuestionOverview = function(hostDiv, resultsToSave, PnP, additionalText) {
@@ -1627,12 +1631,13 @@ ITSTestScreen.prototype.newTestDynamicsRule = function () {
     return newRule;
 };
 
-ITSTestScreen.prototype.generateScreenInDiv = function (divId, context, divPostfix, PnP, preferHTML, storageObject) {
+ITSTestScreen.prototype.generateScreenInDiv = function (divId, context, divPostfix, PnP, preferHTML, storageObject, preload, preloadCallback) {
     // load screen component list
     if (!context) { context = "TT";}
     if (!divPostfix) { divPostfix = ""; }
     if (!PnP) { PnP = false; }
     if (!preferHTML) preferHTML = false;
+    var preloadCount = 0;
 
     for (var i = 0; i < this.screenComponents.length; i++) {
         if (this.screenComponents[i].show) {
@@ -1662,10 +1667,14 @@ ITSTestScreen.prototype.generateScreenInDiv = function (divId, context, divPostf
                     TestResults = storageObject["__" + this.id] ;
                     var ComponentResults = TestResults["__" + this.screenComponents[i].id];
                 } catch(err) {};
-                myTemplate.generate_test_taking_view(newDivID, true, 'X' + i + 'Y' + divPostfix, this.screenComponents[i].templateValues, PnP, true, context, preferHTML, ComponentResults.Value);
+                var x = myTemplate.generate_test_taking_view(newDivID, true, 'X' + i + 'Y' + divPostfix, this.screenComponents[i].templateValues, PnP, true, context, preferHTML, ComponentResults.Value, preload, preloadCallback);
+                if ((typeof x === "number") && (preload)) {
+                    preloadCount += x;
+                }
             }
         }
     }
+    return preloadCount;
 };
 
 function ITSTestScreenComponent(par, session) {

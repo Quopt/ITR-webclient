@@ -92,7 +92,24 @@ ITSCandidateSession = function (session, ITSSession) {
 ITSCandidateSession.prototype.createReportOverviewInZipStart = function (zip, prefixForPath, callWhenDone, callOnError, includeReports, includeAnswers) {
     this.couponsFile = [];
     this.resultsFile = {};
+    this.reportZIP = {};
+    this.preloadDone = undefined;
+    this.preloadCounter = 0;
+    this.genNumber = "" + getNewSimpleGeneratorNumber('SessionViewAnswersInterfaceEdit_gen', 9999);
 }
+
+ITSCandidateSession.prototype.createReportOverviewProcessPreload = function () {
+    this.preloadCounter --;
+    if (this.preloadCounter <= 0) {
+        this.preloadDone = true;
+        this.createReportOverviewInZip(this.reportZIP.zip ,
+            this.reportZIP.prefixForPath,
+            this.reportZIP.callWhenDone,
+            this.reportZIP.callOnError,
+            this.reportZIP.includeReports,
+            this.reportZIP.includeAnswers);
+    }
+};
 
 ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixForPath, callWhenDone, callOnError, includeReports, includeAnswers) {
     if (includeReports) {
@@ -134,6 +151,25 @@ ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixF
                 }.bind(this, zip, prefixForPath, callWhenDone, callOnError, includeReports, includeAnswers));
                 return;
             }
+        }
+    }
+
+    if (includeAnswers && !this.preloadDone) {
+        // the answers overview should be generated. Check for preloading.
+        for (var found = 0; found < this.SessionTests.length; found++) {
+            var x = this.SessionTests[found].testDefinition.generateQuestionOverview("SessionViewAnswersInterfaceEditTestAnswers",
+                this.SessionTests[found].Results, true, "_" + this.genNumber + "_" + found,
+                this, this.SessionTests[found], this.Person, true, true, this.createReportOverviewProcessPreload.bind(this));
+            if (typeof x === "number") this.preloadCounter += x;
+        }
+        if (this.preloadCounter > 0) {
+            this.reportZIP.zip = zip;
+            this.reportZIP.prefixForPath = prefixForPath;
+            this.reportZIP.callWhenDone = callWhenDone;
+            this.reportZIP.callOnError = callOnError;
+            this.reportZIP.includeReports = includeReports;
+            this.reportZIP.includeAnswers = includeAnswers;
+            return;
         }
     }
 
@@ -206,7 +242,6 @@ ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixF
 
     // add the response overview
     if (includeAnswers) {
-        var genNumber = "" + getNewSimpleGeneratorNumber('SessionViewAnswersInterfaceEdit_gen', 9999)
         for (var found = 0; found < this.SessionTests.length; found++) {
             $("#SessionViewAnswersInterfaceEditTestAnswers").empty();
             try {
@@ -216,7 +251,7 @@ ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixF
             }
             fileName = ITSInstance.translator.getTranslatedString("ITSCandidateSession", "AnswerOverview", "Answers overview");
             this.SessionTests[found].testDefinition.generateQuestionOverview("SessionViewAnswersInterfaceEditTestAnswers",
-                this.SessionTests[found].Results, true, "_" + genNumber,
+                this.SessionTests[found].Results, true, "_" + this.genNumber + "_" + found,
                 this, this.SessionTests[found], this.Person, true);
             zip.file(folderName + fileName + ".html", openingTag + $('#SessionViewAnswersInterfaceEditTestAnswers')[0].outerHTML + closingTag);
         }

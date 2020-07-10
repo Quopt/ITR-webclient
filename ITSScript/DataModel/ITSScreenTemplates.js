@@ -236,7 +236,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
 
     var func = emptyfunc;
     try {
-        eval("func = function(id, num_blocks, varvalue, current_values, template_values, template, test_mode) { " + this.get_value_as_html_snippet + " }; ");
+        eval("func = function(id, num_blocks, varvalue, current_values, template_values, template, test_mode, preload, preloadCallback) { " + this.get_value_as_html_snippet + " }; ");
     } catch (err) {
         ITSLogger.logMessage(logLevel.ERROR,"get_value_as_html_snippet contains error " + this.Description + " " + err.message );
     }
@@ -623,7 +623,7 @@ ITSScreenTemplate.prototype.check_value_for_specials = function (variableType, i
     return newVal;
 };
 
-ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_div, id, templatevalues, pnp_view, full_initialisation, init_mode, preferHTML, actual_values) {
+ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_div, id, templatevalues, pnp_view, full_initialisation, init_mode, preferHTML, actual_values, preload, preloadCallback) {
     // div - place to generate the view in the html page
     // id - id of this template
     // templatesvalues - any already filled in values for this template (js object)
@@ -652,11 +652,13 @@ ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_di
     if (preferHTML) {
         var x = '';
         try {
-            x = this.runtime_get_values_as_html(id, RepeatBlockCount, actual_values, templatevalues, template, this, pnp_view ? "PNP" : "TT");
+            x = this.runtime_get_values_as_html(id, RepeatBlockCount, actual_values, templatevalues, template, this, pnp_view ? "PNP" : "TT", preload, preloadCallback);
         }
         catch (err) {
                 ITSLogger.logMessage(logLevel.ERROR,"runtime_get_values_as_html failed for " +  id + " " + err.message );
         }
+
+        if (preload) return x; // when preloading return the amount of objects to preload, even when it excepts
 
         if (typeof x != "undefined") {
             $('#' + div).append(x);
