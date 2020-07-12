@@ -57,6 +57,7 @@ ITSSession = function () {
     // generic support functions
     this.genericLoadQueue = [];
     this.genericJSONLoadQueue = [];
+    this.genericJSONUpdateQueue = [];
     this.callProcessing = false;
     this.callJSONLoaderProcessing = false;
 };
@@ -319,6 +320,53 @@ ITSSession.prototype.JSONAjaxLoaderRunner = function (URL, objectToPutDataIn, On
 };
 
 ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSuccess, OnError, IncludeMaster, IncludeClient, dataType, ForceTranslation) {
+    this.genericJSONUpdateQueue.push(
+        {
+            "URL": URL,
+            "objectToUpdate" : objectToUpdate,
+            "OnSuccess" : OnSuccess,
+            "OnError" : OnError,
+            "IncludeMaster" : IncludeMaster,
+            "IncludeClient" : IncludeClient,
+            "dataType" : dataType,
+            "ForceTranslation" : ForceTranslation
+        }
+    );
+    //console.log("Push",URL, this.genericJSONLoadQueue.length);
+    this.GenericAjaxUpdateProcessQueue();
+};
+
+ITSSession.prototype.GenericAjaxUpdateProcessQueue = function () {
+    if (!this.callJSONUpdateProcessing) {
+        if (this.genericJSONUpdateQueue.length > 0) {
+            this.callJSONUpdateProcessing = true;
+            var x = this.genericJSONUpdateQueue[0];
+            //console.log("Acquiring", x);
+            this.genericAjaxUpdateRunner(x.URL,
+                x.objectToUpdate,
+                function (data) {
+                    var x = this.genericJSONUpdateQueue[0];
+                    this.callJSONUpdateProcessing = false;
+                    //console.log("OK", x);
+                    setTimeout(x.OnSuccess.bind(x, data),1);
+                    this.genericJSONUpdateQueue.splice(0,1);
+                    this.GenericAjaxUpdateProcessQueue();
+                }.bind(this),
+                function (xhr, ajaxOptions, thrownError) {
+                    var x = this.genericJSONUpdateQueue[0];
+                    this.callJSONUpdateProcessing = false;
+                    setTimeout(x.OnError.bind(x,xhr, ajaxOptions, thrownError),1);
+                    this.genericJSONUpdateQueue.splice(0,1);
+                    this.GenericAjaxUpdateProcessQueue();
+                }.bind(this),
+                x.IncludeMaster,
+                x.IncludeClient,
+                x.dataType,
+                x.ForceTranslation);
+        }
+    }
+};
+ITSSession.prototype.genericAjaxUpdateRunner = function (URL, objectToUpdate, OnSuccess, OnError, IncludeMaster, IncludeClient, dataType, ForceTranslation) {
     ITSLogger.logMessage(logLevel.INFO,'ajax update or create : ' + this.baseURLAPI + URL);
     tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
     tempHeaders['IncludeMaster'] = "N";
