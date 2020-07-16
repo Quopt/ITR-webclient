@@ -1341,10 +1341,10 @@ ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, P
                 eval("var func = function(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode, screen) { " + this.screens[i].beforeScreenScript + " }; ");
                 func(currentSession, currentSessionTest, candidate, this, undefined, ITSInstance, "PnPView", this.screens[i] );
             } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Screen pre script failed for "  + this.TestName + "(" + i + ")"  + err);  }
-            preloadCount = this.screens[i].generateScreenInDiv(hostDiv, "PnPView", "_" + i + additionalText, PnP, preferHTML, resultsToLoad, preload, preloadCallback);
+            preloadCount += this.screens[i].generateScreenInDiv(hostDiv, "PnPView", "_" + i + additionalText, PnP, preferHTML, resultsToLoad, preload, preloadCallback);
         }
         else {
-            preloadCount = this.screens[i].generateScreenInDiv(hostDiv, "TE", "_" + i + additionalText, PnP, preferHTML, resultsToLoad, preload, preloadCallback);
+            preloadCount += this.screens[i].generateScreenInDiv(hostDiv, "TE", "_" + i + additionalText, PnP, preferHTML, resultsToLoad, preload, preloadCallback);
         }
         $('#'+ hostDiv).append('<hr/>');
         if (resultsToLoad) {
