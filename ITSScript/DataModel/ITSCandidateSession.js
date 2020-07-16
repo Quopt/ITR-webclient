@@ -946,7 +946,7 @@ ITSCandidateSessionTest.prototype.saveToServer = function (OnSuccess, OnError, I
     this.newSessionTest = false;
 
     if (InTestTaking) {
-        this.ITSSession.genericAjaxUpdate('sessionteststaking/' + this.SessionID + "/" + this.ID, this.lastSavedJSON, OnSuccess, OnError, "N", "Y");
+        this.ITSSession.genericAjaxUpdate('sessionteststaking/' + this.SessionID + "/" + this.ID, this.lastSavedJSON, OnSuccess, OnError, "N", "Y", undefined, undefined, this.SessionID + "/" + this.ID);
     }
     else {
         this.ITSSession.genericAjaxUpdate('sessiontests/'  + this.SessionID + "/" + this.ID, this.lastSavedJSON, OnSuccess, OnError, "N", "Y");

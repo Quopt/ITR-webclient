@@ -319,7 +319,17 @@ ITSSession.prototype.JSONAjaxLoaderRunner = function (URL, objectToPutDataIn, On
     });
 };
 
-ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSuccess, OnError, IncludeMaster, IncludeClient, dataType, ForceTranslation) {
+ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSuccess, OnError, IncludeMaster, IncludeClient, dataType, ForceTranslation, label) {
+    // if label is set remove all items from the queue with this label first
+    if (typeof label==="string" && label != "") {
+        var elements = this.genericJSONUpdateQueue.length - 1;
+        while (elements >= 1) {
+            if (this.genericJSONUpdateQueue[elements].label === label) {
+                this.genericJSONUpdateQueue.splice(elements,1);
+            }
+            elements--;
+        }
+    }
     this.genericJSONUpdateQueue.push(
         {
             "URL": URL,
@@ -329,7 +339,8 @@ ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSucces
             "IncludeMaster" : IncludeMaster,
             "IncludeClient" : IncludeClient,
             "dataType" : dataType,
-            "ForceTranslation" : ForceTranslation
+            "ForceTranslation" : ForceTranslation,
+            "label" : label
         }
     );
     //console.log("Push",URL, this.genericJSONLoadQueue.length);
