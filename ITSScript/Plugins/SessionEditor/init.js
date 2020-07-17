@@ -637,7 +637,7 @@
             if (currentSession.couponsFile.length > 0) {
                 zip.file('coupons.txt', currentSession.couponsFile.join('\n\r'));
             }
-            zip.generateAsync({type : "blob"}).
+            zip.generateAsync({type : "blob", compression: "STORE", streamFiles: true}). // compression: "DEFLATE", compressionOptions: { level: 1 },
              then(function (blob) {
                  ITSInstance.UIController.showInterfaceAsWaitingOff();
                  saveFileLocally(fileName + " " + this.currentSession.Description + " - " + this.currentSession.Person.createHailing() + ".zip" , blob, "application/zip");

@@ -579,7 +579,7 @@ ITSPublicSessionEditor.prototype.loadSessionForDownload = function () {
                             this.zip.file('coupons.txt', this.couponsFile.join('\n\r'));
                         }
                         var fileName = ITSInstance.translator.getTranslatedString("ITSSessionEditor", "ScoreOverview", "Score overview");
-                        this.zip.generateAsync({type: "blob"}).then(function (blob) {
+                        this.zip.generateAsync({type: "blob", compression: "STORE", streamFiles: true}).then(function (blob) {
                             saveFileLocally(fileName + " " + this.currentSession.Description + ".zip", blob, "application/zip");
                             ITSInstance.UIController.showInterfaceAsWaitingOff();
                         }.bind(this));
