@@ -632,12 +632,13 @@
         this.currentSession.createReportOverviewInZipStart();
         this.currentSession.createReportOverviewInZip(zip,"", function(currentSession,zip) {
             // download
+            ITSLogger.logMessage(logLevel.INFO,"ZIPPING session %%Description%%",currentSession);
             var fileName = ITSInstance.translator.getTranslatedString("ITSSessionEditor", "ScoreOverview", "Score overview");
             zip.file('data.json',JSON.stringify(replaceCircular(currentSession.resultsFile)));
             if (currentSession.couponsFile.length > 0) {
                 zip.file('coupons.txt', currentSession.couponsFile.join('\n\r'));
             }
-            zip.generateAsync({type : "blob", compression: "STORE", streamFiles: true}). // compression: "DEFLATE", compressionOptions: { level: 1 },
+            zip.generateAsync({type : "blob", compression: "DEFLATE", compressionOptions: { level: 1 }}). // , streamFiles: true, compression: "STORE", or compression: "DEFLATE", compressionOptions: { level: 1 },
              then(function (blob) {
                  ITSInstance.UIController.showInterfaceAsWaitingOff();
                  saveFileLocally(fileName + " " + this.currentSession.Description + " - " + this.currentSession.Person.createHailing() + ".zip" , blob, "application/zip");
