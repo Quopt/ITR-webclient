@@ -890,7 +890,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             setTimeout(this.renderTestPage.bind(this),100);
             break;
         case "PreviousScreen" :
-     		if (this.InTestTaking) this.switchNavBar();
+            if (this.InTestTaking) this.switchNavBar();
             var oldCurrentPage = this.currentSessionTest.CurrentPage;
             if (this.currentSessionTest.CurrentPage > 0) { this.currentSessionTest.CurrentPage--; }
             while ( (! this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].show) && this.currentSessionTest.CurrentPage > 0 ) {
@@ -905,7 +905,9 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
         case "GotoScreen" :
      		if (this.InTestTaking) this.switchNavBar();
             try {
-                this.currentSessionTest.CurrentPage = parseInt( eventParameters);
+                var x = this.currentTestDefinition.findScreenIndexByName(eventParameters);
+                if ((x == -1) && !isNaN(eventParameters)) this.currentSessionTest.CurrentPage = parseInt(eventParameters);
+                if (x > -1) this.currentSessionTest.CurrentPage = x;
             } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Setting currentpage failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
             this.saveCurrentTest();
             this.renderTestPage();
@@ -915,6 +917,20 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             this.saveSession();
             this.saveCurrentTest();
             ITSInstance.logoutController.logout();
+            break;
+        case "ShowItem":
+            var variables = INIEventParametersToObject(eventParameters);
+            this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].saveScreenComponentsShowStatus();
+            if (variables.ResetShowStatusForAll=="on") { this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].restoreScreenComponentsShowStatus(); }
+            var showComponent = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].findComponentByID(variables.Element1);
+            if (typeof showComponent != "undefined") {
+                showComponent.show = variables.Element1Hide=="off";
+            }
+
+            this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID, false, this.currentSession.PluginData, this.currentSession.SessionType==1);
+            this.saveCurrentTest();
+            this.renderTestPage();
+
             break;
         case "CheckSessionTime" :
             // no action needed already done

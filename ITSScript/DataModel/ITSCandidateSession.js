@@ -34,7 +34,7 @@ ITSCandidateSession = function (session, ITSSession) {
     //this.PersonID = this.Person.ID;
     this.regenerateCandidate();
 
-    this.SessionType = 0; // 0 = PersonSession. 1=Public (might be temporary) session. 100 = Group session. 200 = public base session.
+    this.SessionType = 0; // 0 = PersonSession. 1=Public (might be temporary) session. 4 = Group session. 200 = public base session.
     this.Description = "";
     this.Goal = "";
     this.UsedBatteryIDs = "";

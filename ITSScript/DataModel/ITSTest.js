@@ -1239,6 +1239,21 @@ ITSTestScreen.prototype.getVisibilityStatusAsString = function() {
     return visibilityString;
 };
 
+ITSTestScreen.prototype.saveScreenComponentsShowStatus = function () {
+    for (var i = 0; i < this.screenComponents.length; i++) {
+        if (typeof this.screenComponents[i].showOriginalValue == "undefined")
+            this.screenComponents[i].showOriginalValue = this.screenComponents[i].show ;
+    }
+};
+
+ITSTestScreen.prototype.restoreScreenComponentsShowStatus = function () {
+    for (var i = 0; i < this.screenComponents.length; i++) {
+        if (typeof this.screenComponents[i].showOriginalValue != "undefined")
+            this.screenComponents[i].show = this.screenComponents[i].showOriginalValue ;
+    }
+};
+
+
 ITSTestScreen.prototype.checkValidations = function (storageObject, messageSeparator, postfix) {
     if (!postfix) postfix = "";
     var validationMessage = "";
@@ -1317,6 +1332,20 @@ ITSTest.prototype.screen = function (nameToFind) {
 ITSTest.prototype.resetScreensShowStatus = function () {
     for (i = 0; i < this.screens.length; i++) {
         this.screens[i].show = true; 
+    }
+};
+
+ITSTest.prototype.saveScreensShowStatus = function () {
+    for (i = 0; i < this.screens.length; i++) {
+        if (typeof this.screens[i].showOriginalValue == "undefined")
+            this.screens[i].showOriginalValue = this.screens[i].show ;
+    }
+};
+
+ITSTest.prototype.restoreScreensShowStatus = function () {
+    for (i = 0; i < this.screens.length; i++) {
+        if (typeof this.screens[i].showOriginalValue != "undefined")
+          this.screens[i].show = this.screens[i].showOriginalValue ;
     }
 };
 
@@ -1490,7 +1519,7 @@ ITSTest.prototype.prepareResultsStorage = function (storageObject) {
             }
             TestResults[this.screens[i].screenComponents[compCounter].varComponentName] = ComponentResults;
 
-            ComponentResults.Visible = this.screens[i].show;
+            ComponentResults.Visible = this.screens[i].screenComponents[compCounter].show;
             ComponentResults.Anonimise = this.screens[i].screenComponents[compCounter].excludeFromAnonimisedTestResults;
         }
     }
@@ -1549,6 +1578,10 @@ ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, 
                     ITSLogger.logMessage(logLevel.ERROR,this.screenComponents[j]);
                 }
             }
+
+            if (typeof this.screenComponents[j].showOriginalValue != "undefined") {
+                ComponentResults.VisibleOriginal = this.screenComponents[j].showOriginalValue;
+            }
         } catch (err) {};
     }
     return saveSessionNeeded;
@@ -1586,6 +1619,9 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
             if (ComponentResults.Visible) {
                 this.screenComponents[j].show = ComponentResults.Visible;
             }
+            if (typeof ComponentResults.VisibleOriginal != "undefined") {
+                this.screenComponents[j].showOriginalValue = ComponentResults.VisibleOriginal;
+            }
         } catch (err) {}
     }
 };
@@ -1616,7 +1652,7 @@ ITSTestScreen.prototype.findComponentByID = function (idToFind) {
             return this.screenComponents[i];
         }
     }
-    return null;
+    return undefined;
 };
 
 ITSTestScreen.prototype.newTestScreenComponent = function () {

@@ -1113,7 +1113,6 @@ function InArray( arrayToSearch, propertyToFind, ValueToFind, comparisonOperator
 }
 
 function precise_round(num, dec){
-
     if ((typeof num !== 'number') || (typeof dec !== 'number'))
         return false;
 
@@ -1213,3 +1212,35 @@ function getCSSClassesList(documentParent) {
     }
     return styleBySelector;
 };
+
+function stripEndQuotes(s, quotechar) {
+    var t=s.length;
+    if (s.charAt(0)==quotechar) s=s.substring(1,t--);
+    if (s.charAt(--t)==quotechar) s=s.substring(0,t);
+    return s;
+};
+
+function INIEventParametersToObject (s) {
+    var temp = stripEndQuotes(s, "'").split('&&&');
+    var splitted = [];
+    var key, value;
+    var result = {};
+    for (var i=0; i < temp.length; i++) {
+        splitted = temp[i].split("=");
+        key = splitted[0];
+        value = temp[i].substring(temp[i].indexOf('=')+1);
+        result[key]=value;
+    }
+    return result;
+}
+
+function ObjectToINIEventParameters(obj) {
+    var result = "";
+    for (var prop in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+            if (result != "") result += "&&&";
+            result += prop + '=' + obj[prop];
+        }
+    }
+    return result;
+}
