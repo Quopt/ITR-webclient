@@ -1818,22 +1818,18 @@ ITSTestTemplateEditor.prototype.copyFromTestScreen = function () {
         // translate the portlet
         ITSInstance.translator.translateDiv("#AdminInterfaceTestTemplateEditor");
 
-        // register the menu items
-        ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
-            if (ITSInstance.users.currentUser.IsTestAuthor) {
-                ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#AdminInterfaceTestTemplateEditor.EditMenu", ITSInstance.translator.translate("#AdminInterfaceTestTemplateEditor.EditMenu", "Edit test definitions"), "fa-book-reader", "ITSRedirectPath(\'TestTemplateEditor\');");
-//                setTimeout( function TestTemplateEditorTranslator() {
-//                    if (ITSInstance.translator.loadingLanguage) { setTimeout(TestTemplateEditorTranslator, 500); return; }
-//                    ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#AdminInterfaceTestTemplateEditor.EditMenu", ITSInstance.translator.translate("#AdminInterfaceTestTemplateEditor.EditMenu", "Edit test definitions"), "fa-book-reader", "ITSRedirectPath(\'TestTemplateEditor\');");
-//                }, 10 );
-             }
-            }, true);
         // init the view
         $('#AdminInterfaceTestTemplateEditorEdit').hide();
         $('#AdminInterfaceTestTemplateEditorSelect').show();
         $('#AdminInterfaceTestTemplateEditorScreenContentButtons').hide();
         $('#AdminInterfaceTestTemplateEditorScreenDynamicsDiv').hide();
-
     })
 
 })() //iife
+
+// register the menu items
+ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
+    if (ITSInstance.users.currentUser.IsTestAuthor) {
+        ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#AdminInterfaceTestTemplateEditor.EditMenu", ITSInstance.translator.translate("#AdminInterfaceTestTemplateEditor.EditMenu", "Edit test definitions"), "fa-book-reader", "ITSRedirectPath(\'TestTemplateEditor\');");
+    }
+}, true);
