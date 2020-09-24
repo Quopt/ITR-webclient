@@ -122,6 +122,17 @@
                id="OrganisationEditorInterfaceOrganisationEnablePublicSessionsHeader"
                for="OrganisationEditorInterfaceOrganisationEnablePublicSessions">Enable public sessions</label>
     </div>
+
+
+    <div class="form-group row col-12" id="OrganisationEditorInterfaceOrganisationForbiddenPathsDiv">
+        <label class="col-sm-2 col-form-label"
+               id="OrganisationEditorPreferencesForbiddenPathsHeader"
+               for="OrganisationEditorPreferencesSettingsForbiddenPaths">Forbidden paths for this organisation</label>
+        <input type="text" data-field="PluginData.ForbiddenPaths"
+               onchange="DataBinderFrom('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation);"
+               class="form-control col-sm-6"
+               id="OrganisationEditorPreferencesSettingsForbiddenPaths"/>
+    </div>
 </div>
 
 <div class="bg-dark text-white well row col-12"><label id="OrganisationEditorEditCreditInfoHeader">Credit information</label></div>

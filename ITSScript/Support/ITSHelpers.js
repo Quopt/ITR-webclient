@@ -1170,6 +1170,42 @@ function ConvertFieldToTSVSafe(field) {
     return String(field).replaceAll('\t','');
 };
 
+function IsInCSVList(value, csvstring, seperator) {
+    if (typeof seperator =="undefined") seperator = ",";
+
+    var csvarray = csvstring.split(seperator);
+    var result = csvarray.includes(value);
+    if (!result) result = csvarray.includes('"'+ value + '"');
+    if (!result) result = csvarray.includes("'"+ value + "'");
+    return result;
+};
+
+function RemoveFromCSVList(value, csvstring, seperator) {
+    if (typeof seperator =="undefined") seperator = ",";
+
+    var csvarray = csvstring.split(seperator);
+    var result = csvarray.indexOf(value);
+    if (result < 0) { result = csvarray.includes('"'+ value + '"'); }
+    if (result < 0) { result = csvarray.includes('"'+ value + '"'); }
+
+    csvarray.splice(result,1);
+    return csvarray.join(seperator);
+};
+
+function AddToCSVList(value, csvstring, seperator) {
+    if (typeof seperator =="undefined") seperator = ",";
+
+    value = ConvertFieldToCSVSafe(value);
+    value = stripEndQuotes(value,'"');
+    value = stripEndQuotes(value,"'");
+    if (csvstring == "") {
+        return '"'+value+'"';
+    }
+    else {
+     return csvstring + seperator + '"'+value+'"';
+    }
+};
+
 // Polyfills for backward compatibility
 if (!String.prototype.endsWith) {
     String.prototype.endsWith = function(search, this_len) {

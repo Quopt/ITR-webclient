@@ -137,6 +137,15 @@ ITSUIController = function () {
     this.activateScreenPath = function(Path){
         // check if there is a session token, if not show the login path
         ITSLogger.logMessage(logLevel.INFO,"Activating path " + Path);
+
+        // only activate the path if allowed
+        if (typeof ITSInstance.companies.currentCompany.PluginData["ForbiddenPaths"] != "undefined") {
+            if ( IsInCSVList(Path,ITSInstance.companies.currentCompany.PluginData.ForbiddenPaths) && !ITSInstance.users.currentUser.IsMasterUser ) {
+                ITSInstance.UIController.showError('ITS_UI.ForbiddenPath', 'Your system administrator has blocked access to this path.');
+                return;
+            }
+        }
+
         // if the progress bar is showing then switch if off now
         var token = ITSInstance.token.get();
 

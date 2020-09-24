@@ -161,6 +161,9 @@
             this.currentOrganisation.PluginData.Preferences = {};
             this.currentOrganisation.PluginData.Preferences.SkipResearchQuestions = false;
             this.currentOrganisation.PluginData.Preferences.EnablePublicSessions = false;
+            if (typeof this.currentOrganisation.PluginData["ForbiddenPaths"] == "undefined") {
+                this.currentOrganisation.PluginData.ForbiddenPaths = "";
+            }
         }
         this.showCurrentOrganisation();
     };
