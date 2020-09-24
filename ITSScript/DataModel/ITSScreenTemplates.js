@@ -996,7 +996,8 @@ ITSScreenTemplateVariable.prototype.get_variable_value_for_test_editor = functio
 
                 var2 = ObjectToINIEventParameters(tempObj) ;
             }
-            return "'" + var1 + "','" + var2 + "'";
+//            return "'" + var1 + "','" + var2 + "'";
+            return var1 + "','" + var2;
             break;
         case "I" :
             return $('#' + traceID).val();
