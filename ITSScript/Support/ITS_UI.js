@@ -142,6 +142,7 @@ ITSUIController = function () {
         if (typeof ITSInstance.companies.currentCompany.PluginData["ForbiddenPaths"] != "undefined") {
             if ( IsInCSVList(Path,ITSInstance.companies.currentCompany.PluginData.ForbiddenPaths) && !ITSInstance.users.currentUser.IsMasterUser ) {
                 ITSInstance.UIController.showError('ITS_UI.ForbiddenPath', 'Your system administrator has blocked access to this path.');
+                window.history.back();
                 return;
             }
         }
