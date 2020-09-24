@@ -871,7 +871,11 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
                 $('#' + traceID).val(template_values[varNameForTemplateValues]);
                 break;
             case "LX" :
-                this.generate_LX_variable(traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues);
+                try {
+                    this.generate_LX_variable(traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues);
+                }  catch (err) {
+                    ITSLogger.logMessage(logLevel.ERROR,"generate_LX_variable failed " + err.message);
+                }
                 break;
             case "I" :
                 $('#' + traceID).val(template_values[varNameForTemplateValues]);
