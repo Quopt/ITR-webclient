@@ -217,14 +217,11 @@
         <div class="row col-6 m-0 p-0">
             <div id="AdminInterfaceTestTemplateEditorScreenContentButtons" NoTranslate class="row col-12 px-0 mx-0">
                 <div class="row col-12">
-                    <button id="AdminInterfaceTestTemplateEditorAddScreenComponentButton" type="button"
-                            class="btn-xs btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"><i class="fa fa-fw fa-plus"></i> Add new screen component
+                    <button id="AdminInterfaceTestTemplateEditorAddNewScreenComponentButton" type="button"
+                            class="btn-xs btn-success"
+                            data-toggle="modal" data-target="#AdminInterfaceTestTemplateEditorAddScreenComponent">
+                        <i class="fa fa-fw fa-plus-square"></i> Add new screen component
                     </button>
-                    <div class="dropdown-menu" NoTranslate id="AdminInterfaceTestTemplateEditorAddScreenComponentList"
-                         aria-labelledby="AdminInterfaceTestTemplateEditorAddScreenComponentButton">
-                        <a class="dropdown-item" href="#">...</a>
-                    </div>
                     <button id="AdminInterfaceTestTemplateEditorCopyFromScreenButton" type="button"
                             class="btn-xs btn-success"
                             data-toggle="modal" data-target="#AdminInterfaceTestTemplateEditorCopyFrom">
@@ -759,6 +756,30 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfaceTestTemplateEditorCopyFromCloseButton">Close</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal" id="AdminInterfaceTestTemplateEditorCopyFromNowButton" onclick="ITSInstance.newITSTestEditorController.copyFromTestScreen();">Copy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="AdminInterfaceTestTemplateEditorAddScreenComponent" tabindex="-1" role="dialog" aria-labelledby="AdminInterfaceTestTemplateEditorAddScreenComponentLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AdminInterfaceTestTemplateEditorAddScreenComponentLabel">Add screen component</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row" id="AdminInterfaceTestTemplateEditorAddScreenComponentListDiv">
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfaceTestTemplateEditorAddScreenComponentCloseButton">Close</button>
             </div>
         </div>
     </div>

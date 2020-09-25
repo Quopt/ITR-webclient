@@ -734,14 +734,14 @@ ITSTestTemplateEditor.prototype.addNewScreenTemplate = function (templateID) {
 };
 
 ITSTestTemplateEditor.prototype.loadTestScreenTemplates = function () {
-    $('#AdminInterfaceTestTemplateEditorAddScreenComponentList').empty();
+    $('#AdminInterfaceTestTemplateEditorAddScreenComponentListDiv').empty();
     for (var i = 0; i < ITSInstance.screenTemplates.screenTemplates.length; i++) {
-        $('<a class=\"dropdown-item\" onclick=\"ITSInstance.newITSTestEditorController.addScreenTemplate(\'' +
+        $('<button type="button" notranslate class="btn btn-outline-success" onclick=\"ITSInstance.newITSTestEditorController.addScreenTemplate(\'' +
             ITSInstance.screenTemplates.screenTemplates[i].ID +
-            '\');\">' +
+            '\');\"><i class="fa fa-fw fa-plus"></i><span>' +
             ITSInstance.screenTemplates.screenTemplates[i].descriptionWithDBIndicator() +
-            '</a>').appendTo('#AdminInterfaceTestTemplateEditorAddScreenComponentList');
-    }
+            '</span></button>').appendTo('#AdminInterfaceTestTemplateEditorAddScreenComponentListDiv');
+    } //<i class="fa fa-fw fa-plus"></i>
 };
 
 ITSTestTemplateEditor.prototype.deleteScreen = function (screenId) {
