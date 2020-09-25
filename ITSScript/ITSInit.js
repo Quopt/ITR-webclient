@@ -518,7 +518,6 @@ function ITSTranslateInterface() {
     // translate the interface in the proper language
     ITSInstance.translator.load();
     ITSInstance.translator.translateDiv('#LoginWindow');
-    //ITSInstance.translator.translateDiv('#NavBarsAdminSidebarMenu');
     ITSInstance.translator.translateDiv('#NavbarsAdmin');
     ITSInstance.translator.translateDiv('#NavBarsAdminSidebar');
     ITSInstance.translator.translateDiv('#TestTakingInterface');
@@ -762,4 +761,25 @@ if (getUrlParameterValue('Token')) {
     ITSURLToken = getUrlParameterValue('Token');
 }
 
-parseURLandTakeAction();
+parseURLandTakeAction(); // go to the screen desired
+
+// activate the menu items when the user is loaded
+ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
+    if (! ITSInstance.users.currentUser.IsTestTakingUser) {
+        if (ITSInstance.users.currentUser.HasEducationalOfficeAccess) {
+            $('#submenuCandidatesMain').show();
+            $('#submenuTeachingMain').show();
+            $('#submenuCoursesMain').show();
+            $('#submenuCourseBuilderMain').show();
+            $('#submenuSettingsMain').show();
+            $('#submenuCompaniesMain').show();
+        }
+        if (ITSInstance.users.currentUser.HasTestingOfficeAccess) {
+            $('#submenuCandidatesMain').show();
+            $('#submenuSessionsMain').show();
+            $('#submenuTestsAndReportsMain').show();
+            $('#submenuSettingsMain').show();
+            $('#submenuCompaniesMain').show();
+        }
+    }
+}, true);

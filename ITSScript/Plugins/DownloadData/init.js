@@ -253,7 +253,8 @@
     ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
         if (ITSInstance.users.currentUser.IsMasterUser) $('#DownloadDataMasterDiv').show();
         if (ITSInstance.users.currentUser.IsResearcher) {
-           ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#AdminInterfaceDataDownload.DownloadMenu", ITSInstance.translator.translate("#AdminInterfaceDataDownload.DownloadMenu", "Download test data"), "fa-file-export", "ITSRedirectPath(\'DownloadData\');");
+            ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#AdminInterfaceDataDownload.DownloadMenu", ITSInstance.translator.translate("#AdminInterfaceDataDownload.DownloadMenu", "Download test data"), "fa-file-export", "ITSRedirectPath(\'DownloadData\');");
+            ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#AdminInterfaceDataDownload.DownloadCourseDataMenu", ITSInstance.translator.translate("#AdminInterfaceDataDownload.DownloadCourseDataMenu", "Download course data"), "fa-file-export", "ITSRedirectPath(\'DownloadData&SessionType=1000\');");
         }
     }, true);
 })()// IIFE

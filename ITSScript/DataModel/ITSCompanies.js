@@ -45,6 +45,7 @@ function ITSCompany (uParent) {
     this.CreditUsagesPerMonth = [];
     this.PluginData = {};
     this.PluginData.persistentProperties = "*ALL*";
+    this.PluginData.ForbiddenPaths ='';
 
     this.persistentProperties = [
       'ID','CostsPerTestInUnits','Active','CurrentCreditLevel','TestTakingDiscount','YearlyLicenseDiscount',

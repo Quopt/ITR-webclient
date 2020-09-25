@@ -241,6 +241,7 @@
     ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
         if ( (ITSInstance.users.currentUser.IsTestAuthor) && (ITSInstance.users.currentUser.IsMasterUser) ) {
             ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#TestTemplateLocalPublisherController.LocalPublisherMenu", ITSInstance.translator.translate("#TestTemplateLocalPublisherController.LocalPublisherMenu", "Publish test templates"), "fa-door-open", "ITSRedirectPath(\'TestTemplateLocalPublisher\');");
+            ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#TestTemplateLocalPublisherController.LocalCoursePublisherMenu", ITSInstance.translator.translate("#TestTemplateLocalPublisherController.LocalCoursePublisherMenu", "Publish course (part) templates"), "fa-door-open", "ITSRedirectPath(\'TestTemplateLocalPublisher&TestType=1000\');");
         }
     }, true);
 

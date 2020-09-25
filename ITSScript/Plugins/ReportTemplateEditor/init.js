@@ -580,6 +580,7 @@
         ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
             if (ITSInstance.users.currentUser.IsReportAuthor) {
                 ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#ReportTemplateInterfaceSessionEdit.EditMenu", ITSInstance.translator.translate("#ReportTemplateInterfaceSessionEdit.EditMenu", "Edit report definitions"), "fa-newspaper", "ITSRedirectPath(\'ReportTemplateEditor&ReportType=0\');");
+                ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#ReportTemplateInterfaceSessionEdit.EditCourseReportMenu", ITSInstance.translator.translate("#ReportTemplateInterfaceSessionEdit.EditCourseReportMenu", "Edit report definitions"), "fa-newspaper", "ITSRedirectPath(\'ReportTemplateEditor&ReportType=1000\');");
             }
         }, true);
     }

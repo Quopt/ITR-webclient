@@ -25,6 +25,7 @@
                 AdminInterfaceInviteRRSessionsDiv = $('<div class="col-md-4" id="AdminInterfaceInviteRRSessions">');
                 $('#AdminInterfacePortlets').append(AdminInterfaceInviteRRSessionsDiv);
                 $('#AdminInterfaceInviteRRSessions').append(this.html);
+                $('#AdminInterfaceInviteRRSessions').hide();
             },
             afterOfficeLogin: function () {
                 ITSLogger.logMessage(logLevel.INFO,'Init portlet ready sessions');
@@ -85,6 +86,15 @@
 
         ITSInstance.MessageBus.subscribe("Session.Delete", ITSInstance.portletReadySessions.reloadAfterDelay);
         ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletReadySessions.reloadAfterDelay);
+
+        // show the portlet
+        ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
+            if (ITSInstance.users.currentUser.HasTestingOfficeAccess) {
+                setTimeout(function() { $('#AdminInterfaceInviteRRSessions').show(); }, 1000);
+            } else {
+                setTimeout(function() { $('#AdminInterfaceInviteRRSessions').hide(); }, 1000);
+            }
+        }, true);
 
     })
 

@@ -48,7 +48,7 @@ ITSCandidate = function (parent, ITSSession) {
     this.Active = true;
     this.BirthDate = "1900-1-1";
     this.Age = 0;
-    this.Sex = 0; // 0 unknonw, 1 male, 2 female, 3 gender neutral
+    this.Sex = 0; // 0 unknown, 1 male, 2 female, 3 gender neutral
     this.Password = "";
 
     this.newCandidate = true;

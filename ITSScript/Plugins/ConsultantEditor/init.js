@@ -38,7 +38,9 @@
     ITSConsultantEditor.prototype.show=function () {
         if (getUrlParameterValue('ConsultantID')) {
             this.ConsultantID = getUrlParameterValue('ConsultantID');
-            if (!this.currentConsultant) this.currentConsultant = ITSInstance.users.createNewUser();
+            if (!this.currentConsultant) {
+                this.currentConsultant = ITSInstance.users.createNewUser();
+            }
             $('#NavbarsAdmin').show();
             $('#NavbarsAdmin').visibility = 'visible';
             $('#NavBarsFooter').show();
@@ -73,6 +75,9 @@
         if (this.currentConsultant) {
             this.currentUserLoaded();
             // now show the consultants info by binding it to the form
+            if (typeof ITSInstance.ConsultantEditorController.currentConsultant.PluginData["ForbiddenPaths"] == "undefined") {
+                ITSInstance.ConsultantEditorController.currentConsultant.PluginData.ForbiddenPaths = '';
+            }
             DataBinderTo('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );
         } else {
             ITSInstance.UIController.showError('ITSConsultantEditor.NotFound', 'This consultant cannot be found.');
@@ -82,8 +87,6 @@
 
     ITSConsultantEditor.prototype.currentUserLoaded = function () {
         // hide the roles the user does not have him/herself. You cannot grant roles that you do not have yourself
-        // ConsultantEditorInterfaceMasterUserDiv ConsultantEditorInterfaceOrganisationSupervisorDiv ConsultantEditorInterfaceMayOrderCreditsDiv
-        // ConsultantEditorInterfaceIsTestAuthorDiv ConsultantEditorInterfaceIsReportAuthorDiv ConsultantEditorInterfaceTestScreenTemplateAuthorDiv ConsultantEditorInterfaceTranslatorDiv
         if (!ITSInstance.users.currentUser.IsMasterUser) {
             $('#ConsultantEditorInterfaceMasterUserDiv').hide();
             $('#ConsultantEditorInterfaceOrganisationSupervisorDiv').hide();
@@ -92,17 +95,25 @@
             $('#ConsultantEditorInterfaceIsReportAuthorDiv').hide();
             $('#ConsultantEditorInterfaceTestScreenTemplateAuthorDiv').hide();
             $('#ConsultantEditorInterfaceTranslatorDiv').hide();
+            $('#ConsultantEditorOfficeHeader').hide();
+            $('#ConsultantEditorOffice').hide();
             $('#ConsultantEditorInterfaceMayWorkWithOwnObjectsOnlyDiv').show();
             $('#ConsultantEditorInterfaceMayWorkWithBatteriesOnlyDiv').show();
 
-            if (ITSInstance.users.currentUser.IsOrganisationSupervisor) $('#ConsultantEditorInterfaceOrganisationSupervisorDiv').show();
             if (ITSInstance.users.currentUser.MayOrderCredits) $('#ConsultantEditorInterfaceMayOrderCreditsDiv').show();
             if (ITSInstance.users.currentUser.IsTestAuthor) $('#ConsultantEditorInterfaceIsTestAuthorDiv').show();
             if (ITSInstance.users.currentUser.IsReportAuthor) $('#ConsultantEditorInterfaceIsReportAuthorDiv').show();
             if (ITSInstance.users.currentUser.IsTestScreenTemplateAuthor) $('#ConsultantEditorInterfaceTestScreenTemplateAuthorDiv').show();
             if (ITSInstance.users.currentUser.IsTranslator) $('#ConsultantEditorInterfaceTranslatorDiv').show();
-            //if (ITSInstance.users.currentUser.MayWorkWithOwnObjectsOnly) $('#ConsultantEditorInterfaceMayWorkWithOwnObjectsOnlyDiv').show();
-            //if (ITSInstance.users.currentUser.MayWorkWithBatteriesOnly) $('#ConsultantEditorInterfaceMayWorkWithBatteriesOnlyDiv').show();
+        }
+
+        if (ITSInstance.users.currentUser.IsOrganisationSupervisor || ITSInstance.users.currentUser.IsMasterUser) {
+            $('#ConsultantEditorInterfaceOrganisationSupervisorDiv').show();
+            $('#ConsultantEditorOfficeHeader').show();
+            $('#ConsultantEditorOffice').show();
+            $('#ConsultantEditorOfficeTesting')[0].checked = ITSInstance.ConsultantEditorController.currentConsultant.HasTestingOfficeAccess && ! ITSInstance.ConsultantEditorController.currentConsultant.HasEducationalOfficeAccess;
+            $('#ConsultantEditorOfficeEducation')[0].checked = !ITSInstance.ConsultantEditorController.currentConsultant.HasTestingOfficeAccess && ITSInstance.ConsultantEditorController.currentConsultant.HasEducationalOfficeAccess;
+            $('#ConsultantEditorOfficeAll')[0].checked = ITSInstance.ConsultantEditorController.currentConsultant.HasTestingOfficeAccess && ITSInstance.ConsultantEditorController.currentConsultant.HasEducationalOfficeAccess;
         }
 
         $('#ConsultantEditorEditAPIKeyDiv').hide();
@@ -134,6 +145,12 @@
         } else if (RightsCount == 0) {
             ITSInstance.UIController.showError('ITSConsultantEditor.NoRights', 'You need to grant this user at least one right');
         } else {
+            // extract the office rights from the UI
+            if ((ITSInstance.users.currentUser.IsOrganisationSupervisor) || (ITSInstance.users.currentUser.IsMasterUser)) {
+                this.currentConsultant.HasTestingOfficeAccess = $('#ConsultantEditorOfficeTesting')[0].checked || $('#ConsultantEditorOfficeAll')[0].checked;
+                this.currentConsultant.HasEducationalOfficeAccess = $('#ConsultantEditorOfficeEducation')[0].checked || $('#ConsultantEditorOfficeAll')[0].checked;
+            }
+
             $('#ConsultantEditorEditButtonBar_SaveIcon').addClass("fa-life-ring fa-spin");
             $('#ConsultantEditorEditButtonBar_SaveIcon').removeClass("fa-thumbs-up");
             this.currentConsultant.saveToServer(this.saveOK.bind(this), this.saveError.bind(this));

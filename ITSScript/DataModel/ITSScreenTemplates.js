@@ -418,11 +418,14 @@ ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templ
             this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, 0, on_change_function, testdefinition, "", 0,0, currentScreenIndex, on_element_command);
         }
     }
+    var first_on_element_command = "";
     for (var repeat_block_counter = 0; repeat_block_counter < this.RepeatBlockCount; repeat_block_counter++) {
+        first_on_element_command = on_element_command;
         for (var i = 0; i < this.TemplateVariables.length; i++) {
             // is this a repeat block var? If so we can generate it now !
             if (repeat_block_vars.indexOf(this.TemplateVariables[i]) >= 0) {
-                this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, repeat_block_counter + 1, on_change_function, testdefinition, on_element_command, repeat_block_counter+1, this.RepeatBlockCount, currentScreenIndex);
+                this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, repeat_block_counter + 1, on_change_function, testdefinition, first_on_element_command , repeat_block_counter+1, this.RepeatBlockCount, currentScreenIndex, on_element_command );
+                first_on_element_command = "";
             }
         }
     }
@@ -707,7 +710,7 @@ ITSScreenTemplateVariable.prototype.traceID = function (template_parent, repeat_
     return this.varTraceID + repeat_block_counter + "Y";
 };
 
-ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function (template_parent, div_to_add_to, template_values, repeat_block_counter, on_change_function, testdefinition, on_element_command, element_position, max_element_position, currentScreenIndex) {
+ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function (template_parent, div_to_add_to, template_values, repeat_block_counter, on_change_function, testdefinition, on_element_command, element_position, max_element_position, currentScreenIndex, on_element_command_for_all_elements) {
     var traceID = this.traceID(template_parent, repeat_block_counter);
     var colorpicker = false;
     var bgcolor = "bg-light";
@@ -804,7 +807,7 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0 '+bgcolor+'">' +
                 '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
                 '<div NoTranslate class="col-6 mx-0 px-0">' +
-                '<select NoTranslate class="form-control" onchange="' +on_element_command+ '(\'ACTIONCHANGED\'); " onkeyup="' +on_element_command+ '(\'ACTIONCHANGED\'); " id="' + traceID + '">';
+                '<select NoTranslate class="form-control" onchange="' +on_element_command_for_all_elements+ '(\'ACTIONCHANGED\'); " onkeyup="' +on_element_command_for_all_elements+ '(\'ACTIONCHANGED\'); " id="' + traceID + '">';
             // now add the options from the default settings
             var option_array = this.defaultValue.split(',');
             var new_option = "";

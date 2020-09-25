@@ -64,6 +64,15 @@
         // register the portlet
         ITSInstance.portletTestCatalog = Object.create(ITSPortletTestCatalog);
         ITSInstance.UIController.registerPortlet(ITSInstance.portletTestCatalog);
+
+        //show the portlet
+        ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
+            if (ITSInstance.users.currentUser.HasTestingOfficeAccess) {
+                setTimeout(function() { $('#AdminInterfaceInviteTCatalog').show(); }, 1000);
+            } else {
+                setTimeout(function() { $('#AdminInterfaceInviteTCatalog').hide(); }, 1000);
+            }
+        }, true);
     })
 
 })() // iife

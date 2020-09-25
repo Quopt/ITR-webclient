@@ -240,6 +240,7 @@
     ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
         if ( (ITSInstance.users.currentUser.IsTestScreenTemplateAuthor) && (ITSInstance.users.currentUser.IsMasterUser) ) {
             ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#ScreenTemplateLocalPublisherController.LocalPublisherMenu", ITSInstance.translator.translate("#ScreenTemplateLocalPublisherController.LocalPublisherMenu", "Publish screen templates"), "fa-door-open", "ITSRedirectPath(\'ScreenTemplateLocalPublisher\');");
+            ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#ScreenTemplateLocalPublisherController.LocalCoursePublisherMenu", ITSInstance.translator.translate("#ScreenTemplateLocalPublisherController.LocalCoursePublisherMenu", "Publish course screen templates"), "fa-door-open", "ITSRedirectPath(\'ScreenTemplateLocalPublisher\');");
         }
     }, true);
 

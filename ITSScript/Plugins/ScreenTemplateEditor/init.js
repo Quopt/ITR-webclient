@@ -383,6 +383,7 @@ ITSScreenTemplateEditor.prototype.uploadCurrentTemplate_process = function (file
         ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
             if (ITSInstance.users.currentUser.IsTestScreenTemplateAuthor) {
                 ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#AdminInterfaceScreenTemplateEditor.EditMenu", ITSInstance.translator.translate("#AdminInterfaceScreenTemplateEditor.EditMenu", "Edit test screen templates"), "fa-object-group", "ITSRedirectPath(\'ScreenTemplateEditor\');");
+                ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#AdminInterfaceScreenTemplateEditor.EditCourseMenu", ITSInstance.translator.translate("#AdminInterfaceScreenTemplateEditor.EditCourseMenu", "Edit course screen templates"), "fa-object-group", "ITSRedirectPath(\'ScreenTemplateEditor\');");
             }
         }, true);
 

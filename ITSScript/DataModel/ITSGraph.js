@@ -139,10 +139,16 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
             options: {
                 scales: {
                     xAxes: [{
-                        stacked: (template_values["Stacked"] == "T")
+                        stacked: (template_values["Stacked"] == "T"),
+                        ticks: {
+                            display: (template_values["Show_x_axis_labels"] != "F")
+                        }
                     }],
                     yAxes: [{
-                        stacked: (template_values["Stacked"] == "T")
+                        stacked: (template_values["Stacked"] == "T"),
+                        ticks: {
+                            display: (template_values["Show_y_axis_labels"] != "F")
+                        }
                     }]
                 },
                 legend: {
@@ -158,7 +164,18 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
                 datasets: dsets
             },
             options: {
-                legend: {
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            display: (template_values["Show_x_axis_labels"] != "F")
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            display: (template_values["Show_y_axis_labels"] != "F")
+                        }
+                    }]
+                },                legend: {
                     display: (template_values["Show_legend"] == "T")
                 }
             }
@@ -213,14 +230,6 @@ ITSGraph_editTemplate = {
     "Remarks": "",
     "persistentProperties": "*ALL*",
     "TemplateVariables": [
-//        {
-//        "_objectType": "ITSScreenTemplateVariable",
-//        "ID": "2206e25c-4d9f-4c2c-00b2-c3dbf91a6035",
-//        "variableName": "Name",
-//        "description": "The name of the graph",
-//        "defaultValue": "",
-//        "variableType": "T", "persistentProperties": "*ALL*"
-//        },
         {
             "_objectType": "ITSScreenTemplateVariable",
             "ID": "b3db1080-ca26-4fd7-d0f1-17827bbec8f5",
@@ -258,6 +267,22 @@ ITSGraph_editTemplate = {
             "ID": "ad16dc0b-d5da-43d0-96d1-a2c64c450fbb",
             "variableName": "Show_legend",
             "description": "Show the legend in the graph ",
+            "defaultValue": "T",
+            "variableType": "B", "persistentProperties": "*ALL*"
+        },
+        {
+            "_objectType": "ITSScreenTemplateVariable",
+            "ID": "74988ddb-5390-4659-9640-9d7c7cd833a9",
+            "variableName": "Show_x_axis_labels",
+            "description": "Show the labels for the X axis",
+            "defaultValue": "T",
+            "variableType": "B", "persistentProperties": "*ALL*"
+        },
+        {
+            "_objectType": "ITSScreenTemplateVariable",
+            "ID": "53851335-1bbf-40c9-b234-4be2249380b1",
+            "variableName": "Show_y_axis_labels",
+            "description": "Show the labels for the Y axis",
             "defaultValue": "T",
             "variableType": "B", "persistentProperties": "*ALL*"
         },

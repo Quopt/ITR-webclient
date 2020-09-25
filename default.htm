@@ -81,7 +81,7 @@
     <div id="NavBarsAdminSidebarMenu" class="d-md-flex pt-2 nav flex-column">
         <li NoTranslate class="nav-item"><a class="nav-link" style="color:white;" id="NavBarsAdminSidebarSwitchboard" onclick="$('div[MainMenu]').collapse('hide'); ITSRedirectPath('Switchboard');"><label id="NavBarsAdminSidebarSwitchboardLabel">Switchboard</label></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" id="submenuCandidatesMain" style="display: none">
             <a class="nav-link collapsed" data-toggle="collapse" data-target="#submenuCandidates" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
                style="color:white;" id="NavBarsAdminSidebarUsers"><label id="NavBarsAdminSidebarUsersLabel">Candidates</label></a>
             <div NoTranslate class="collapse small" id="submenuCandidates" aria-expanded="false" MainMenu>
@@ -89,7 +89,7 @@
                 </ul>
             </div>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" id="submenuSessionsMain" style="display: none">
             <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
                data-target="#submenuSessions" style="color:white;" id="NavBarsAdminSidebarSessions"><label id="NavBarsAdminSidebarSessionsLabel">Sessions</label></a>
             <div NoTranslate class="collapse small" id="submenuSessions" aria-expanded="false" MainMenu>
@@ -97,7 +97,31 @@
                 </ul>
             </div>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" id="submenuTeachingMain" style="display: none">
+            <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
+               data-target="#submenuTeaching" style="color:white;" id="NavBarsAdminSidebarTeaching"><label id="NavBarsAdminSidebarTeachingLabel">Teaching</label></a>
+            <div NoTranslate class="collapse small" id="submenuTeaching" aria-expanded="false" MainMenu>
+                <ul NoTranslate class="flex-column pl-4 nav" id="submenuTeachingLI">
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item" id="submenuCoursesMain" style="display: none">
+            <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
+               data-target="#submenuCourses" style="color:white;" id="NavBarsAdminSidebarCourses"><label id="NavBarsAdminSidebarCoursesLabel">Courses</label></a>
+            <div NoTranslate class="collapse small" id="submenuCourses" aria-expanded="false" MainMenu>
+                <ul NoTranslate class="flex-column pl-4 nav" id="submenuCoursesLI">
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item" id="submenuCourseBuilderMain" style="display: none">
+            <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
+               data-target="#submenuCourseBuilder" style="color:white;" id="NavBarsAdminSidebarCourseBuilder"><label id="NavBarsAdminSidebarCourseBuilderLabel">Course builder</label></a>
+            <div NoTranslate class="collapse small" id="submenuCourseBuilder" aria-expanded="false" MainMenu>
+                <ul NoTranslate class="flex-column pl-4 nav" id="submenuCourseBuilderLI">
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item" id="submenuTestsAndReportsMain" style="display: none">
             <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
                data-target="#submenuTestsAndReports" style="color:white;" id="NavBarsAdminSidebarTestAndReports"><label id="NavBarsAdminSidebarTestAndReportsLabel">Tests and Reports</label></a>
             <div NoTranslate class="collapse small" id="submenuTestsAndReports" aria-expanded="false" MainMenu>
@@ -105,7 +129,7 @@
                 </ul>
             </div>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" id="submenuSettingsMain" style="display: none">
             <a class="nav-link collapsed" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
                data-target="#submenuSettings" style="color:white;" id="NavBarsAdminSidebarSettings"><label id="NavBarsAdminSidebarSettingsLabel">Settings</label></a>
             <div NoTranslate class="collapse small" id="submenuSettings" aria-expanded="false" MainMenu>
@@ -113,7 +137,7 @@
                 </ul>
             </div>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" id="submenuCompaniesMain" style="display: none">
             <a class="nav-link collapsed" style="color:white;" data-toggle="collapse" data-parent="#NavBarsAdminSidebarMenu" onclick="$('div[MainMenu]').collapse('hide')"
                data-target="#submenuCompanies" id="NavBarsAdminSidebarCompanies"><label id="NavBarsAdminSidebarCompaniesLabel">Organisation</label></a>
             <div NoTranslate class="collapse small" id="submenuCompanies" aria-expanded="false" MainMenu>

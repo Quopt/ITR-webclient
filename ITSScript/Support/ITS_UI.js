@@ -140,7 +140,9 @@ ITSUIController = function () {
 
         // only activate the path if allowed
         if (typeof ITSInstance.companies.currentCompany.PluginData["ForbiddenPaths"] != "undefined") {
-            if ( IsInCSVList(Path,ITSInstance.companies.currentCompany.PluginData.ForbiddenPaths) && !ITSInstance.users.currentUser.IsMasterUser ) {
+            if ( ( IsInCSVList(Path,ITSInstance.companies.currentCompany.PluginData.ForbiddenPaths) ||
+                 ( IsInCSVList(Path,ITSInstance.users.currentUser.PluginData.ForbiddenPaths) ))
+                   && !ITSInstance.users.currentUser.IsMasterUser ) {
                 ITSInstance.UIController.showError('ITS_UI.ForbiddenPath', 'Your system administrator has blocked access to this path.');
                 window.history.back();
                 return;
@@ -201,7 +203,6 @@ ITSUIController = function () {
     } ;
 
     this.scan_for_default_office_plugin_paths = function (Path) {
-        //ITSLogger.logMessage(logLevel.INFO,"Showing " +ITSInstance.UIController.registeredEditors.length  );
         var plugin_found = false;
         for (var i=0; i < ITSInstance.UIController.registeredEditors.length; i++) {
             if (ITSInstance.UIController.registeredEditors[i].path == Path) {

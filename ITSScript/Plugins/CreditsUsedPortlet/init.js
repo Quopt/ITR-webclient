@@ -56,57 +56,61 @@
             },
             creditUsagesLoaded: function () {
                 ITSLogger.logMessage(logLevel.INFO,'Portlet credit usages loaded');
+                try {
                 // init the graph
                 $('#AdminInterfaceCreditManagementChart').empty();
                 if (ITSInstance.companies.currentCompany.CreditUsagesPerMonth.length > 0) {
-                    var ctx = $("#AdminInterfaceCreditManagementChart");
+                        var ctx = $("#AdminInterfaceCreditManagementChart");
 
-                    Chart.scaleService.updateScaleDefaults('linear', {
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    });
-                    Chart.defaults.global.defaultFontSize = 14;
-                    Chart.defaults.global.animation.duration = 2000;
-
-                    var adminInterfaceCreditManagementChart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: ["", "", "", "", "", "", ""],
-                            datasets: [
-                                {
-                                    label: ITSInstance.translator.getTranslatedString('CreditsUsedPortlet', 'GraphHeader', 'Credit usage (ticks)'),
-                                    data: [0, 0, 0, 0, 0, 0, 0],
-                                    pointRadius: 3,
-                                    borderWidth: 1
-                                }]
-                        },
-                        options: {
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true
-                                    }
-                                }],
-                                xAxes: [{
-                                    ticks: {
-                                        autoSkip: false
-                                    }
-                                }]
+                        Chart.scaleService.updateScaleDefaults('linear', {
+                            ticks: {
+                                beginAtZero: true
                             }
+                        });
+                        Chart.defaults.global.defaultFontSize = 14;
+                        Chart.defaults.global.animation.duration = 2000;
+
+                        var adminInterfaceCreditManagementChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: ["", "", "", "", "", "", ""],
+                                datasets: [
+                                    {
+                                        label: ITSInstance.translator.getTranslatedString('CreditsUsedPortlet', 'GraphHeader', 'Credit usage (ticks)'),
+                                        data: [0, 0, 0, 0, 0, 0, 0],
+                                        pointRadius: 3,
+                                        borderWidth: 1
+                                    }]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }],
+                                    xAxes: [{
+                                        ticks: {
+                                            autoSkip: false
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+
+
+                        adminInterfaceCreditManagementChart.chart.config.data.labels.length = 0;
+                        adminInterfaceCreditManagementChart.chart.config.data.datasets[0].data.length = 0;
+                        for (i = 0; (i < 6) && (i < ITSInstance.companies.currentCompany.CreditUsagesPerMonth.length); i++) {
+                            adminInterfaceCreditManagementChart.data.labels[6 - i] = ITSInstance.companies.currentCompany.CreditUsagesPerMonth[i].year + '/' + ITSInstance.companies.currentCompany.CreditUsagesPerMonth[i].month;
+                            adminInterfaceCreditManagementChart.chart.config.data.datasets[0].data[6 - i] = ITSInstance.companies.currentCompany.CreditUsagesPerMonth[i].ticks;
                         }
-                    });
-
-
-                    adminInterfaceCreditManagementChart.chart.config.data.labels.length = 0;
-                    adminInterfaceCreditManagementChart.chart.config.data.datasets[0].data.length = 0;
-                    for (i = 0; (i < 6) && (i < ITSInstance.companies.currentCompany.CreditUsagesPerMonth.length); i++) {
-                        adminInterfaceCreditManagementChart.data.labels[6 - i] = ITSInstance.companies.currentCompany.CreditUsagesPerMonth[i].year + '/' + ITSInstance.companies.currentCompany.CreditUsagesPerMonth[i].month;
-                        adminInterfaceCreditManagementChart.chart.config.data.datasets[0].data[6 - i] = ITSInstance.companies.currentCompany.CreditUsagesPerMonth[i].ticks;
+                        adminInterfaceCreditManagementChart.data.labels[0] = '';
+                        adminInterfaceCreditManagementChart.chart.config.data.datasets[0].data[0] = 0;
+                        adminInterfaceCreditManagementChart.update();
                     }
-                    adminInterfaceCreditManagementChart.data.labels[0] = '';
-                    adminInterfaceCreditManagementChart.chart.config.data.datasets[0].data[0] = 0;
-                    adminInterfaceCreditManagementChart.update();
+                } catch (err) {
+                    ITSLogger.logMessage(logLevel.ERROR,'CreditsUsedPortlet, creating graph failed : ' + err.message);
                 }
             },
             creditUsagesError: function () {

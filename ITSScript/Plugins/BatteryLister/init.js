@@ -219,14 +219,9 @@
     ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
         if (! ITSInstance.users.currentUser.MayWorkWithBatteriesOnly) {
             ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#BatteryListerController.ListMenu", ITSInstance.translator.translate("#BatteryListerController.ListMenu", "Edit test batteries"), "fa-battery-three-quarters", "ITSRedirectPath(\'BatteryLister\');");
+            ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#BatteryListerController.ListCourseMenu", ITSInstance.translator.translate("#BatteryListerController.ListCourseMenu", "Compose course"), "fa-battery-three-quarters", "ITSRedirectPath(\'BatteryLister&BatteryType=1000\');");
         }
     }, true);
-
-//    ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", function () {
-//        ITSInstance.batteries.loadAvailableBatteries(function () {
-//        }, function () {
-//        });
-//    });
 
     ITSInstance.MessageBus.subscribe("Battery.Delete", function () {
         ITSInstance.BatteryListerController.alreadyLoaded = "";

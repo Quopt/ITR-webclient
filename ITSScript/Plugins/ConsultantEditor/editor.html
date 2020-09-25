@@ -64,8 +64,8 @@
     </div>
 </div>
 
-<div class="bg-dark text-white well row col-12"><label id="ConsultantEditorEditRightsHeader">User rights</label></div>
-<div id="ConsultantEditorEditRights" class="row col-12">
+<div class="bg-dark text-white well row col-12"><label id="ConsultantEditorSystemRightsHeader">System rights</label></div>
+<div id="ConsultantEditorSystemRights" class="row col-12">
     <div class="col-3" id="ConsultantEditorInterfaceMasterUserDiv">
         <div class="col-1">
             <input type="checkbox" data-field="IsMasterUser"
@@ -77,7 +77,10 @@
                id="ConsultantEditorInterfaceMasterUserHeader"
                for="ConsultantEditorInterfaceMasterUser">Master user</label>
     </div>
+</div>
 
+<div class="bg-dark text-white well row col-12"><label id="ConsultantEditorEditRightsHeader">User rights</label></div>
+<div id="ConsultantEditorEditRights" class="row col-12">
     <div class="col-3" id="ConsultantEditorInterfaceOrganisationSupervisorDiv">
         <div class="col-1">
             <input type="checkbox" data-field="IsOrganisationSupervisor"
@@ -175,6 +178,23 @@
     </div>
 </div>
 
+<div class="bg-dark text-white well row col-12"><label id="ConsultantEditorOfficeHeader">Office environment</label></div>
+<div id="ConsultantEditorOffice" class="row col-12">
+    <span>&nbsp;&nbsp;</span>
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input col-1" id="ConsultantEditorOfficeTesting" name="ConsultantEditorOfficeRadios" checked >
+        <label class="custom-control-label col-3" id="ConsultantEditorOfficeTestingLabel" for="ConsultantEditorOfficeTesting">Testing</label>
+    </div>
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input col-1" id="ConsultantEditorOfficeEducation" name="ConsultantEditorOfficeRadios">
+        <label class="custom-control-label col-3"  id="ConsultantEditorOfficeEducationLabel" for="ConsultantEditorOfficeEducation">Education</label>
+    </div>
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input col-1" id="ConsultantEditorOfficeAll" name="ConsultantEditorOfficeRadios">
+        <label class="custom-control-label col-3"  id="ConsultantEditorOfficeAllLabel" for="ConsultantEditorOfficeAll">Both</label>
+    </div>
+</div>
+
 <div class="bg-dark text-white well row col-12"><label id="ConsultantEditorEditRightsLimitations">User limitations</label></div>
 <div id="ConsultantEditorEditLimitations" class="row col-12">
     <div class="col-3" id="ConsultantEditorInterfaceMayWorkWithBatteriesOnlyDiv">
@@ -199,6 +219,16 @@
         <label class="col-sm-11"
                id="ConsultantEditorInterfaceMayWorkWithOwnObjectsOnlyHeader"
                for="ConsultantEditorInterfaceMayWorkWithOwnObjectsOnly">May work with own objects only</label>
+    </div>
+
+    <div class="form-group row col-12" id="ConsultantEditorInterfaceOrganisationForbiddenPathsDiv">
+        <label class="col-sm-2 col-form-label"
+               id="ConsultantEditorPreferencesForbiddenPathsHeader"
+               for="ConsultantEditorPreferencesSettingsForbiddenPaths">Forbidden paths for this user</label>
+        <input type="text" data-field="PluginData.ForbiddenPaths"
+               onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant);"
+               class="form-control col-sm-6"
+               id="ConsultantEditorPreferencesSettingsForbiddenPaths"/>
     </div>
 </div>
 

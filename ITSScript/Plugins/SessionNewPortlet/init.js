@@ -24,6 +24,7 @@
                 AdminInterfaceNewSessionPortletDiv = $('<div class="col-md-4" id="AdminInterfaceInviteNewCandidate">');
                 $('#AdminInterfacePortlets').append(AdminInterfaceNewSessionPortletDiv);
                 $('#AdminInterfaceInviteNewCandidate').append(this.html);
+                $('#AdminInterfaceInviteNewCandidate').hide();
 
                 // disable the portlet while the tests are not available
                 $("#AdminInterfaceInviteNewCandidate").prop('disabled', true);
@@ -55,6 +56,15 @@
         // register the portlet
         ITSInstance.portletInviteNewCandidate = Object.create(ITSPortletInviteNewCandidate);
         ITSInstance.UIController.registerPortlet(ITSInstance.portletInviteNewCandidate);
+
+        //show the portlet
+        ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
+            if (ITSInstance.users.currentUser.HasTestingOfficeAccess) {
+                setTimeout(function() { $('#AdminInterfaceInviteNewCandidate').show(); }, 1000);
+            } else {
+                setTimeout(function() { $('#AdminInterfaceInviteNewCandidate').hide(); }, 1000);
+            }
+        }, true);
 
         $('#AdminInterfaceInviteNewCandidateInputUsername').keypress(function (e) {
             if (e.which == '13') {

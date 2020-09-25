@@ -24,6 +24,7 @@
                 AdminInterfaceSessionProgressPortletDiv = $('<div class="col-md-4" id="AdminInterfaceSessionProgressPortlet">');
                 $('#AdminInterfacePortlets').append(AdminInterfaceSessionProgressPortletDiv);
                 $('#AdminInterfaceSessionProgressPortlet').append(this.html);
+                $('#AdminInterfaceSessionProgressPortlet').hide();
             },
             afterOfficeLogin: function () {
                 ITSLogger.logMessage(logLevel.INFO,'Init portlet prepared and busy sessions');
@@ -111,6 +112,14 @@
         ITSInstance.MessageBus.subscribe("Session.Delete", ITSInstance.portletBusySessions.reloadAfterDelay);
         ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletBusySessions.reloadAfterDelay);
 
+        // show the portlet
+        ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
+            if (ITSInstance.users.currentUser.HasTestingOfficeAccess) {
+                setTimeout(function() { $('#AdminInterfaceSessionProgressPortlet').show(); }, 1000);
+            } else {
+                setTimeout(function() { $('#AdminInterfaceSessionProgressPortlet').hide(); }, 1000);
+            }
+        }, true);
 
     })
 

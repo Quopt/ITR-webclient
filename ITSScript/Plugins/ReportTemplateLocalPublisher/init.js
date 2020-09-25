@@ -249,6 +249,7 @@
     ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
         if ( (ITSInstance.users.currentUser.IsReportAuthor) && (ITSInstance.users.currentUser.IsMasterUser) ) {
             ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#ReportTemplateLocalPublisherController.LocalPublisherMenu", ITSInstance.translator.translate("#ReportTemplateLocalPublisherController.LocalPublisherMenu", "Publish report templates"), "fa-door-open", "ITSRedirectPath(\'ReportTemplateLocalPublisher\');");
+            ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#ReportTemplateLocalPublisherController.LocalCoursePublisherMenu", ITSInstance.translator.translate("#ReportTemplateLocalPublisherController.LocalCoursePublisherMenu", "Publish report templates"), "fa-door-open", "ITSRedirectPath(\'ReportTemplateLocalPublisher&ReportType=1000\');");
         }
     }, true);
 

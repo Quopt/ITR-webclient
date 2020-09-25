@@ -1831,5 +1831,6 @@ ITSTestTemplateEditor.prototype.copyFromTestScreen = function () {
 ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
     if (ITSInstance.users.currentUser.IsTestAuthor) {
         ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#AdminInterfaceTestTemplateEditor.EditMenu", ITSInstance.translator.translate("#AdminInterfaceTestTemplateEditor.EditMenu", "Edit test definitions"), "fa-book-reader", "ITSRedirectPath(\'TestTemplateEditor\');");
+        ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#AdminInterfaceTestTemplateEditor.EditCourseMenu", ITSInstance.translator.translate("#AdminInterfaceTestTemplateEditor.EditCourseMenu", "Course (part) builder"), "fa-book-reader", "ITSRedirectPath(\'TestTemplateEditor&TestType=1000\');");
     }
 }, true);

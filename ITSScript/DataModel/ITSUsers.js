@@ -57,22 +57,20 @@ function ITSUser (usersParent, ITSSession) {
     this.SecurityTemplateID="00000000-0000-0000-0000-000000000000";
     this.HasPersonalCreditPool=false;
     this.CurrentPersonalCreditLevel=0;
+    this.HasTestingOfficeAccess = true;
+    this.HasEducationalOfficeAccess = false;
     this.PluginData = {};
     this.PluginData.persistentProperties = "*ALL*";
+    this.PluginData.ForbiddenPaths ='';
     this.APIKey = "";
-    //this.PluginData.MailSettings = {};
-    //this.PluginData.MailSettings.persistentProperties = "*ALL*";
-    //this.PluginData.MailSettings._objectType = "ITSObject";
-    //this.PluginData.MailTemplates = {};
-    //this.PluginData.MailTemplates.persistentProperties = "*ALL*";
-    //this.PluginData.MailTemplates._objectType = "ITSObject";
 
     this.persistentProperties = [
         'ID','CompanyID','Email', 'Password', 'UserOpeningsScreen','UserName','PreferredLanguage','MailAddress','VisitingAddress','InvoiceAddress',
         'InformationAddress','Remarks','PasswordExpirationDate',
         'StartDateLicense','EndDateLicense','LastLoginDateTime','LastRefreshDateTime','IsMasterUser','IsTestTakingUser', 'IsResearcher',
         'IsOrganisationSupervisor', "IsOfficeUser", "IsTestAuthor", "IsReportAuthor", "IsTestScreenTemplateAuthor",'IsTranslator','MayOrderCredits','MayWorkWithBatteriesOnly','DoNotRenewLicense',
-        'Active','UserCulture','MayWorkWithOwnObjectsOnly','SecurityTemplateID','HasPersonalCreditPool','CurrentPersonalCreditLevel','PluginData', 'IsPasswordManager', 'APIKey'
+        'Active','UserCulture','MayWorkWithOwnObjectsOnly','SecurityTemplateID','HasPersonalCreditPool','CurrentPersonalCreditLevel','PluginData', 'IsPasswordManager', 'APIKey', 'HasTestingOfficeAccess',
+        'HasEducationalOfficeAccess'
     ];
 
     this.lastSavedJSON = "";
@@ -88,11 +86,8 @@ ITSUser.prototype.regeneratePassword = function () {
 ITSUser.prototype.loadDetails = function (OnSuccess, OnError) {
     this.loadDetailsOK = OnSuccess;
     this.loadDetailsError = OnError;
-    Password = "";
     this.ITSSession.JSONAjaxLoader('logins/' + this.ID , this,
         this.loadDetailsOK.bind(this), this.loadDetailsError.bind(this), ITSObject, 0 , -1, "", "Y", "N", "Y");
-//    ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, DefaultObjectType, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
-
 };
 ITSUser.prototype.loadDetailsOK = function () {
     this.postLoad();

@@ -1172,6 +1172,8 @@ function ConvertFieldToTSVSafe(field) {
 
 function IsInCSVList(value, csvstring, seperator) {
     if (typeof seperator =="undefined") seperator = ",";
+    if (typeof csvstring =="undefined") return false;
+    if (typeof value =="undefined") return false;
 
     var csvarray = csvstring.split(seperator);
     var result = csvarray.includes(value);
