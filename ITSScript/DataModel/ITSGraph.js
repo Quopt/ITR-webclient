@@ -128,6 +128,7 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
     });
     Chart.defaults.global.defaultFontSize = parseInt(template_values["DefaultFontSize"]);
     Chart.defaults.global.animation.duration = animationDuration;
+    Chart.defaults.global.backgroundColor = RGBcolourToNumber(255,255,255);
 
     if (template_values["Stacked"] == "T") {
         var myChart = new Chart(ctx, {

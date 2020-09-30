@@ -452,10 +452,15 @@ ITSTranslator.prototype.getTranslatedString = function (module, stringid, origin
                 this.originalStrings[indexID] = tempObj;
             }
 
+
             if (this.translatedStrings[indexID] != undefined) {
                 return this.translatedStrings[indexID].value;
             } else {
-                if ((this.toTranslate[indexID] == undefined) && (originalString != "")) {
+                this.toTranslate.some(function (elem) {
+                    return elem.id == indexID;
+                });
+
+                if ((!this.toTranslate.some(function (elem) { return elem.id == indexID;})) && (originalString != "")) {
                     var tempObj = {};
                     tempObj.id = indexID;
                     tempObj.value = originalString;

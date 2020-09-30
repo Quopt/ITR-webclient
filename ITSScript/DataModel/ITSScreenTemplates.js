@@ -795,7 +795,11 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             for (var i = 0; i < option_array.length; i++) {
                 if (option_array[i].indexOf('|') >= 0) {
                     new_option = option_array[i].split('|');
-                    select = select + '<option NoTranslate value="' + new_option[0] + '">' + ITSInstance.translator.getTranslatedString("ScreenTemplateVariable." + this.variableName, new_option[0], new_option[1]) + '</option>';
+                    if (this.translatable) {
+                        select = select + '<option NoTranslate value="' + new_option[0] + '">' + ITSInstance.translator.getTranslatedString("ScreenTemplateVariable." + this.ID + "." + this.variableName, new_option[0], new_option[1]) + '</option>';
+                    } else {
+                        select = select + '<option NoTranslate value="' + new_option[0] + '">' + new_option[1] + '</option>';
+                    }
                 } else {
                     select = select + '<option NoTranslate value="' + option_array[i] + '">' + option_array[i] + '</option>';
                 }
@@ -814,7 +818,11 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             for (var i = 0; i < option_array.length; i++) {
                 if (option_array[i].indexOf('|') >= 0) {
                     new_option = option_array[i].split('|');
-                    select = select + '<option NoTranslate value="' + new_option[0] + '">' + ITSInstance.translator.getTranslatedString("ScreenTemplateVariable." + this.variableName, new_option[0], new_option[1]) + '</option>';
+                    if (this.translatable) {
+                        select = select + '<option NoTranslate value="' + new_option[0] + '">' + ITSInstance.translator.getTranslatedString("ScreenTemplateVariable." + this.ID + "." + this.variableName, new_option[0], new_option[1]) + '</option>';
+                    } else {
+                        select = select + '<option NoTranslate value="' + new_option[0] + '">' + new_option[1] + '</option>';
+                    }
                 } else {
                     select = select + '<option NoTranslate value="' + option_array[i] + '">' + option_array[i] + '</option>';
                 }
@@ -890,7 +898,7 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
 
     if (this.description.trim() != "") {
         $('#' + traceID).attr('data-toggle', "tooltip");
-        $('#' + traceID).attr('title', ITSInstance.translator.getTranslatedString("ScreenTemplateVariable." + this.variableName, "hint", this.description) );
+        $('#' + traceID).attr('title', ITSInstance.translator.getTranslatedString("ScreenTemplateVariable." + this.ID + "." +  this.variableName, "hint", this.description) );
         $('[data-toggle="tooltip"]').tooltip();
     }
 

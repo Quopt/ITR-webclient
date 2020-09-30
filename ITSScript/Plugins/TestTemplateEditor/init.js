@@ -263,8 +263,9 @@ ITSTestTemplateEditor.prototype.populateTests = function () {
     $('#AdminInterfaceTestTemplateEditorSelectListLoading').empty();
     $('#AdminInterfaceTestTemplateEditor-CopyFromSelect').empty();
     var newElement = "";
+    var testType= getUrlParameterValue('TestType');
     for (var i = 0; i < ITSInstance.tests.testList.length; i++) {
-        if (ITSInstance.tests.testList[i].dbsource == 0) {
+        if ( (ITSInstance.tests.testList[i].dbsource == 0) && (ITSInstance.tests.testList[i].TestType == testType) ) {
             newElement = "<li value='" + i + "' onclick='ITSInstance.newITSTestEditorController.redirectToTestIndex(this.value);' > <i class='fa fa-fw fa-book-reader'></i>&nbsp;&nbsp;" + ITSInstance.tests.testList[i].testNameWithDBIndicator() + "</li>";
             $('#AdminInterfaceTestTemplateEditorSelectListLoading').append(newElement);
             newElement = "<option NoTranslate value='" + ITSInstance.tests.testList[i].ID + "'>" + ITSInstance.tests.testList[i].testNameWithDBIndicator() + "</option>";
@@ -283,7 +284,7 @@ ITSTestTemplateEditor.prototype.redirectToTestIndex = function (testIndex) {
     if (this.currentTest.dbsource >= 1) {
         ITSInstance.UIController.showInfo("ITSTestTemplateEditor.centralTemplate", "Centrally managed tests cannot be edited.");
     } else {
-        ITSRedirectPath(this.path, 'id=' + ITSInstance.tests.testList[testIndex].ID);
+        ITSRedirectPath(this.path, 'id=' + ITSInstance.tests.testList[testIndex].ID+"&TestType="+getUrlParameterValue('TestType'));
     }
 };
 
@@ -354,8 +355,8 @@ ITSTestTemplateEditor.prototype.addNewTestDefinition = function () {
     this.currentTest.scales = [];
     this.currentTest.scales.push(newScale);
     this.currentTestIndex = ITSInstance.tests.testList.length - 1;
+    this.TestType = parseInt(getUrlParameterValue("TestType"));
     this.switchToTestEditView();
-
 };
 
 ITSTestTemplateEditor.prototype.switchToTestEditView = function () {
@@ -1830,7 +1831,7 @@ ITSTestTemplateEditor.prototype.copyFromTestScreen = function () {
 // register the menu items
 ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
     if (ITSInstance.users.currentUser.IsTestAuthor) {
-        ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#AdminInterfaceTestTemplateEditor.EditMenu", ITSInstance.translator.translate("#AdminInterfaceTestTemplateEditor.EditMenu", "Edit test definitions"), "fa-book-reader", "ITSRedirectPath(\'TestTemplateEditor\');");
+        ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#AdminInterfaceTestTemplateEditor.EditMenu", ITSInstance.translator.translate("#AdminInterfaceTestTemplateEditor.EditMenu", "Edit test definitions"), "fa-book-reader", "ITSRedirectPath(\'TestTemplateEditor&TestType=0\');");
         ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#AdminInterfaceTestTemplateEditor.EditCourseMenu", ITSInstance.translator.translate("#AdminInterfaceTestTemplateEditor.EditCourseMenu", "Course (part) builder"), "fa-book-reader", "ITSRedirectPath(\'TestTemplateEditor&TestType=1000\');");
     }
 }, true);
