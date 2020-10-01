@@ -179,53 +179,53 @@
     };
 
     ITSServerSettingsEditor.prototype.changeCreditOrderEMailParameter = function (newVal) {
-        ITSInstance.genericAjaxUpdate('systemsettings/CreditOrderEMail', newVal, function () {}, function () {}, "Y","N");
+        if ($('#ServerSettingsDiv-SMTPUser-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/CreditOrderEMail', newVal, function () {}, function () {}, "Y","N");
     };
 
     ITSServerSettingsEditor.prototype.changeMaxNumberOfConsulantsParameter= function (newVal) {
-        ITSInstance.genericAjaxUpdate('systemsettings/MAXNUMBEROFCONSULTANTS', newVal, function () {}, function () {}, "Y","N");
+        if ($('#ServerSettingsDiv-SMTPUser-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/MAXNUMBEROFCONSULTANTS', newVal, function () {}, function () {}, "Y","N");
     };
 
     ITSServerSettingsEditor.prototype.changeTranslateKeyParameter= function (newVal) {
-        ITSInstance.genericAjaxUpdate('systemsettings/TRANSLATE_AZURE_KEY', newVal, function () {}, function () {}, "Y","N");
+        if ($('#ServerSettingsDiv-SMTPUser-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/TRANSLATE_AZURE_KEY', newVal, function () {}, function () {}, "Y","N");
     };
 
     ITSServerSettingsEditor.prototype.changeSMTPPasswordParameter= function (newVal) {
-        ITSInstance.genericAjaxUpdate('systemsettings/SMTP_PASSWORD', newVal, function () {}, function () {}, "Y","N");
+        if ($('#ServerSettingsDiv-SMTPUser-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/SMTP_PASSWORD', newVal, function () {}, function () {}, "Y","N");
     };
 
     ITSServerSettingsEditor.prototype.changeSMTPUserParameter= function (newVal) {
-        ITSInstance.genericAjaxUpdate('systemsettings/SMTP_USER', newVal, function () {}, function () {}, "Y","N");
+        if ($('#ServerSettingsDiv-SMTPUser-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/SMTP_USER', newVal, function () {}, function () {}, "Y","N");
     };
 
     ITSServerSettingsEditor.prototype.changeSMTPUseTLSParameter= function (newVal) {
-        ITSInstance.genericAjaxUpdate('systemsettings/SMTP_USETLS', newVal, function () {}, function () {}, "Y","N");
+        if ($('#ServerSettingsDiv-SMTPUser-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/SMTP_USETLS', newVal, function () {}, function () {}, "Y","N");
     };
 
     ITSServerSettingsEditor.prototype.changeSMTPPortParameter= function (newVal) {
-        ITSInstance.genericAjaxUpdate('systemsettings/SMTP_PORT', newVal, function () {}, function () {}, "Y","N");
+        if ($('#ServerSettingsDiv-SMTPUser-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/SMTP_PORT', newVal, function () {}, function () {}, "Y","N");
     };
 
     ITSServerSettingsEditor.prototype.changeSMTPServerParameter= function (newVal) {
-        ITSInstance.genericAjaxUpdate('systemsettings/SMTP_SERVER', newVal, function () {}, function () {}, "Y","N");
+        if ($('#ServerSettingsDiv-SMTPUser-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/SMTP_SERVER', newVal, function () {}, function () {}, "Y","N");
     };
 
     ITSServerSettingsEditor.prototype.changeSMTPSenderParameter= function (newVal) {
-        ITSInstance.genericAjaxUpdate('systemsettings/SMTP_SENDER', newVal, function () {}, function () {}, "Y","N");
+        if ($('#ServerSettingsDiv-SMTPUser-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/SMTP_SENDER', newVal, function () {}, function () {}, "Y","N");
     };
 
     ITSServerSettingsEditor.prototype.changeCopyrightParameter= function (newVal) {
-        ITSInstance.genericAjaxUpdate('systemsettings/COPYRIGHT', newVal, function () {}, function () {}, "Y","N");
+        if ($('#ServerSettingsDiv-SMTPUser-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/COPYRIGHT', newVal, function () {}, function () {}, "Y","N");
         setTimeout(1000,getCopyrightMessage);
     };
 
     ITSServerSettingsEditor.prototype.changeCompanyNameParameter= function (newVal) {
-        ITSInstance.genericAjaxUpdate('systemsettings/COMPANYNAME', newVal, function () {}, function () {}, "Y","N");
+        if ($('#ServerSettingsDiv-SMTPUser-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/COMPANYNAME', newVal, function () {}, function () {}, "Y","N");
         setTimeout(1000,getCopyrightMessage);
     };
 
     ITSServerSettingsEditor.prototype.changeHistoricLogFilesParameter = function (newVal){
-        ITSInstance.genericAjaxUpdate('systemsettings/LOG_HANDLER_BACKUP_COUNT', newVal, function () {}, function () {}, "Y","N");
+        if ($('#ServerSettingsDiv-SMTPUser-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/LOG_HANDLER_BACKUP_COUNT', newVal, function () {}, function () {}, "Y","N");
     };
 
     ITSServerSettingsEditor.prototype.restartServer = function () {
