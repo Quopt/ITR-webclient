@@ -173,7 +173,7 @@
             $('#SessionListerInterfaceEditSessionEditHeaderStatus')[0].innerText =
                 ITSInstance.translator.translate("SessionListerController.SessionStatusAll", "present");
         }
-        this.filter = this.filter == "" ? "SessionType=" + this.sessionType : this.filter + ",SessionType=" + this.sessionType
+        this.filter = this.filter == "" ? "SessionType=" + this.sessionType.split(",").join(",SessionType=") : this.filter + ",SessionType=" + this.sessionType.split(",").join(",SessionType=")
         if ( this.personID.trim() != "") this.filter = this.filter == "" ? "PersonID=" + this.personID : this.filter + ",PersonID=" + this.personID;
         if ( this.groupID.trim() != "") this.filter = this.filter == "" ? "GroupID=" + this.groupID : this.filter + ",GroupID=" + this.groupID;
         if ( this.groupSessionID.trim() != "") this.filter = this.filter == "" ? "GroupSessionID=" + this.groupSessionID : this.filter + ",GroupSessionID=" + this.groupSessionID;
@@ -266,7 +266,12 @@
 
     ITSSessionListerEditor.prototype.viewSession = function (sessionID) {
         this.alreadyLoaded = document.URL;
-        ITSRedirectPath("Session&SessionID=" + sessionID);
+        if (parseInt(getUrlParameterValue("SessionType")) == 1001) {
+            ITSRedirectPath("TeachingSession&SessionID=" + sessionID);
+        }
+        else {
+            ITSRedirectPath("Session&SessionID=" + sessionID);
+        }
     };
 
     // register the portlet

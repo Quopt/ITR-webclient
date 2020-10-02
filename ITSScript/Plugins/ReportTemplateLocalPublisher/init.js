@@ -122,10 +122,14 @@
             this.generatedTable = this.tablePart1;
         }
 
+        var reportType = parseInt(getUrlParameterValue("ReportType"));
+        var rowCounter=1;
         // generate the records for the returned data
         for (var i=0; i < this.reportsList.length; i++) {
+            if (this.reportsList[i].ReportType != reportType) continue; // next if type does not match
+
             var rowText = this.tablePart2;
-            rowText = rowText.replace(this.mNR, i + this.currentPage * 25 + 1);
+            rowText = rowText.replace(this.mNR, rowCounter++);
             rowText = rowText.replace(this.mID, this.reportsList[i].id);
             rowText = rowText.replace(this.mDescription, this.reportsList[i].Description);
 
@@ -248,7 +252,7 @@
 
     ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
         if ( (ITSInstance.users.currentUser.IsReportAuthor) && (ITSInstance.users.currentUser.IsMasterUser) ) {
-            ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#ReportTemplateLocalPublisherController.LocalPublisherMenu", ITSInstance.translator.translate("#ReportTemplateLocalPublisherController.LocalPublisherMenu", "Publish report templates"), "fa-door-open", "ITSRedirectPath(\'ReportTemplateLocalPublisher\');");
+            ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#ReportTemplateLocalPublisherController.LocalPublisherMenu", ITSInstance.translator.translate("#ReportTemplateLocalPublisherController.LocalPublisherMenu", "Publish report templates"), "fa-door-open", "ITSRedirectPath(\'ReportTemplateLocalPublisher&ReportType=0\');");
             ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#ReportTemplateLocalPublisherController.LocalCoursePublisherMenu", ITSInstance.translator.translate("#ReportTemplateLocalPublisherController.LocalCoursePublisherMenu", "Publish report templates"), "fa-door-open", "ITSRedirectPath(\'ReportTemplateLocalPublisher&ReportType=1000\');");
         }
     }, true);

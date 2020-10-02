@@ -41,7 +41,7 @@ ITSGroupSessionEditor.prototype.show = function () {
         this.newSession = true;
         this.currentSession = ITSInstance.candidateSessions.newGroupSession();
         this.SessionID = this.currentSession.ID;
-
+        this.currentSession.SessionType = parseInt(getUrlParameterValue("SessionType"));
     }
 
     $('#NavbarsAdmin').show();
@@ -55,6 +55,7 @@ ITSGroupSessionEditor.prototype.show = function () {
          this.sessionLoadingSucceeded();
      } else {
          this.currentSession = ITSInstance.candidateSessions.newGroupSession();
+         this.currentSession.SessionType = parseInt(getUrlParameterValue("SessionType"));
          $('#AdminInterfaceGroupSessionCandidateFor').tagsManager('empty');
          this.currentSession.loadSession(this.SessionID, this.sessionLoadingSucceeded.bind(this), this.sessionLoadingFailed.bind(this));
          ITSInstance.UIController.showInterfaceAsWaitingOn();
@@ -141,13 +142,15 @@ ITSGroupSessionEditor.prototype.loadTestAndBatteriesList = function() {
     this.availableTestsAndBatteries.length = 0;
 
     $('#AdminInterfaceGroupSessionTestsInputList').empty();
-    newLI = "<option value=\"\">" + ITSInstance.translator.getTranslatedString('GroupSessionEditor','SelectATest','Select a test to add to the session') + "</option>"
+    newLI = "<option value=\"\">" + ITSInstance.translator.getTranslatedString('GroupSessionEditor','SelectATest','Select content to add to the session') + "</option>"
     $('#AdminInterfaceGroupSessionTestsInputList').append(newLI);
 
+    var TestType = parseInt(getUrlParameterValue("SessionType")) == 100 ? 0 : 1000;
+    var BatteryType = parseInt(getUrlParameterValue("SessionType")) == 100 ? 10 : 1000;
     if (! ITSInstance.users.currentUser.MayWorkWithBatteriesOnly) {
         ITSInstance.tests.testList.forEach(function callback(currentValue, index, array) {
             var includeTest = false;
-            includeTest = currentValue.Active == true;
+            includeTest = (currentValue.Active == true) && (currentValue.TestType == TestType);
             if (!$('#AdminInterfaceGroupSessionTestsIncludeOtherLanguages').is(':checked')) {
                 includeTest = includeTest && (currentValue.supportsLanguage(ITSLanguage));
             }
@@ -162,7 +165,7 @@ ITSGroupSessionEditor.prototype.loadTestAndBatteriesList = function() {
         }, this);
     }
     ITSInstance.batteries.batteryList.forEach(function callback(currentValue, index, array) {
-        if (currentValue.Active) {
+        if ((currentValue.Active) && (currentValue.BatteryType == BatteryType)) {
             this.availableTestsAndBatteries.push({
                 "TestID": currentValue.ID,
                 "Description": ITSInstance.translator.getTranslatedString('GroupSessionEditor','BatteryText',"Battery : ") + currentValue.BatteryName
@@ -188,6 +191,7 @@ ITSGroupSessionEditor.prototype.TestOrBatterySelected = function (textFound) {
     var testIndex = ITSInstance.tests.findTestById(ITSInstance.tests.testList, id);
     var batteryIndex = ITSInstance.batteries.findBatteryById(ITSInstance.batteries.batteryList, id);
     var existsIndex = this.currentSession.findTestById(id);
+
     if (testIndex > -1) { // new test found and not added yet
         var newCST = this.currentSession.newCandidateSessionTest(ITSInstance.tests.testList[testIndex]);
         if (!ITSInstance.tests.testList[testIndex].detailsLoaded) {
@@ -223,6 +227,7 @@ ITSGroupSessionEditor.prototype.createNewSession= function (EmailAddress) {
     ITSLogger.logMessage(logLevel.INFO,"Change test session requested " + EmailAddress);
     // create a new and empty session
     this.currentSession = ITSInstance.candidateSessions.newGroupSession();
+    this.currentSession.SessionType = parseInt(getUrlParameterValue("SessionType"));
     $('#AdminInterfaceGroupSessionCandidateFor').tagsManager('empty');
 
     // bind it to the div elements AdminInterfaceGroupSession
@@ -243,13 +248,15 @@ ITSGroupSessionEditor.prototype.repopulateTestsLists =  function (animate) {
             '</td><td></td><td></td><td></td><td></td><td></td></tr>');
         $('#AdminInterfaceGroupSessionTestsSelectionBody').append(newTR0);
     }
+
+    var maxNormsCount = 0;
     for (var i = 0; i < tempSessionTestList.length; i++) {
         var newTR = $('<TR>');
         var newTD1 = $('<TD id="AdminInterfaceGroupSessionTestsSelectionCA' + i + '">');
         var newTD2 = $('<TD id="AdminInterfaceGroupSessionTestsSelectionCB' + i + '">');
-        var newTD3 = $('<TD id="AdminInterfaceGroupSessionTestsSelectionCC' + i + '">');
-        var newTD4 = $('<TD id="AdminInterfaceGroupSessionTestsSelectionCD' + i + '">');
-        var newTD5 = $('<TD id="AdminInterfaceGroupSessionTestsSelectionCE' + i + '">');
+        var newTD3 = $('<TD coltag="groupeditnorm1" id="AdminInterfaceGroupSessionTestsSelectionCC' + i + '">');
+        var newTD4 = $('<TD coltag="groupeditnorm2" id="AdminInterfaceGroupSessionTestsSelectionCD' + i + '">');
+        var newTD5 = $('<TD coltag="groupeditnorm3" id="AdminInterfaceGroupSessionTestsSelectionCE' + i + '">');
         var newTD6 = $('<TD style="min-width: 70px" id="AdminInterfaceGroupSessionTestsSelectionCF' + i + '">');
 
         if (tempSessionTestList[i].Status == 10) {
@@ -315,6 +322,7 @@ ITSGroupSessionEditor.prototype.repopulateTestsLists =  function (animate) {
                     }
                     newTD5.append(NewNorm3);
                 }
+                maxNormsCount = max([maxNormsCount,tempNorms.length])
             }
 
             newTR.append(newTD1);
@@ -326,6 +334,9 @@ ITSGroupSessionEditor.prototype.repopulateTestsLists =  function (animate) {
             $('#AdminInterfaceGroupSessionTestsSelectionBody').append(newTR);
         }
     }
+    maxNormsCount > 0 ? $('td[coltag="groupeditnorm1"]').show() : $('td[coltag="groupeditnorm1"]').hide();
+    maxNormsCount > 1 ? $('td[coltag="groupeditnorm2"]').show() : $('td[coltag="groupeditnorm2"]').hide();
+    maxNormsCount > 2 ? $('td[coltag="groupeditnorm3"]').show() : $('td[coltag="groupeditnorm3"]').hide();
     if (animate) {
         $('#AdminInterfaceGroupSessionTestsSelection').fadeTo("quick", 0.1);
         $('#AdminInterfaceGroupSessionTestsSelection').fadeTo("quick", 1);
@@ -604,7 +615,8 @@ ITSGroupSessionEditor.prototype.showUserAndPasswordOverview = function () {
 
 ITSGroupSessionEditor.prototype.showGroupSessions = function () {
     var x = this.currentSession.Active ? "" : "&Status=Archived";
-    ITSRedirectPath('SessionLister&SessionType=0&GroupSessionID=' + this.currentSession.ID + x);
+    var SessionType = this.currentSession.SessionType == 100 ? 0 : 1002;
+    ITSRedirectPath('SessionLister&SessionType='+SessionType+'&GroupSessionID=' + this.currentSession.ID + x);
 };
 
 ITSGroupSessionEditor.prototype.archiveGroupSessionNow = function (archiveStatus) {
@@ -735,6 +747,7 @@ ITSGroupSessionEditor.prototype.clearSession = function () {
 
 ITSGroupSessionEditor.prototype.clearSessionCallback = function () {
     this.currentSession = ITSInstance.candidateSessions.newGroupSession();
+    this.currentSession.SessionType = parseInt(getUrlParameterValue("SessionType"));
     DataBinderTo("AdminInterfaceGroupSession", this.currentSession);
     this.repopulateTestsLists();
     this.show();

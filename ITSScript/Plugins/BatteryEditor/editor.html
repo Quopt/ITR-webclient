@@ -37,32 +37,32 @@
             </div>
         </div>
         <div id="BatteryEditorTests" class="form-group row col-12">
-            <label for="BatteryEditorTestsInputList" id="BatteryEditorTestsInputListLabel" class="col-sm-3 col-form-label">Tests in this battery</label>
+            <label for="BatteryEditorTestsInputList" id="BatteryEditorTestsInputListLabel" class="col-sm-3 col-form-label">Content of this battery</label>
             <div class="col-sm-9">
                 <div class="form-group">
                     <select id="BatteryEditorTestsInputList" novalidate class="combobox form-control" style="display: none;">
-                        <option value="" selected="selected">Select a test</option>
+                        <option value="" selected="selected">Select content</option>
                     </select>
                 </div>
                 <label class="form-check-label">
                     &nbsp;&nbsp;&nbsp;<input class="form-check-input" id="BatteryEditorTestsIncludeOtherLanguages" type="checkbox" onchange="ITSInstance.BatteryEditorController.loadTestAndBatteriesList();" value="">
-                    <label id="BatteryEditorTestsIncludeOtherLanguagesLabel">Include tests in other languages</label>
+                    <label id="BatteryEditorTestsIncludeOtherLanguagesLabel">Include content in other languages</label>
                 </label>
                 <table class="table table-sm table-striped table-hover" style="text-align: left"
                        id="BatteryEditorTestsSelection" NoTranslate>
                     <thead NoTranslate id="BatteryEditorTestsSelectionHead">
                     <tr>
-                        <td id="BatteryEditorTestsSelectionH1">Test name</td>
-                        <td id="BatteryEditorTestsSelectionH2">Test language</td>
-                        <td id="BatteryEditorTestsSelectionH3">Norm 1</td>
-                        <td id="BatteryEditorTestsSelectionH4">Norm 2</td>
-                        <td id="BatteryEditorTestsSelectionH5">Norm 3</td>
+                        <td id="BatteryEditorTestsSelectionH1">Content name</td>
+                        <td id="BatteryEditorTestsSelectionH2">Content language</td>
+                        <td id="BatteryEditorTestsSelectionH3" coltag="battnorm1">Norm 1</td>
+                        <td id="BatteryEditorTestsSelectionH4" coltag="battnorm2">Norm 2</td>
+                        <td id="BatteryEditorTestsSelectionH5" coltag="battnorm3">Norm 3</td>
                         <td id="BatteryEditorTestsSelectionH6">Actions</td>
                     </tr>
                     </thead>
                     <tbody id="BatteryEditorTestsSelectionBody">
                     <tr>
-                        <td id="BatteryEditorTestsSelectionC1">No tests added yet</td>
+                        <td id="BatteryEditorTestsSelectionC1">No content added yet</td>
                         <td></td>
                         <td></td>
                         <td></td>

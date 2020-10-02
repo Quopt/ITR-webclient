@@ -137,11 +137,15 @@
             this.generatedTable = this.tablePart1;
         }
 
+        var batteryType = parseInt(getUrlParameterValue("BatteryType"));
+        var itemCounter = 1;
         // generate the records for the returned data
         for (var i=0; i < this.itemsList.length; i++) {
+            if (this.itemsList[i].BatteryType != batteryType) continue;
+
             var rowText = this.tablePart2;
 
-            rowText = rowText.replace( this.mNR, i + this.currentPage *25 +1 );
+            rowText = rowText.replace( this.mNR, itemCounter++ );
             rowText = rowText.replace( this.mID, this.itemsList[i].ID );
             rowText = rowText.replace( this.mDESCRIPTION, this.itemsList[i].BatteryName );
             rowText = rowText.replace( this.mARCHIVED, this.itemsList[i].Active ? "<i class=\"fa fa-times\"></i>" : "<i class=\"fa fa-check\"></i>" );
@@ -205,12 +209,16 @@
 
     ITSBatteryListerEditor.prototype.viewThis = function (ID) {
         this.alreadyLoaded = document.URL;
-        ITSRedirectPath("BatteryEditor&BatteryID=" + ID);
+        var TestType = parseInt(getUrlParameterValue("BatteryType"));
+        TestType == 10 ? TestType = 0 : TestType = TestType;
+        ITSRedirectPath("BatteryEditor&BatteryID=" + ID + "&BatteryType=" + getUrlParameterValue("BatteryType")+ "&TestType=" + TestType);
     };
 
     ITSBatteryListerEditor.prototype.addNew = function (ID) {
         this.alreadyLoaded = document.URL;
-        ITSRedirectPath("BatteryEditor");
+        var TestType = parseInt(getUrlParameterValue("BatteryType"));
+        TestType == 10 ? TestType = 0 : TestType = TestType;
+        ITSRedirectPath("BatteryEditor&BatteryType=" + getUrlParameterValue("BatteryType")+ "&TestType=" + TestType);
     };
 
     // register the portlet
@@ -218,8 +226,8 @@
     ITSInstance.UIController.registerEditor(ITSInstance.BatteryListerController);
     ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
         if (! ITSInstance.users.currentUser.MayWorkWithBatteriesOnly) {
-            ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#BatteryListerController.ListMenu", ITSInstance.translator.translate("#BatteryListerController.ListMenu", "Edit test batteries"), "fa-battery-three-quarters", "ITSRedirectPath(\'BatteryLister\');");
-            ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#BatteryListerController.ListCourseMenu", ITSInstance.translator.translate("#BatteryListerController.ListCourseMenu", "Compose course"), "fa-battery-three-quarters", "ITSRedirectPath(\'BatteryLister&BatteryType=1000\');");
+            ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#BatteryListerController.ListMenu", ITSInstance.translator.translate("#BatteryListerController.ListMenu", "Edit test batteries"), "fa-check-double", "ITSRedirectPath(\'BatteryLister&BatteryType=10\');");
+            ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#BatteryListerController.ListCourseMenu", ITSInstance.translator.translate("#BatteryListerController.ListCourseMenu", "Compose course batteries"), "fa-check-double", "ITSRedirectPath(\'BatteryLister&BatteryType=1000\');");
         }
     }, true);
 

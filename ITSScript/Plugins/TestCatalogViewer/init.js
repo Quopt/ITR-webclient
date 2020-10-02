@@ -70,8 +70,10 @@
         $('#AdminInterfaceViewTestCatalogDropdownMenu').empty();
         //<button class="dropdown-item" type="button">Test 1</button>
         for (i = 0; i < ITSInstance.tests.testList.length; i++) {
-            $('#AdminInterfaceViewTestCatalogDropdownMenu').append('<button class="dropdown-item" type="button" onclick="ITSInstance.viewCatalogController.showTest(\'' + ITSInstance.tests.testList[i].ID + '\');">' +
-                ITSInstance.tests.testList[i].getTestFormatted() + '</button>');
+            if (ITSInstance.tests.testList[i].TestType == getUrlParameterValue("TestType")) {
+                $('#AdminInterfaceViewTestCatalogDropdownMenu').append('<button class="dropdown-item" type="button" onclick="ITSInstance.viewCatalogController.showTest(\'' + ITSInstance.tests.testList[i].ID + '\');">' +
+                    ITSInstance.tests.testList[i].getTestFormatted() + '</button>');
+            }
         }
     };
 

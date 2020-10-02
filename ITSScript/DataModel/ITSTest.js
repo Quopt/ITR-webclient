@@ -28,7 +28,7 @@ function ITSTest(par, session) {
     this.Explanation = "";
     this.Copyrights = "";
     this.Costs = 0;
-    this.TestType = 0; // 0 = Person test = normal session based test for a single candidate. 1000=course (part)
+    this.TestType = -1; // 0 = Person test = normal session based test for a single candidate. 1000=course (part)
     // (0-1000 reserved for testing, 1000-2000 reserved for educational)
     this.AuthorInfo = "";
     this.InvoiceCode = "";

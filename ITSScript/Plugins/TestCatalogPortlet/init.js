@@ -45,8 +45,10 @@
                         $('#AdminInterfaceInviteTCatalogdropdownMenuItems').empty();
                         //<button class="dropdown-item" type="button">Test 1</button>
                         for (i = 0; i < ITSInstance.tests.testList.length; i++) {
-                            $('#AdminInterfaceInviteTCatalogdropdownMenuItems').append('<button class="dropdown-item" type="button" onclick="ITSRedirectPath(\'Catalog&TestID=' + ITSInstance.tests.testList[i].ID + '\');">' +
-                                ITSInstance.tests.testList[i].Description + '</button>');
+                            if (ITSInstance.tests.testList[i].TestType==0) {
+                                $('#AdminInterfaceInviteTCatalogdropdownMenuItems').append('<button class="dropdown-item" type="button" onclick="ITSRedirectPath(\'Catalog&TestType=0&TestID=' + ITSInstance.tests.testList[i].ID + '\');">' +
+                                    ITSInstance.tests.testList[i].Description + '</button>');
+                            }
                         }
                     },
                     function () {

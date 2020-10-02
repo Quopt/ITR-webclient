@@ -114,7 +114,7 @@ ITSPublicSessionEditor.prototype.loadTestAndBatteriesList = function() {
     this.availableTestsAndBatteries.length = 0;
 
     $('#AdminInterfacePublicSessionTestsInputList').empty();
-    newLI = "<option value=\"\">" + ITSInstance.translator.getTranslatedString('PublicSessionEditor','SelectATest','Select a test to add to the session') + "</option>"
+    newLI = "<option value=\"\">" + ITSInstance.translator.getTranslatedString('PublicSessionEditor','SelectATest','Select content to add to the session') + "</option>"
     $('#AdminInterfacePublicSessionTestsInputList').append(newLI);
 
     if (! ITSInstance.users.currentUser.MayWorkWithBatteriesOnly) {

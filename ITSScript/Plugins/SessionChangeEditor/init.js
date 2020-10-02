@@ -102,7 +102,7 @@ ITSChangeExistingSessionEditor.prototype.loadTestAndBatteriesList = function() {
     this.availableTestsAndBatteries.length = 0;
 
     $('#AdminInterfaceChangeSessionTestsInputList').empty();
-    newLI = "<option value=\"\">" + ITSInstance.translator.getTranslatedString('SessionChangeEditor','SelectATest','Select a test to add to the session') + "</option>"
+    newLI = "<option value=\"\">" + ITSInstance.translator.getTranslatedString('SessionChangeEditor','SelectATest','Select content to add to the session') + "</option>"
     $('#AdminInterfaceChangeSessionTestsInputList').append(newLI);
 
     if (! ITSInstance.users.currentUser.MayWorkWithBatteriesOnly) {

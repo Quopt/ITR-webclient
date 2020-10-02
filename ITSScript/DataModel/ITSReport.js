@@ -139,7 +139,7 @@ function ITSReport(par, session) {
     this.Explanation = "";
     this.InvoiceCode = "";
     this.CostsInTicks = 0;
-    this.ReportType = 0; // 0 = test report, 10 = session report (spanning accross multiple tests), 20 = group report, 30 = 360 degrees group report
+    this.ReportType = -1; // 0 = test report, 10 = session report (spanning accross multiple tests), 20 = group report, 30 = 360 degrees group report
     // 1000 = course report
     //  (0-1000 reserved for testing, 1000-2000 reserved for educational)
     this.Remarks = "";

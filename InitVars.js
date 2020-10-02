@@ -51,6 +51,7 @@ function loadOfficeComponents() {
         $.getScript(ITSJavaScriptVersion + "/Plugins/SessionProgressPortlet/init.js"); loadPortletsCount ++;
         $.getScript(ITSJavaScriptVersion + "/Plugins/SessionOverviewPortlet/init.js"); loadPortletsCount ++;
         $.getScript(ITSJavaScriptVersion + "/Plugins/TestCatalogPortlet/init.js"); loadPortletsCount ++;
+        $.getScript(ITSJavaScriptVersion + "/Plugins/CourseCatalogPortlet/init.js"); loadPortletsCount ++;
         $.getScript(ITSJavaScriptVersion + "/Plugins/CreditsUsedPortlet/init.js"); loadPortletsCount ++;
         $.getScript(ITSJavaScriptVersion + "/Plugins/UserPreferencesPortlet/init.js"); loadPortletsCount ++;
         $.getScript(ITSJavaScriptVersion + "/Plugins/UsersLoggedInPortlet/init.js"); loadPortletsCount ++;

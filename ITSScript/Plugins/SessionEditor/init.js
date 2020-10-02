@@ -60,7 +60,7 @@
             "</div>" +
             "</div>";
 
-        this.testCardElementButtonViewReports = "<button type=\"button\"onclick=\"ITSInstance.editSessionController.testReports(%%NR%%);\"class=\"btn-sm btn-success\"><i class=\"fa fa-fw fa-pen-alt aria-hidden='true'\"></i><span id=\"AdminInterfaceEditSessionEditReportTest\">Test reports</span></button>";
+        this.testCardElementButtonViewReports = "<button type=\"button\"onclick=\"ITSInstance.editSessionController.testReports(%%NR%%);\"class=\"btn-sm btn-success\"><i class=\"fa fa-fw fa-pen-alt aria-hidden='true'\"></i><span id=\"AdminInterfaceEditSessionEditReportTest\">Reports</span></button>";
         this.testCardElementID = /%%NR%%/g;
         this.testCardElementTracker = /%%ID%%/g;
         this.testCardElementTitle = /%%TESTTITLE%%/g;
@@ -102,7 +102,7 @@
             "<div class=\"card\">" +
             "<h5 class=\"card-header\">%%TESTTITLE%%</h5>" +
             "<div class=\"card-body col-12 row\">" +
-            "<label id=\"AdminInterfaceEditSessionEditTestCardsTestWaiting\">Test waiting to be started.</label>&nbsp;&nbsp;&nbsp;" +
+            "<label id=\"AdminInterfaceEditSessionEditTestCardsTestWaiting\">Content waiting to be started.</label>&nbsp;&nbsp;&nbsp;" +
             "<div><button type=\"button\" onclick=\"ITSInstance.editSessionController.deleteTest(%%NR%%);\"class=\"btn-sm btn-warning\"><i class=\"fa fa-fw fa-trash aria-hidden='true'\"></i><span id=\"AdminInterfaceEditSessionEditDeleteUnstarted\">Delete test</span></button></div>" +
             "</div>" +
             "</div>" +

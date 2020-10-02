@@ -48,7 +48,7 @@ ITSInviteNewCandidateEditor.prototype.loadTestAndBatteriesList = function() {
     this.availableTestsAndBatteries.length = 0;
 
     $('#AdminInterfaceSessionNewSessionTestsInputList').empty();
-    newLI = "<option value=\"\">" + ITSInstance.translator.getTranslatedString('SessionNewEditor','SelectATest','Select a test to add to the session') + "</option>"
+    newLI = "<option value=\"\">" + ITSInstance.translator.getTranslatedString('SessionNewEditor','SelectATest','Select content to add to the session') + "</option>"
     $('#AdminInterfaceSessionNewSessionTestsInputList').append(newLI);
 
     if (! ITSInstance.users.currentUser.MayWorkWithBatteriesOnly) {
@@ -153,7 +153,7 @@ ITSInviteNewCandidateEditor.prototype.repopulateTestsLists =  function (animate)
     if (tempSessionTestList.length == 0) {
 
         var newTR0 = $('<tr><td id="AdminInterfaceSessionNewSessionTestsSelectionC1">'+
-            ITSInstance.translator.getTranslatedString( 'SessionNewEditor', 'NoTestsYet', 'No tests added yet')+
+            ITSInstance.translator.getTranslatedString( 'SessionNewEditor', 'NoTestsYet', 'Nothing added yet')+
             '</td><td></td><td></td><td></td><td></td><td></td></tr>');
         $('#AdminInterfaceSessionNewSessionTestsSelectionBody').append(newTR0);
     }

@@ -35,7 +35,7 @@ ITSCandidateSession = function (session, ITSSession) {
     this.regenerateCandidate();
 
     this.SessionType = 0; // 0 = PersonSession. 1=Public (might be temporary) session. 4 = Group session. 200 = public base session.
-    // 1000 = Course session (group session), 1001 teaching session for specific course part
+    // 1000 = Course session (group session), 1001 teaching session for specific course part, 1002 = individual course session
     // (0-1000 reserved for testing, 1000-2000 reserved for educational)
     this.Description = "";
     this.Goal = "";
@@ -473,6 +473,7 @@ ITSCandidateSession.prototype.saveGroupSessionToServerCreateNew = function (Grou
     newSession.EmailNotificationIncludeResults = this.EmailNotificationIncludeResults;
     newSession.EMailNotificationAdresses = this.EMailNotificationAdresses;
     newSession.PersonID = newSession.Person.ID;
+    if (this.SessionType == 1000) { newSession.SessionType = 1002; }
     for (var st=0; st < this.SessionTests.length; st++) {
         var tempTestSession = new ITSCandidateSessionTest(this, this.ITSSession);
         tempTestSession.OldID = tempTestSession.ID;
@@ -506,7 +507,7 @@ ITSCandidateSession.prototype.saveGroupSessionsToServerStageCompare = function (
             // update
             // first load the session so we can validate it
 
-            this.saveGroupSessionsToServerStageCompareLoad(this.currentGroupMembers[sessionIndex].sessionid,  i);
+            this.saveGroupSessionsToServerStageCompareLoad(this.currentGroupMembers[sessionIndex].sessionid, i);
         } else {
             // create
             this.saveGroupSessionToServerCreateNew(i);
@@ -647,7 +648,7 @@ ITSCandidateSession.prototype.sessionLoaded = function () {
         this.SessionTests[i].loadDetails(this.testLoadedFine.bind(this,i), this.sessionLoadingFailed.bind(this), this.InTestTaking);
     }
     // load the candidate information
-    if (this.SessionType != 100) {
+    if ((this.SessionType != 100) && (this.SessionType != 1000)) {
         this.personRequired = true;
         ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, this.testLoadedFine.bind(this), this.sessionLoadingFailed.bind(this));
     }

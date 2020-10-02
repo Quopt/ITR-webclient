@@ -28,7 +28,7 @@
         ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
             ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', '#GroupSessionListerController.GroupSessionMenu', ITSInstance.translator.translate("#GroupSessionListerController.GroupSessionReadyMenu", "Group sessions"), "fa-user-plus", "ITSRedirectPath(\'GroupSessionLister&SessionType=100\');");
             ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#GroupSessionListerController.GroupSessionArchivedMenu", ITSInstance.translator.translate("#GroupSessionListerController.GroupSessionArchivedMenu", "Group sessions archive"), "fa-archive", "ITSRedirectPath(\'GroupSessionLister&SessionType=100&Status=Archived\');");
-            ITSInstance.UIController.registerMenuItem('#submenuCoursesLI', '#GroupSessionListerController.CourseMenu', ITSInstance.translator.translate("#GroupSessionListerController.CourseMenu", "Active courses"), "fa-user-plus", "ITSRedirectPath(\'GroupSessionLister&SessionType=1000\');");
+            ITSInstance.UIController.registerMenuItem('#submenuCoursesLI', '#GroupSessionListerController.CourseMenu', ITSInstance.translator.translate("#GroupSessionListerController.CourseMenu", "Active course group sessions"), "fa-user-plus", "ITSRedirectPath(\'GroupSessionLister&SessionType=1000\');");
             ITSInstance.UIController.registerMenuItem('#submenuCoursesLI', "#GroupSessionListerController.CourseArchivedMenu", ITSInstance.translator.translate("#GroupSessionListerController.CourseArchivedMenu", "Courses archive"), "fa-archive", "ITSRedirectPath(\'GroupSessionLister&SessionType=1000&Status=Archived\');");
         }, true);
 
@@ -132,9 +132,7 @@
                 this.archived = "N"; // N No Y Yes
                 this.status = -1; // no status selection
 
-                if (getUrlParameterValue('SessionType')) {
-                    this.sessionType = getUrlParameterValue('SessionType');
-                }
+                this.sessionType = getUrlParameterValue('SessionType');
                 if (getUrlParameterValue('GroupID')) {
                     this.groupID = getUrlParameterValue('GroupID');
                 }
@@ -183,16 +181,17 @@
         this.filter = this.filter == "" ? "SessionType=" + this.sessionType : this.filter + ",SessionType=" + this.sessionType
         if ( this.personID.trim() != "") this.filter = this.filter == "" ? "PersonID=" + this.personID : this.filter + ",PersonID=" + this.personID;
         if ( this.groupID.trim() != "") this.filter = this.filter == "" ? "GroupID=" + this.groupID : this.filter + ",GroupID=" + this.groupID;
-        if ( this.consultantID.trim() != "") this.filter = this.filter == "" ? "ManagedByUserID=" + this.consultantID : this.filter + ",ManagedByUserID=" + this.consultantID
+        if ( this.consultantID.trim() != "") this.filter = this.filter == "" ? "ManagedByUserID=" + this.consultantID : this.filter + ",ManagedByUserID=" + this.consultantID;
+
         if (fireRequest) {
             this.fireRequest();
         }
     };
 
     ITSGroupSessionListerEditor.prototype.fireRequest = function () {
-        // ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, DefaultObjectType, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter) {
         this.sessionsList = {};
         ITSInstance.UIController.showInterfaceAsWaitingOn();
+
         ITSInstance.JSONAjaxLoader('groupsessionsview' , this.sessionsList, this.listLoaded.bind(this), this.listLoadingFailed.bind(this), 'ITSObject', this.currentPage, 25,
             this.sortField, this.archived, "N", "Y", this.filter, this.searchField);
     };
@@ -293,8 +292,8 @@
 
     ITSGroupSessionListerEditor.prototype.viewSession = function (sessionID) {
         this.alreadyLoaded = document.URL;
-        var SessionType = getUrlParameterValue("SessionType");
-        if (SessionType == "200") {
+        var SessionType = parseInt(getUrlParameterValue("SessionType"));
+        if ((SessionType == "200") || (SessionType == "1200")) {
             ITSRedirectPath("PublicSession&SessionID=" + sessionID + "&SessionType=" + getUrlParameterValue("SessionType"));
         } else {
             ITSRedirectPath("GroupSession&SessionID=" + sessionID + "&SessionType=" + getUrlParameterValue("SessionType"));
@@ -304,13 +303,21 @@
 
     ITSGroupSessionListerEditor.prototype.addNewGroupSession = function () {
         var SessionType = getUrlParameterValue("SessionType");
-        if (SessionType == "200") {
-            ITSRedirectPath("PublicSession" );
+        if ((SessionType == "200") || (SessionType == "1200")) {
+            ITSRedirectPath("PublicSession&SessionType=" + getUrlParameterValue("SessionType") );
         } else {
-            ITSRedirectPath("GroupSession" );
+            ITSRedirectPath("GroupSession&SessionType=" + getUrlParameterValue("SessionType") );
         }
     };
 
-
+    ITSGroupSessionListerEditor.prototype.showSessionsList = function (groupSessionID) {
+        var SessionType = getUrlParameterValue("SessionType");
+        SessionType == "1000" ? SessionType = 1002 : SessionType = 0;
+        if ((SessionType == "200") || (SessionType == "1200")) {
+            ITSRedirectPath("SessionLister&SessionType=" + SessionType + "&GroupSessionID=" + groupSessionID);
+        } else {
+            ITSRedirectPath("SessionLister&SessionType=" + SessionType + "&GroupSessionID=" + groupSessionID);
+        }
+    };
 
 })()// IIFE

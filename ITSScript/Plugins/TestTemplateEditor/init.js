@@ -296,6 +296,14 @@ ITSTestTemplateEditor.prototype.show = function () {
     this.showTab('AdminInterfaceTestTemplateEditor_TabTestInformation', 'AdminInterfaceTestTemplateEditorTabTestInformation');
     ITSInstance.UIController.initNavBar();
 
+    $('#AdminInterfaceCourseTemplateEditorHeaderH4').hide();
+    $('#AdminInterfaceTestTemplateEditorHeaderH4').hide();
+    if (parseInt(getUrlParameterValue("TestType")) >= 1000) {
+        $('#AdminInterfaceCourseTemplateEditorHeaderH4').show();
+    } else {
+        $('#AdminInterfaceTestTemplateEditorHeaderH4').show();
+    }
+
     // load the available tests for this company. details of the test are loaded when the template is selected by the user
     if (!ITSInstance.tests.testListLoaded) {
         if (!ITSInstance.tests.currentlyLoading) {
@@ -355,7 +363,7 @@ ITSTestTemplateEditor.prototype.addNewTestDefinition = function () {
     this.currentTest.scales = [];
     this.currentTest.scales.push(newScale);
     this.currentTestIndex = ITSInstance.tests.testList.length - 1;
-    this.TestType = parseInt(getUrlParameterValue("TestType"));
+    this.currentTest.TestType = parseInt(getUrlParameterValue("TestType"));
     this.switchToTestEditView();
 };
 
@@ -1612,6 +1620,19 @@ ITSTestTemplateEditor.prototype.processTestCapabilities = function () {
     $('#AdminInterfaceTestTemplateEditorTestExplanationDiv').hide();
     $('#AdminInterfaceTestTemplateEditorTabScreensColScreenItemSettings').addClass('col-6');
     $('#AdminInterfaceTestTemplateEditorTabScreensColScreenItemSettings').removeClass('col-4');
+
+    if ((this.currentTest.TestType >= 1000) && (this.currentTest.TestType < 2000)) {
+        $('#AdminInterfaceTestTemplateEditorTestCapabilitiesDiv').hide();
+        this.currentTest.PluginData.testHasScoring = false;
+        this.currentTest.PluginData.testHasNorms = false;
+        this.currentTest.PluginData.testHasCatalog = false;
+        this.currentTest.PluginData.testHasMedia = true;
+        this.currentTest.PluginData.testHasMultipleScreens = true;
+        this.currentTest.PluginData.testHasScreenDynamics = false;
+
+    } else {
+        $('#AdminInterfaceTestTemplateEditorTestCapabilitiesDiv').show();
+    }
 
     if (this.currentTest.PluginData) {
         if (this.currentTest.PluginData.testHasScoring) {

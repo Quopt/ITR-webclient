@@ -20,7 +20,7 @@ ITSBattery = function (parent, ITSSession) {
     this.ID = newGuid();
     this.BatteryName = "";
 
-    this.BatteryType = 10; // 10 = test battery, 1000 = course composer (0-1000 reserved for testing, 1000-2000 reserved for educational)
+    this.BatteryType = -1; // 10 = test battery, 1000 = course composer (0-1000 reserved for testing, 1000-2000 reserved for educational)
     this.InvoiceCode = "";
     this.ReportMailAdress = "";
     this.BatteryCosts = 0;

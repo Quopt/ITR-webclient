@@ -24,7 +24,7 @@
     });
 
     var ITSTestTemplateLocalPublisherEditor = function () {
-        this.info = new ITSPortletAndEditorRegistrationInformation('646efa03-99d7-4135-bd4c-7aeda977215b', 'TestTemplateLocalPublisher editor', '1.0', 'Copyright 2018 Quopt IT Services BV', 'Publish tests for usage of all organisations on the server.');
+        this.info = new ITSPortletAndEditorRegistrationInformation('646efa03-99d7-4135-bd4c-7aeda977215b', 'TestTemplateLocalPublisher editor', '1.0', 'Copyright 2018 Quopt IT Services BV', 'Publish content for usage of all organisations on the server.');
         this.path = "TestTemplateLocalPublisher";
 
         this.tablePart1 = "  <table notranslate class=\"table col-12 table-responsive w-100 d-block d-md-table\">" +
@@ -35,7 +35,7 @@
             " <i class=\"fa fa-search\"></i></button></th></tr>" +
             "  <tr>" +
             "   <th scope=\"col\">#</th>" +
-            "   <th id=\"ITSTestTemplateLocalPublisherEditor_DescriptionLogin\" scope=\"col\">Test name</th>" +
+            "   <th id=\"ITSTestTemplateLocalPublisherEditor_DescriptionLogin\" scope=\"col\">Content name</th>" +
             "   <th id=\"ITSTestTemplateLocalPublisherEditor_DescriptionName\" scope=\"col\">Description</th>" +
             "   <th scope=\"col\"><span id=\"ITSTestTemplateLocalPublisherEditor_Publish\">Publish</span></th>" +
             "   <th scope=\"col\"><span id=\"ITSTestTemplateLocalPublisherEditor_Revoke\">Revoke</span></th>" +
@@ -122,10 +122,14 @@
             this.generatedTable = this.tablePart1;
         }
 
+        var testType = parseInt(getUrlParameterValue("TestType"));
+        var rowCounter=1;
         // generate the records for the returned data
         for (var i=0; i < this.testsList.length; i++) {
+            if (this.testsList[i].TestType != testType) continue; // next if type does not match
+
             var rowText = this.tablePart2;
-            rowText = rowText.replace(this.mNR, i + this.currentPage * 25 + 1);
+            rowText = rowText.replace(this.mNR, rowCounter++);
             rowText = rowText.replace(this.mID, this.testsList[i].id);
             rowText = rowText.replace(this.mDescription, this.testsList[i].testNameWithDBIndicator());
             rowText = rowText.replace(this.mExplanation, this.testsList[i].Description);
@@ -240,7 +244,7 @@
 
     ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
         if ( (ITSInstance.users.currentUser.IsTestAuthor) && (ITSInstance.users.currentUser.IsMasterUser) ) {
-            ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#TestTemplateLocalPublisherController.LocalPublisherMenu", ITSInstance.translator.translate("#TestTemplateLocalPublisherController.LocalPublisherMenu", "Publish test templates"), "fa-door-open", "ITSRedirectPath(\'TestTemplateLocalPublisher\');");
+            ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#TestTemplateLocalPublisherController.LocalPublisherMenu", ITSInstance.translator.translate("#TestTemplateLocalPublisherController.LocalPublisherMenu", "Publish test templates"), "fa-door-open", "ITSRedirectPath(\'TestTemplateLocalPublisher&TestType=0\');");
             ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#TestTemplateLocalPublisherController.LocalCoursePublisherMenu", ITSInstance.translator.translate("#TestTemplateLocalPublisherController.LocalCoursePublisherMenu", "Publish course (part) templates"), "fa-door-open", "ITSRedirectPath(\'TestTemplateLocalPublisher&TestType=1000\');");
         }
     }, true);

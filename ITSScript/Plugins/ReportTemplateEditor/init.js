@@ -160,6 +160,7 @@
             this.candidateSession = new ITSCandidateSession(this, ITSInstance);
             this.candidateSessionTest = new ITSCandidateSessionTest(this, ITSInstance);
             this.candidateSessionTest.TestID = this.TestID ;
+            if (this.currentReport.ReportType == -1) this.currentReport.ReportType = parseInt(getUrlParameterValue("ReportType"));
 
             this.candidateSessionTest.loadTest( function () {
                     ITSInstance.reports.currentReport.generateTestReport(this.candidateSession, this.candidateSessionTest, true);
@@ -181,7 +182,10 @@
             $('#ReportTemplateInterfaceEditSelectTestList').empty();
             var tmpPath = "";
             var tmpDiv = "";
+            var TestType = parseInt(getUrlParameterValue("TestType"));
             for (var i = 0; i < ITSInstance.tests.testList.length; i++) {
+                if (ITSInstance.tests.testList[i].TestType != TestType) continue;
+
                 tmpPath = "ITSRedirectPath(\"ReportTemplateEditor&ReportType=" + this.ReportType + "&TestID=" + ITSInstance.tests.testList[i].ID + "\");";
                 tmpDiv = "<li value='" + i + "' onclick='" + tmpPath + "' > <i class='fa fa-fw fa-book-reader'></i>&nbsp;&nbsp;" + ITSInstance.tests.testList[i].descriptionWithDBIndicator() + "</li>";
                 $('#ReportTemplateInterfaceEditSelectTestList').append(tmpDiv);
@@ -196,9 +200,10 @@
             var tmpDiv = "";
             var testIndex = ITSInstance.tests.findTestById(ITSInstance.tests.testList, this.TestID);
             if (testIndex > -1) $('#ReportTemplateInterfaceEditSelectReportHeader2Test')[0].innerHTML = ITSInstance.tests.testList[testIndex].TestName;
+            var reportType = parseInt(getUrlParameterValue("ReportType"));
             for (var i = 0; i < ITSInstance.reports.reportsList.length; i++) {
                 if (ITSInstance.reports.reportsList[i].TestID == this.TestID) {
-                    if (ITSInstance.reports.reportsList[i].dbsource == 0) {
+                    if ((ITSInstance.reports.reportsList[i].dbsource == 0) && (ITSInstance.reports.reportsList[i].ReportType == reportType)) {
                         tmpPath = "ITSRedirectPath(\"ReportTemplateEditor&ReportType=" + this.ReportType + "&TestID=" + this.TestID + "&ReportID=" + ITSInstance.reports.reportsList[i].ID + "\");";
                         tmpDiv = "<li value='" + i + "' onclick='" + tmpPath + "' > <i class='fa fa-fw fa-newspaper'></i>&nbsp;&nbsp;" + ITSInstance.reports.reportsList[i].getReportDescriptionWithDBIndicator() + "</li>";
                         if (!ITSInstance.reports.reportsList[i].isCentrallyManaged()) $('#ReportTemplateInterfaceEditSelectReportList').append(tmpDiv);
@@ -579,8 +584,8 @@
         // register the menu items
         ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
             if (ITSInstance.users.currentUser.IsReportAuthor) {
-                ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#ReportTemplateInterfaceSessionEdit.EditMenu", ITSInstance.translator.translate("#ReportTemplateInterfaceSessionEdit.EditMenu", "Edit report definitions"), "fa-newspaper", "ITSRedirectPath(\'ReportTemplateEditor&ReportType=0\');");
-                ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#ReportTemplateInterfaceSessionEdit.EditCourseReportMenu", ITSInstance.translator.translate("#ReportTemplateInterfaceSessionEdit.EditCourseReportMenu", "Edit report definitions"), "fa-newspaper", "ITSRedirectPath(\'ReportTemplateEditor&ReportType=1000\');");
+                ITSInstance.UIController.registerMenuItem('#submenuTestsAndReportsLI', "#ReportTemplateInterfaceSessionEdit.EditMenu", ITSInstance.translator.translate("#ReportTemplateInterfaceSessionEdit.EditMenu", "Edit report definitions"), "fa-newspaper", "ITSRedirectPath(\'ReportTemplateEditor&TestType=0&ReportType=0\');");
+                ITSInstance.UIController.registerMenuItem('#submenuCourseBuilderLI', "#ReportTemplateInterfaceSessionEdit.EditCourseReportMenu", ITSInstance.translator.translate("#ReportTemplateInterfaceSessionEdit.EditCourseReportMenu", "Edit report definitions"), "fa-newspaper", "ITSRedirectPath(\'ReportTemplateEditor&TestType=1000&ReportType=1000\');");
             }
         }, true);
     }

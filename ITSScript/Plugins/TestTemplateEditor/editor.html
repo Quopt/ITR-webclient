@@ -16,10 +16,11 @@
 <div NoTranslate id="AdminInterfaceTestTemplateEditorHeader" class="row col-12">
     <i class="fa fa-2x fa-arrow-circle-left" onclick="window.history.back();"></i>&nbsp;
     <h4 id="AdminInterfaceTestTemplateEditorHeaderH4">Edit and create test definitions</h4>
+    <h4 id="AdminInterfaceCourseTemplateEditorHeaderH4">Edit and create course definitions</h4>
 </div>
 
 <div id="AdminInterfaceTestTemplateEditorSelect">
-    <div><h1 id="AdminInterfaceTestTemplateEditorSelectHeader">Select a test definition or add a new one</h1></div>
+    <div><h1 id="AdminInterfaceTestTemplateEditorSelectHeader">Select a definition or add a new one</h1></div>
     <div>
         <ul id="AdminInterfaceTestTemplateEditorSelectSelectList" class="list-unstyled">
             <li id="AdminInterfaceTestTemplateEditorSelectListLoading"> list is loading ...</li>
@@ -28,7 +29,7 @@
     <div>
         <button type="button" class="btn-sm btn-success" id="AdminInterfaceTestTemplateEditorAddNewTest"
                 onclick="ITSInstance.newITSTestEditorController.addNewTestDefinition(); ">
-            <i class="fa fa-sm fa-plus aria-hidden='true'"></i> Add new test definition
+            <i class="fa fa-sm fa-plus aria-hidden='true'"></i> Add new definition
         </button>&nbsp;
     </div>
 </div>
@@ -38,9 +39,9 @@
     <div class="row col-12">
         <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true"
            onclick="ITSInstance.newITSTestEditorController.processBackClick();"></i>&nbsp;
-        <h4 id="AdminInterfaceTestTemplateEditorSelectHeaderEdit">Edit test definition</h4>
+        <h4 id="AdminInterfaceTestTemplateEditorSelectHeaderEdit">Edit definition</h4>
     </div>
-    <div class="bg-dark text-white well"><label id="AdminInterfaceTestTemplateEditorSelectHeaderEditRow">Test definition
+    <div class="bg-dark text-white well"><label id="AdminInterfaceTestTemplateEditorSelectHeaderEditRow">Definition
         section</label>
     </div>
 
@@ -49,7 +50,7 @@
             <li id="AdminInterfaceTestTemplateEditor_TabTestInformation_li" notranslate class="nav-item">
                 <a class="nav-link active"
                    onclick="ITSInstance.newITSTestEditorController.showTab('AdminInterfaceTestTemplateEditor_TabTestInformation','AdminInterfaceTestTemplateEditorTabTestInformation');">
-                    <label id="AdminInterfaceTestTemplateEditor_TabTestInformation">Test information</label>
+                    <label id="AdminInterfaceTestTemplateEditor_TabTestInformation">General information</label>
                 </a>
             </li>
             <li id="AdminInterfaceTestTemplateEditor_TabScreens_li" notranslate class="nav-item">
@@ -89,7 +90,7 @@
         <div class="form-group row col-12"></div>
         <div class="form-group row col-12">
             <label class="col-sm-4 col-form-label" for="AdminInterfaceTestTemplateEditorTestActive"
-                   id="AdminInterfaceTestTemplateEditorTestActiveLabel">Test can be
+                   id="AdminInterfaceTestTemplateEditorTestActiveLabel">Content can be
                 used</label>
             <div class="col-sm-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" class="form-check-input"  data-field="currentTest.Active" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );"
                                                                        id="AdminInterfaceTestTemplateEditorTestActive"/>
@@ -97,7 +98,7 @@
         </div>
         <div class="form-group row col-12">
             <label class="col-sm-4 col-form-label" for="AdminInterfaceTestTemplateEditorTestName"
-                   id="AdminInterfaceTestTemplateEditorTestNameLabel">Test name</label>
+                   id="AdminInterfaceTestTemplateEditorTestNameLabel">Name</label>
             <div class="col-sm-8"><input type="text" class="form-control" maxlength="50" required="true"
                                          id="AdminInterfaceTestTemplateEditorTestName" data-field="currentTest.TestName" onkeyup="this.value = this.value.replace(/\W/g, ''); DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );"/></div>
         </div>
@@ -109,39 +110,39 @@
         </div>
         <div class="form-group row col-12">
             <label class="col-sm-4 col-form-label" for="AdminInterfaceTestTemplateEditor-LanguageSelect"
-                   id="AdminInterfaceTestTemplateEditor-LanguageSelectLabel">Test language</label>
+                   id="AdminInterfaceTestTemplateEditor-LanguageSelectLabel">Language</label>
             <div class="col-sm-8"><select notranslate class="form-control form-control-sm"
                                                   id="AdminInterfaceTestTemplateEditor-LanguageSelect" onchange="ITSInstance.newITSTestEditorController.selectLanguageInEditor(this.selectedIndex);">
             </select>
             </div>
         </div>
-        <div class="form-group row col-12">
-            <label class="col-sm-4 form-check-label" id="AdminInterfaceTestTemplateEditorTestCapabilities">Test capabilities</label>
+        <div class="form-group row col-12" id="AdminInterfaceTestTemplateEditorTestCapabilitiesDiv">
+            <label class="col-sm-4 form-check-label" id="AdminInterfaceTestTemplateEditorTestCapabilities">Content capabilities</label>
             <div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasScoring" id="AdminInterfaceTestTemplateEditorTestCapHasScoringLabel">Test has scoring</label>
+                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasScoring" id="AdminInterfaceTestTemplateEditorTestCapHasScoringLabel">Content has scoring rules</label>
                 <input  id="AdminInterfaceTestTemplateEditorTestCapHasScoring" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.PluginData.testHasScoring" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController ); ITSInstance.newITSTestEditorController.processTestCapabilities();"/>
             </div><div class="col-sm-4 form-check">&nbsp</div><div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasNorms" id="AdminInterfaceTestTemplateEditorTestCapHasNormsLabel">Test has norms</label>
+                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasNorms" id="AdminInterfaceTestTemplateEditorTestCapHasNormsLabel">Content has norms</label>
                 <input  id="AdminInterfaceTestTemplateEditorTestCapHasNorms" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.PluginData.testHasNorms" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController ); ITSInstance.newITSTestEditorController.processTestCapabilities();"/>
             </div><div class="col-sm-4 form-check">&nbsp</div><div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasCatalog" id="AdminInterfaceTestTemplateEditorTestCapHasCatalogLabel">Test has catalog information</label>
+                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasCatalog" id="AdminInterfaceTestTemplateEditorTestCapHasCatalogLabel">Content has catalog information</label>
                 <input  id="AdminInterfaceTestTemplateEditorTestCapHasCatalog" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.PluginData.testHasCatalog" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController ); ITSInstance.newITSTestEditorController.processTestCapabilities();"/>
             </div><div class="col-sm-4 form-check">&nbsp</div><div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasAdditionalFiles" id="AdminInterfaceTestTemplateEditorTestCapHasAdditionalFilesLabel">Test uses additional files like images</label>
+                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasAdditionalFiles" id="AdminInterfaceTestTemplateEditorTestCapHasAdditionalFilesLabel">Content uses additional files like images</label>
                 <input  id="AdminInterfaceTestTemplateEditorTestCapHasAdditionalFiles" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.PluginData.testHasMedia" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController ); ITSInstance.newITSTestEditorController.processTestCapabilities();"/>
             </div><div class="col-sm-4 form-check">&nbsp</div><div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasMultipleScreens" id="AdminInterfaceTestTemplateEditorTestCapHasMultipleScreensLabel">Test has multiple screens</label>
+                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasMultipleScreens" id="AdminInterfaceTestTemplateEditorTestCapHasMultipleScreensLabel">Content has multiple screens</label>
                 <input  id="AdminInterfaceTestTemplateEditorTestCapHasMultipleScreens" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.PluginData.testHasMultipleScreens" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController ); ITSInstance.newITSTestEditorController.processTestCapabilities();"/>
             </div><div class="col-sm-4 form-check">&nbsp</div><div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasScreenDynamics" id="AdminInterfaceTestTemplateEditorTestCapHasScreenDynamicsLabel">Test has screen dynamics</label>
+                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapHasScreenDynamics" id="AdminInterfaceTestTemplateEditorTestCapHasScreenDynamicsLabel">Content has screen dynamics</label>
                 <input  id="AdminInterfaceTestTemplateEditorTestCapHasScreenDynamics" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.PluginData.testHasScreenDynamics" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController ); ITSInstance.newITSTestEditorController.processTestCapabilities();"/>
             </div><div class="col-sm-4 form-check">&nbsp</div>
             <div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapProtectTest" id="AdminInterfaceTestTemplateEditorTestCapProtectTestScreenLabel">Remove the test scoring & norms during test taking</label>
+                <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapProtectTest" id="AdminInterfaceTestTemplateEditorTestCapProtectTestScreenLabel">Remove the scoring & norms during test taking</label>
                 <input  id="AdminInterfaceTestTemplateEditorTestCapProtectTest" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.TestDefinitionIsProtected" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );"/>
             </div><div class="col-sm-4 form-check">&nbsp</div>
             <div class="col-sm-8 form-check">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapShowTestClosureScreen" id="AdminInterfaceTestTemplateEditorTestCapShowTestClosureScreenLabel">Show the test closure screen after the test</label>
+            <label class="col-sm-6 form-check-label" for="AdminInterfaceTestTemplateEditorTestCapShowTestClosureScreen" id="AdminInterfaceTestTemplateEditorTestCapShowTestClosureScreenLabel">Show the closure screen after the test</label>
             <input  id="AdminInterfaceTestTemplateEditorTestCapShowTestClosureScreen" type="checkbox" class="form-check-input col-sm-1"  data-field="currentTest.ShowTestClosureScreen" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );"/>
             </div>
         </div>
@@ -154,7 +155,7 @@
 
         <div id="AdminInterfaceTestTemplateEditorTestCostsDiv" class="form-group row col-12">
             <label class="col-sm-4 col-form-label" id="AdminInterfaceTestTemplateEditorTestCostsLabel"
-                                     for="AdminInterfaceTestTemplateEditorTestCosts">Test costs (in credit units)</label>
+                                     for="AdminInterfaceTestTemplateEditorTestCosts">Content costs (in credit units)</label>
             <div class="col-sm-8"><input type="number" class="form-control" id="AdminInterfaceTestTemplateEditorTestCosts" data-field="currentTest.Costs" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabTestInformation', ITSInstance.newITSTestEditorController );" min="0" step="1" max="9999" placeholder="">
             </div>
             <label class="col-sm-4 col-form-label" id="AdminInterfaceTestTemplateEditorTestCodeLabel"
@@ -316,7 +317,7 @@
                     <div class="row">
                         <label class="col-4 col-form-label col-form-label-sm"
                                id="AdminInterfaceTestTemplateEditorScaleActiveHeader"
-                               for="AdminInterfaceTestTemplateEditorScaleActiveCheck">Show scale as test result</label>
+                               for="AdminInterfaceTestTemplateEditorScaleActiveCheck">Show scale as result</label>
                         <div class="col-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" data-field="currentScale.showScale" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"
                                                                                 class="form-check-input form-check-input-sm"
                                                                                 id="AdminInterfaceTestTemplateEditorScaleActiveCheck"/>
@@ -649,16 +650,15 @@
     <br/>
     <button id="AdminInterfaceTestTemplateEditorActionButtonSave" type="button" class="btn btn-success"
             onclick="ITSInstance.newITSTestEditorController.saveCurrentTest();"><i
-            id="AdminInterfaceTestTemplateEditor-saveIcon" class="fa fa-fw fa-thumbs-up"></i> Save test definition
+            id="AdminInterfaceTestTemplateEditor-saveIcon" class="fa fa-fw fa-thumbs-up"></i> Save this template
     </button>&nbsp;
     <button id="AdminInterfaceTestTemplateEditorActionButtonCopy" type="button" class="btn btn-success"
             onclick="ITSInstance.newITSTestEditorController.copyCurrentTest();"><i class="fa fa-fw fa-copy"></i>
-        Copy
-        this test
+        Copy this template
     </button>&nbsp;
     <button id="AdminInterfaceTestTemplateEditorActionButtonDelete" type="button" class="btn btn-warning"
             onclick="ITSInstance.newITSTestEditorController.deleteCurrentTestWarning();"><i
-            class="fa fa-fw fa-trash"></i> Delete this test definition
+            class="fa fa-fw fa-trash"></i> Delete this template
     </button>&nbsp;
     <button id="AdminInterfaceTestTemplateEditorActionButtonTrial" type="button" style="visibility: hidden;" class="btn btn-success"
             onclick="ITSInstance.newITSTestEditorController.trialRunTest(false);"><i class="fa fa-fw fa-flask"></i>
@@ -672,7 +672,6 @@
     <button id="AdminInterfaceScreenTemplate-downloadButton" type="button" class="btn btn-success" onclick="ITSInstance.newITSTestEditorController.downloadCurrentTemplate();"><i class="fa fa-fw fa-download"></i> Download template definition</button>&nbsp;
     <button id="AdminInterfaceScreenTemplate-uploadButton" type="button" class="btn btn-success" onclick="if ('FileReader' in window) { document.getElementById('AdminInterfaceTestTemplate-files').click(); } else { alert('Your browser does not support this function. Please upgrade your browser.'); }"><i class="fa fa-fw fa-upload"></i> Upload template definition</button>&nbsp;
     <input type="file" onchange="ITSInstance.newITSTestEditorController.uploadCurrentTemplate(event.target.files[0]);" style="visibility: hidden" id="AdminInterfaceTestTemplate-files" accept=".itrtesttemplate"/>
-
 </div>
 
 <div class="modal fade" id="AdminInterfaceTestTemplateEditorTranslate" tabindex="-1" role="dialog" aria-labelledby="AdminInterfaceTestTemplateEditorTranslateLabel" aria-hidden="true">

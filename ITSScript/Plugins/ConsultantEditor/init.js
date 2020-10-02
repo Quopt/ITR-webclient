@@ -182,7 +182,7 @@
         $('#ConsultantEditorInterfaceExternalAPIKey').val(this.currentConsultant.APIKey);
     };
     ITSConsultantEditor.prototype.showSessions = function () {
-        ITSRedirectPath("SessionLister&SessionType=0&Status=All&ConsultantID=" + this.currentConsultant.ID);
+        ITSRedirectPath("SessionLister&SessionType=0,1001,1002&Status=All&ConsultantID=" + this.currentConsultant.ID);
     };
     ITSConsultantEditor.prototype.deleteCurrentConsultantWarning = function () {
         ITSInstance.UIController.showDialog("ITSConsultantEditor.Delete","Delete consultant", "Are you sure you want to delete this consultant? Sessions created by this consultant will NOT be deleted.",

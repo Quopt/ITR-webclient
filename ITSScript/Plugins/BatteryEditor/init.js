@@ -56,6 +56,7 @@ ITSBatteryEditorController.prototype.batteryLoadingSucceeded = function () {
     DataBinderTo("BatteryEditor", this.currentBattery);
     this.repopulateTestsLists(true);
     this.loadTestAndBatteriesList();
+    if (this.currentBattery.BatteryType == -1) this.currentBattery.BatteryType = parseInt(getUrlParameterValue("BatteryType"));
 };
 
 ITSBatteryEditorController.prototype.batteryLoadingFailed = function () {
@@ -78,12 +79,14 @@ ITSBatteryEditorController.prototype.loadTestAndBatteriesList = function() {
     this.availableTestsAndBatteries.length = 0;
 
     $('#BatteryEditorTestsInputList').empty();
-    newLI = "<option value=\"\">" + ITSInstance.translator.getTranslatedString('BatteryChangeEditor','SelectATest','Select a test to add to the battery') + "</option>"
+    newLI = "<option value=\"\">" + ITSInstance.translator.getTranslatedString('BatteryChangeEditor','SelectATest','Select content to add to the battery') + "</option>"
     $('#BatteryEditorTestsInputList').append(newLI);
 
+    var TestType = parseInt(getUrlParameterValue("TestType"));
+    var BatteryType = parseInt(getUrlParameterValue("BatteryType"));
     ITSInstance.tests.testList.forEach(function callback(currentValue, index, array) {
         var includeTest = false;
-        includeTest = currentValue.Active == true;
+        includeTest = (currentValue.Active == true) && (currentValue.TestType == TestType) ;
         if (!$('#BatteryEditorTestsIncludeOtherLanguages').is(':checked')) {
             includeTest = includeTest && (currentValue.supportsLanguage(ITSLanguage));
         }
@@ -97,7 +100,7 @@ ITSBatteryEditorController.prototype.loadTestAndBatteriesList = function() {
         }
     }, this);
     ITSInstance.batteries.batteryList.forEach(function callback(currentValue, index, array) {
-        if (currentValue.Active) {
+        if ((currentValue.Active) && (currentValue.BatteryType == BatteryType)) {
             this.availableTestsAndBatteries.push({
                 "TestID": currentValue.ID,
                 "Description": ITSInstance.translator.getTranslatedString('BatteryChangeEditor','BatteryText',"Battery : ") + currentValue.BatteryName
@@ -157,6 +160,7 @@ ITSBatteryEditorController.prototype.createNewBattery= function (EmailAddress) {
     ITSLogger.logMessage(logLevel.INFO,"Change test battery requested " + EmailAddress);
     // create a new and empty battery
     this.currentBattery = ITSInstance.batteries.newBattery();
+    if (this.currentBattery.BatteryType == -1) this.currentBattery.BatteryType = parseInt(getUrlParameterValue("BatteryType"));
 
     // bind it to the div elements BatteryEditor
     DataBinderTo("BatteryEditor", this.currentBattery);
@@ -172,17 +176,20 @@ ITSBatteryEditorController.prototype.repopulateTestsLists =  function (animate) 
     if (tempBatteryTestList.length == 0) {
 
         var newTR0 = $('<tr><td id="BatteryEditorTestsSelectionC1">'+
-            ITSInstance.translator.getTranslatedString( 'BatteryChangeEditor', 'NoTestsYet', 'No tests added yet')+
+            ITSInstance.translator.getTranslatedString( 'BatteryChangeEditor', 'NoTestsYet', 'Nothing added yet')+
             '</td><td></td><td></td><td></td><td></td><td></td></tr>');
         $('#BatteryEditorTestsSelectionBody').append(newTR0);
     }
+
+    var maxNormCount = 0;
+
     for (var i = 0; i < tempBatteryTestList.length; i++) {
         var newTR = $('<TR>');
         var newTD1 = $('<TD id="BatteryEditorTestsSelectionCA' + i + '">');
         var newTD2 = $('<TD id="BatteryEditorTestsSelectionCB' + i + '">');
-        var newTD3 = $('<TD id="BatteryEditorTestsSelectionCC' + i + '">');
-        var newTD4 = $('<TD id="BatteryEditorTestsSelectionCD' + i + '">');
-        var newTD5 = $('<TD id="BatteryEditorTestsSelectionCE' + i + '">');
+        var newTD3 = $('<TD coltag="battnorm1" id="BatteryEditorTestsSelectionCC' + i + '">');
+        var newTD4 = $('<TD coltag="battnorm2" id="BatteryEditorTestsSelectionCD' + i + '">');
+        var newTD5 = $('<TD coltag="battnorm3" id="BatteryEditorTestsSelectionCE' + i + '">');
         var newTD6 = $('<TD style="min-width: 70px" id="BatteryEditorTestsSelectionCF' + i + '">');
         
         var NewIDel = $('<a onclick="ITSInstance.BatteryEditorController.testsListDelete(' + i + ');">');
@@ -225,6 +232,7 @@ ITSBatteryEditorController.prototype.repopulateTestsLists =  function (animate) 
                 }
                 newTD3.append(NewNorm1);
             }
+            maxNormCount = max([ tempNorms.length, maxNormCount]);
 
             if (tempNorms.length > 1) {
                 var NewNorm2 = $('<select class="form-control form-control-sm" id="normSelect2" onchange="ITSInstance.BatteryEditorController.normSelected(2,this,' + i + ');">');
@@ -259,6 +267,9 @@ ITSBatteryEditorController.prototype.repopulateTestsLists =  function (animate) 
         newTR.append(newTD6);
         $('#BatteryEditorTestsSelectionBody').append(newTR);
     }
+    maxNormCount > 0 ? $('td[coltag="battnorm1"]').show() : $('td[coltag="battnorm1"]').hide();
+    maxNormCount > 1 ? $('td[coltag="battnorm2"]').show() : $('td[coltag="battnorm2"]').hide();
+    maxNormCount > 2 ? $('td[coltag="battnorm3"]').show() : $('td[coltag="battnorm3"]').hide();
     if (animate) {
         $('#BatteryEditorTestsSelection').fadeTo("quick", 0.1);
         $('#BatteryEditorTestsSelection').fadeTo("quick", 1);

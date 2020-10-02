@@ -40,32 +40,32 @@
             </div>
         </div>
         <div id="AdminInterfaceGroupSessionTests" class="form-group row">
-            <label for="AdminInterfaceGroupSessionTestsInputList" id="AdminInterfaceGroupSessionTestsInputListLabel" class="col-sm-3 col-form-label">Tests in these group sessions</label>
+            <label for="AdminInterfaceGroupSessionTestsInputList" id="AdminInterfaceGroupSessionTestsInputListLabel" class="col-sm-3 col-form-label">Content of this group session</label>
             <div class="col-sm-9">
                 <div class="form-group">
                     <select id="AdminInterfaceGroupSessionTestsInputList" novalidate class="combobox form-control" style="display: none;">
-                        <option value="" selected="selected">Select a test</option>
+                        <option value="" selected="selected">Select some content to add</option>
                     </select>
                 </div>
                 <label class="form-check-label">
                     &nbsp;&nbsp;&nbsp;<input class="form-check-input" id="AdminInterfaceGroupSessionTestsIncludeOtherLanguages" type="checkbox" onchange="ITSInstance.groupSessionController.loadTestAndBatteriesList();" value="">
-                    <label id="AdminInterfaceGroupSessionTestsIncludeOtherLanguagesLabel">Include tests in other languages</label>
+                    <label id="AdminInterfaceGroupSessionTestsIncludeOtherLanguagesLabel">Include content in other languages</label>
                 </label>
                 <table class="table table-sm table-striped table-hover" style="text-align: left"
                        id="AdminInterfaceGroupSessionTestsSelection" NoTranslate>
                     <thead NoTranslate id="AdminInterfaceGroupSessionTestsSelectionHead">
                     <tr>
-                        <td id="AdminInterfaceGroupSessionTestsSelectionH1">Test name</td>
-                        <td id="AdminInterfaceGroupSessionTestsSelectionH2">Test language</td>
-                        <td id="AdminInterfaceGroupSessionTestsSelectionH3">Norm 1</td>
-                        <td id="AdminInterfaceGroupSessionTestsSelectionH4">Norm 2</td>
-                        <td id="AdminInterfaceGroupSessionTestsSelectionH5">Norm 3</td>
+                        <td id="AdminInterfaceGroupSessionTestsSelectionH1">Content name</td>
+                        <td id="AdminInterfaceGroupSessionTestsSelectionH2">Content language</td>
+                        <td id="AdminInterfaceGroupSessionTestsSelectionH3" coltag="groupeditnorm1">Norm 1</td>
+                        <td id="AdminInterfaceGroupSessionTestsSelectionH4" coltag="groupeditnorm2">Norm 2</td>
+                        <td id="AdminInterfaceGroupSessionTestsSelectionH5" coltag="groupeditnorm3">Norm 3</td>
                         <td id="AdminInterfaceGroupSessionTestsSelectionH6">Actions</td>
                     </tr>
                     </thead>
                     <tbody id="AdminInterfaceGroupSessionTestsSelectionBody">
                     <tr>
-                        <td id="AdminInterfaceGroupSessionTestsSelectionC1">No tests added yet</td>
+                        <td id="AdminInterfaceGroupSessionTestsSelectionC1">Nothing added yet</td>
                         <td></td>
                         <td></td>
                         <td></td>
