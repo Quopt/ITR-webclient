@@ -15,7 +15,7 @@
 -->
 <div class="row col-12">
     <i class="fa fa-2x fa-arrow-circle-left" aria-hidden="true" onclick="window.history.back();"></i>&nbsp;
-    <h4 id="AdminInterfaceSessionEditHeader">Create new candidate session</h4>
+    <h4 id="AdminInterfaceSessionEditHeader">Create new session</h4>
 </div>
 <div id="AdminInterfaceSessionNewSession" class="needs-validation" novalidate class="row">
     <div class="panel-body col-sm-12">
@@ -43,7 +43,7 @@
         </div>
         <span class="badge badge-warning" id="AdminInterfaceSessionNewAccountExists" >Please note : This e-mail address is registered as a consultant in this system and cannot be used for a candidate.</span>
         <div id="AdminInterfaceSessionNewSessionTests" class="form-group row">
-            <label for="AdminInterfaceSessionNewSessionTestsInputList" id="AdminInterfaceSessionNewSessionTestsInputListLabel" class="col-sm-3 col-form-label">Tests in this session</label>
+            <label for="AdminInterfaceSessionNewSessionTestsInputList" id="AdminInterfaceSessionNewSessionTestsInputListLabel" class="col-sm-3 col-form-label">Contents of this session</label>
             <div class="col-sm-9">
                 <div class="form-group">
                     <select id="AdminInterfaceSessionNewSessionTestsInputList" novalidate class="combobox form-control" style="display: none;">
@@ -52,17 +52,17 @@
                 </div>
                 <label class="form-check-label">
                     &nbsp;&nbsp;&nbsp;<input class="form-check-input" id="AdminInterfaceSessionNewSessionTestsIncludeOtherLanguages" type="checkbox" onchange="ITSInstance.newCandidateSessionController.loadTestAndBatteriesList();" value="">
-                    <label id="AdminInterfaceSessionNewSessionTestsIncludeOtherLanguagesLabel" for="AdminInterfaceSessionNewSessionTestsIncludeOtherLanguages">Include tests in other languages</label>
+                    <label id="AdminInterfaceSessionNewSessionTestsIncludeOtherLanguagesLabel" for="AdminInterfaceSessionNewSessionTestsIncludeOtherLanguages">Include content in other languages</label>
                 </label>
                 <table class="table table-sm table-striped table-hover" style="text-align: left"
                        id="AdminInterfaceSessionNewSessionTestsSelection" NoTranslate>
                     <thead NoTranslate id="AdminInterfaceSessionNewSessionTestsSelectionHead">
                     <tr>
-                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH1">Test name</td>
-                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH2">Test language</td>
-                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH3">Norm 1</td>
-                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH4">Norm 2</td>
-                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH5">Norm 3</td>
+                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH1">Content name</td>
+                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH2">Content language</td>
+                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH3" coltag="newsessnorm1">Norm 1</td>
+                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH4" coltag="newsessnorm2">Norm 2</td>
+                        <td id="AdminInterfaceSessionNewSessionTestsSelectionH5" coltag="newsessnorm3">Norm 3</td>
                         <td id="AdminInterfaceSessionNewSessionTestsSelectionH6">Actions</td>
                     </tr>
                     </thead>
@@ -177,7 +177,7 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card" id="AdminInterfaceSessionNotificationAccordion">
             <div class="card-header" role="tab" id="headingThree">
                 <h5 class="mb-0">
                     <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree"
@@ -220,4 +220,10 @@
 <button type="button" id="AdminInterfaceSessionNewSessionDeleteButton" class="btn btn-warning" onclick="ITSInstance.newCandidateSessionController.deleteNewSession();"><i class="fa fa-fw fa-trash aria-hidden='true'"></i> <span id="AdminInterfaceSessionNewSessionDeleteButtonLabel">Delete session</span>
 </button>
 <!-- <button type="button" class="btn btn-default btn-secondary"><i class="fa fa-fw fa-archive aria-hidden='true'"></i> Archive session</button> -->
+</div>
+
+<div id="AdminInterfaceSessionNewTeachingBar">
+    <br/>
+    <button type="button" class="btn btn-default btn-success" id="AdminInterfaceSessionNewSessionStartTeachingButton" onclick="ITSInstance.newCandidateSessionController.teachSession();"><i id="AdminInterfaceSessionNewTeachingSession-saveIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="AdminInterfaceSessionNewTeachingButtonLabel">Start teaching</span>
+    </button>&nbsp;
 </div>

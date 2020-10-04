@@ -206,13 +206,14 @@ ITSChangeExistingSessionEditor.prototype.repopulateTestsLists =  function (anima
             '</td><td></td><td></td><td></td><td></td><td></td></tr>');
         $('#AdminInterfaceChangeSessionTestsSelectionBody').append(newTR0);
     }
+    var maxNormsCount = 0;
     for (var i = 0; i < tempSessionTestList.length; i++) {
         var newTR = $('<TR>');
         var newTD1 = $('<TD id="AdminInterfaceChangeSessionTestsSelectionCA' + i + '">');
         var newTD2 = $('<TD id="AdminInterfaceChangeSessionTestsSelectionCB' + i + '">');
-        var newTD3 = $('<TD id="AdminInterfaceChangeSessionTestsSelectionCC' + i + '">');
-        var newTD4 = $('<TD id="AdminInterfaceChangeSessionTestsSelectionCD' + i + '">');
-        var newTD5 = $('<TD id="AdminInterfaceChangeSessionTestsSelectionCE' + i + '">');
+        var newTD3 = $('<TD coltag="changesessnorm1" id="AdminInterfaceChangeSessionTestsSelectionCC' + i + '">');
+        var newTD4 = $('<TD coltag="changesessnorm2" id="AdminInterfaceChangeSessionTestsSelectionCD' + i + '">');
+        var newTD5 = $('<TD coltag="changesessnorm3" id="AdminInterfaceChangeSessionTestsSelectionCE' + i + '">');
         var newTD6 = $('<TD style="min-width: 70px" id="AdminInterfaceChangeSessionTestsSelectionCF' + i + '">');
         
         if (tempSessionTestList[i].Status == 10) {
@@ -278,6 +279,7 @@ ITSChangeExistingSessionEditor.prototype.repopulateTestsLists =  function (anima
                     }
                     newTD5.append(NewNorm3);
                 }
+                maxNormsCount = max([maxNormsCount,tempNorms.length])
             }
 
             newTR.append(newTD1);
@@ -289,6 +291,9 @@ ITSChangeExistingSessionEditor.prototype.repopulateTestsLists =  function (anima
             $('#AdminInterfaceChangeSessionTestsSelectionBody').append(newTR);
         }
     }
+    maxNormsCount > 0 ? $('td[coltag="changesessnorm1"]').show() : $('td[coltag="changesessnorm1"]').hide();
+    maxNormsCount > 1 ? $('td[coltag="changesessnorm2"]').show() : $('td[coltag="changesessnorm2"]').hide();
+    maxNormsCount > 2 ? $('td[coltag="changesessnorm3"]').show() : $('td[coltag="changesessnorm3"]').hide();
     if (animate) {
         $('#AdminInterfaceChangeSessionTestsSelection').fadeTo("quick", 0.1);
         $('#AdminInterfaceChangeSessionTestsSelection').fadeTo("quick", 1);

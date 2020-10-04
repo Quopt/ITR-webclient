@@ -35,7 +35,7 @@
                     if ($('#AdminInterfaceInviteNewCandidateInputUsername').val().trim() != '') {
                         ITSInstance.newCandidateSessionController.createNewSession($('#AdminInterfaceInviteNewCandidateInputUsername').val());
                         $('#AdminInterfaceInviteNewCandidateInputUsername').val('');
-                        ITSRedirectPath('NewSession');
+                        ITSRedirectPath('NewSession&SessionType=0');
                     } else {
                         ITSInstance.UIController.showWarning('ITSInviteNewCandidatePortlet.NoLoginGiven', 'Please enter an email address or unique login id for your candidate.');
                     }

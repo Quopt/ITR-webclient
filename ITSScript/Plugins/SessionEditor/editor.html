@@ -47,3 +47,11 @@
     <button type="button" onclick="ITSInstance.editSessionController.deleteSession();" class="btn btn-warning"><i class="fa fa-fw fa-trash "></i><span id="AdminInterfaceEditSessionEditDelete">Delete this session</span></button>
     <button type="button" onclick="ITSInstance.editSessionController.downloadSession();" class="btn btn-success" id="AdminInterfaceEditSessionEditDownloadButton"><i class="fa fa-fw fa-download "></i><span id="AdminInterfaceEditSessionEditDownload">Download session results archive</span></button>
 </div>
+
+<div id="AdminInterfaceEditSessionEditButtonBarTeaching">
+    <button type="button" class="btn btn-default btn-success" id="AdminInterfaceEditSessionEditStartTeachingButton" onclick="ITSInstance.editSessionController.startTeachingSession();"><i id="AdminInterfaceSessionEditTeachingSession-saveIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="AdminInterfaceSessionEditTeachingButtonLabel">Resume teaching</span>
+    </button>&nbsp;
+    <button id="AdminInterfaceEditSessionEditArchiveTestTeaching" type="button" onclick="ITSInstance.editSessionController.archiveSession();" class="btn btn-warning"><i id="AdminInterfaceEditSessionEditArchiveTestIconTeaching" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceEditSessionEditArchiveTeaching">Archive this session</span></button>
+    <button id="AdminInterfaceEditSessionEditUnarchiveTestTeaching" type="button" onclick="ITSInstance.editSessionController.unarchiveSession();" class="btn btn-warning"><i id="AdminInterfaceEditSessionEditUnarchiveTestIconTeaching" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceEditSessionEditArchiveTeaching">Unarchive this session</span></button>
+    <button type="button" onclick="ITSInstance.editSessionController.deleteSession();" class="btn btn-warning"><i class="fa fa-fw fa-trash "></i><span id="AdminInterfaceEditSessionEditDeleteTeaching">Delete this session</span></button>
+</div>

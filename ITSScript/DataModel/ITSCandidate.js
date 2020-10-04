@@ -51,12 +51,14 @@ ITSCandidate = function (parent, ITSSession) {
     this.Sex = 0; // 0 unknown, 1 male, 2 female, 3 gender neutral
     this.Password = "";
 
+    this.PersonType = 0 ; // 0 = candidate, 1000 = teacher
+
     this.newCandidate = true;
 
     this.persistentProperties = [
         'ID', 'EMail', 'FirstName', 'LastName', 'Initials', 'TitlesBefore', 'TitlesAfter', 'UserDefinedFields',
         'Remarks', 'PreferredLanguage', 'DateOfLastTest', 'CompanyID', 'ManagedByUserID', 'PluginData', 'Active', 'BirthDate',
-        'Sex', 'Password', 'Age'
+        'Sex', 'Password', 'Age', 'PersonType'
     ];
 }
 

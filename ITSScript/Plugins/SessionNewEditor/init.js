@@ -51,10 +51,15 @@ ITSInviteNewCandidateEditor.prototype.loadTestAndBatteriesList = function() {
     newLI = "<option value=\"\">" + ITSInstance.translator.getTranslatedString('SessionNewEditor','SelectATest','Select content to add to the session') + "</option>"
     $('#AdminInterfaceSessionNewSessionTestsInputList').append(newLI);
 
+    var sessionType = parseInt(getUrlParameterValue("SessionType"));
+    var testType = 0;
+    var batteryType = 10;
+    sessionType == 0 ? testType = 0 : testType = 1000;
+    sessionType == 0 ? batteryType = 100 : batteryType = 1000;
     if (! ITSInstance.users.currentUser.MayWorkWithBatteriesOnly) {
         ITSInstance.tests.testList.forEach(function callback(currentValue, index, array) {
             var includeTest = false;
-            includeTest = currentValue.Active == true;
+            includeTest = currentValue.Active == true && currentValue.TestType == testType;
             if (!$('#AdminInterfaceSessionNewSessionTestsIncludeOtherLanguages').is(':checked')) {
                 includeTest = includeTest && (currentValue.supportsLanguage(ITSLanguage));
             }
@@ -69,7 +74,7 @@ ITSInviteNewCandidateEditor.prototype.loadTestAndBatteriesList = function() {
         }, this);
     }
     ITSInstance.batteries.batteryList.forEach(function callback(currentValue, index, array) {
-        if (currentValue.Active) {
+        if ((currentValue.Active) && (currentValue.BatteryType == batteryType))  {
             this.availableTestsAndBatteries.push({
                 "TestID": currentValue.ID,
                 "Description": ITSInstance.translator.getTranslatedString('SessionNewEditor','BatteryText',"Battery : ") + currentValue.BatteryName
@@ -157,13 +162,14 @@ ITSInviteNewCandidateEditor.prototype.repopulateTestsLists =  function (animate)
             '</td><td></td><td></td><td></td><td></td><td></td></tr>');
         $('#AdminInterfaceSessionNewSessionTestsSelectionBody').append(newTR0);
     }
+    var maxNormsCount = 0;
     for (var i = 0; i < tempSessionTestList.length; i++) {
         var newTR = $('<TR>');
         var newTD1 = $('<TD id="AdminInterfaceSessionNewSessionTestsSelectionCA' + i + '">');
         var newTD2 = $('<TD id="AdminInterfaceSessionNewSessionTestsSelectionCB' + i + '">');
-        var newTD3 = $('<TD id="AdminInterfaceSessionNewSessionTestsSelectionCC' + i + '">');
-        var newTD4 = $('<TD id="AdminInterfaceSessionNewSessionTestsSelectionCD' + i + '">');
-        var newTD5 = $('<TD id="AdminInterfaceSessionNewSessionTestsSelectionCE' + i + '">');
+        var newTD3 = $('<TD coltag="newsessnorm1" id="AdminInterfaceSessionNewSessionTestsSelectionCC' + i + '">');
+        var newTD4 = $('<TD coltag="newsessnorm2" id="AdminInterfaceSessionNewSessionTestsSelectionCD' + i + '">');
+        var newTD5 = $('<TD coltag="newsessnorm3" id="AdminInterfaceSessionNewSessionTestsSelectionCE' + i + '">');
         var newTD6 = $('<TD style="min-width: 70px" id="AdminInterfaceSessionNewSessionTestsSelectionCF' + i + '">');
         var NewIDel = $('<a onclick="ITSInstance.newCandidateSessionController.testsListDelete(' + i + ');">');
         NewIDel.append($('<i class="fa fa-fw fa-trash">'));
@@ -226,6 +232,8 @@ ITSInviteNewCandidateEditor.prototype.repopulateTestsLists =  function (animate)
                 }
                 newTD5.append(NewNorm3);
             }
+
+            maxNormsCount = max([maxNormsCount,tempNorms.length]);
         }
 
         newTR.append(newTD1);
@@ -236,6 +244,9 @@ ITSInviteNewCandidateEditor.prototype.repopulateTestsLists =  function (animate)
         newTR.append(newTD6);
         $('#AdminInterfaceSessionNewSessionTestsSelectionBody').append(newTR);
     }
+    maxNormsCount > 0 ? $('td[coltag="newsessnorm1"]').show() : $('td[coltag="newsessnorm1"]').hide();
+    maxNormsCount > 1 ? $('td[coltag="newsessnorm2"]').show() : $('td[coltag="newsessnorm2"]').hide();
+    maxNormsCount > 2 ? $('td[coltag="newsessnorm3"]').show() : $('td[coltag="newsessnorm3"]').hide();
     if (animate) {
         $('#AdminInterfaceSessionNewSessionTestsSelection').fadeTo("quick", 0.1);
         $('#AdminInterfaceSessionNewSessionTestsSelection').fadeTo("quick", 1);
@@ -297,8 +308,23 @@ ITSInviteNewCandidateEditor.prototype.show = function () {
 
     this.afterOfficeLogin();
     this.repopulateTestsLists();
+    this.loadTestAndBatteriesList();
     this.UpdateEMailAddress();
     if (!ITSInstance.users.userListLoaded) ITSInstance.users.loadUsers(function (){}, function (){});
+
+    if (getUrlParameterValue('Mode') == "Teaching") {
+        $('#AdminInterfaceSessionNewSessionCandidate').hide();
+        $('#AdminInterfaceSessionEditAccordion').hide();
+        $('#AdminInterfaceSessionNotificationAccordion').hide();
+        $('#AdminInterfaceSessionNewButtonBar').hide();
+        $('#AdminInterfaceSessionNewTeachingBar').show();
+    } else {
+        $('#AdminInterfaceSessionNewSessionCandidate').show();
+        $('#AdminInterfaceSessionEditAccordion').show();
+        $('#AdminInterfaceSessionNotificationAccordion').show();
+        $('#AdminInterfaceSessionNewButtonBar').show();
+        $('#AdminInterfaceSessionNewTeachingBar').hide();
+    }
 };
 
 
@@ -490,6 +516,43 @@ ITSInviteNewCandidateEditor.prototype.startNowSession = function () {
     this.saveNewSession(function () { setTimeout(this.startNowSessionCallback.bind(this),1000); } );
 };
 
+ITSInviteNewCandidateEditor.prototype.teachSession = function () {
+    this.existingUserFound = true; // always save the password
+    this.newSession.SessionType = 1001;
+    var ValidationMessage = "";
+    // check if all information is present to save the session
+    this.newSession.Description = $('#AdminInterfaceSessionNewSessionDescriptionFor').val();
+    this.newSession.PersonID = this.newSession.ID;
+    this.newSession.Person.ID = this.newSession.ID;
+    this.newSession.Person.EMail = "Teacher_" + ITSInstance.users.currentUser.Email + "_" + this.newSession.ID;
+    this.newSession.Person.Password = newGuid();
+    this.newSession.Person.PersonType = 1000;
+    this.newSession.relinkToCurrentPersonID();
+
+    if (this.newSession.Description == "") {
+        ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','DescriptionMissing','Please enter a description for this session.')
+    }
+    if (this.newSession.SessionTests.length == 0) {
+        ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','TestMissing','Please add a test to this session.')
+    }
+    if (ValidationMessage == "") {
+        this.newSession.saveToServerIncludingTestsAndPerson(function () {
+                this.startTeachingSession();
+            }.bind(this),
+            function () {
+                ITSInstance.UIController.showError('SessionNewEditor.TeachingSessionSaveFailed', 'The teaching session could not be started due to an unforeseen error.');
+            });
+    } else {
+        ITSInstance.UIController.showWarning('SessionNewEditor.SessionValidationFailed', 'The session could not be saved because information is missing', ValidationMessage);
+    }
+};
+
+ITSInviteNewCandidateEditor.prototype.startTeachingSession = function () {
+    // UserID Password AutoLogin
+    // Global_OriginalURL
+    window.location.href =Global_OriginalURL + "?AutoLogin&UserID="+ this.newSession.Person.EMail + "&Password=" + this.newSession.Person.Password;
+};
+
 ITSInviteNewCandidateEditor.prototype.startNowSessionCallback = function () {
     // redirect to login screen
     ITSInstance.logoutController.logout("UserID=" + $('#AdminInterfaceSessionNewSessionCandidateFor').val() + "&Password=" + $('#AdminInterfaceSessionNewSessionCandidatePassword').val());
@@ -518,9 +581,9 @@ ITSInviteNewCandidateEditor.prototype.mailSessionInvitation = function () {
 
         // register the menu items
         ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
-            ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#AdminInterfaceNewSessionEditorDiv.NewSessionMenu", ITSInstance.translator.translate("#AdminInterfaceNewSessionEditorDiv.NewSessionMenu", "New session"), "fa-thermometer-half", "ITSInstance.newCandidateSessionController.createNewSession(\'\'); ITSRedirectPath(\'NewSession\');");
+            ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#AdminInterfaceNewSessionEditorDiv.NewSessionMenu", ITSInstance.translator.translate("#AdminInterfaceNewSessionEditorDiv.NewSessionMenu", "New session"), "fa-thermometer-half", "ITSInstance.newCandidateSessionController.createNewSession(\'\'); ITSRedirectPath(\'NewSession&SessionType=0\');");
             //ITSInstance.UIController.registerMenuItem('#submenuCandidatesLI', "#AdminInterfaceNewSessionEditorDiv.NewSessionMenu2", ITSInstance.translator.translate("#AdminInterfaceNewSessionEditorDiv.NewSessionMenu2", "New session"), "fa-thermometer-half", "ITSInstance.newCandidateSessionController.createNewSession(\'\'); ITSRedirectPath(\'NewSession\');");
-            ITSInstance.UIController.registerMenuItem('#submenuTeachingLI', '#AdminInterfaceNewSessionEditorDiv.NewTeachingSessionMenu', ITSInstance.translator.translate("#AdminInterfaceNewSessionEditorDiv.NewTeachingSessionMenu", "New teaching session"), "fa-atom", "ITSRedirectPath(\'NewTeachingSession\'); ");
+            ITSInstance.UIController.registerMenuItem('#submenuTeachingLI', '#AdminInterfaceNewSessionEditorDiv.NewTeachingSessionMenu', ITSInstance.translator.translate("#AdminInterfaceNewSessionEditorDiv.NewTeachingSessionMenu", "New teaching session"), "fa-atom", "ITSRedirectPath(\'NewSession&Mode=Teaching&SessionType=1001\'); ");
         }, true);
     })
 

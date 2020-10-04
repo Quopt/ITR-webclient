@@ -227,9 +227,18 @@
     ITSSessionEditor.prototype.toggleButtons = function () {
         $('#AdminInterfaceEditSessionEditAddTest').hide();
         $('#AdminInterfaceEditSessionEditArchiveTest').show();
-        if (!this.currentSession.Active) $('#AdminInterfaceEditSessionEditArchiveTest').hide();
+        $('#AdminInterfaceEditSessionEditStartTeachingButton').show();
+        if (!this.currentSession.Active) {
+            $('#AdminInterfaceEditSessionEditArchiveTest').hide();
+            $('#AdminInterfaceEditSessionEditArchiveTestTeaching').hide();
+            $('#AdminInterfaceEditSessionEditStartTeachingButton').hide();
+        }
+        if (!ITSInstance.users.currentUser.IsPasswordManager) $('#AdminInterfaceEditSessionEditStartTeachingButton').hide();
         $('#AdminInterfaceEditSessionEditUnarchiveTest').show();
-        if (this.currentSession.Active) $('#AdminInterfaceEditSessionEditUnarchiveTest').hide();
+        if (this.currentSession.Active) {
+            $('#AdminInterfaceEditSessionEditUnarchiveTest').hide();
+            $('#AdminInterfaceEditSessionEditUnarchiveTestTeaching').hide();
+        }
         $('#AdminInterfaceEditSessionEditResendInvitation').show();
         $('#AdminInterfaceEditSessionEditResendInvitationNoReset').show();
         $('#AdminInterfaceEditSessionEditStartNow').show();
@@ -239,6 +248,14 @@
             $('#AdminInterfaceEditSessionEditResendInvitationNoReset').hide();
             $('#AdminInterfaceEditSessionEditStartNow').hide();
             $('#AdminInterfaceEditSessionEditDownloadButton').show();
+        }
+
+        if (getUrlParameterValue("SessionType") == 1001) {
+            $('#AdminInterfaceEditSessionEditButtonBar').hide();
+            $('#AdminInterfaceEditSessionEditButtonBarTeaching').show();
+        } else {
+            $('#AdminInterfaceEditSessionEditButtonBar').show();
+            $('#AdminInterfaceEditSessionEditButtonBarTeaching').hide();
         }
     }
 
@@ -540,10 +557,7 @@
         }, function () {
         });
         if (this.currentSession.SessionTests.length <= 1) {
-            this.currentSession.deleteFromServer(function () {
-            }, function () {
-            });
-            window.history.back();
+            this.deleteSessionNow();
         } else {
             this.currentSession.SessionTests.splice(index,1);
             this.generateTestsList();
@@ -620,6 +634,9 @@
         this.currentSession.deleteSession(function () {},
             function () { ITSInstance.UIController.showError('ITSSessionEditor.DeleteSessionFailed', 'The session could not be deleted at this moment'); }
             );
+        if (getUrlParameterValue("SessionType")==1001) {
+            this.currentSession.Person.deleteFromServer(function () {}, function () {})
+        }
         setTimeout(function () { window.history.back();},500);
     };
 
@@ -737,6 +754,15 @@
     ITSSessionEditor.prototype.changeSession = function () {
         ITSInstance.changeSessionController.currentSession = this.currentSession;
         ITSRedirectPath('ChangeSession&SessionID=' + this.currentSession.ID);
+    };
+
+    ITSSessionEditor.prototype.startTeachingSession = function () {
+        this.currentSession.Person.requestPassword( this.startTeachingSessionNow.bind(this),
+            ITSInstance.UIController.showError("SessionEditor", "SessionTeachingStartFailed", "The teaching session could not be started, please refresh your browser page and try again.") );
+    };
+
+    ITSSessionEditor.prototype.startTeachingSessionNow = function () {
+        window.location.href =Global_OriginalURL + "?AutoLogin&UserID="+ this.currentSession.Person.EMail + "&Password=" + this.currentSession.Person.Password;
     };
 
     // register the portlet

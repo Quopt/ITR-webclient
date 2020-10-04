@@ -267,7 +267,7 @@
     ITSSessionListerEditor.prototype.viewSession = function (sessionID) {
         this.alreadyLoaded = document.URL;
         if (parseInt(getUrlParameterValue("SessionType")) == 1001) {
-            ITSRedirectPath("TeachingSession&SessionID=" + sessionID);
+            ITSRedirectPath("Session&SessionType=1001&SessionID=" + sessionID);
         }
         else {
             ITSRedirectPath("Session&SessionID=" + sessionID);
@@ -282,7 +282,8 @@
         ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#SessionListerController.SessionInProgressMenu", ITSInstance.translator.translate("#SessionListerController.SessionInProgressMenu", "Show in progress sessions"), "fa-tasks", "ITSRedirectPath(\'SessionLister&SessionType=0&Status=Busy\');");
         ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#SessionListerController.SessionDoneMenu", ITSInstance.translator.translate("#SessionListerController.SessionDoneMenu", "Show report ready sessions"), "fa-check", "ITSRedirectPath(\'SessionLister&SessionType=0&Status=Done\');");
         ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#SessionListerController.SessionArchivedMenu", ITSInstance.translator.translate("#SessionListerController.SessionArchivedMenu", "Show archived sessions"), "fa-archive", "ITSRedirectPath(\'SessionLister&SessionType=0&Status=Archived\');");
-        ITSInstance.UIController.registerMenuItem('#submenuTeachingLI', '#SessionListerController.TeachingSessionMenu', ITSInstance.translator.translate("#SessionListerController.TeachingSessionMenu", "Active teaching sessions"), "fa-tasks", "ITSRedirectPath(\'SessionLister&SessionType=1001\');");
+        ITSInstance.UIController.registerMenuItem('#submenuTeachingLI', '#SessionListerController.MyTeachingSessionMenu', ITSInstance.translator.translate("#SessionListerController.MyTeachingSessionMenu", "My active teaching sessions"), "fa-user", "ITSRedirectPath(\'SessionLister&SessionType=1001&Status=All&ConsultantID="+ITSInstance.users.currentUser.ID+"\');" );
+        ITSInstance.UIController.registerMenuItem('#submenuTeachingLI', '#SessionListerController.TeachingSessionMenu', ITSInstance.translator.translate("#SessionListerController.TeachingSessionMenu", "Active teaching sessions"), "fa-tasks", "ITSRedirectPath(\'SessionLister&SessionType=1001&Status=All\');");
         ITSInstance.UIController.registerMenuItem('#submenuTeachingLI', '#SessionListerController.TeachingSessionArchivedMenu', ITSInstance.translator.translate("#SessionListerController.TeachingSessionArchivedMenu", "Archived teaching sessions"), "fa-book-reader", "ITSRedirectPath(\'SessionLister&SessionType=1001&Status=Archived\');");
     }, true);
 

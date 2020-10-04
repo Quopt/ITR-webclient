@@ -100,7 +100,7 @@
         this.currentPage = 0;
         $('#PersonListerTableFindMoreButton').hide();
         this.waitForSearch = false;
-        this.filter = "";
+        this.filter = "PersonType=0";
 
         $('#PersonListerInterfaceEditSessionEditHeaderStatus')[0].innerText = "";
         $('#PersonListerInterfaceEditSessionEditHeaderStatus').hide();

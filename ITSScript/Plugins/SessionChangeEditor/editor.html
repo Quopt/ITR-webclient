@@ -43,7 +43,7 @@
         </div>
         <span class="badge badge-warning" id="AdminInterfaceSessionChangeAccountExists" >Please note : This e-mail address is registered as a consultant in this system and cannot be used for a candidate.</span>
         <div id="AdminInterfaceChangeSessionTests" class="form-group row">
-            <label for="AdminInterfaceChangeSessionTestsInputList" id="AdminInterfaceChangeSessionTestsInputListLabel" class="col-sm-3 col-form-label">Tests in this session</label>
+            <label for="AdminInterfaceChangeSessionTestsInputList" id="AdminInterfaceChangeSessionTestsInputListLabel" class="col-sm-3 col-form-label">Contents of this session</label>
             <div class="col-sm-9">
                 <div class="form-group">
                     <select id="AdminInterfaceChangeSessionTestsInputList" novalidate class="combobox form-control" style="display: none;">
@@ -52,17 +52,17 @@
                 </div>
                 <label class="form-check-label">
                     &nbsp;&nbsp;&nbsp;<input class="form-check-input" id="AdminInterfaceChangeSessionTestsIncludeOtherLanguages" type="checkbox" onchange="ITSInstance.changeSessionController.loadTestAndBatteriesList();" value="">
-                    <label id="AdminInterfaceChangeSessionTestsIncludeOtherLanguagesLabel">Include tests in other languages</label>
+                    <label id="AdminInterfaceChangeSessionTestsIncludeOtherLanguagesLabel">Include content in other languages</label>
                 </label>
                 <table class="table table-sm table-striped table-hover" style="text-align: left"
                        id="AdminInterfaceChangeSessionTestsSelection" NoTranslate>
                     <thead NoTranslate id="AdminInterfaceChangeSessionTestsSelectionHead">
                     <tr>
-                        <td id="AdminInterfaceChangeSessionTestsSelectionH1">Test name</td>
-                        <td id="AdminInterfaceChangeSessionTestsSelectionH2">Test language</td>
-                        <td id="AdminInterfaceChangeSessionTestsSelectionH3">Norm 1</td>
-                        <td id="AdminInterfaceChangeSessionTestsSelectionH4">Norm 2</td>
-                        <td id="AdminInterfaceChangeSessionTestsSelectionH5">Norm 3</td>
+                        <td id="AdminInterfaceChangeSessionTestsSelectionH1">Content name</td>
+                        <td id="AdminInterfaceChangeSessionTestsSelectionH2">Content language</td>
+                        <td coltag="changesessnorm1" id="AdminInterfaceChangeSessionTestsSelectionH3">Norm 1</td>
+                        <td coltag="changesessnorm2" id="AdminInterfaceChangeSessionTestsSelectionH4">Norm 2</td>
+                        <td coltag="changesessnorm3" id="AdminInterfaceChangeSessionTestsSelectionH5">Norm 3</td>
                         <td id="AdminInterfaceChangeSessionTestsSelectionH6">Actions</td>
                     </tr>
                     </thead>
