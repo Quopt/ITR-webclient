@@ -18,7 +18,6 @@
 // and now init the application
 document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/ITSBootstrap.js'><\/script>");
 
-
 if (window.location.href.indexOf('DevMode=Y') >= 0 ) {
     var DebugMode=true;
     // %DEVMODESTART%

@@ -32,6 +32,7 @@
                 $("#AdminInterfaceInviteCCatalog").prop('disabled', true);
                 $("#AdminInterfaceInviteCCatalog").children().prop('disabled', true);
                 $("#AdminInterfaceInviteCCatalog").fadeTo("quick", 0.3);
+                $('#AdminInterfaceInviteCCatalog').hide();
             },
             testList: [],
             afterOfficeLogin: function () {
