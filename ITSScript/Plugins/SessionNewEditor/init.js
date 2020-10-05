@@ -29,8 +29,6 @@ ITSInviteNewCandidateEditor.prototype.info = new ITSPortletAndEditorRegistration
 ITSInviteNewCandidateEditor.prototype.afterOfficeLogin = function () {
     // make sure we get the tests and batteries loaded, dont care when it is ready
     if (ITSInstance.tests.testList.length <= 0) {
-        this.createNewSession("");
-
         ITSInstance.tests.loadAvailableTests(function () {
             this.loadTestAndBatteriesList();
         }.bind(this), function () {
@@ -39,6 +37,8 @@ ITSInviteNewCandidateEditor.prototype.afterOfficeLogin = function () {
             this.loadTestAndBatteriesList();
         }.bind(this), function () {
         });
+
+        this.createNewSession("");
 
         ITSInstance.users.loadUsers(function () {}, function (){});
     }
@@ -51,15 +51,18 @@ ITSInviteNewCandidateEditor.prototype.loadTestAndBatteriesList = function() {
     newLI = "<option value=\"\">" + ITSInstance.translator.getTranslatedString('SessionNewEditor','SelectATest','Select content to add to the session') + "</option>"
     $('#AdminInterfaceSessionNewSessionTestsInputList').append(newLI);
 
-    var sessionType = parseInt(getUrlParameterValue("SessionType"));
     var testType = 0;
     var batteryType = 10;
-    sessionType == 0 ? testType = 0 : testType = 1000;
-    sessionType == 0 ? batteryType = 100 : batteryType = 1000;
+    var sessionType = 0;
+    try {
+        if (typeof getUrlParameterValue("SessionType") != "undefined") { sessionType = parseInt(getUrlParameterValue("SessionType"));}
+    } catch (err) { };
+    if (sessionType == 0) { testType = 0; } else { testType = 1000;}
+    if (sessionType == 0) { batteryType = 100; } else { batteryType = 1000;}
     if (! ITSInstance.users.currentUser.MayWorkWithBatteriesOnly) {
         ITSInstance.tests.testList.forEach(function callback(currentValue, index, array) {
             var includeTest = false;
-            includeTest = currentValue.Active == true && currentValue.TestType == testType;
+            includeTest = ((currentValue.Active == true) && (currentValue.TestType == testType));
             if (!$('#AdminInterfaceSessionNewSessionTestsIncludeOtherLanguages').is(':checked')) {
                 includeTest = includeTest && (currentValue.supportsLanguage(ITSLanguage));
             }
@@ -312,7 +315,11 @@ ITSInviteNewCandidateEditor.prototype.show = function () {
     this.UpdateEMailAddress();
     if (!ITSInstance.users.userListLoaded) ITSInstance.users.loadUsers(function (){}, function (){});
 
-    if (getUrlParameterValue('Mode') == "Teaching") {
+    try {
+        var TeachingMode = getUrlParameterValue('Mode') == "Teaching";
+    } catch (err) { };
+
+    if (TeachingMode) {
         $('#AdminInterfaceSessionNewSessionCandidate').hide();
         $('#AdminInterfaceSessionEditAccordion').hide();
         $('#AdminInterfaceSessionNotificationAccordion').hide();
