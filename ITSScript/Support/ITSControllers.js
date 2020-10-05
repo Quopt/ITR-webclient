@@ -236,7 +236,7 @@ ITSLogoutController = function () {
             if (returnURL.trim() == "") {
                 setTimeout(function () {
                     ITSInitSession();
-                    location.reload();
+                    location.reload(true);
                 }, 1000);
             } else {
                 window.location.replace(returnURL);
