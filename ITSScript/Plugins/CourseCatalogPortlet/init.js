@@ -29,19 +29,13 @@
                 AdminInterfaceInviteCCatalogDiv = $('<div class="col-md-4" id="AdminInterfaceInviteCCatalog">');
                 $('#AdminInterfacePortlets').append(AdminInterfaceInviteCCatalogDiv);
                 $('#AdminInterfaceInviteCCatalog').append(this.html);
-                $("#AdminInterfaceInviteCCatalog").prop('disabled', true);
-                $("#AdminInterfaceInviteCCatalog").children().prop('disabled', true);
-                $("#AdminInterfaceInviteCCatalog").fadeTo("quick", 0.3);
-                $('#AdminInterfaceInviteCCatalog').hide();
+                $('#AdminInterfaceInviteCCatalog').css("display", "none");
             },
             testList: [],
             afterOfficeLogin: function () {
-                ITSLogger.logMessage(logLevel.INFO,'Init portlet test catalog');
+                ITSLogger.logMessage(logLevel.INFO,'Init portlet course catalog');
                 ITSInstance.tests.loadAvailableTests(
                     function () {
-                        $("#AdminInterfaceInviteCCatalog").children().prop('disabled', false);
-                        $("#AdminInterfaceInviteCCatalog").prop('disabled', false);
-                        $("#AdminInterfaceInviteCCatalog").fadeTo("slow", 1);
                         // load the tests in the dropdown
                         $('#AdminInterfaceInviteCCatalogdropdownMenuItems').empty();
                         //<button class="dropdown-item" type="button">Test 1</button>
