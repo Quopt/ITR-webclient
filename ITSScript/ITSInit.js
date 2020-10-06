@@ -699,7 +699,11 @@ if (!ITSInstance) {
     ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", function () {
         ITSInstance.users.loadUsers(function (){}, function (){});
      });
-
+    ITSInstance.MessageBus.subscribe('CurrentUser.Loaded',
+        function () {
+            if ((ITSInstance.users.currentUser.HasEducationalOfficeAccess) && (ITSInstance.users.currentUser.HasTestingOfficeAccess)) document.title = 'ITR - The Internet Test & Teaching Room';
+            if ((ITSInstance.users.currentUser.HasEducationalOfficeAccess) && (!ITSInstance.users.currentUser.HasTestingOfficeAccess)) document.title = 'ITR - The Internet Teaching Room';
+        });
 
     if (cookieHelper.getCookie('ITRLanguage') != "") {
         ITSInstance.translator.switchLanguage(cookieHelper.getCookie('ITRLanguage'), function () { ITSInstance.UIController.loadTranslationsDropDown(); });

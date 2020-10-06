@@ -557,8 +557,9 @@ ITSInviteNewCandidateEditor.prototype.teachSession = function () {
 ITSInviteNewCandidateEditor.prototype.startTeachingSession = function () {
     // UserID Password AutoLogin
     // Global_OriginalURL
-    window.location.href =Global_OriginalURL + "?AutoLogin&UserID="+ this.newSession.Person.EMail + "&Password=" + this.newSession.Person.Password;
+    window.open(Global_OriginalURL + "?AutoLogin&UserID="+ this.newSession.Person.EMail + "&Password=" + this.newSession.Person.Password, '', "resizable");
 };
+
 
 ITSInviteNewCandidateEditor.prototype.startNowSessionCallback = function () {
     // redirect to login screen

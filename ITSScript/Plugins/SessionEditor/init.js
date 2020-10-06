@@ -771,11 +771,11 @@
 
     ITSSessionEditor.prototype.startTeachingSession = function () {
         this.currentSession.Person.requestPassword( this.startTeachingSessionNow.bind(this),
-            ITSInstance.UIController.showError("SessionEditor", "SessionTeachingStartFailed", "The teaching session could not be started, please refresh your browser page and try again.") );
+            function () { ITSInstance.UIController.showError("SessionEditor", "SessionTeachingStartFailed", "The teaching session could not be started, please refresh your browser page and try again.") ;} );
     };
 
     ITSSessionEditor.prototype.startTeachingSessionNow = function () {
-        window.location.href =Global_OriginalURL + "?AutoLogin&UserID="+ this.currentSession.Person.EMail + "&Password=" + this.currentSession.Person.Password;
+        window.open(Global_OriginalURL + "?AutoLogin&UserID="+ this.currentSession.Person.EMail + "&Password=" + this.currentSession.Person.Password, '', "resizable");
     };
 
     // register the portlet
