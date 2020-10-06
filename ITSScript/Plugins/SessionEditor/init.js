@@ -666,8 +666,8 @@
     ITSSessionEditor.prototype.printSession = function () {
         var w=window.open();
         this.generateTestsList(true);
-        w.document.write("<h4>" + $('#AdminInterfaceEditSessionEditHeaderName').text() + " / " + $('#AdminInterfaceEditSessionEditHeaderCandidate').text() + "</h4>"
-            + $('#AdminInterfaceEditSessionPrintDateTimeHeader').text() + moment(new Date()).format(ITSDateTimeFormatPickerMomentJS) + "<br/>");
+        w.document.write("<h2>" + $('#AdminInterfaceEditSessionEditHeaderName').text() + " / " + $('#AdminInterfaceEditSessionEditHeaderCandidate').text() + "</h2>"
+            + $('#AdminInterfaceEditSessionPrintDateTimeHeader').text() + "<small>" + moment(new Date()).format(ITSDateTimeFormatPickerMomentJS) + "<br/></small>");
         for (var i = 0; i < this.currentSession.SessionTests.length; i++) {
             w.document.write($('#AdminInterfaceEditSessionEditTestCards'+i).html());
         }
