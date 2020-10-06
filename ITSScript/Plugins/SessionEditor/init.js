@@ -48,12 +48,12 @@
             "</div>";
 
         this.testCardElementDoneNoUIElements =
-            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%ID%%\" style='break-inside: avoid; break-before: auto;'>" +
+            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%ID%%\" style='break-inside: avoid; break-before: auto; border-left: dotted 1px;'>" +
             "<div class=\"card\">" +
-            "<h5 class=\"card-header\">%%TESTTITLE%%</h5>" +
+            "<h3 class=\"card-header\">%%TESTTITLE%%</h3>" +
             "<div class=\"card-body col-12 row\">" +
             "<div class=\"col-sm-12\">" +
-            "<h5 class=\"card-title\"id=\"AdminInterfaceEditSessionEditTestScores\">Test scores</h5>" +
+            "<h4 class=\"card-title\"id=\"AdminInterfaceEditSessionEditTestScores\">Test scores</h4>" +
             "<p class=\"card-text\">%%TESTSCORES%%</p>" +
             "</div>" +
             "</div>" +
@@ -664,16 +664,47 @@
     };
 
     ITSSessionEditor.prototype.printSession = function () {
+        var openingTag = '<html><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">';
+        openingTag += '<link href="fontawesome/css/all.css" rel="stylesheet">';
+        openingTag += '<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">';
+        openingTag += '<link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet" type="text/css">';
+        openingTag += '<link href="https://fonts.googleapis.com/css?family=Alegreya+Sans" rel="stylesheet" type="text/css">';
+        openingTag += '<link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet" type="text/css">';
+        openingTag += '<body><script src="https://use.fontawesome.com/releases/v5.12.1/js/all.js" data-auto-replace-svg="nest"></script>';
+        openingTag += '<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>\n' +
+            '<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>\n' +
+            '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>' +
+            '<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/4/tinymce.min.js" referrerpolicy="origin"></script>'   ;
+        var closingTag = '</body>'+
+            `<script>
+            $('textarea-htmledit').removeClass('form-control');
+            (function($) {
+                $.fn.changeElementType = function(newType) {
+                    var attrs = {};
+            
+                    $.each(this[0].attributes, function(idx, attr) {
+                        attrs[attr.nodeName] = attr.nodeValue;
+                    });
+            
+                    this.replaceWith(function() {
+                        return $("<" + newType + "/>", attrs).append($(this).contents()).css("border", "solid");
+                    });
+                }
+            })(jQuery);
+            $('textarea-htmledit').changeElementType('div');
+        </script></html>`;
+
         var w=window.open();
         this.generateTestsList(true);
+        w.document.write(openingTag);
         w.document.write("<h2>" + $('#AdminInterfaceEditSessionEditHeaderName').text() + " / " + $('#AdminInterfaceEditSessionEditHeaderCandidate').text() + "</h2>"
             + $('#AdminInterfaceEditSessionPrintDateTimeHeader').text() + "<small>" + moment(new Date()).format(ITSDateTimeFormatPickerMomentJS) + "<br/></small>");
         for (var i = 0; i < this.currentSession.SessionTests.length; i++) {
             w.document.write($('#AdminInterfaceEditSessionEditTestCards'+i)[0].outerHTML);
         }
         this.generateTestsList(false);
-        w.print();
-        w.close();
+        w.document.write(closingTag);
+        setTimeout(function () { w.print(); w.close(); }.bind(w), 1000);
     };
 
     ITSSessionEditor.prototype.zipError = function () {
