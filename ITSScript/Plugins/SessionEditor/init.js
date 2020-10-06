@@ -30,7 +30,7 @@
         this.currentSession = {};
 
         this.testCardElementDone =
-            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%ID%%\" style='break-inside: avoid;'>" +
+            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%ID%%\" style='break-inside: avoid; break-before: auto;'>" +
             "<div class=\"card\">" +
             "<h5 class=\"card-header\">%%TESTTITLE%%</h5>" +
             "<div class=\"card-body col-12 row\">" +
@@ -48,7 +48,7 @@
             "</div>";
 
         this.testCardElementDoneNoUIElements =
-            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%ID%%\" style='break-inside: avoid;'>" +
+            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%ID%%\" style='break-inside: avoid; break-before: auto;'>" +
             "<div class=\"card\">" +
             "<h5 class=\"card-header\">%%TESTTITLE%%</h5>" +
             "<div class=\"card-body col-12 row\">" +
@@ -80,7 +80,7 @@
         this.testCardElementReportsButton = /%%TESTREPORTSBUTTON%%/g ;
 
         this.testCardElementInProgress =
-            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%NR%%\" style='break-inside: avoid;'>" +
+            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%NR%%\" style='break-inside: avoid; break-before: auto;'>" +
             "<div class=\"card\">" +
             "<h5 class=\"card-header\">%%TESTTITLE%%</h5>" +
             "<div class=\"card-body col-12 row\">" +
@@ -98,7 +98,7 @@
             "</div>";
 
         this.testCardElementWaitingForStart =
-            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%NR%%\" style='break-inside: avoid;'>" +
+            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%NR%%\" style='break-inside: avoid; break-before: auto;'>" +
             "<div class=\"card\">" +
             "<h5 class=\"card-header\">%%TESTTITLE%%</h5>" +
             "<div class=\"card-body col-12 row\">" +
