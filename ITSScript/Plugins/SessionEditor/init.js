@@ -243,11 +243,13 @@
         $('#AdminInterfaceEditSessionEditResendInvitationNoReset').show();
         $('#AdminInterfaceEditSessionEditStartNow').show();
         $('#AdminInterfaceEditSessionEditDownloadButton').hide();
+        $('#AdminInterfaceEditSessionEditPrintButton').hide();
         if (this.currentSession.Status >= 30) {
             $('#AdminInterfaceEditSessionEditResendInvitation').hide();
             $('#AdminInterfaceEditSessionEditResendInvitationNoReset').hide();
             $('#AdminInterfaceEditSessionEditStartNow').hide();
             $('#AdminInterfaceEditSessionEditDownloadButton').show();
+            $('#AdminInterfaceEditSessionEditPrintButton').show();
         }
 
         if (getUrlParameterValue("SessionType") == 1001) {
