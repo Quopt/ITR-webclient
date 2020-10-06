@@ -240,7 +240,7 @@ ITSLogoutController = function () {
                 }, 1000);
             } else {
                 window.location.replace(returnURL);
-            }
+            }"Session:"
         }
     }
 };

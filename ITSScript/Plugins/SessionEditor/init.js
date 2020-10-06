@@ -30,7 +30,7 @@
         this.currentSession = {};
 
         this.testCardElementDone =
-            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%ID%%\">" +
+            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%ID%%\" style='break-inside: avoid;'>" +
             "<div class=\"card\">" +
             "<h5 class=\"card-header\">%%TESTTITLE%%</h5>" +
             "<div class=\"card-body col-12 row\">" +
@@ -48,7 +48,7 @@
             "</div>";
 
         this.testCardElementDoneNoUIElements =
-            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%ID%%\">" +
+            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%ID%%\" style='break-inside: avoid;'>" +
             "<div class=\"card\">" +
             "<h5 class=\"card-header\">%%TESTTITLE%%</h5>" +
             "<div class=\"card-body col-12 row\">" +
@@ -80,7 +80,7 @@
         this.testCardElementReportsButton = /%%TESTREPORTSBUTTON%%/g ;
 
         this.testCardElementInProgress =
-            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%NR%%\">" +
+            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%NR%%\" style='break-inside: avoid;'>" +
             "<div class=\"card\">" +
             "<h5 class=\"card-header\">%%TESTTITLE%%</h5>" +
             "<div class=\"card-body col-12 row\">" +
@@ -98,7 +98,7 @@
             "</div>";
 
         this.testCardElementWaitingForStart =
-            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%NR%%\">" +
+            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%NR%%\" style='break-inside: avoid;'>" +
             "<div class=\"card\">" +
             "<h5 class=\"card-header\">%%TESTTITLE%%</h5>" +
             "<div class=\"card-body col-12 row\">" +
@@ -412,9 +412,9 @@
 
         // load the tests norms
         if (noNormDropdowns) {
-            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm1Select')[0].outerHTML = this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID1);
-            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm2Select')[0].outerHTML = this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID2);
-            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm3Select')[0].outerHTML = this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID3);
+            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm1Select')[0].outerHTML = "&nbsp;" + this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID1);
+            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm2Select')[0].outerHTML = "&nbsp;" + this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID2);
+            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm3Select')[0].outerHTML = "&nbsp;" + this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID3);
         } else {
             $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm1Select').append(this.generateNormSelection(
                 currentTest.testDefinition.norms, currentTest.NormID1
@@ -661,6 +661,19 @@
                  saveFileLocally(fileName + " " + this.currentSession.Description + " - " + this.currentSession.Person.createHailing() + ".zip" , blob, "application/zip");
              }.bind(this));
         }.bind(this), this.zipError, true , true);
+    };
+
+    ITSSessionEditor.prototype.printSession = function () {
+        var w=window.open();
+        this.generateTestsList(true);
+        w.document.write("<h4>" + $('#AdminInterfaceEditSessionEditHeaderName').text() + " / " + $('#AdminInterfaceEditSessionEditHeaderCandidate').text() + "</h4>"
+            + $('#AdminInterfaceEditSessionPrintDateTimeHeader').text() + moment(new Date()).format(ITSDateTimeFormatPickerMomentJS) + "<br/>");
+        for (var i = 0; i < this.currentSession.SessionTests.length; i++) {
+            w.document.write($('#AdminInterfaceEditSessionEditTestCards'+i).html());
+        }
+        this.generateTestsList(false);
+        w.print();
+        w.close();
     };
 
     ITSSessionEditor.prototype.zipError = function () {
