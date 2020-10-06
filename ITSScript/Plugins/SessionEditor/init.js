@@ -669,7 +669,7 @@
         w.document.write("<h2>" + $('#AdminInterfaceEditSessionEditHeaderName').text() + " / " + $('#AdminInterfaceEditSessionEditHeaderCandidate').text() + "</h2>"
             + $('#AdminInterfaceEditSessionPrintDateTimeHeader').text() + "<small>" + moment(new Date()).format(ITSDateTimeFormatPickerMomentJS) + "<br/></small>");
         for (var i = 0; i < this.currentSession.SessionTests.length; i++) {
-            w.document.write($('#AdminInterfaceEditSessionEditTestCards'+i).html());
+            w.document.write($('#AdminInterfaceEditSessionEditTestCards'+i)[0].outerHTML);
         }
         this.generateTestsList(false);
         w.print();
