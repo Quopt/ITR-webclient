@@ -48,7 +48,7 @@
             "</div>";
 
         this.testCardElementDoneNoUIElements =
-            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%ID%%\" style='break-inside: avoid; break-before: auto; border-left: dotted 1px;'>" +
+            "<div NoTranslate id=\"AdminInterfaceEditSessionEditTestCards%%ID%%\" style='break-inside: avoid; break-before: auto;'>" +
             "<div class=\"card\">" +
             "<h3 class=\"card-header\">%%TESTTITLE%%</h3>" +
             "<div class=\"card-body col-12 row\">" +
