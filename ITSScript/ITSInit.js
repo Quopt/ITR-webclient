@@ -701,8 +701,15 @@ if (!ITSInstance) {
      });
     ITSInstance.MessageBus.subscribe('CurrentUser.Loaded',
         function () {
-            if ((ITSInstance.users.currentUser.HasEducationalOfficeAccess) && (ITSInstance.users.currentUser.HasTestingOfficeAccess)) document.title = 'ITR - The Internet Test & Teaching Room';
-            if ((ITSInstance.users.currentUser.HasEducationalOfficeAccess) && (!ITSInstance.users.currentUser.HasTestingOfficeAccess)) document.title = 'ITR - The Internet Teaching Room';
+            if ((ITSInstance.users.currentUser.HasEducationalOfficeAccess) && (ITSInstance.users.currentUser.HasTestingOfficeAccess)) {
+                document.title = ITSInstance.translator.getTranslatedString('default', 'TitleTestTeaching', 'ITR - The Internet Test & Teaching Room');
+            }
+            if ((ITSInstance.users.currentUser.HasEducationalOfficeAccess) && (!ITSInstance.users.currentUser.HasTestingOfficeAccess)) {
+                document.title = ITSInstance.translator.getTranslatedString('default', 'TitleTeaching', 'ITR - The Internet Teaching Room');
+            }
+            if ((!ITSInstance.users.currentUser.HasEducationalOfficeAccess) && (ITSInstance.users.currentUser.HasTestingOfficeAccess)) {
+                document.title = ITSInstance.translator.getTranslatedString('default', 'TitleTest', 'ITR - The Internet Test Room');
+            }
         });
 
     if (cookieHelper.getCookie('ITRLanguage') != "") {

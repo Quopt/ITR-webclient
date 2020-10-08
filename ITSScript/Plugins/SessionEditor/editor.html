@@ -44,9 +44,9 @@
             class="btn btn-success" onclick="ITSInstance.editSessionController.changeSession();"><i class="fa fa-fw fa-edit"></i><span id="AdminInterfaceEditSessionChangeLabel">Change session</span>
     </button>
     <button id="AdminInterfaceEditSessionEditArchiveTest" notranslate type="button" onclick="ITSInstance.editSessionController.archiveSession();" class="btn btn-warning"><i id="AdminInterfaceEditSessionEditArchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceEditSessionEditArchiveLabel">Archive this session</span></button>
-    <button id="AdminInterfaceEditSessionEditUnarchiveTest" notranslate type="button" onclick="ITSInstance.editSessionController.unarchiveSession();" class="btn btn-warning"><i id="AdminInterfaceEditSessionEditUnarchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceEditSessionEditArchiveLabel">Unarchive this session</span></button>
+    <button id="AdminInterfaceEditSessionEditUnarchiveTest" notranslate type="button" onclick="ITSInstance.editSessionController.unarchiveSession();" class="btn btn-warning"><i id="AdminInterfaceEditSessionEditUnarchiveTestIcon" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceEditSessionEditUnarchiveLabel">Unarchive this session</span></button>
     <button type="button" onclick="ITSInstance.editSessionController.deleteSession();" class="btn btn-warning" notranslate><i class="fa fa-fw fa-trash "></i><span id="AdminInterfaceEditSessionEditDelete">Delete this session</span></button>
-    <button type="button" onclick="ITSInstance.editSessionController.downloadSession();" class="btn btn-success" id="AdminInterfaceEditSessionEditDownloadButton" notranslate><i class="fa fa-fw fa-download "></i><span id="AdminInterfaceEditSessionEditDownload">Download session results archive</span></button>
+    <button type="button" data-toggle="modal" data-target="#AdminInterfaceEditSessionDownload-dialog" class="btn btn-success" id="AdminInterfaceEditSessionEditDownloadButton" notranslate><i class="fa fa-fw fa-download "></i><span id="AdminInterfaceEditSessionEditDownload">Download session results archive</span></button>
     <button type="button" onclick="ITSInstance.editSessionController.printSession();" class="btn btn-success" id="AdminInterfaceEditSessionEditPrintButton" notranslate><i class="fa fa-fw fa-print"></i><span id="AdminInterfaceEditSessionPrint">Print overview</span></button>
 </div>
 
@@ -56,4 +56,41 @@
     <button id="AdminInterfaceEditSessionEditArchiveTestTeaching" notranslate type="button" onclick="ITSInstance.editSessionController.archiveSession();" class="btn btn-warning" notranslate><i id="AdminInterfaceEditSessionEditArchiveTestIconTeaching" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceEditSessionEditArchiveTeaching">Archive this session</span></button>
     <button id="AdminInterfaceEditSessionEditUnarchiveTestTeaching" notranslate type="button" onclick="ITSInstance.editSessionController.unarchiveSession();" class="btn btn-warning" notranslate><i id="AdminInterfaceEditSessionEditUnarchiveTestIconTeaching" class="fa fa-fw fa-archive "></i><span id="AdminInterfaceEditSessionEditUnarchiveTeaching">Unarchive this session</span></button>
     <button type="button" onclick="ITSInstance.editSessionController.deleteSession();" class="btn btn-warning" notranslate><i class="fa fa-fw fa-trash "></i><span id="AdminInterfaceEditSessionEditDeleteTeaching">Delete this session</span></button>
+</div>
+
+<div class="modal fade" id="AdminInterfaceEditSessionDownload-dialog" tabindex="-1" role="dialog" aria-labelledby="AdminInterfaceEditSessionDownloadLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AdminInterfaceEditSessionDownloadLabel">Please confirm what you want to download</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="AdminInterfaceEditSessionDownload-Answers" name="AdminInterfaceEditSessionUnArchive-list" value="answers">
+                        <label class="form-check-label" id="AdminInterfaceEditSessionDownload-AnswersLabel"  for="AdminInterfaceEditSessionDownload-Answers">
+                            Include answers overview
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="AdminInterfaceEditSessionDownload-reports" name="AdminInterfaceEditSessionUnArchive-list" value="reports">
+                        <label class="form-check-label" id="AdminInterfaceEditSessionDownload-ReportsLabel"  for="AdminInterfaceEditSessionDownload-reports">
+                            Include all reports
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfaceEditSessionDownload-CloseButton">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="AdminInterfaceEditSessionDownload-Button" onclick="ITSInstance.editSessionController.downloadSession();"  notranslate>
+                    <i id="AdminInterfaceEditSessionDownloadIcon" class="fa fa-fw fa-archive"></i>
+                    <span id="AdminInterfaceEditSessionDownload-buttonlabel">Download archive</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

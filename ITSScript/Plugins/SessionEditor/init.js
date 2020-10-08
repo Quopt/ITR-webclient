@@ -646,6 +646,9 @@
     ITSSessionEditor.prototype.downloadSession = function () {
         ITSInstance.UIController.showInterfaceAsWaitingOn(0);
 
+        this.downloadPreferenceReports = $('#AdminInterfaceEditSessionDownload-reports:checked').val() == "reports";
+        this.downloadPreferenceAnswers = $('#AdminInterfaceEditSessionDownload-Answers:checked').val() == "answers";
+
         // add all results to a ZIP file and download that to the client
         var zip = new JSZip();
         this.currentSession.createReportOverviewInZipStart();
@@ -662,7 +665,7 @@
                  ITSInstance.UIController.showInterfaceAsWaitingOff();
                  saveFileLocally(fileName + " " + this.currentSession.Description + " - " + this.currentSession.Person.createHailing() + ".zip" , blob, "application/zip");
              }.bind(this));
-        }.bind(this), this.zipError, true , true);
+        }.bind(this), this.zipError, this.downloadPreferenceReports, this.downloadPreferenceAnswers);
     };
 
     ITSSessionEditor.prototype.printSession = function () {
