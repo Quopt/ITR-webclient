@@ -359,6 +359,11 @@ ITSInviteNewCandidateEditor.prototype.saveNewSession = function ( onSuccessCallb
         this.saveNewSessionCallback = undefined;
     }
 
+    // set correct session type if present
+    try {
+        this.newSession.SessionType = parseInt(getUrlParameterValue("SessionType"));
+    } catch (err) { };
+
     var ValidationMessage = "";
     // check if all information is present to save the session
     DataBinderFrom("AdminInterfaceSessionEditNew", this.newSession);
@@ -592,7 +597,7 @@ ITSInviteNewCandidateEditor.prototype.mailSessionInvitation = function () {
             ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#AdminInterfaceNewSessionEditorDiv.NewSessionMenu", ITSInstance.translator.translate("#AdminInterfaceNewSessionEditorDiv.NewSessionMenu", "New session"), "fa-thermometer-half", "ITSInstance.newCandidateSessionController.createNewSession(\'\'); ITSRedirectPath(\'NewSession&SessionType=0\');");
             //ITSInstance.UIController.registerMenuItem('#submenuCandidatesLI', "#AdminInterfaceNewSessionEditorDiv.NewSessionMenu2", ITSInstance.translator.translate("#AdminInterfaceNewSessionEditorDiv.NewSessionMenu2", "New session"), "fa-thermometer-half", "ITSInstance.newCandidateSessionController.createNewSession(\'\'); ITSRedirectPath(\'NewSession\');");
             ITSInstance.UIController.registerMenuItem('#submenuTeachingLI', '#AdminInterfaceNewSessionEditorDiv.NewTeachingSessionMenu', ITSInstance.translator.translate("#AdminInterfaceNewSessionEditorDiv.NewTeachingSessionMenu", "New teaching session"), "fa-atom", "ITSInstance.newCandidateSessionController.createNewSession(''); ITSRedirectPath(\'NewSession&Mode=Teaching&SessionType=1001\'); ");
-            ITSInstance.UIController.registerMenuItem('#submenuCoursesLI', '#AdminInterfaceNewSessionEditorDiv.NewIndividualTeachingSessionMenu', ITSInstance.translator.translate("#AdminInterfaceNewSessionEditorDiv.NewIndividualTeachingSessionMenu", "New individual teaching session"), "fa-atom", "ITSRedirectPath(\'NewSession&SessionType=1003\'); ");
+            ITSInstance.UIController.registerMenuItem('#submenuCoursesLI', '#AdminInterfaceNewSessionEditorDiv.NewIndividualTeachingSessionMenu', ITSInstance.translator.translate("#AdminInterfaceNewSessionEditorDiv.NewIndividualTeachingSessionMenu", "New individual teaching session"), "fa-atom", "ITSInstance.newCandidateSessionController.createNewSession(''); ITSRedirectPath(\'NewSession&SessionType=1003\'); ");
         }, true);
     })
 

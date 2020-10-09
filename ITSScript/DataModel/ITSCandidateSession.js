@@ -494,6 +494,7 @@ ITSCandidateSession.prototype.saveGroupSessionsToServerUpdateCounter = function 
         $('#'+this.progressElement).attr('aria-valuenow' , Math.round(progressElementCounter / this.PluginData.GroupMembers.length) * 100 );
         if (progressElementCounter >= this.PluginData.GroupMembers.length) {
             $('#'+this.progressElement).hide();
+            this.ITSSession.MessageBus.publishMessage("SessionGroup.Update", this);
         }
     }
 };

@@ -30,16 +30,7 @@
             afterOfficeLogin: function () {
                 ITSLogger.logMessage(logLevel.INFO,'Init portlet invite new candidate');
                 ITSInstance.batteries.loadAvailableBatteries(function () {}, function () {});
-                ITSInstance.tests.loadAvailableTests(
-                    function () {
-                        ITSLogger.logMessage(logLevel.INFO,'Tests loaded');
-                        $("#AdminInterfaceInviteNewCandidate").children().prop('disabled', false);
-                        $("#AdminInterfaceInviteNewCandidate").prop('disabled', false);
-                        $("#AdminInterfaceInviteNewCandidate").fadeTo("slow", 1);
-                    },
-                    function () {
-                    }
-                );
+                ITSInstance.tests.loadAvailableTests(function () {},function () {});
             },
             hide: function () {
                 $('#AdminInterfaceInviteNewCandidate').hide();

@@ -26,9 +26,9 @@
         ITSInstance.GroupSessionListerController = new ITSGroupSessionListerEditor();
         ITSInstance.UIController.registerEditor(ITSInstance.GroupSessionListerController);
         ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
-            ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', '#GroupSessionListerController.GroupSessionMenu', ITSInstance.translator.translate("#GroupSessionListerController.GroupSessionReadyMenu", "Group sessions"), "fa-user-plus", "ITSRedirectPath(\'GroupSessionLister&SessionType=100\');");
+            ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', '#GroupSessionListerController.GroupSessionMenu', ITSInstance.translator.translate("#GroupSessionListerController.GroupSessionReadyMenu", "Group sessions"), "fa-user", "ITSRedirectPath(\'GroupSessionLister&SessionType=100\');");
             ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#GroupSessionListerController.GroupSessionArchivedMenu", ITSInstance.translator.translate("#GroupSessionListerController.GroupSessionArchivedMenu", "Group sessions archive"), "fa-archive", "ITSRedirectPath(\'GroupSessionLister&SessionType=100&Status=Archived\');");
-            ITSInstance.UIController.registerMenuItem('#submenuCoursesLI', '#GroupSessionListerController.CourseMenu', ITSInstance.translator.translate("#GroupSessionListerController.CourseMenu", "Active course group sessions"), "fa-user-plus", "ITSRedirectPath(\'GroupSessionLister&SessionType=1000\');");
+            ITSInstance.UIController.registerMenuItem('#submenuCoursesLI', '#GroupSessionListerController.CourseMenu', ITSInstance.translator.translate("#GroupSessionListerController.CourseMenu", "Active course group sessions"), "fa-user-friends", "ITSRedirectPath(\'GroupSessionLister&SessionType=1000\');");
             ITSInstance.UIController.registerMenuItem('#submenuCoursesLI', "#GroupSessionListerController.CourseArchivedMenu", ITSInstance.translator.translate("#GroupSessionListerController.CourseArchivedMenu", "Group courses archive"), "fa-archive", "ITSRedirectPath(\'GroupSessionLister&SessionType=1000&Status=Archived\');");
         }, true);
 

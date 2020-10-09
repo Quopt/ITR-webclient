@@ -19,7 +19,7 @@
     $.get(ITSJavaScriptVersion + '/Plugins/CourseTeachingSessionPortlet/portlet.html', function (htmlLoaded) {
         var ITSportletTeachingSessions = {
             info: new ITSPortletAndEditorRegistrationInformation('06155c4c-a288-47f5-a4d4-5290a06bfb42', 'Teaching sessions portlet', '1.0', 'Copyright 2020 Quopt IT Services BV', 'Presents an overview of teaching sessions, an option to view the list and an option to create a new one.'),
-            defaultShowOrder : 2,
+            defaultShowOrder : 3,
             html : htmlLoaded,
             addToInterface : function () {
                 var AdminInterfaceTeachingPortletDiv = $('<div class="col-md-4" id="AdminInterfaceTeachingPortlet">');
