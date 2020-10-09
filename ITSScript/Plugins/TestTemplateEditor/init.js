@@ -534,6 +534,7 @@ ITSTestTemplateEditor.prototype.setCurrentScreenIndex = function (screenNum, tes
         this.currentScreenIndex = screenNum;
         this.currentScreen = this.currentTest.screens[screenNum];
         $('#AdminInterfaceTestTemplateEditorScreenContentsHeader').empty();
+        tinyMCE.get("AdminInterfaceTestTemplateEditorScreenExplanation").setContent(this.currentScreen.remarks); //xxx
         var newScreenComponent = "";
         var template = {};
         if ((this.currentScreenComponentIndex < 0) || (this.currentScreenComponentIndex >= this.currentScreen.screenComponents.length)) {
