@@ -399,6 +399,10 @@ ITSTest.prototype.loadTestDetailSucces = function () {
             if (lastCheckedTemplateID != this.screens[i].screenComponents[j].templateID )
             {
                 lastCheckedTemplateID = this.screens[i].screenComponents[j].templateID;
+                if (!this.ITSSession.screenTemplates.templatesLoaded) {
+                    setTimeout(this.loadTestDetailSucces.bind(this), 200);
+                    return;
+                }
                 templateIndex = this.ITSSession.screenTemplates.findTemplateById(this.ITSSession.screenTemplates.screenTemplates, lastCheckedTemplateID);
                 if (templateIndex < 0) {
                    ITSLogger.logMessage(logLevel.ERROR,"Template missing ! " + lastCheckedTemplateID);

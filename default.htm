@@ -63,16 +63,45 @@
 <div class="navbar navbar-toggleable-md navbar-inverse fixed-top" id="NavbarsTestTaking"
      style="background-color: #D3D3D3;display: none;max-height:49px;min-height:49px;">
     <div class="form-inline col-8" id="NavbarsAdminLoginBlockTT" style="width:100%;color:white;vertical-align: bottom; left:10px;">
+        <a class="navbar-brand fixed-top" id="NavbarsAdminLoginBlockTTMenuIcon" style="display: none">
+            <i id="menuIconTT" style="position:fixed; top:10px; left:10px; z-index:99999;" class="fa fa-caret-square-down fa-1x" onclick="if ($('#NavBarsAdminSidebarTT:visible').length > 0) {$('#NavBarsAdminSidebarTT').hide();} else {$('#NavBarsAdminSidebarTT').show();}"></i>
+        </a>
         <label id="NavbarsLabelHeadingTT" NoTranslate>
-            <label id="NavbarsLabelHeadingWelcomeTT">Welcome</label>&nbsp;
-            <label id="welcomeUserNameTT" NoTranslate>...</label>&nbsp;
-            <label id="welcomeCompanyTT" NoTranslate>...</label></label>
+        <label id="NavbarsLabelHeadingWelcomeTT">Welcome</label>&nbsp;
+        <label id="welcomeUserNameTT" NoTranslate>...</label>&nbsp;
+        <label id="welcomeCompanyTT" NoTranslate>...</label></label>
         <label id="TestTakingInterfaceConnectionLost" style="display:none">Saving the test failed. Your internet connection is temporarily unavailable. You may continue the test but the results will not be stored. Check your internet connection. If you see this error again then please press the logout button. Restore your internet connection and then login again. Your session will restart at the last saved question.</label>
     </div>
     <div class="form-inline col-2" id="NavbarsAdminSearchButtonBlockTT" style="position:absolute; left:80%; top:1px; width:400px;min-width:400px;max-width:400px;">
         <button class="btn btn-warning" id="NavbarsAdminLogoutButtonTT"
                 onclick="processEvent('Logout');">Logout
         </button>
+    </div>
+</div>
+
+<div class="fixed-top" id="NavBarsAdminSidebarTT" style="display:none;color:white;background-color: rgb(200,200,200);top:30px;z-index:9998;min-width: 300px;max-width: 300px;">
+    <div id="NavBarsAdminSidebarMenuTT" class="d-md-flex pt-2 nav flex-column">
+        <li class="nav-item" style="display:none;" id="NavBarsAdminSidebarOtherCompanyTTLI" notranslate>
+            <a class="nav-link" style="color:white;" onclick="$('#NavBarsAdminSidebarTT').hide(); ITSInstance.UIController.activateScreenPath('LoginCompanySelect');" id="NavBarsAdminSidebarOtherCompanyTT">
+                <label id="NavBarsAdminSidebarOtherCompanyLabelTT">Change to other company</label>
+            </a>
+        </li>
+        <li class="nav-item" style="display:none;" id="NavBarsAdminSidebarOtherSessionTTLI" notranslate>
+            <a class="nav-link" style="color:white;" onclick="$('#NavBarsAdminSidebarTT').hide(); ITSInstance.UIController.activateScreenPath('LoginSessionSelect');" id="NavBarsAdminSidebarOtherSessionTT">
+                <label id="NavBarsAdminSidebarOtherSessionLabelTT">Change to other session</label>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" style="color:white;" onclick="$('#NavBarsAdminSidebarTT').hide(); ITSInstance.logoutController.logout();" id="NavBarsAdminSidebarLogoutTT">
+                <label id="NavBarsAdminSidebarLogoutLabelTT">Logout</label>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link small" id="NavBarDarkModeMenuTT" onclick="ITSInstance.UIController.changeDarkMode();" style="color:white;">
+                <label id="ITRColorModeLabelTT">Dark mode</label>
+                <input id="ITRColorModeTT" type="checkbox" onclick="ITSInstance.UIController.changeDarkMode();" class="bootstrap-toggle" data-toggle="toggle" data-size="xs" data-onstyle="outline-success" data-offstyle="success" data-off="<i class='fa fa-adjust'></i>" data-on="<i class='fa fa-adjust'></i>">
+            </a>
+        </li>
     </div>
 </div>
 
@@ -393,7 +422,7 @@
         <div class="mx-auto" style="max-width:390px;min-width:190px;">
             <h3 style="vertical-align:text-bottom;" id="LoginWindowMfaQRSetupHeader">One-time setup for multi factor authentication for your account</h3>
             <div class="form-group">
-                <label id="LoginWindowMfaQRSetupInstruction">Please use your smartphone. Install Google Authenticator, Microsoft Authenticator, or another OTP compatible application from the appstore. Scan the QR code below. When scanned press the back button and restart the login procedure. In case you do not scan the MFA code now ask your system administrator to remove your account and create your account again at a more convenient time. This QR code will be shown only once.</label> <br/><br/>
+                <label id="LoginWindowMfaQRSetupInstruction">Please use your smartphone. Install Microsoft Authenticator or another OTP compatible application from the appstore. Scan the QR code below. When scanned press the back button and restart the login procedure. In case you do not scan the MFA code now ask your system administrator to remove your account and create your account again at a more convenient time. This QR code will be shown only once.</label> <br/><br/>
                 <canvas  id="LoginWindowMfaQRSetupImage" notranslate></canvas >
             </div>
             <button class="btn btn-primary" id="LoginWindowMfaQRBackButton"

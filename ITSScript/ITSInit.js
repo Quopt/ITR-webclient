@@ -60,6 +60,10 @@ ITSSession = function () {
     this.genericJSONUpdateQueue = [];
     this.callProcessing = false;
     this.callJSONLoaderProcessing = false;
+
+    // current user special surface state flags
+    this.MultipleSessionsFound = false;
+    this.MultipleCompaniesFound = false;
 };
 
 ITSEmptyObject = function () {

@@ -175,7 +175,7 @@ ITSLoginToken.prototype.keepTokenFresh = function () {
                         if (!$('#LoginWindowHeading').is(':visible')) {
                             keepTokenFreshCounter = 0;
                             ITSInstance.UIController.showError('ITSLoginToken.tokenRefreshFailed', 'Your login has expired. Please login again.', '',
-                                'ITSInstance.logoutController.logout();');
+                                    'ITSInstance.logoutController.logout();');
                         }
                     },
                     success: function () {

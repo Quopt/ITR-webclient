@@ -223,6 +223,7 @@ ITSUIController = function () {
         $('#LoginWindow').hide();
         $('#ForgotWindow').hide();
         $('#NavbarsAdmin').hide();
+        $('#NavbarsAdminLoginBlockTTMenuIcon').hide();
         $('#NavbarsAdmin').visibility = 'hidden';
         $('#NavBarsFooter').hide();
         $('#NavBarsAdminSidebar').hide();
@@ -558,12 +559,23 @@ ITSUIController = function () {
     this.changeDarkMode = function () {
         if (! ITSInstance.UIController.inChangeDarkMode) {
             ITSInstance.UIController.inChangeDarkMode = true;
-            if ($('#ITRColorMode').is(':checked')) {
-                setTimeout( ITSInstance.UIController.enableLightMode, 100);
-                $('#ITRColorMode').bootstrapToggle('off', true);
-            } else {
-                setTimeout( ITSInstance.UIController.enableDarkMode, 100);
-                $('#ITRColorMode').bootstrapToggle('on', true);
+            if (! ($('#NavBarsAdminSidebarTT:visible').length > 0) ) {
+                if ($('#ITRColorMode').is(':checked')) {
+                    setTimeout(ITSInstance.UIController.enableLightMode, 100);
+                    $('#ITRColorMode').bootstrapToggle('off', true);
+                } else {
+                    setTimeout(ITSInstance.UIController.enableDarkMode, 100);
+                    $('#ITRColorMode').bootstrapToggle('on', true);
+                }
+            }
+            else {
+                if ($('#ITRColorModeTT').is(':checked')) {
+                    setTimeout(ITSInstance.UIController.enableLightMode, 100);
+                    $('#ITRColorModeTT').bootstrapToggle('off', true);
+                } else {
+                    setTimeout(ITSInstance.UIController.enableDarkMode, 100);
+                    $('#ITRColorModeTT').bootstrapToggle('on', true);
+                }
             }
             setTimeout(function () { ITSInstance.UIController.inChangeDarkMode = false; ITSInstance.MessageBus.publishMessage("CurrentCompany.Refreshed", ""); }, 100);
             // save this as a user preference

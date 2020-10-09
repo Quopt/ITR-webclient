@@ -109,6 +109,7 @@ ITSLoginController = function () {
             }
         }
         else {
+            ITSInstance.MultipleCompaniesFound = true;
             ITSInstance.UIController.activateScreenPath('LoginCompanySelect');
         }
     };
@@ -367,6 +368,7 @@ ITSTestTakingController.prototype.sessionLoader = function () {
     if (this.sessionList.length > 1) {
         // there is more than one session, candidate needs to choose which one...
         ITSInstance.UIController.showInterfaceAsWaitingOff();
+        ITSInstance.MultipleSessionsFound = true;
         ITSRedirectPath('LoginSessionSelect');
     } else {
         // start this session now ...
@@ -412,6 +414,16 @@ ITSTestTakingController.prototype.sessionLoadingSucceeded = function () {
         $('#LoginWindow').hide();
         $('#LoginWindowSelectSession').hide();
         $('#LoginWindowSelectCompany').hide();
+        $('#NavbarsAdminLoginBlockTTMenuIcon').hide();
+
+        // finetune the interface for teaching or testing
+        if (this.currentSession.SessionType >= 1000) {
+            $('#NavbarsAdminLoginBlockTTMenuIcon').show();
+            $('#NavBarsAdminSidebarOtherCompanyTTLI').hide();
+            $('#NavBarsAdminSidebarOtherSessionTTLI').hide();
+            if (ITSInstance.MultipleCompaniesFound) $('#NavBarsAdminSidebarOtherCompanyTTLI').show();
+            if (ITSInstance.MultipleSessionsFound) $('#NavBarsAdminSidebarOtherSessionTTLI').show();
+        }
         this.switchNavBar();
         this.prepareTest(this.currentTestIndex);
         setTimeout(this.updateHeaders.bind(this), 200);
@@ -990,8 +1002,10 @@ ITSTestTakingController.prototype.saveCurrentTestRetry = function (sessionPostOb
     } else {
         this.saveCurrentTestObjectBusy = false;
         if ((typeof ajaxOptions != "undefined") && (ajaxOptions.status == 403)) {
-            ITSInstance.UIController.showError('ITSLoginToken.tokenRefreshFailed', 'Your login has expired. Please login again.', '',
-                'ITSInstance.logoutController.logout();');
+            if (ITSInstance.token.IssuedToken != '') {
+                ITSInstance.UIController.showError('ITSLoginToken.tokenRefreshFailed', 'Your login has expired. Please login again.', '',
+                    'ITSInstance.logoutController.logout();');
+            }
         } else {
             ITSInstance.UIController.showError('ITSTestTakingController.SaveCurrentTestFailed',
                 $('#TestTakingInterfaceConnectionLost').text());
