@@ -35,7 +35,8 @@ ITSCandidateSession = function (session, ITSSession) {
     this.regenerateCandidate();
 
     this.SessionType = 0; // 0 = PersonSession. 1=Public (might be temporary) session. 4 = Group session. 200 = public base session.
-    // 1000 = Course session (group session), 1001 teaching session for specific course part, 1002 = individual course session
+    // 1000 = Course session (group session), 1001 teaching session for specific course part, 1002 = individual course session from group session,
+    //  1003 = individual course session
     // (0-1000 reserved for testing, 1000-2000 reserved for educational)
     this.Description = "";
     this.Goal = "";

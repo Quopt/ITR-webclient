@@ -22,6 +22,7 @@
                 AdminInterfaceSettingsDiv = $('<div class="col-md-4" id="AdminInterfaceSettings">');
                 $('#AdminInterfacePortlets').append(AdminInterfaceSettingsDiv);
                 $('#AdminInterfaceSettings').append(this.html);
+                $('#AdminInterfaceSettings').hide();
             },
             hide: function () {
                 $('#AdminInterfaceSettings').hide();
@@ -53,6 +54,10 @@
         ITSInstance.portletUserPreferences = Object.create(ITSPortletUserPreferences);
         ITSInstance.UIController.registerPortlet(ITSInstance.portletUserPreferences);
 
+        //show the portlet
+        ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
+            $('#AdminInterfaceSettings').show();
+        }, true);
     })
 
 })() // iife

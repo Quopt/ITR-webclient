@@ -175,6 +175,8 @@
         ITSInstance.UIController.showInterfaceAsWaitingOn(0);
         $('#AdminInterfaceEditSessionEditTestsList').empty();
         this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this));
+
+
     };
 
     ITSSessionEditor.prototype.sessionLoaded = function () {
@@ -258,6 +260,16 @@
         } else {
             $('#AdminInterfaceEditSessionEditButtonBar').show();
             $('#AdminInterfaceEditSessionEditButtonBarTeaching').hide();
+        }
+
+        // set the user download preferences
+        if ((typeof ITSInstance.users.currentUser.PluginData.DownloadSettings != "undefined") && (typeof ITSInstance.users.currentUser.PluginData.DownloadSettings.Reports != "undefined")) {
+            $('#AdminInterfaceEditSessionDownload-reports').prop('checked',ITSInstance.users.currentUser.PluginData.DownloadSettings.Reports);
+            $('#AdminInterfaceEditSessionDownload-Answers').prop('checked',ITSInstance.users.currentUser.PluginData.DownloadSettings.Answers);
+        } else {
+            ITSInstance.users.currentUser.PluginData.DownloadSettings = {};
+            ITSInstance.users.currentUser.PluginData.DownloadSettings.Answers = false;
+            ITSInstance.users.currentUser.PluginData.DownloadSettings.Reports = false;
         }
     }
 
@@ -648,6 +660,19 @@
 
         this.downloadPreferenceReports = $('#AdminInterfaceEditSessionDownload-reports:checked').val() == "reports";
         this.downloadPreferenceAnswers = $('#AdminInterfaceEditSessionDownload-Answers:checked').val() == "answers";
+        var prefSaveRequired = false;
+
+        if (this.downloadPreferenceAnswers != ITSInstance.users.currentUser.PluginData.DownloadSettings.Answers) {
+            ITSInstance.users.currentUser.PluginData.DownloadSettings.Answers = this.downloadPreferenceAnswers;
+            prefSaveRequired = true;
+        }
+        if (this.downloadPreferenceReports != ITSInstance.users.currentUser.PluginData.DownloadSettings.Reports) {
+            ITSInstance.users.currentUser.PluginData.DownloadSettings.Reports = this.downloadPreferenceReports;
+            prefSaveRequired = true;
+        }
+        if (prefSaveRequired) {
+            ITSInstance.users.currentUser.saveToServer(function () {}, function () {});
+        }
 
         // add all results to a ZIP file and download that to the client
         var zip = new JSZip();
@@ -702,8 +727,8 @@
         var w=window.open();
         this.generateTestsList(true);
         w.document.write(openingTag);
-        w.document.write("<h2>" + $('#AdminInterfaceEditSessionEditHeaderName').text() + " / " + $('#AdminInterfaceEditSessionEditHeaderCandidate').text() + "</h2>"
-            + $('#AdminInterfaceEditSessionPrintDateTimeHeader').text() + "<small>" + moment(new Date()).format(ITSDateTimeFormatPickerMomentJS) + "<br/></small>");
+        w.document.write("<h2>" + $('#AdminInterfaceEditSessionEditHeaderName').text() + " / " + $('#AdminInterfaceEditSessionEditHeaderCandidate').text() + "</h2><small>"
+            + $('#AdminInterfaceEditSessionPrintDateTimeHeader').text()  + moment(new Date()).format(ITSDateTimeFormatPickerMomentJS) + "<br/></small>");
         for (var i = 0; i < this.currentSession.SessionTests.length; i++) {
             w.document.write($('#AdminInterfaceEditSessionEditTestCards'+i)[0].outerHTML);
         }

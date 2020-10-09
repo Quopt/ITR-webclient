@@ -54,6 +54,7 @@ function loadOfficeComponents() {
         $.getScript(ITSJavaScriptVersion + "/Plugins/CreditsUsedPortlet/init.js"); loadPortletsCount ++;
         $.getScript(ITSJavaScriptVersion + "/Plugins/UserPreferencesPortlet/init.js"); loadPortletsCount ++;
         $.getScript(ITSJavaScriptVersion + "/Plugins/UsersLoggedInPortlet/init.js"); loadPortletsCount ++;
+        $.getScript(ITSJavaScriptVersion + "/Plugins/CourseTeachingSessionPortlet/init.js"); loadPortletsCount ++;
         // %OFFICEPORTLETEND%
 
         // load all the editors and viewers

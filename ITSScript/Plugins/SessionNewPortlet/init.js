@@ -26,10 +26,6 @@
                 $('#AdminInterfaceInviteNewCandidate').append(this.html);
                 $('#AdminInterfaceInviteNewCandidate').hide();
 
-                // disable the portlet while the tests are not available
-                $("#AdminInterfaceInviteNewCandidate").prop('disabled', true);
-                $("#AdminInterfaceInviteNewCandidate").children().prop('disabled', true);
-                $("#AdminInterfaceInviteNewCandidate").fadeTo("quick", 0.3);
             },
             afterOfficeLogin: function () {
                 ITSLogger.logMessage(logLevel.INFO,'Init portlet invite new candidate');

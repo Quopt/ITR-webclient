@@ -62,6 +62,8 @@ function ITSUser (usersParent, ITSSession) {
     this.PluginData = {};
     this.PluginData.persistentProperties = "*ALL*";
     this.PluginData.ForbiddenPaths ='';
+    this.PluginData.DownloadSettings = {};
+    this.PluginData.DownloadSettings.persistentProperties = "*ALL*";
     this.APIKey = "";
 
     this.persistentProperties = [

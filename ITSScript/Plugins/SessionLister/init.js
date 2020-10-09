@@ -269,6 +269,9 @@
         if (parseInt(getUrlParameterValue("SessionType")) == 1001) {
             ITSRedirectPath("Session&SessionType=1001&SessionID=" + sessionID);
         }
+        else if (parseInt(getUrlParameterValue("SessionType")) == 1003) {
+            ITSRedirectPath("Session&SessionType=1003&SessionID=" + sessionID);
+        }
         else {
             ITSRedirectPath("Session&SessionID=" + sessionID);
         }
@@ -285,6 +288,9 @@
         ITSInstance.UIController.registerMenuItem('#submenuTeachingLI', '#SessionListerController.MyTeachingSessionMenu', ITSInstance.translator.translate("#SessionListerController.MyTeachingSessionMenu", "My active teaching sessions"), "fa-user", "ITSRedirectPath(\'SessionLister&SessionType=1001&Status=All&ConsultantID="+ITSInstance.users.currentUser.ID+"\');" );
         ITSInstance.UIController.registerMenuItem('#submenuTeachingLI', '#SessionListerController.TeachingSessionMenu', ITSInstance.translator.translate("#SessionListerController.TeachingSessionMenu", "Active teaching sessions"), "fa-tasks", "ITSRedirectPath(\'SessionLister&SessionType=1001&Status=All\');");
         ITSInstance.UIController.registerMenuItem('#submenuTeachingLI', '#SessionListerController.TeachingSessionArchivedMenu', ITSInstance.translator.translate("#SessionListerController.TeachingSessionArchivedMenu", "Archived teaching sessions"), "fa-book-reader", "ITSRedirectPath(\'SessionLister&SessionType=1001&Status=Archived\');");
+        ITSInstance.UIController.registerMenuItem('#submenuCoursesLI', '#SessionListerController.CourseIndividualMenu', ITSInstance.translator.translate("#SessionListerController.CourseIndividualMenu", "Active individual course sessions"), "fa-user-plus", "ITSRedirectPath(\'SessionLister&SessionType=1003\');");
+        ITSInstance.UIController.registerMenuItem('#submenuCoursesLI', "#SessionListerController.CourseIndividualArchivedMenu", ITSInstance.translator.translate("#SessionListerController.CourseIndividualArchivedMenu", "Individual courses archive"), "fa-archive", "ITSRedirectPath(\'SessionLister&SessionType=1003&Status=Archived\');");
+
     }, true);
 
 
