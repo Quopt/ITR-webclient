@@ -1623,7 +1623,7 @@ ITSTestTemplateEditor.prototype.processTestCapabilities = function () {
 
     if ((this.currentTest.TestType >= 1000) && (this.currentTest.TestType < 2000)) {
         $('#AdminInterfaceTestTemplateEditorTestCapabilitiesDiv').hide();
-        this.currentTest.PluginData.testHasScoring = false;
+        this.currentTest.PluginData.testHasScoring = true;
         this.currentTest.PluginData.testHasNorms = false;
         this.currentTest.PluginData.testHasCatalog = false;
         this.currentTest.PluginData.testHasMedia = true;
@@ -1637,6 +1637,7 @@ ITSTestTemplateEditor.prototype.processTestCapabilities = function () {
     if (this.currentTest.PluginData) {
         if (this.currentTest.PluginData.testHasScoring) {
             $('#AdminInterfaceTestTemplateEditor_TabScoring_li').show();
+            if ((this.currentTest.TestType >= 1000) && (this.currentTest.TestType < 2000)) $('#AdminInterfaceTestTemplateEditorTabScalesComplexScoringDiv').hide();
         }
         if (this.currentTest.PluginData.testHasNorms) {
             $('#AdminInterfaceTestTemplateEditor_TabNorms_li').show();
