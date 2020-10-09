@@ -981,7 +981,7 @@ ITSTestTakingController.prototype.saveCurrentTest = function () {
     }
 };
 
-ITSTestTakingController.prototype.saveCurrentTestRetry = function (sessionPostObject) {
+ITSTestTakingController.prototype.saveCurrentTestRetry = function (sessionPostObject, xhr, ajaxOptions, thrownError) {
     this.saveCurrentTestObjectBusy = true;
     setTimeout(this.resetBusyFlag.bind(this), 3000); // make sure to reset this flag after a few secs so saves will be retried anyway
     if (sessionPostObject.numberOfRetries > 0) {
@@ -989,8 +989,13 @@ ITSTestTakingController.prototype.saveCurrentTestRetry = function (sessionPostOb
         sessionPostObject.sessionTest.saveToServer(this.saveCurrentTestPickupNext.bind(this), this.saveCurrentTestRetry.bind(this, sessionPostObject), true);
     } else {
         this.saveCurrentTestObjectBusy = false;
-        ITSInstance.UIController.showError('ITSTestTakingController.SaveCurrentTestFailed',
-            $('#TestTakingInterfaceConnectionLost').text());
+        if ((typeof ajaxOptions != "undefined") && (ajaxOptions.status == 403)) {
+            ITSInstance.UIController.showError('ITSLoginToken.tokenRefreshFailed', 'Your login has expired. Please login again.', '',
+                'ITSInstance.logoutController.logout();');
+        } else {
+            ITSInstance.UIController.showError('ITSTestTakingController.SaveCurrentTestFailed',
+                $('#TestTakingInterfaceConnectionLost').text());
+        }
     }
 };
 
