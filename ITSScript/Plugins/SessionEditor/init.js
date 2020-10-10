@@ -734,7 +734,7 @@
         }
         this.generateTestsList(false);
         w.document.write(closingTag);
-        setTimeout(function () { w.print(); w.close(); }.bind(w), 1000);
+        setTimeout(function () { w.print(); w.close(); }.bind(w), 2500);
     };
 
     ITSSessionEditor.prototype.zipError = function () {
