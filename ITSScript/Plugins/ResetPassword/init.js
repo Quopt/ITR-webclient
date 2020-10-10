@@ -38,6 +38,7 @@
     ITSResetPasswordEditor.prototype.show=function () {
         $('#NavbarsAdmin').show();
         $('#NavbarsAdmin').visibility = 'visible';
+        if (ITSInstance.testTakingController.InTestTaking) $('#NavbarsAdmin').hide();
         $('#NavBarsFooter').show();
         $('#ResetPasswordInterfaceSessionEdit').show();
         ITSInstance.UIController.initNavBar();

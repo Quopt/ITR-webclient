@@ -416,14 +416,6 @@ ITSTestTakingController.prototype.sessionLoadingSucceeded = function () {
         $('#LoginWindowSelectCompany').hide();
         $('#NavbarsAdminLoginBlockTTMenuIcon').hide();
 
-        // finetune the interface for teaching or testing
-        if (this.currentSession.SessionType >= 1000) {
-            $('#NavbarsAdminLoginBlockTTMenuIcon').show();
-            $('#NavBarsAdminSidebarOtherCompanyTTLI').hide();
-            $('#NavBarsAdminSidebarOtherSessionTTLI').hide();
-            if (ITSInstance.MultipleCompaniesFound) $('#NavBarsAdminSidebarOtherCompanyTTLI').show();
-            if (ITSInstance.MultipleSessionsFound) $('#NavBarsAdminSidebarOtherSessionTTLI').show();
-        }
         this.switchNavBar();
         this.prepareTest(this.currentTestIndex);
         setTimeout(this.updateHeaders.bind(this), 200);

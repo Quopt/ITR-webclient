@@ -105,6 +105,18 @@ ITSUIController = function () {
         this.initNavBar();
         ITSTranslateInterface();
         setTimeout(onResize,5000);
+
+        // finetune the interface for teaching or testing, but allow for some time to load the session
+        setTimeout( function () {
+            if (ITSInstance.testTakingController.currentSession.SessionType >= 1000) {
+                $('#NavbarsAdminLoginBlockTTMenuIcon').show();
+                $('#NavBarsAdminSidebarOtherCompanyTTLI').hide();
+                $('#NavBarsAdminSidebarOtherSessionTTLI').hide();
+                if (ITSInstance.MultipleCompaniesFound) $('#NavBarsAdminSidebarOtherCompanyTTLI').show();
+                if (ITSInstance.MultipleSessionsFound) $('#NavBarsAdminSidebarOtherSessionTTLI').show();
+                $.getScript(ITSJavaScriptVersion + "/Plugins/ResetPassword/init.js");
+            }
+        }.bind(this), 5000);
     };
 
     this.EnablePublicTestTakingInterface = function () {
