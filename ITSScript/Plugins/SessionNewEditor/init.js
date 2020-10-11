@@ -562,7 +562,8 @@ ITSInviteNewCandidateEditor.prototype.teachSession = function () {
 ITSInviteNewCandidateEditor.prototype.startTeachingSession = function () {
     // UserID Password AutoLogin
     // Global_OriginalURL
-    window.open(Global_OriginalURL + "?AutoLogin&UserID="+ this.newSession.Person.EMail + "&Password=" + this.newSession.Person.Password, '', "resizable");
+    //window.open(Global_OriginalURL + "?AutoLogin&UserID="+ this.newSession.Person.EMail + "&Password=" + this.newSession.Person.Password, '', "resizable");
+    ITSRedirectPath('CourseTeachingSession', "SessionID="+ this.newSession.ID);
 };
 
 

@@ -735,6 +735,7 @@ ITSTestTakingController.prototype.endSessionChecker = function () {
             $('#ITSTestTakingDiv').hide();
             $('#ITSTestTakingDivSessionEnded').show();
             $('#NavbarsAdminLogoutButtonTT').hide();
+            $('#NavbarsAdminLoginBlockTTMenuIcon').hide();
             setTimeout(function () {
                 ITSInstance.logoutController.logout();
             }, 60000);

@@ -1197,7 +1197,7 @@ function ITSTestScreen(par, session) {
     this.explanation = ""; // the explanation for this question as shown to the office user (HTML OK)
     this.screenGroup = ""; // the name of the screen group this screen belongs to
     this.show = true; // determines whether this screen is shown or not
-    this.remarks = ""; // remarks as shown in the test editor
+    this.remarks = ""; // remarks as shown in the test editor and to the teacher
 
     this.beforeScreenScript = ""; // runs before the screen is shown, for example to shuffle questions or to change answer order
     this.afterScreenScript = ""; // runs after the screen is shown, for example for complex validations

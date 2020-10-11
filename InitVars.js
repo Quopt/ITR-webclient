@@ -103,6 +103,7 @@ function loadOfficeComponents() {
         $.getScript(ITSJavaScriptVersion + "/Plugins/SessionAuditTrail/init.js"); loadEditorsCount++;
         $.getScript(ITSJavaScriptVersion + "/Plugins/ServerData/init.js"); loadEditorsCount++;
         $.getScript(ITSJavaScriptVersion + "/Plugins/PublicSessionEditor/init.js"); loadEditorsCount++;
+        $.getScript(ITSJavaScriptVersion + "/Plugins/CourseTeachingSession/init.js"); loadEditorsCount++;
         // %OFFICEEDITOREND%
     }
 };

@@ -175,8 +175,6 @@
         ITSInstance.UIController.showInterfaceAsWaitingOn(0);
         $('#AdminInterfaceEditSessionEditTestsList').empty();
         this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this));
-
-
     };
 
     ITSSessionEditor.prototype.sessionLoaded = function () {
@@ -831,8 +829,9 @@
     };
 
     ITSSessionEditor.prototype.startTeachingSession = function () {
-        this.currentSession.Person.requestPassword( this.startTeachingSessionNow.bind(this),
-            function () { ITSInstance.UIController.showError("SessionEditor", "SessionTeachingStartFailed", "The teaching session could not be started, please refresh your browser page and try again.") ;} );
+        ITSRedirectPath('CourseTeachingSession', "SessionID="+ this.currentSession.ID);
+        //this.currentSession.Person.requestPassword( this.startTeachingSessionNow.bind(this),
+        //    function () { ITSInstance.UIController.showError("SessionEditor", "SessionTeachingStartFailed", "The teaching session could not be started, please refresh your browser page and try again.") ;} );
     };
 
     ITSSessionEditor.prototype.startTeachingSessionNow = function () {
