@@ -130,11 +130,13 @@ ITSLoginToken.prototype.changeCompany = function (newCompanyId, OnSuccess, OnErr
 ITSLoginToken.prototype.acquire = function (userName, password, okFunction, errorFunction) { // acquires a login token from the server.
     this.LoginProgress = "InProgress";
     this.userID = userName;
+    var poll = typeof getUrlParameterValue('Poll') == "undefined" ? "" : getUrlParameterValue('Poll');
     ITSLogger.logMessage(logLevel.ERROR,'Login started : ' + this.ITSInstance.baseURLAPI + 'login');
     var req = $.ajax({
         url: this.ITSInstance.baseURLAPI + 'login',
         context: this,
         headers: {
+            'Poll': poll,
             'UserID': userName,
             'Password': password,
             'MASTER': 'Y'
@@ -1293,3 +1295,31 @@ function ObjectToINIEventParameters(obj) {
     }
     return result;
 }
+
+function convertDateToCode(newdate) {
+    var carryOver = 0;
+
+    function numberToCharCode(num) {
+        if (num > 62) num = num % 62;
+        if (num < 26) return String.fromCharCode( "A".charCodeAt(0) + num );
+        if (num < 36) return String.fromCharCode( "0".charCodeAt(0) + (num-26) );
+        carryOver ++;
+        return String.fromCharCode( "A".charCodeAt(0) + (num-36) );
+    }
+
+    var newCode = numberToCharCode(newdate.getYear() % 62) +
+        numberToCharCode(newdate.getMonth()) +
+        numberToCharCode(newdate.getDay()) +
+        numberToCharCode(newdate.getHours()) +
+        numberToCharCode(newdate.getMinutes()) +
+        numberToCharCode(newdate.getSeconds());
+    if (carryOver > 0) {
+        newCode = numberToCharCode((newdate.getYear()-40-carryOver) % 62) +
+            numberToCharCode(newdate.getMonth()) +
+            numberToCharCode(newdate.getDay()) +
+            numberToCharCode(newdate.getHours()) +
+            numberToCharCode(newdate.getMinutes()) +
+            numberToCharCode(newdate.getSeconds());
+    }
+    return newCode;
+};

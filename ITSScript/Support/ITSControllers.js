@@ -61,7 +61,7 @@ ITSLoginController = function () {
         }.bind(this) );
     };
     this.login = function (userName, password) { // acquires a login token from the server.
-        if ((userName != "") && (password!="")) {
+        if ( ((userName != "") && (password!="")) || (getUrlParameterValue('Poll') != "")) {
             // clear the token and instance
             ITSInstance.token.set("empty");
             ITSInstance.users.resetCurrentUser();

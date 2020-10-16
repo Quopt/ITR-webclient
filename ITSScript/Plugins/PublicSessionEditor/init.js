@@ -609,20 +609,7 @@ ITSPublicSessionEditor.prototype.zipError = function () {
 };
 
 ITSPublicSessionEditor.prototype.getCurrentSessionURL = function () {
-    this.saveCurrentSession(this.getCurrentSessionURLOK.bind(this));
-};
-
-ITSPublicSessionEditor.prototype.getCurrentSessionURLOK = function () {
-    this.currentSession.Person.requestPassword( this.getURLPasswordLoadOK.bind(this),
-        this.getURLPasswordLoadError.bind(this) );
-};
-
-ITSPublicSessionEditor.prototype.getURLPasswordLoadOK = function () {
-    ITSInstance.UIController.showInfo('', location.protocol + '//' + location.host + location.pathname + "?AutoLogin&Lang=" + ITSLanguage +
-        "&UserID="+this.currentSession.Person.EMail+"&Password=" + this.currentSession.Person.Password)
-};
-ITSPublicSessionEditor.prototype.getURLPasswordLoadError = function () {
-    ITSInstance.UIController.showError('ITSPublicSessionEditor.PasswordLoadFailed', 'The password could not be retrieved at this moment.');
+    ITSInstance.UIController.showInfo('', location.protocol + '//' + location.host + location.pathname.replace("/default.htm","/") + "?Poll=" + this.currentSession.ShortLoginCode)
 };
 
 (function() { // iife to prevent pollution of the global memspace

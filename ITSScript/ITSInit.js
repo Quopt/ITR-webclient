@@ -762,6 +762,12 @@ if (getUrlParameterValue('AutoLogin')) {
         $('#LoginWindowLoginButton').click();
       }, 100);
 }
+if (getUrlParameterValue('Poll')) {
+    OldURLparseURLandTakeAction = document.URL;
+    setTimeout(function () {
+        $('#LoginWindowLoginButton').click();
+    }, 100);
+}
 if (getUrlParameterValue('NoTTHeader')) {
     cookieHelper.setCookie('NoTTHeader', 'Y', 600);
 }
