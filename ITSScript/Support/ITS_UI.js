@@ -308,6 +308,7 @@ ITSUIController = function () {
     } ;
     this.showWarning= function (warningID, warningMessage, MessageAddition, onClickFunctionAsText ) {
         // show an error message to the user
+        $('#basicModalQRCode').hide();
         $('#basicModalFooter').empty();
         if (!MessageAddition) MessageAddition = "";
         if (!onClickFunctionAsText) onClickFunctionAsText = "";
@@ -323,6 +324,7 @@ ITSUIController = function () {
     } ;
     this.showInfo= function (infoID, infoMessage, MessageAddition, onClickFunctionAsText) {
         // show an error message to the user
+        $('#basicModalQRCode').hide();
         $('#basicModalFooter').empty();
         if (!MessageAddition) MessageAddition = "";
         if (!onClickFunctionAsText) onClickFunctionAsText = "";
@@ -333,9 +335,18 @@ ITSUIController = function () {
         $('#basicModalButtonClose').text ( ITSInstance.translator.getTranslatedString( 'infoMessages', 'Button', 'Close') );
         $('#basicModal').modal();
     } ;
+    this.showURL = function (infoID, infoMessage, MessageAddition,  URL, onClickFunctionAsText) {
+        this.showInfo(infoID, infoMessage, MessageAddition, onClickFunctionAsText);
+        $('#basicModalQRCode').show();
+        var qr = new QRious({
+            element: document.getElementById('basicModalQRCode'),
+            value: URL
+        });
+    };
     this.showDialog= function (dialogID,  dialogHeader, dialogMessage, dialogOptionsArray, additionalStrings) {
         // dialogOptionsArray is an array of objects with properties (per object) : btnType, btnCaption, btnOnClick
         // show an error message to the user
+        $('#basicModalQRCode').hide();
         $('#basicModalFooter').empty();
         var btype="";
         var bcaption="";

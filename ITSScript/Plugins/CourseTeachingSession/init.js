@@ -194,7 +194,8 @@
         this.newPublicSession.Person.PersonType = 1000;
         this.newPublicSession.relinkToCurrentPersonID();
         this.newPublicSession.saveToServerIncludingTestsAndPerson(function(){},function(){},false, false);
-        ITSInstance.UIController.showInfo('', location.protocol + '//' + location.host + location.pathname.replace("/default.htm","/") + "?Poll=" + this.newPublicSession.ShortLoginCode)
+        var newUrl=location.protocol + '//' + location.host + location.pathname.replace("/default.htm","/") + "?Poll=" + this.newPublicSession.ShortLoginCode;
+        ITSInstance.UIController.showURL('', newUrl,'', newUrl);
     };
 
     ITSCourseTeachingSessionEditor.prototype.stopPublicSessionURL = function (OnSuccess) {

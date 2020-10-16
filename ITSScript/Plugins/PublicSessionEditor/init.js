@@ -609,7 +609,8 @@ ITSPublicSessionEditor.prototype.zipError = function () {
 };
 
 ITSPublicSessionEditor.prototype.getCurrentSessionURL = function () {
-    ITSInstance.UIController.showInfo('', location.protocol + '//' + location.host + location.pathname.replace("/default.htm","/") + "?Poll=" + this.currentSession.ShortLoginCode)
+    var newURL = location.protocol + '//' + location.host + location.pathname.replace("/default.htm","/") + "?Poll=" + this.currentSession.ShortLoginCode;
+    ITSInstance.UIController.showURL('', newURL, '', newURL);
 };
 
 (function() { // iife to prevent pollution of the global memspace
