@@ -580,7 +580,7 @@ function shallowCopy(original, target , propertiesOnly) {
     } catch (err) {
         ITSLogger.logMessage(logLevel.ERROR,"shallowCopy failed " + err.message);
     }
-}
+};
 
 generatorValues = {};
 

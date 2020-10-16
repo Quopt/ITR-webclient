@@ -91,8 +91,8 @@
     ITSCourseTeachingSessionEditor.prototype.startSession = function () {
         if (this.currentSession.Status >= 30) {
             this.currentSession.Status = 20;
-            this.currentSession.SessionTests[0].CurrentPage = this.currentSession.SessionTests[0].TotalPages-1;
-            this.currentSession.SessionTests[0].Status = 20;
+            this.currentSession.SessionTests[this.currentSession.SessionTests.length-1].CurrentPage = this.currentSession.SessionTests[this.currentSession.SessionTests.length-1].TotalPages-1;
+            this.currentSession.SessionTests[this.currentSession.SessionTests.length-1].Status = 20;
             this.currentSession.saveToServerIncludingTests(this.startSessionNow.bind(this),this.sessionLoadingFailed.bind(this));
         } else {
             this.startSessionNow();
@@ -107,6 +107,7 @@
         if (typeof this.teachingWindow != "undefined") {
             this.teachingWindow.close();
             delete this.teachingWindow;
+            this.stopPublicSessionURL();
         }
     };
 
@@ -117,6 +118,7 @@
             try {
                 if (ITSInstance.CourseTeachingSessionSessionController.teachingWindow.closed) {
                     delete this.teachingWindow;
+                    this.stopPublicSessionURL();
                     this.loadSession();
                 }
             } catch (err) { delete this.teachingWindow; }
@@ -167,8 +169,41 @@
                 $('#CourseTeachingSessionGuidanceRight').empty();
                 $('#CourseTeachingSessionGuidanceLeft').empty();
                 $('#CourseTeachingSessionGuidanceMain').empty();
+                this.stopSession();
             }
         }
+    };
+
+    ITSCourseTeachingSessionEditor.prototype.showPublicSessionURL = function () {
+        // show the URL and create the session in the meantime
+        this.newPublicSession = this.currentSession.clone();
+        if (typeof this.currentSession.PluginData.teachingSession == "undefined") {
+            this.currentSession.PluginData.teachingSession = {};
+            this.currentSession.PluginData.teachingSession.PublicSessionID = newGuid();
+            this.currentSession.PluginData.teachingSession.PublicPersonID = newGuid();
+            this.currentSession.saveToServer(function () {}, function () {});
+        }
+        this.newPublicSession.ID = this.currentSession.PluginData.teachingSession.PublicSessionID;
+        for (var i=0; i < this.newPublicSession.SessionTests.length; i++) {
+            this.newPublicSession.SessionTests[i].SessionID = this.newPublicSession.ID;
+        }
+        this.newPublicSession.SessionType = 1200;
+        this.newPublicSession.regenerateCandidate();
+        this.newPublicSession.Person.EMail = this.newPublicSession.Description;
+        this.newPublicSession.Person.ID = this.currentSession.PluginData.teachingSession.PublicPersonID;
+        this.newPublicSession.Person.PersonType = 1000;
+        this.newPublicSession.relinkToCurrentPersonID();
+        this.newPublicSession.saveToServerIncludingTestsAndPerson(function(){},function(){},false, false);
+        ITSInstance.UIController.showInfo('', location.protocol + '//' + location.host + location.pathname.replace("/default.htm","/") + "?Poll=" + this.newPublicSession.ShortLoginCode)
+    };
+
+    ITSCourseTeachingSessionEditor.prototype.stopPublicSessionURL = function (OnSuccess) {
+        var newPublicSession = this.currentSession.clone();
+        newPublicSession.ID = this.currentSession.PluginData.teachingSession.PublicSessionID;
+        newPublicSession.Person.ID = this.currentSession.PluginData.teachingSession.PublicPersonID;
+        if (typeof OnSuccess == 'undefined') OnSuccess = function () {};
+        newPublicSession.deleteGroupSessionQuick(OnSuccess, function () {});
+        newPublicSession.Person.deleteFromServer(function () {},function () {});
     };
 
     ITSCourseTeachingSessionEditor.prototype.sessionLoadingFailed = function () {

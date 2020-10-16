@@ -389,6 +389,20 @@ ITSCandidateSession.prototype.saveToServer = function (OnSuccess, OnError) {
     this.ITSSession.MessageBus.publishMessage("Session.Update", this);
 };
 
+ITSCandidateSession.prototype.clone = function () {
+    var newSession = ITSInstance.candidateSessions.newCandidateSession();
+    shallowCopy(this,newSession, true);
+    newSession.ID = newGuid();
+    for (var i=0; i < this.SessionTests.length; i++) {
+        var newSessionTest = new ITSCandidateSessionTest(this, this.ITSSession);
+        newSession.SessionTests.push(newSessionTest);
+        shallowCopy(this.SessionTests[i],newSessionTest, true);
+        newSessionTest.ID = newGuid();
+        newSessionTest.SessionID = newSession.ID;
+    }
+    return newSession;
+};
+
 ITSCandidateSession.prototype.saveToServerIncludingTests = function (OnSuccess, OnError, deleteAllUnstartedTests) {
     if (deleteAllUnstartedTests) {
         ITSInstance.genericAjaxDelete('sessions/' + this.ID + "/deletealltests",
