@@ -23,7 +23,7 @@
 
         var ITSPortletCourseCatalog = {
             info: new ITSPortletAndEditorRegistrationInformation('392d01b4-b224-4e07-b9cd-c1dab2512999', 'Course catalog portlet', '1.0', 'Copyright 2020 Quopt IT Services BV', 'Shows a portlet that will allow easy linking into the course catalog information.'),
-            defaultShowOrder : 6,
+            defaultShowOrder : 122,
             html: htmlLoaded,
             addToInterface : function () {
                 AdminInterfaceInviteCCatalogDiv = $('<div class="col-md-4" id="AdminInterfaceInviteCCatalog">');

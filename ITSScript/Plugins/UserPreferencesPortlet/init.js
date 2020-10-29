@@ -18,6 +18,7 @@
         var ITSPortletUserPreferences = {
             info: new ITSPortletAndEditorRegistrationInformation('c3095d24-0382-48cf-b51d-d6018526b184', 'User preferences portlet', '1.0', 'Copyright 2018 Quopt IT Services BV', 'Jump to the settings of the current user.'),
             html: htmlLoaded,
+            defaultShowOrder : 998,
             addToInterface: function () {
                 AdminInterfaceSettingsDiv = $('<div class="col-md-4" id="AdminInterfaceSettings">');
                 $('#AdminInterfacePortlets').append(AdminInterfaceSettingsDiv);

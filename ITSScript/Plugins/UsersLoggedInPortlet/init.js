@@ -18,7 +18,7 @@
     $.get(ITSJavaScriptVersion + '/Plugins/UsersLoggedInPortlet/portlet.html', function (htmlLoaded) {
         var ITSPortletLoggedInUsers = {
             info: new ITSPortletAndEditorRegistrationInformation('7b0e7c93-0269-48ef-a26f-e26f839766bf', 'Users logged in portlet', '1.0', 'Copyright 2018 Quopt IT Services BV', 'Shows the latest logged in users and allows jumping to the logged in users audit trail.'),
-            defaultShowOrder : 5,
+            defaultShowOrder : 121,
             html: htmlLoaded,
             addToInterface : function () {
                 AdminInterfaceInviteUserMngtDiv = $('<div class="col-md-4" id="AdminInterfaceInviteUserMngt" style="display:none">');

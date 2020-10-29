@@ -23,7 +23,7 @@
 
         var ITSPortletTestCatalog = {
             info: new ITSPortletAndEditorRegistrationInformation('020247ef-5afd-4ab4-9f99-0aa1f4466978', 'Test catalog portlet', '1.0', 'Copyright 2018 Quopt IT Services BV', 'Shows a portlet that will allow easy linking into the test catalog information.'),
-            defaultShowOrder : 6,
+            defaultShowOrder : 123,
             html: htmlLoaded,
             addToInterface : function () {
                 AdminInterfaceInviteTCatalogDiv = $('<div class="col-md-4" id="AdminInterfaceInviteTCatalog">');

@@ -18,7 +18,7 @@
         // init the portlet
         var ITSPortletCreditManagement = {
             info: new ITSPortletAndEditorRegistrationInformation('8ce5ec6e-c125-4d15-ba41-b67740ef0453', 'Credits used portlet', '1.0', 'Copyright 2018 Quopt IT Services BV', 'Shows credit usage of the company and remaining credit units.'),
-            defaultShowOrder : 4,
+            defaultShowOrder : 120,
             html : htmlLoaded,
             addToInterface : function () {
                 AdminInterfaceCreditManagementPortletDiv = $('<div class="col-md-4" id="AdminInterfaceCreditManagement" style="display:none">');

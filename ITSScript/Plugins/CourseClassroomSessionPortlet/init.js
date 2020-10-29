@@ -19,7 +19,7 @@
     $.get(ITSJavaScriptVersion + '/Plugins/CourseClassroomSessionPortlet/portlet.html', function (htmlLoaded) {
         var ITSportletTeachingClassroomSessions = {
             info: new ITSPortletAndEditorRegistrationInformation('09cadcc8-17fe-41e8-beeb-63db6d5c5ee2\n', 'Teaching classroom group sessions portlet', '1.0', 'Copyright 2020 Quopt IT Services BV', 'Presents an overview of classroom sessions, an option to view the list and an option to create a new one.'),
-            defaultShowOrder : 1,
+            defaultShowOrder : 101,
             html : htmlLoaded,
             addToInterface : function () {
                 var AdminInterfaceTeachingClassroomPortletDiv = $('<div class="col-md-4" id="AdminInterfaceTeachingClassroomPortlet">');
