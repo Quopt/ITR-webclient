@@ -147,8 +147,24 @@
     </div>
     <!-- html and scripting section -->
     <div class="bg-dark text-white well"><label id="AdminInterfaceScreenTemplate-HTMLHeader">HTML and scripting section</label></div>
+    <div class="row col-12">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" id="AdminInterfaceScreenTemplate-viewlist-default" href="#" onclick="ITSInstance.newITSScreenTemplateEditorController.changeView('default');" >Default view</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="AdminInterfaceScreenTemplate-viewlist-pnp" href="#" onclick="ITSInstance.newITSScreenTemplateEditorController.changeView('pnp');">PnP view</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="AdminInterfaceScreenTemplate-viewlist-summary"  href="#" onclick="ITSInstance.newITSScreenTemplateEditorController.changeView('summary');">Summary view</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="AdminInterfaceScreenTemplate-viewlist-html" href="#" onclick="ITSInstance.newITSScreenTemplateEditorController.changeView('html');">Plain HTML view</a>
+            </li>
+        </ul>
+    </div>
     <div class="row">
-        <div class="col-3">
+        <div class="col-6" id="AdminInterfaceScreenTemplate-htmltemplate-div" notranslate>
             <div class="form-group">
                 <label id="AdminInterfaceScreenTemplate-labelGeneratorHTML" for="AdminInterfaceScreenTemplate-htmltemplate">HTML template</label>
                 <textarea class="form-control" id="AdminInterfaceScreenTemplate-htmltemplate" rows="19"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.HTMLContent = this.value;">
@@ -168,59 +184,82 @@
                 </button>&nbsp;
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-6" id="AdminInterfaceScreenTemplate-pnptemplate-div" notranslate >
             <div class="form-group">
                 <label id="AdminInterfaceScreenTemplate-labelGeneratorHTMLPnP" for="AdminInterfaceScreenTemplate-pnptemplate">HTML template for PnP input (if different from
                     html template)</label>
                 <textarea class="form-control" id="AdminInterfaceScreenTemplate-pnptemplate" rows="19"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.HTMLContentPnP = this.value;"></textarea>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-6" id="AdminInterfaceScreenTemplate-summary-div" notranslate >
             <div class="form-group">
-                <label id="AdminInterfaceScreenTemplate-labelGeneratorSummary" for="AdminInterfaceScreenTemplate-summarytemplate">HTML template for summary view</label>
+                <label id="AdminInterfaceScreenTemplate-labelGeneratorSummaryTemplate" for="AdminInterfaceScreenTemplate-summarytemplate">HTML template for summary view</label>
                 <textarea class="form-control" id="AdminInterfaceScreenTemplate-summarytemplate" rows="19"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.HTMLContentSummary = this.value;"></textarea>
             </div>
         </div>
-        <div class="col-3">
-            <div class="form-group">
+        <div class="col-6">
+            <div id="AdminInterfaceScreenTemplate-get_value_snippet-div" notranslate class="form-group">
                 <label id="AdminInterfaceScreenTemplate-labelGeneratorGetValue" for="AdminInterfaceScreenTemplate-getvalue">Snippet to get value (id, num_blocks)</label>
-                <textarea class="form-control" id="AdminInterfaceScreenTemplate-getvalue" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.get_value_snippet = this.value;">return $('#'+id).val();</textarea>
+                <div ace-edit id="AdminInterfaceScreenTemplate-getvalue" notranslate data-field="currentTemplate.get_value_snippet" onkeyup="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController );"></div>
+                <script>
+                    ace.initEditJavascript("AdminInterfaceScreenTemplate-getvalue");
+                </script>
             </div>
-            <div class="form-group">
+            <div id="AdminInterfaceScreenTemplate-set_value_snippet-div" notranslate class="form-group">
                 <label id="AdminInterfaceScreenTemplate-labelGeneratorSetValue" for="AdminInterfaceScreenTemplate-setvalue">Snippet to set value (id, num_blocks, varvalue)</label>
-                <textarea class="form-control" id="AdminInterfaceScreenTemplate-setvalue" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.set_value_snippet = this.value;">$('#'+id).val(varvalue);</textarea>
+                <div ace-edit id="AdminInterfaceScreenTemplate-setvalue" notranslate data-field="currentTemplate.set_value_snippet" onkeyup="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController );"></div>
+                <script>
+                    ace.initEditJavascript("AdminInterfaceScreenTemplate-setvalue");
+                </script>
             </div>
-            <div class="form-group">
+            <div id="AdminInterfaceScreenTemplate-init_value_snippet-div" notranslate class="form-group">
                 <label id="AdminInterfaceScreenTemplate-labelGeneratorInitScript" for="AdminInterfaceScreenTemplate-initscript">Initialisation snippet (id, num_blocks, test_mode, template_values)</label>
-                <textarea class="form-control" id="AdminInterfaceScreenTemplate-initscript" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.init_value_snippet = this.value;">$('#'+id).val('');</textarea>
+                <div ace-edit id="AdminInterfaceScreenTemplate-initscript" notranslate data-field="currentTemplate.init_value_snippet" onkeyup="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController );"></div>
+                <script>
+                    ace.initEditJavascript("AdminInterfaceScreenTemplate-initscript");
+                </script>
             </div>
-            <div class="form-group">
+            <div id="AdminInterfaceScreenTemplate-validation_snippet-div" notranslate class="form-group">
                 <label id="AdminInterfaceScreenTemplate-labelGeneratorValidateScript" for="AdminInterfaceScreenTemplate-validatescript">Validation snippet (id, num_blocks, test_mode, template_values, runtime_values)</label>
-                <textarea class="form-control" id="AdminInterfaceScreenTemplate-validatescript" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.validation_snippet = this.value;">/* no validation script needed */</textarea>
+                <div ace-edit id="AdminInterfaceScreenTemplate-validatescript" notranslate data-field="currentTemplate.validation_snippet" onkeyup="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController );"></div>
+                <script>
+                    ace.initEditJavascript("AdminInterfaceScreenTemplate-validatescript");
+                </script>
             </div>
-            <div class="form-group">
+            <div id="AdminInterfaceScreenTemplate-isanswered_snippet-div" notranslate class="form-group">
                 <label id="AdminInterfaceScreenTemplate-labelIsAnsweredScript" for="AdminInterfaceScreenTemplate-isansweredscript">IsAnswered snippet (id, num_blocks, test_mode, template_values, runtime_values)</label>
-                <textarea class="form-control" id="AdminInterfaceScreenTemplate-isansweredscript" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.isanswered_snippet = this.value;">return true;</textarea>
+                <div ace-edit id="AdminInterfaceScreenTemplate-isansweredscript" notranslate data-field="currentTemplate.isanswered_snippet" onkeyup="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController );"></div>
+                <script>
+                    ace.initEditJavascript("AdminInterfaceScreenTemplate-isansweredscript");
+                </script>
             </div>
-<!--            <div class="form-group">
-                <label for="AdminInterfaceScreenTemplate-css">CSS additions</label>
-                <textarea class="form-control" id="AdminInterfaceScreenTemplate-css" rows="1">.democolor {background-color: lightskyblue;}</textarea>
-            </div> -->
-            <div class="form-group">
+            <div id="AdminInterfaceScreenTemplate-generator_snippet-div" notranslate class="form-group">
                 <label id="AdminInterfaceScreenTemplate-labelGenerator" for="AdminInterfaceScreenTemplate-genscript">Generator snippet (id, num_blocks, template_values)</label>
-                <textarea class="form-control" id="AdminInterfaceScreenTemplate-genscript" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.generator_snippet = this.value;">/* no generator script needed */</textarea>
+                <div ace-edit id="AdminInterfaceScreenTemplate-genscript" notranslate data-field="currentTemplate.generator_snippet" onkeyup="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController );"></div>
+                <script>
+                    ace.initEditJavascript("AdminInterfaceScreenTemplate-genscript");
+                </script>
             </div>
-            <div class="form-group">
+            <div id="AdminInterfaceScreenTemplate-generator_pnp_snippet-div" notranslate class="form-group">
                 <label id="AdminInterfaceScreenTemplate-labelGeneratorPnP" for="AdminInterfaceScreenTemplate-genscript-PnP">Generator snippet PnP (id, num_blocks, template_values)</label>
-                <textarea class="form-control" id="AdminInterfaceScreenTemplate-genscript-PnP" rows="1"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.generator_pnp_snippet = this.value;">/* no generator script needed */</textarea>
+                <div ace-edit id="AdminInterfaceScreenTemplate-genscript-PnP" notranslate data-field="currentTemplate.generator_pnp_snippet" onkeyup="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController );"></div>
+                <script>
+                    ace.initEditJavascript("AdminInterfaceScreenTemplate-genscript-PnP");
+                </script>
             </div>
-            <div class="form-group">
+            <div id="AdminInterfaceScreenTemplate-generator_summary_snippet-div" notranslate class="form-group">
                 <label id="AdminInterfaceScreenTemplate-labelGeneratorSummary" for="AdminInterfaceScreenTemplate-genscript-summary">Generator snippet summary view (id, num_blocks, template_values, current_values_array) return { "html" : ..., "values" : ... } </label>
-                <textarea class="form-control" id="AdminInterfaceScreenTemplate-genscript-summary" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.generator_summary_snippet = this.value;">/* no generator script needed */</textarea>
+                <div ace-edit id="AdminInterfaceScreenTemplate-genscript-summary" notranslate data-field="currentTemplate.generator_summary_snippet" onkeyup="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController );"></div>
+                <script>
+                    ace.initEditJavascript("AdminInterfaceScreenTemplate-genscript-summary");
+                </script>
             </div>
-            <div class="form-group">
+            <div id="AdminInterfaceScreenTemplate-get_value_as_html_snippet-div" notranslate class="form-group">
                 <label id="AdminInterfaceScreenTemplate-labelGeneratorGetAsHTMLValue" for="AdminInterfaceScreenTemplate-genscript-HTML">Generator snippet plain HTML only view (id, num_blocks, varvalue, current_values, template_values, template, test_mode, preload, preloadCallback) </label>
-                <textarea class="form-control" id="AdminInterfaceScreenTemplate-genscript-HTML" rows="1" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.get_value_as_html_snippet = this.value;">/* no generator script needed */</textarea>
+                <div ace-edit id="AdminInterfaceScreenTemplate-genscript-HTML" notranslate data-field="currentTemplate.get_value_as_html_snippet" onkeyup="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController );"></div>
+                <script>
+                    ace.initEditJavascript("AdminInterfaceScreenTemplate-genscript-HTML");
+                </script>
             </div>
         </div>
     </div>

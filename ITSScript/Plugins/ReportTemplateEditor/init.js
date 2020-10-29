@@ -266,9 +266,7 @@
         ITSReportTemplateEditor.prototype.fillReportWriterTab = function () {
             DataBinderTo('ReportTemplateInterfaceEditTabReportWriter', this.currentReport);
 
-            var ReportTemplateInterfaceEditTabReportWriter_PreScriptEditor = ace.edit("ReportTemplateInterfaceEditTabReportWriterEditor");
-            ReportTemplateInterfaceEditTabReportWriter_PreScriptEditor.setTheme("ace/theme/monokai");
-            ReportTemplateInterfaceEditTabReportWriter_PreScriptEditor.session.setMode("ace/mode/javascript");
+            var ReportTemplateInterfaceEditTabReportWriter_PreScriptEditor = ace.initEditJavascript("ReportTemplateInterfaceEditTabReportWriterEditor");
         };
 
         ITSReportTemplateEditor.prototype.fillGraphsTab = function () {

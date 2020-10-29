@@ -282,20 +282,16 @@
                         <div class="bg-dark text-white well"><label
                                 id="AdminInterfaceTestTemplateEditorTabScreenPreScriptHeader">Screen pre script</label><label notranslate>(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode, screen)</label>
                         </div>
-                        <div ace-edit id="AdminInterfaceTestTemplateEditorScreenDynamicsPre" notranslate style="height: 100px;" data-field="currentScreen.beforeScreenScript" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScreens', ITSInstance.newITSTestEditorController );"></div>
+                        <div ace-edit id="AdminInterfaceTestTemplateEditorScreenDynamicsPre" notranslate data-field="currentScreen.beforeScreenScript" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScreens', ITSInstance.newITSTestEditorController );"></div>
                         <script>
-                            var myAdminInterfaceTestTemplateEditorComplexScoringEditorPreScreen = ace.edit("AdminInterfaceTestTemplateEditorScreenDynamicsPre");
-                            myAdminInterfaceTestTemplateEditorComplexScoringEditorPreScreen.setTheme("ace/theme/monokai");
-                            myAdminInterfaceTestTemplateEditorComplexScoringEditorPreScreen.session.setMode("ace/mode/javascript");
+                            var myAdminInterfaceTestTemplateEditorComplexScoringEditorPreScreen = ace.initEditJavascript("AdminInterfaceTestTemplateEditorScreenDynamicsPre");
                         </script>
                         <div class="bg-dark text-white well"><label
                                 id="AdminInterfaceTestTemplateEditorTabScreenPostScriptHeader">Screen post script</label><label notranslate>(session, sessiontest, candidate, testdefinition, testtakingcontroller, itsinstance, testmode, screen)</label>
                         </div>
-                        <div ace-edit id="AdminInterfaceTestTemplateEditorScreenDynamicsPost" notranslate style="height: 100px;" data-field="currentScreen.afterScreenScript" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScreens', ITSInstance.newITSTestEditorController );"></div>
+                        <div ace-edit id="AdminInterfaceTestTemplateEditorScreenDynamicsPost" notranslate data-field="currentScreen.afterScreenScript" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScreens', ITSInstance.newITSTestEditorController );"></div>
                         <script>
-                            var myAdminInterfaceTestTemplateEditorComplexScoringEditorPostScreen = ace.edit("AdminInterfaceTestTemplateEditorScreenDynamicsPost");
-                            myAdminInterfaceTestTemplateEditorComplexScoringEditorPostScreen.setTheme("ace/theme/monokai");
-                            myAdminInterfaceTestTemplateEditorComplexScoringEditorPostScreen.session.setMode("ace/mode/javascript");
+                            var myAdminInterfaceTestTemplateEditorComplexScoringEditorPostScreen = ace.initEditJavascript("AdminInterfaceTestTemplateEditorScreenDynamicsPost");
                         </script>
                     </div>
                 </div>
@@ -434,11 +430,9 @@
                     script</label><label notranslate>(session, sessiontest, candidate, testdefinition, scores, scales, itsinstance)</label>
                 </div>
 
-                <div ace-edit id="AdminInterfaceTestTemplateEditorComplexScoringEditor" notranslate style="height: 100px;" data-field="currentTest.ScoringScript" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"></div>
+                <div ace-edit id="AdminInterfaceTestTemplateEditorComplexScoringEditor" notranslate data-field="currentTest.ScoringScript" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScoring', ITSInstance.newITSTestEditorController );"></div>
                 <script>
-                    var myAdminInterfaceTestTemplateEditorComplexScoringEditor = ace.edit("AdminInterfaceTestTemplateEditorComplexScoringEditor");
-                    myAdminInterfaceTestTemplateEditorComplexScoringEditor.setTheme("ace/theme/monokai");
-                    myAdminInterfaceTestTemplateEditorComplexScoringEditor.session.setMode("ace/mode/javascript");
+                    var myAdminInterfaceTestTemplateEditorComplexScoringEditor = ace.initEditJavascript("AdminInterfaceTestTemplateEditorComplexScoringEditor");
                 </script>
             </div>
         </div>
@@ -578,12 +572,11 @@
                     script</label><label notranslate>(TestTakingObject, TestObject, trigger)</label>
                 </div>
 
-                <div ace-edit id="AdminInterfaceTestTemplateEditorComplexNormEditor" notranslate style="height: 100px;" data-field="currentNorm.afterNormScript"
+                <div ace-edit id="AdminInterfaceTestTemplateEditorComplexNormEditor" notranslate data-field="currentNorm.afterNormScript"
                      onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabNorms', ITSInstance.newITSTestEditorController );"></div>
                 <script>
-                    var myAdminInterfaceTestTemplateEditorComplexNormEditor = ace.edit("AdminInterfaceTestTemplateEditorComplexNormEditor");
-                    myAdminInterfaceTestTemplateEditorComplexNormEditor.setTheme("ace/theme/monokai");
-                    myAdminInterfaceTestTemplateEditorComplexNormEditor.session.setMode("ace/mode/javascript");
+                    var myAdminInterfaceTestTemplateEditorComplexNormEditor = ace.initEditJavascript("AdminInterfaceTestTemplateEditorComplexNormEditor");
+
                 </script>
             </div>
         </div>

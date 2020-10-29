@@ -170,6 +170,8 @@ ITSScreenTemplateEditor.prototype.selectTemplateShowDetails = function () {
     $('#AdminInterfaceScreenTemplate-genscript-PnP').val(this.currentTemplate.generator_pnp_snippet);
     $('#AdminInterfaceScreenTemplate-genscript-summary').val(this.currentTemplate.generator_summary_snippet);
 
+    DataBinderTo('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController);
+
     this.populateTemplateVariableList.call(this);
 
     if (this.currentTemplate.TemplateVariables.length > 0) {
@@ -177,6 +179,8 @@ ITSScreenTemplateEditor.prototype.selectTemplateShowDetails = function () {
     } else {
         this.showVariableInEditor(-1);
     }
+
+    this.changeView('default');
 };
 
 ITSScreenTemplateEditor.prototype.showVariableInEditor = function (var_index) {
@@ -363,6 +367,54 @@ ITSScreenTemplateEditor.prototype.uploadCurrentTemplate = function (fileName) {
 ITSScreenTemplateEditor.prototype.uploadCurrentTemplate_process = function (fileContents) {
     ITSJSONLoad(this.currentTemplate, fileContents);
     this.selectTemplateShowDetails();
+};
+
+ITSScreenTemplateEditor.prototype.changeView= function (viewName) {
+    $('#AdminInterfaceScreenTemplate-htmltemplate-div').hide();
+    $('#AdminInterfaceScreenTemplate-summary-div').hide();
+    $('#AdminInterfaceScreenTemplate-pnptemplate-div').hide();
+
+    $('#AdminInterfaceScreenTemplate-get_value_snippet-div').hide();
+    $('#AdminInterfaceScreenTemplate-set_value_snippet-div').hide();
+    $('#AdminInterfaceScreenTemplate-init_value_snippet-div').hide();
+    $('#AdminInterfaceScreenTemplate-validation_snippet-div').hide();
+    $('#AdminInterfaceScreenTemplate-isanswered_snippet-div').hide();
+    $('#AdminInterfaceScreenTemplate-generator_snippet-div').hide();
+    $('#AdminInterfaceScreenTemplate-generator_pnp_snippet-div').hide();
+    $('#AdminInterfaceScreenTemplate-generator_summary_snippet-div').hide();
+    $('#AdminInterfaceScreenTemplate-get_value_as_html_snippet-div').hide();
+
+    $('#AdminInterfaceScreenTemplate-viewlist-default').removeClass('active');
+    $('#AdminInterfaceScreenTemplate-viewlist-pnp').removeClass('active');
+    $('#AdminInterfaceScreenTemplate-viewlist-summary').removeClass('active');
+    $('#AdminInterfaceScreenTemplate-viewlist-html').removeClass('active');
+
+    switch (viewName) {
+         case 'default' :
+             $('#AdminInterfaceScreenTemplate-htmltemplate-div').show();
+             $('#AdminInterfaceScreenTemplate-get_value_snippet-div').show();
+             $('#AdminInterfaceScreenTemplate-set_value_snippet-div').show();
+             $('#AdminInterfaceScreenTemplate-init_value_snippet-div').show();
+             $('#AdminInterfaceScreenTemplate-validation_snippet-div').show();
+             $('#AdminInterfaceScreenTemplate-isanswered_snippet-div').show();
+             $('#AdminInterfaceScreenTemplate-generator_snippet-div').show();
+             $('#AdminInterfaceScreenTemplate-viewlist-default').addClass('active');
+             break;
+         case 'pnp' :
+             $('#AdminInterfaceScreenTemplate-pnptemplate-div').show();
+             $('#AdminInterfaceScreenTemplate-generator_pnp_snippet-div').show();
+             $('#AdminInterfaceScreenTemplate-viewlist-pnp').addClass('active');
+             break;
+         case 'summary' :
+             $('#AdminInterfaceScreenTemplate-summary-div').show();
+             $('#AdminInterfaceScreenTemplate-generator_summary_snippet-div').show();
+             $('#AdminInterfaceScreenTemplate-viewlist-summary').addClass('active');
+             break;
+         case 'html' :
+             $('#AdminInterfaceScreenTemplate-get_value_as_html_snippet-div').show();
+             $('#AdminInterfaceScreenTemplate-viewlist-html').addClass('active');
+             break;
+     }
 };
 
 (function () { // iife to prevent pollution of the global memspace
