@@ -331,7 +331,11 @@ ITSUIController = function () {
         $('#basicModalFooter').append('<button type="button" id="basicModalButtonClose" class="btn btn-default" onclick="'+onClickFunctionAsText+'" data-dismiss="modal">x</button>');
 
         $('#basicModalHeader').text(  ITSInstance.translator.getTranslatedString( 'infoMessages', 'Header', 'Information') );
-        $('#basicModalBody').text(  ITSInstance.translator.getTranslatedString( 'infoMessages', infoID, infoMessage) + MessageAddition  );
+        if (infoID != '') {
+            $('#basicModalBody').html(ITSInstance.translator.getTranslatedString('infoMessages', infoID, infoMessage) + MessageAddition);
+        } else {
+            $('#basicModalBody').html( infoMessage + MessageAddition);
+        }
         $('#basicModalButtonClose').text ( ITSInstance.translator.getTranslatedString( 'infoMessages', 'Button', 'Close') );
         $('#basicModal').modal();
     } ;

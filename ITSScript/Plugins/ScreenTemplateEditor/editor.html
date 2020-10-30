@@ -49,14 +49,21 @@
                            id="AdminInterfaceScreenTemplate-description" onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.Description = this.value;">
                 </div>
             </div>
+            <div class="form-group row">
+                <span class="col-2">&nbsp;</span>
+                <span class="col-10">
+                  <input  id="AdminInterfaceScreenTemplate-legacy" type="checkbox" class="form-check-input col-1"  data-field="currentTemplate.PluginData.LegacyTemplate" onchange="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController);"/>
+                  <label class="col-11 form-check-label" for="AdminInterfaceScreenTemplate-legacy" id="AdminInterfaceScreenTemplate-legacylabel">Discourage use of template</label>
+                </span>
+            </div>
         </div>
         <div class="col-8">
             <div class="form-group row">
                 <label id="AdminInterfaceScreenTemplate-explanationHeader" for="AdminInterfaceScreenTemplate-explanation" class="col-2 col-form-label">Explanation</label>
                 <div class="col">
-                    <textarea rows="1" class="form-control"
+                    <textarea-htmledit class="form-control"  data-field="currentTemplate.Explanation"
                               placeholder="explanation about this screen templates as shown in the test editor"
-                              id="AdminInterfaceScreenTemplate-explanation"  onchange="ITSInstance.newITSScreenTemplateEditorController.currentTemplate.Explanation = this.value;"></textarea>
+                              id="AdminInterfaceScreenTemplate-explanation" onkeyup="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController );"></textarea>
                 </div>
             </div>
             <div class="form-group row">

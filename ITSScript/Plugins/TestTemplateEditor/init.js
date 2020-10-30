@@ -744,14 +744,46 @@ ITSTestTemplateEditor.prototype.addNewScreenTemplate = function (templateID) {
 };
 
 ITSTestTemplateEditor.prototype.loadTestScreenTemplates = function () {
+    var me= ITSInstance.newITSTestEditorController;
+    console.log(me);
     $('#AdminInterfaceTestTemplateEditorAddScreenComponentListDiv').empty();
+    // check if all templates are fully loaded. we need me to get at the plugindata
+    me.templatesLoading = false;
     for (var i = 0; i < ITSInstance.screenTemplates.screenTemplates.length; i++) {
-        $('<button type="button" notranslate class="btn btn-outline-success" onclick=\"ITSInstance.newITSTestEditorController.addScreenTemplate(\'' +
-            ITSInstance.screenTemplates.screenTemplates[i].ID +
-            '\');\"><i class="fa fa-fw fa-plus"></i><span>' +
-            ITSInstance.screenTemplates.screenTemplates[i].descriptionWithDBIndicator() +
-            '</span></button>').appendTo('#AdminInterfaceTestTemplateEditorAddScreenComponentListDiv');
-    } //<i class="fa fa-fw fa-plus"></i>
+        if (!ITSInstance.screenTemplates.screenTemplates[i].detailsLoaded) {
+            if (!ITSInstance.screenTemplates.screenTemplates[i].currentlyLoading) {
+                ITSInstance.screenTemplates.screenTemplates[i].loadDetailDefinition(me.loadTestScreenTemplates.bind(me),
+                    function () {
+                        ITSInstance.UIController.showError('TestTemplateEditor.ScreenTemplateLoadFailure', 'A test screen template could not be loaded. Please save the test and refresh your browser screen. ');
+                    });
+            }
+            me.templatesLoading = true;
+        }
+    }
+    if (me.templatesLoading) return;
+    // generate the list
+    for (var i = 0; i < ITSInstance.screenTemplates.screenTemplates.length; i++) {
+        if ((ITSInstance.screenTemplates.screenTemplates[i].PluginData.LegacyTemplate) && (!$('#AdminInterfaceTestTemplateEditorAddScreenComponent-legacy').is(':checked')) ) {
+            // do nothing for legacy templates
+        } else {
+            $('<button notranslate onmouseenter="$(this).popover(\'show\');" onmouseleave="$(this).popover(\'hide\');" id="'+ i + '-' + ITSInstance.screenTemplates.screenTemplates[i].ID +
+                '" type="button" notranslate class="btn btn-outline-success" data-html="true" title=" " onclick=\"ITSInstance.newITSTestEditorController.addScreenTemplate(\'' +
+                ITSInstance.screenTemplates.screenTemplates[i].ID +
+                '\');\"><i class="fa fa-fw fa-plus"></i><span>' +
+                ITSInstance.screenTemplates.screenTemplates[i].descriptionWithDBIndicator() +
+                '</span></button>').appendTo('#AdminInterfaceTestTemplateEditorAddScreenComponentListDiv');
+            //$('<i class="fa fa-fw fa-info-circle" onclick=" ITSInstance.UIController.showInfo(\'ScreenTemplate.\' + ITSInstance.screenTemplates.screenTemplates['+i+'].ID + \'.explanation\', ITSInstance.screenTemplates.screenTemplates['+i+'].Explanation) "></i>').appendTo('#AdminInterfaceTestTemplateEditorAddScreenComponentListDiv');
+            if (ITSInstance.screenTemplates.screenTemplates[i].Explanation != '') {
+                $('<i class="fa fa-fw fa-info-circle" onclick=" ITSInstance.UIController.showInfo(\'\', ITSInstance.screenTemplates.screenTemplates[' + i + '].Explanation) "></i>').appendTo('#AdminInterfaceTestTemplateEditorAddScreenComponentListDiv');
+            }
+        }
+    }
+    // now set the tooltip texts
+    for (var i = 0; i < ITSInstance.screenTemplates.screenTemplates.length; i++) {
+        try {
+            $('#' + i + '-' + ITSInstance.screenTemplates.screenTemplates[i].ID).prop('title',ITSInstance.screenTemplates.screenTemplates[i].Explanation);
+        } catch (e) { }
+    }
 };
 
 ITSTestTemplateEditor.prototype.deleteScreen = function (screenId) {

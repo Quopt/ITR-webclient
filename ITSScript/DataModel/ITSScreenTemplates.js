@@ -126,6 +126,7 @@ function ITSScreenTemplate(parent, session) {
 
     this.PluginData = {};
     this.PluginData.persistentProperties = "*ALL*";
+    this.PluginData.LegacyTemplate = false;
 
     // internal loading status variables
     this.onSuccessCallbacks = [];

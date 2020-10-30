@@ -784,7 +784,12 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="AdminInterfaceTestTemplateEditorAddScreenComponentCloseButton">Close</button>
+                <div class="row col-12">
+                    <input  id="AdminInterfaceTestTemplateEditorAddScreenComponent-legacy" type="checkbox" class="form-check-input col-1" onchange="ITSInstance.newITSTestEditorController.loadTestScreenTemplates();"/>
+                    <label class="col-9 form-check-label" for="AdminInterfaceTestTemplateEditorAddScreenComponent-legacy" id="AdminInterfaceTestTemplateEditorAddScreenComponent-legacylabel">Include legacy templates</label>
+
+                    <button type="button" class="btn btn-secondary col-2" data-dismiss="modal" id="AdminInterfaceTestTemplateEditorAddScreenComponentCloseButton">Close</button>
+                </div>
             </div>
         </div>
     </div>
