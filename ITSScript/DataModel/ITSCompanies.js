@@ -155,7 +155,7 @@ ITSCompanies.prototype.loadCurrentCompany = function (whenLoaded, onError, refre
     this.currentCompanyLoaded = whenLoaded;
     this.currentCompanyError = onError;
     this.refreshOnly = refreshOnly;
-    ITSInstance.genericAjaxLoader('companies/currentcompany', ITSInstance.companies.currentCompany, this.loadCurrentCompanyOK.bind(this), this.loadCurrentCompanyError.bind(this), undefined);
+    ITSInstance.genericAjaxLoader('companies/currentcompany', ITSInstance.companies.currentCompany, this.loadCurrentCompanyOK.bind(this), this.loadCurrentCompanyError.bind(this), undefined, undefined, undefined,undefined,undefined,undefined,undefined,undefined,undefined,true);
     // also load the companies this user is allowed to see
     ITSInstance.companies.otherCompanies = [];
     ITSInstance.genericAjaxLoader('logins/currentuser/companies', ITSInstance.companies.otherCompanies,function () {}, function () {}, undefined, -1,99999,

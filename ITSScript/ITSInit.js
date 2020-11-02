@@ -70,24 +70,28 @@ ITSEmptyObject = function () {
     this.ID = "";
 }
 
-ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, OnNewChild, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
-    this.genericLoadQueue.push(
-        {
-            "URL": URL,
-            "objectToPutDataIn" : objectToPutDataIn,
-            "OnSuccess" : OnSuccess,
-            "OnError" : OnError,
-            "OnNewChild" : OnNewChild,
-            "PageNumber" : PageNumber,
-            "PageSize" : PageSize,
-            "PageSort" : PageSort,
-            "IncludeArchived" : IncludeArchived,
-            "IncludeMaster" : IncludeMaster,
-            "IncludeClient" : IncludeClient,
-            "Filter" : Filter,
-            "UnifiedSearchString" : UnifiedSearchString
-        }
-    );
+ITSSession.prototype.genericAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, OnNewChild, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString, preferred) {
+    if (typeof preferred == "undefined") preferred = false;
+    var objectToPush = {
+        "URL": URL,
+        "objectToPutDataIn": objectToPutDataIn,
+        "OnSuccess": OnSuccess,
+        "OnError": OnError,
+        "OnNewChild": OnNewChild,
+        "PageNumber": PageNumber,
+        "PageSize": PageSize,
+        "PageSort": PageSort,
+        "IncludeArchived": IncludeArchived,
+        "IncludeMaster": IncludeMaster,
+        "IncludeClient": IncludeClient,
+        "Filter": Filter,
+        "UnifiedSearchString": UnifiedSearchString
+        };
+    if (preferred) {
+        this.genericLoadQueue.splice(1,0,objectToPush);
+    } else {
+        this.genericLoadQueue.push(objectToPush);
+    }
     //console.log("Push",URL, this.genericLoadQueue.length);
     this.genericAjaxLoaderProcessQueue();
 };

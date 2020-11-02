@@ -60,7 +60,7 @@
                         ITSInstance.portletTeachingSessions.newPortletReadySession,
                         0,
                         3,
-                        'EndedAt desc', "N", "N", "Y", "SessionType=1001,ConsultantID=" + ITSInstance.users.currentUser.ID
+                        'EndedAt desc', "N", "N", "Y", "SessionType=1001,ConsultantID=" + ITSInstance.users.currentUser.ID, "", true
                     );
                 }.bind(this), 1);
             },

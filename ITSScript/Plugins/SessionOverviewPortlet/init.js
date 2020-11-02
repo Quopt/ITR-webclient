@@ -60,7 +60,7 @@
                         ITSInstance.portletReadySessions.newPortletReadySession,
                         0,
                         3,
-                        'EndedAt desc', "N", "N", "Y", "Status=30,Status=31,SessionType=0"
+                        'EndedAt desc', "N", "N", "Y", "Status=30,Status=31,SessionType=0", "",true
                     );
                 }.bind(this), 1);
             },

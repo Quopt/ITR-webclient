@@ -60,7 +60,7 @@
                         ITSInstance.portletTeachingClassroomSessions.newPortletReadySession,
                         0,
                         3,
-                        'EndedAt desc', "N", "N", "Y", "SessionType=1000"
+                        'EndedAt desc', "N", "N", "Y", "SessionType=1000", "", true
                     );
                 }.bind(this), 1);
             },

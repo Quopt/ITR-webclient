@@ -57,7 +57,7 @@
 
         //show the portlet
         ITSInstance.MessageBus.subscribe("CurrentUser.Loaded", function () {
-            $('#AdminInterfaceSettings').show();
+            setTimeout( function () { $('#AdminInterfaceSettings').show(); }, 50);
         }, true);
     })
 

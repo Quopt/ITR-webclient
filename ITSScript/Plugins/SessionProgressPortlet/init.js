@@ -71,7 +71,7 @@
                         ITSInstance.portletBusySessions.newPortletSession,
                         0,
                         3,
-                        'CreateDate desc, AllowedStartDateTime desc', "N", "N", "Y", "Status=10,SessionType=0"
+                        'CreateDate desc, AllowedStartDateTime desc', "N", "N", "Y", "Status=10,SessionType=0", "", true
                     );
                 }.bind(this), 1);
                 setTimeout( function () {
@@ -83,7 +83,7 @@
                         ITSInstance.portletBusySessions.newPortletBusySession,
                         0,
                         3,
-                        'StartedAt desc', "N", "N", "Y", "Status=20,Status=21,SessionType=0"
+                        'StartedAt desc', "N", "N", "Y", "Status=20,Status=21,SessionType=0", "", true
                     );
                 }.bind(this), 1);
             },
