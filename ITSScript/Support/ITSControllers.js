@@ -16,7 +16,7 @@
 
 // Password reset controller
 ITSPasswordResetController = function () {};
-ITSPasswordResetController.prototype.sendPasswordReset = function () {
+ITSPasswordResetController.prototype.sendPasswordReset = function (showMessage) {
     if ($('#ForgotWindowinputUsername').val().trim() == "") {
         ITSInstance.UIController.showError('ITSResetPassword.NoMail', 'Please enter a valid email address. If your login is NOT an email address contact your support person to reset it.');
     } else {
@@ -27,9 +27,14 @@ ITSPasswordResetController.prototype.sendPasswordReset = function () {
         $.ajax({url: ITSInstance.baseURLAPI + 'sendresetpassword', headers: tempHeaders, type: 'POST'});
         //ITSRedirectPath('Login');
         ITSInstance.UIController.activateScreenPath('Login');
+        ITSInstance.UIController.showInfo('ITSResetPasswordEditor.MailOK', 'The e-mail has been sent.', '', 'location.reload();');
     }
 };
-ITSPasswordResetController.prototype.tryPasswordReset = function () {
+ITSPasswordResetController.prototype.tryPasswordReset = function (showMessage) {
+    // make sure to translate the messages from the sendPasswordReset function otherwise they are not translatable ever
+    ITSInstance.translator.getTranslatedString('infoMessages', 'ITSResetPasswordEditor.MailOK', 'The e-mail has been sent.');
+    ITSInstance.translator.getTranslatedString('infoMessages', 'ITSResetPassword.NoMail', 'Please enter a valid email address. If your login is NOT an email address contact your support person to reset it.');
+    // continue normal function
     var newPW = $('#PasswordResetWindow1').val();
     var newPW2 = $('#PasswordResetWindow2').val();
     var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{10,})");
@@ -48,6 +53,7 @@ ITSPasswordResetController.prototype.tryPasswordReset = function () {
         tempHeaders['SessionID'] = getUrlParameterValue('Token');
         $.ajax({url: ITSInstance.baseURLAPI + 'resetpassword', headers: tempHeaders, type: 'POST'});
         ITSRedirectPath('');
+        ITSInstance.UIController.showInfo('ITSResetPasswordEditor.PasswordReset', 'The password has been changed.', '', 'location.reload();');
     }
 };
 
