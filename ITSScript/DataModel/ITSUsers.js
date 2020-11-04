@@ -206,7 +206,8 @@ ITSUsers.prototype.loadCurrentUser = function (whenLoaded, onError, forceReload 
         if (!this.currentUserLoadedCallPending) {
             this.currentUserLoadedCallPending = true;
             this.myITSInstance.JSONAjaxLoader('logins/currentuser', this.myITSInstance.users.currentUser,
-                this.currentUserLoadedOKcallback.bind(this), this.currentUserLoadedErrorcallback.bind(this));
+                this.currentUserLoadedOKcallback.bind(this), this.currentUserLoadedErrorcallback.bind(this),
+                undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
         }
     } else {
         whenLoaded();

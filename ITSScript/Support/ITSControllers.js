@@ -213,7 +213,7 @@ ITSLogoutController = function () {
         if (typeof redirectAfterLogout == "undefined") redirectAfterLogout = true;
 
         ITSLogger.logMessage(logLevel.INFO,"user logged out " + ITSInstance.users.currentUser.Email );
-        ITSInstance.genericAjaxLoader('logout', '', function () {}, function () {} , function () {}, undefined );
+        ITSInstance.genericAjaxUpdate('logout', '', function () {}, function () {} , function () {}, undefined );
         ITSInstance.token.clear();
         var returnURL = cookieHelper.getCookie('ReturnURL');
         cookieHelper.setCookie('NoTTHeader', '', 1);
@@ -241,15 +241,13 @@ ITSLogoutController = function () {
                 }, 1000);
             } else {
                 window.location.replace(returnURL);
-            }"Session:"
+            }
         }
     }
 };
 
 ITSInitializePortlets = function () {
     this.init = function () {
-        //ITSInstance.portletSelectCompany.init();
-        //ITSInstance.portletSelectSession.init();
         ITSInstance.UIController.initPortlets();
     }
 };

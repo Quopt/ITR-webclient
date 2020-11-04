@@ -82,7 +82,7 @@
             }
 
             // check if the current user's password has expired. If so redirect them to the password reset screen
-            if (ITSInstance.ITRSessionType == "office") {
+            if ( (ITSInstance.ITRSessionType == "office") && (getUrlParameterValue('Path') != "PasswordReset")) {
                 if (ITSInstance.users.currentUser.PasswordExpirationDate < new Date()) {
                     ITSInstance.UIController.showWarning("passwordExpired", "Your password has expired. Please change your password now.", "", "ITSRedirectPath('ResetPassword');" )
                 }

@@ -209,8 +209,9 @@ ITSSession.prototype.genericAjaxLoaderRunner = function (URL, objectToPutDataIn,
         type: 'GET'
     });
 };
-ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, DefaultObjectType, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
-    this.genericJSONLoadQueue.push(
+ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, DefaultObjectType, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString, preferred) {
+    if (typeof preferred == "undefined") preferred = false;
+    objectToPush =
         {
             "URL": URL,
             "objectToPutDataIn" : objectToPutDataIn,
@@ -225,8 +226,12 @@ ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSucces
             "IncludeClient" : IncludeClient,
             "Filter" : Filter,
             "UnifiedSearchString" : UnifiedSearchString
-        }
-    );
+        };
+    if (preferred) {
+        this.genericJSONLoadQueue.splice(1,0,objectToPush);
+    } else {
+        this.genericJSONLoadQueue.push(objectToPush);
+    }
     //console.log("Push",URL, this.genericJSONLoadQueue.length);
     this.JSONAjaxLoaderProcessQueue();
 };
