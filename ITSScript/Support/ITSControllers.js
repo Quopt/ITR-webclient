@@ -911,6 +911,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             this.saveCurrentTest();
             this.renderTestPage();
             break;
+/*
         case "GotoScreen" :
      		if (this.InTestTaking) this.switchNavBar();
             try {
@@ -920,12 +921,6 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Setting currentpage failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
             this.saveCurrentTest();
             this.renderTestPage();
-            break;
-        case "Logout" :
-     		if (this.InTestTaking) this.switchNavBar();
-            this.saveSession();
-            this.saveCurrentTest();
-            ITSInstance.logoutController.logout();
             break;
         case "ShowItem":
             var variables = INIEventParametersToObject(eventParameters);
@@ -941,8 +936,26 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             this.renderTestPage();
 
             break;
+*/
+        case "Logout" :
+            if (this.InTestTaking) this.switchNavBar();
+            this.saveSession();
+            this.saveCurrentTest();
+            ITSInstance.logoutController.logout();
+            break;
         case "CheckSessionTime" :
             // no action needed already done
+            break;
+        case "Script" :
+            // run a script. Parameters are the screen template trace ID and the script index
+            var scriptScreenParameterID = eventParameters.split(',')[0];
+            var scriptScreenParameterScreenComponentIndex = eventParameters.split(',')[1];
+            var scriptScreenParameterCodeBlockNr = eventParameters.split(',')[2];
+            var scriptScreenVariableName = eventParameters.split(',')[3];
+
+            if (scriptScreenParameterCodeBlockNr <=1) { scriptScreenParameterCodeBlockNr = ""; } else { scriptScreenParameterCodeBlockNr = "_" + scriptScreenParameterCodeBlockNr;}
+            var tempScript = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].screenComponents[scriptScreenParameterScreenComponentIndex].templateValues[scriptScreenVariableName+scriptScreenParameterCodeBlockNr];
+            ITSInstance.actions.executeScriptInTestTaking(tempScript, this, this.currentTestDefinition, this.currentSession, this.currentSessionTest, this.currentSessionTest.CurrentPage, scriptScreenParameterScreenComponentIndex, scriptScreenVariableName, scriptScreenParameterCodeBlockNr );
             break;
         default :
             if (eventName != '') ITSLogger.logMessage(logLevel.ERROR,"processEvent UNKNOWN event found : " + eventName + " " + eventParameters);

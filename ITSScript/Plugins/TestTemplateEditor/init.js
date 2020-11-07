@@ -558,7 +558,7 @@ ITSTestTemplateEditor.prototype.setCurrentScreenIndex = function (screenNum, tes
                 template = ITSInstance.screenTemplates.screenTemplates[template];
                 // generate_test_taking_view div, add_to_div, id, templatevalues, pnp_view
                 $('#AdminInterfaceTestTemplateEditorScreenContentsHeader').append(newScreenComponent);
-                template.generate_test_taking_view(newDivID, true, 'X' + i + 'Y', x.templateValues, false, true, 'TE');
+                template.generate_test_taking_view(newDivID, true, 'X' + i + 'Y', x.templateValues, false, true, 'TE', undefined, undefined, undefined, undefined, i);
                 // and generate the template editor if this is the current screen component index
                 if (testTemplateVarGeneration && (this.currentScreenComponentIndex == i)) {
                     this.generateCurrentScreenIndexTemplateVariables(i, x.templateValues, template);
@@ -606,6 +606,7 @@ ITSTestTemplateEditor.prototype.templatePlaceHolderChanged = function (newVal) {
     this.currentScreenComponent.placeholderName = newVal;
 };
 ITSTestTemplateEditor.prototype.templatePlaceHolderCommand = function (Command, value1, value2) {
+    console.log(Command, value1, value2);
     if (Command == "DELETE") {
         ITSInstance.newITSTestEditorController.currentTemplate.deleteElement(value1, ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues);
         ITSInstance.newITSTestEditorController.editScreenComponentDescription(ITSInstance.newITSTestEditorController.currentScreenComponentIndex, ITSInstance.newITSTestEditorController.currentScreenComponent.varComponentName);
@@ -624,6 +625,33 @@ ITSTestTemplateEditor.prototype.templatePlaceHolderCommand = function (Command, 
     if (Command == 'ACTIONCHANGED') {
         ITSInstance.newITSTestEditorController.templateValueChangedProcess();
         ITSInstance.newITSTestEditorController.editScreenComponentDescription(ITSInstance.newITSTestEditorController.currentScreenComponentIndex, ITSInstance.newITSTestEditorController.currentScreenComponent.varComponentName);
+    }
+    if (Command == 'ACTIONADD') {
+        ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1].ActionCounter++;
+        ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1]['Action'+ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1].ActionCounter] = {};
+        for (var i=ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1].ActionCounter-1; i > value2; i--) {
+            swapInObject(i+1, i, 'Action', ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1]);
+        }
+        ITSInstance.newITSTestEditorController.editScreenComponentDescription(ITSInstance.newITSTestEditorController.currentScreenComponentIndex, ITSInstance.newITSTestEditorController.currentScreenComponent.varComponentName);
+        ITSInstance.newITSTestEditorController.templateValueChanged();
+    }
+    if (Command == 'ACTIONDELETE') {
+        for (var i=value2; i <= ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1].ActionCounter; i++) {
+            swapInObject(i, i+1, 'Action', ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1]);
+        }
+        ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1].ActionCounter--;
+        ITSInstance.newITSTestEditorController.editScreenComponentDescription(ITSInstance.newITSTestEditorController.currentScreenComponentIndex, ITSInstance.newITSTestEditorController.currentScreenComponent.varComponentName);
+        ITSInstance.newITSTestEditorController.templateValueChanged();
+    }
+    if (Command == 'ACTIONDOWN') {
+        swapInObject(value2, value2+1, 'Action', ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1]);
+        ITSInstance.newITSTestEditorController.editScreenComponentDescription(ITSInstance.newITSTestEditorController.currentScreenComponentIndex, ITSInstance.newITSTestEditorController.currentScreenComponent.varComponentName);
+        ITSInstance.newITSTestEditorController.templateValueChanged();
+    }
+    if (Command == 'ACTIONUP') {
+        swapInObject(value2, value2-1, 'Action', ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1]);
+        ITSInstance.newITSTestEditorController.editScreenComponentDescription(ITSInstance.newITSTestEditorController.currentScreenComponentIndex, ITSInstance.newITSTestEditorController.currentScreenComponent.varComponentName);
+        ITSInstance.newITSTestEditorController.templateValueChanged();
     }
 };
 

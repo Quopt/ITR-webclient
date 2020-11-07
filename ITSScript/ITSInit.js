@@ -46,6 +46,7 @@ ITSSession = function () {
     this.currentTest = {}; // the test currently being viewed, calculated, taken etc
     this.currentSession = {}; // the session currently being viewed or taken
     this.testTaking = {}; // the test taking object when in test taking for the current session and candidate
+    this.actions = new ITSActionList(this); // the list of actions that can be used throughout the system
 
     // UI objects
     this.UIController = new ITSUIController(this);

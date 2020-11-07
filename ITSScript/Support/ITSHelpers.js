@@ -1324,3 +1324,22 @@ function convertDateToCode(newdate) {
     return newCode;
 };
 
+// generic swap function
+function swapInObject (element1, element2, varname, templatevalues) {
+    // NOTE : The element1 and element2 are 1-based ! So element 0 is not valid!
+    var ElemIndex1 = element1;
+    var ElemIndex2 = element2;
+
+    if ((element1 >0) && (element2 >0)) {
+        var tempVal = "";
+        tempVal1 = templatevalues[varname + ElemIndex1];
+        tempVal2 = templatevalues[varname + ElemIndex2];
+        if ((typeof tempVal1 === "undefined") || (typeof tempVal2 === "undefined")) {
+            // do nothing for now
+        }
+        else {
+            templatevalues[varname + ElemIndex1] = tempVal2;
+            templatevalues[varname + ElemIndex2] = tempVal1;
+        }
+    }
+};

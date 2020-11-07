@@ -107,6 +107,7 @@ function ITSScreenTemplate(parent, session) {
     this.constRepeatBlockIDPostFixtext = /%%RepeatBlockID%%/g;
     this.constRepeatBlockTest = '<!--REPEATBLOCK-->';
     this.constVarEnvelope = '%%';
+    this.constScreenComponentIndextext = /%%ScreenComponentIndex%%/g;
 
     // HTML template
     this.HTMLContent = "";
@@ -506,7 +507,7 @@ ITSScreenTemplate.prototype.extract_test_editor_view_templatevalues = function (
     for (var i = 0; i < this.TemplateVariables.length; i++) {
         // is this a repeat block var? If so generate at the bottom ...
         if (repeat_block_vars.indexOf(this.TemplateVariables[i]) < 0) {
-            templatevalues[this.TemplateVariables[i].variableName] = this.TemplateVariables[i].get_variable_value_for_test_editor(this, div, 0);
+            templatevalues[this.TemplateVariables[i].variableName] = this.TemplateVariables[i].get_variable_value_for_test_editor(this, div, 0, this.TemplateVariables[i].variableName, templatevalues);
         }
     }
     // get values for repeat block variables
@@ -515,9 +516,9 @@ ITSScreenTemplate.prototype.extract_test_editor_view_templatevalues = function (
             // is this a repeat block var? If so we can generate it now !
             if (repeat_block_vars.indexOf(this.TemplateVariables[i]) >= 0) {
                 if (repeat_block_counter > 0) {
-                    templatevalues[this.TemplateVariables[i].variableName + "_" + (repeat_block_counter + 1)] = this.TemplateVariables[i].get_variable_value_for_test_editor(this, div, repeat_block_counter + 1);
+                    templatevalues[this.TemplateVariables[i].variableName + "_" + (repeat_block_counter + 1)] = this.TemplateVariables[i].get_variable_value_for_test_editor(this, div, repeat_block_counter + 1, this.TemplateVariables[i].variableName, templatevalues);
                 } else {
-                    templatevalues[this.TemplateVariables[i].variableName] = this.TemplateVariables[i].get_variable_value_for_test_editor(this, div, repeat_block_counter + 1);
+                    templatevalues[this.TemplateVariables[i].variableName] = this.TemplateVariables[i].get_variable_value_for_test_editor(this, div, repeat_block_counter + 1,this.TemplateVariables[i].variableName, templatevalues);
                 }
             }
         }
@@ -580,8 +581,11 @@ ITSScreenTemplate.prototype.expand_repeat_block_and_parameters_with_blockcount =
     return template;
 }
 
-ITSScreenTemplate.prototype.replace_variables_with_actual_values = function (repeat_block_vars, template, varvalues, RepeatBlockCount, id) {
+ITSScreenTemplate.prototype.replace_variables_with_actual_values = function (repeat_block_vars, template, varvalues, RepeatBlockCount, id, screenComponentIndex) {
 // replace all variables with the indicated values
+    // replace the screen template index variable here
+    template = template.replace(this.constScreenComponentIndextext, screenComponentIndex);
+
     for (var i = 0; i < this.TemplateVariables.length; i++) {
         // is this a repeat block var? If so generate at the bottom ...
         if (repeat_block_vars.indexOf(this.TemplateVariables[i]) < 0) {
@@ -615,7 +619,7 @@ ITSScreenTemplate.prototype.check_value_for_specials = function (variableType, i
     if (variableType == "P") {
         newVal = id + "_" + newVal;
     } else if (variableType.indexOf("L") == 0) {
-        if (newVal.indexOf('|') >= 0) {
+        if ((typeof newVal.indexOf != "undefined") && (newVal.indexOf('|') >= 0)) {
             var new_option = newVal.split('|');
             newVal = new_option[0];
         }
@@ -624,7 +628,7 @@ ITSScreenTemplate.prototype.check_value_for_specials = function (variableType, i
     return newVal;
 };
 
-ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_div, id, templatevalues, pnp_view, full_initialisation, init_mode, preferHTML, actual_values, preload, preloadCallback) {
+ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_div, id, templatevalues, pnp_view, full_initialisation, init_mode, preferHTML, actual_values, preload, preloadCallback, screenComponentIndex) {
     // div - place to generate the view in the html page
     // id - id of this template
     // templatesvalues - any already filled in values for this template (js object)
@@ -648,7 +652,7 @@ ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_di
 
     // generate sufficient copies of the repeat block(s)
     template = this.expand_repeat_block_and_parameters_with_blockcount(RepeatBlockCount, template, repeat_block_vars);
-    template = this.replace_variables_with_actual_values(repeat_block_vars, template, templatevalues, RepeatBlockCount, id);
+    template = this.replace_variables_with_actual_values(repeat_block_vars, template, templatevalues, RepeatBlockCount, id, screenComponentIndex);
 
     if (preferHTML) {
         var x = '';
@@ -703,9 +707,7 @@ function ITSScreenTemplateVariable(parent, session) {
 
 ITSScreenTemplateVariable.prototype.traceID = function (template_parent, repeat_block_counter) {
     if (this.varTraceID == "") {
-//        var traceID = "V" + repeat_block_counter + template_parent.ID + this.ID + "Y";
         var traceID = "TEMPLATEVAR" + getNewSimpleGeneratorNumber('ui_tempvar_gen', 99999999);
-//        traceID = traceID.replace("-", "");
         this.varTraceID = traceID;
     }
     return this.varTraceID + repeat_block_counter + "Y";
@@ -809,27 +811,57 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             $('#' + div_to_add_to).append(select);
             break;
         case "LX" : // list of actions
-            select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0 '+bgcolor+'">' +
-                '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
-                '<div NoTranslate class="col-6 mx-0 px-0">' +
-                '<select NoTranslate class="form-control" onchange="' +on_element_command_for_all_elements+ '(\'ACTIONCHANGED\'); " onkeyup="' +on_element_command_for_all_elements+ '(\'ACTIONCHANGED\'); " id="' + traceID + '">';
-            // now add the options from the default settings
-            var option_array = this.defaultValue.split(',');
-            var new_option = "";
-            for (var i = 0; i < option_array.length; i++) {
-                if (option_array[i].indexOf('|') >= 0) {
-                    new_option = option_array[i].split('|');
-                    if (this.translatable) {
-                        select = select + '<option NoTranslate value="' + new_option[0] + '">' + ITSInstance.translator.getTranslatedString("ScreenTemplateVariable." + this.ID + "." + this.variableName, new_option[0], new_option[1]) + '</option>';
-                    } else {
-                        select = select + '<option NoTranslate value="' + new_option[0] + '">' + new_option[1] + '</option>';
-                    }
-                } else {
-                    select = select + '<option NoTranslate value="' + option_array[i] + '">' + option_array[i] + '</option>';
-                }
+            // check of the template values exists and is properly initialised
+            if ((typeof template_values[varNameForTemplateValues] == "undefined") || (typeof template_values[varNameForTemplateValues].ActionCounter == "undefined")) {
+                template_values[varNameForTemplateValues] = {};
+                template_values[varNameForTemplateValues].ActionCounter = 1;
+                template_values[varNameForTemplateValues].persistentProperties = "*ALL*";
+                template_values[varNameForTemplateValues]._objectType = "ITSObject";
             }
-            select = select + '</select></div><div NoTranslate class="col-12 mx-0 px-0" id="' + traceID + 'Options"></div></div>';
-            $('#' + div_to_add_to).append(select);
+
+            var actionMax = template_values[varNameForTemplateValues].ActionCounter;
+            var countForLabel="";
+            var borderForDiv="";
+            for (var actionCounter = 1; actionCounter <= actionMax; actionCounter ++) {
+                if (actionMax > 1) countForLabel = ' #' + actionCounter;
+                borderForDiv = "";
+                if (actionCounter < 2) borderForDiv = 'style="border-top:1px silver dotted;"';
+                select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0 ' + bgcolor + '" '+borderForDiv+'>' +
+                    '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + countForLabel + '</label>' +
+                    '<div NoTranslate class="col-6 mx-0 px-0">' +
+                    '<select NoTranslate class="form-control" onchange="' + on_element_command_for_all_elements + '(\'ACTIONCHANGED\'); " onkeyup="' + on_element_command_for_all_elements + '(\'ACTIONCHANGED\'); " id="' + traceID + '_' + actionCounter + '">';
+                // check if there are actions in the default settings, if not add them all
+                if (this.defaultValue == "") {
+                    this.defaultValue = ITSInstance.actions.getActionsForContextAsCSV('test');
+                }
+                // now add the options from the default settings
+                var option_array = this.defaultValue.split(',');
+                var new_option = "";
+                for (var i = 0; i < option_array.length; i++) {
+                    if (option_array[i].indexOf('|') >= 0) {
+                        new_option = option_array[i].split('|');
+                        if (this.translatable) {
+                            select = select + '<option NoTranslate value="' + new_option[0] + '">' + ITSInstance.translator.getTranslatedString("ScreenTemplateVariable." + this.ID + "." + this.variableName, new_option[0], new_option[1]) + '</option>';
+                        } else {
+                            select = select + '<option NoTranslate value="' + new_option[0] + '">' + new_option[1] + '</option>';
+                        }
+                    } else {
+                        select = select + '<option NoTranslate value="' + option_array[i] + '">' + option_array[i] + '</option>';
+                    }
+                }
+                select = select + '</select></div></div>';
+                borderForDiv = 'style="border-bottom:1px silver dotted;"';
+                select += '<div NoTranslate class="row col-12 mr-0 ml-1 px-0 ' + bgcolor + '" '+borderForDiv+'>';
+                var buttons= "";
+                buttons += "<button type=\"button\" class=\"btn-xs btn-default\" onclick=\"" + on_element_command_for_all_elements + "('ACTIONADD','" + varNameForTemplateValues + "'," + actionCounter + ");\"><i class=\"fa fa-xs fa-plus\"></i></button>\n";
+                if (actionCounter > 1) buttons += "<button type=\"button\" class=\"btn-xs btn-default\" onclick=\"" + on_element_command_for_all_elements + "('ACTIONUP','" + varNameForTemplateValues + "'," + actionCounter + ");\"><i class=\"fa fa-xs fa-arrow-up\"></i></button>\n";
+                if (actionCounter < actionMax) buttons += "<button type=\"button\" class=\"btn-xs btn-default\" onclick=\"" + on_element_command_for_all_elements + "('ACTIONDOWN','" + varNameForTemplateValues + "'," + actionCounter + ");\"><i class=\"fa fa-xs fa-arrow-down\"></i></button>\n";
+                if (actionMax > 1) buttons += "<button type=\"button\" class=\"btn-xs btn-default\" onclick=\"" + on_element_command_for_all_elements + "('ACTIONDELETE','" + varNameForTemplateValues + "'," + actionCounter + ");\"><i class=\"fa fa-xs fa-trash\"></i></button>\n";
+                select += '<div NoTranslate class="col-4 mx-0 px-0 btn-group" style="height:25px">'+buttons+'</div>';
+                select += '<div NoTranslate class="col-8 mx-0 px-0" id="' + traceID  +  'Options'+ actionCounter + '"></div>';
+                select += "</div>";
+                $('#' + div_to_add_to).append(select);
+            }
             break;
         case "I" :
             select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0 '+bgcolor+'">' +
@@ -910,56 +942,39 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
 };
 
 ITSScreenTemplateVariable.prototype.generate_LX_variable = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues) {
-    var parts = template_values[varNameForTemplateValues].split(',');
-    var part1 = stripEndQuotes(parts[0],"'");
-    var part2 = [''];
-    if (typeof parts[1] != "undefined") {
-        part2 = stripEndQuotes(parts[1], "'").split('&&&');
-    }
+    // loop through all actions in this list
+    var actionMax = template_values[varNameForTemplateValues].ActionCounter;
+    for (var actionCounter = 1; actionCounter <= actionMax; actionCounter ++) {
+        if (typeof template_values[varNameForTemplateValues]["Action" + actionCounter]  == "undefined") {
+            template_values[varNameForTemplateValues]["Action" + actionCounter] = {};
+            template_values[varNameForTemplateValues]["Action" + actionCounter].persistentProperties = "*ALL*";
+            template_values[varNameForTemplateValues]["Action" + actionCounter]._objectType = "ITSObject";
+            template_values[varNameForTemplateValues].persistentProperties = "*ALL*";
+            template_values[varNameForTemplateValues]._objectType = "ITSObject";
+        }
 
-    $('#' + traceID).val(part1);
-    // to do : add the settings for the selected action from the template values and generate the options. xxx
-    // the value is formatted as 2 strings : 'ACTIONNAME', 'par1, par2, par3'
-    // this is only valid for the actions GotoScreen and ShowItem
-    var DivToAdd = traceID + 'Options';
-    $('#' + DivToAdd).empty();
-    if (typeof testdefinition != "undefined") {
-        if (part1 == 'GotoScreen') {
-            var select =
-                '<div NoTranslate class="col-12 mx-0 px-0">' +
-                '<select NoTranslate class="form-control" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" id="' + traceID + 'Options1">';
-            var selectStr = '';
-            // now add the options from the default settings
-            for (var i = 0; i < testdefinition.screens.length; i++) {
-                selectStr = (testdefinition.screens[i].varName == part2[0]) ? " selected " : "";
-                select = select + '<option '+selectStr+' NoTranslate value="' + testdefinition.screens[i].varName + '">' + testdefinition.screens[i].varName + '</option>';
-            }
-            select = select + '</select></div>';
-            $('#' + DivToAdd).append("<div class='row m-0 p-0 col-12 form-control-sm'>" + select + "</div>");
+        // get the action and variables
+        var part1 = template_values[varNameForTemplateValues]["Action" + actionCounter].ActionName;
+        var part2 = template_values[varNameForTemplateValues]["Action" + actionCounter].ActionValue;
+
+        var tempTraceID = traceID + '_' + actionCounter;
+        $('#' + tempTraceID).val(part1);
+        // to do : add the settings for the selected action from the template values and generate the options. xxx
+        // the value is formatted as 2 strings : 'ACTIONNAME', 'par1, par2, par3'
+        // this is only valid for the actions GotoScreen and ShowItem
+        var DivToAdd = traceID + 'Options' + actionCounter;
+        $('#' + DivToAdd).empty();
+        if (typeof testdefinition != "undefined") {
+
+            try {
+                ITSInstance.actions.findAction(part1).generateElement(traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd, tempTraceID, part2);
+            } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"generate_LX_variable : ITSInstance.actions.findAction contains error " + part1 + " " + err.message ); }
+
         }
-        if (part1 == 'ShowItem') {
-            var select =
-                '<div NoTranslate class="col-12 mx-0 px-0">' +
-                '<select NoTranslate class="form-control" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" id="' + traceID + 'Options1-1">' +
-                '<option NoTranslate value="">-</option>';
-            var selectStr = '';
-            var tempObj = INIEventParametersToObject( parts[1] );
-            // now add the options from the default settings
-            for (var i = 0; i < testdefinition.screens[currentScreenIndex].screenComponents.length; i++) {
-                selectStr = (testdefinition.screens[currentScreenIndex].screenComponents[i].id == tempObj.Element1) ? " selected " : "";
-                select = select + '<option '+selectStr+' NoTranslate value="' + testdefinition.screens[currentScreenIndex].screenComponents[i].id + '">' + testdefinition.screens[currentScreenIndex].screenComponents[i].varComponentName + '</option>';
-            }
-            select = select + '</select></div>';
-            selectStr = tempObj.Element1Hide == "on" ? "checked" : "";
-            select = select + '<div class="col-12 mx-0 px-0"><input type="checkbox" '+selectStr+' class="col-1" onchange="' + on_change_function + '" id="' + traceID + 'Options1-2"><label class="col-11" id="ShowItem_HideInsteadOfShow">Hide the element instead of show</label></div>';
-            selectStr = tempObj.ResetShowStatusForAll   == "on" ? "checked" : "";
-            select = select + '<div class="col-12 mx-0 px-0"><input type="checkbox" '+selectStr+' class="col-1" onchange="' + on_change_function + '" id="' + traceID + 'Options3"><label class="col-11" id="ShowItem_ResetAllToInitialShow">Reset all elements to initial Show status</label></div>';
-            $('#' + DivToAdd).append("<div class='row m-0 p-0 col-12 form-control-sm'>" + select + "</div>");
-        }
-    }
+    } // for
 };
 
-ITSScreenTemplateVariable.prototype.get_variable_value_for_test_editor = function (template_parent, div_to_add_to, repeat_block_counter) {
+ITSScreenTemplateVariable.prototype.get_variable_value_for_test_editor = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values) {
     // generate variable name
     var traceID = this.traceID(template_parent, repeat_block_counter);
     // now get the value depending on the type of variable
@@ -984,28 +999,34 @@ ITSScreenTemplateVariable.prototype.get_variable_value_for_test_editor = functio
             return $('#' + traceID).val();
             break;
         case "LX" :
-            var var1 = $('#' + traceID).val();
-            // to do : add the option values and return those as well, get the values out of the optional parameters
-            if (var1 != 'ShowItem') {
-                var var2 = ''; // seperate multiple values in var2 with |
-                i = 1;
-                while (typeof $('#' + traceID + 'Options' + i).val() != "undefined") {
-                    if (var2 == '') {
-                        var2 = $('#' + traceID + 'Options' + i).val();
-                    } else {
-                        var2 = var2 + '&&&' + $('#' + traceID + 'Options' + i).val();
-                    }
-                    i++;
-                }
-            } else {
-                var tempObj = {};
-                tempObj["Element1"] = $('#' + traceID + 'Options1-1').val();
-                tempObj["Element1Hide"] = ( $('#' + traceID + 'Options1-2').prop('checked') ? "on" : "off" );
-                tempObj["ResetShowStatusForAll"] = ( $('#' + traceID + 'Options3').prop('checked') ? "on" : "off" )
+            // loop through all actions in this list
+            var toReturn = {};
+            var actionCounter = 1;
+            var tempTraceID = traceID + "_" + actionCounter;
+            var var2="";
+            while (typeof $('#' + tempTraceID )[0] != "undefined") {
+                var var1 = $('#' + tempTraceID).val();
+                var var2 = "";
 
-                var2 = ObjectToINIEventParameters(tempObj) ;
+                try {
+                    var2 = ITSInstance.actions.findAction(var1).getValuesFromGeneratedElement(template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values, tempTraceID);
+                } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"get_variable_value_for_test_editor : ITSInstance.actions.findAction contains error " + var1 + " " + err.message ); }
+
+                toReturn["Action"+actionCounter] = {};
+                toReturn["Action"+actionCounter].ActionName = var1 ;
+                toReturn["Action"+actionCounter].ActionValue = var2;
+                toReturn["Action"+actionCounter].persistentProperties = "*ALL*";
+                toReturn["Action"+actionCounter]._objectType = "ITSObject";
+                toReturn.persistentProperties = "*ALL*";
+                toReturn._objectType = "ITSObject";
+
+                // check next
+                actionCounter++;
+                tempTraceID = traceID + "_" + actionCounter;
             }
-            return "'" + var1 + "','" + var2 + "'";
+            toReturn.ActionCounter= actionCounter-1;
+
+            return toReturn;
             break;
         case "I" :
             return $('#' + traceID).val();

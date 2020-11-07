@@ -1584,9 +1584,6 @@ ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, 
                 }
             }
 
-            if (typeof this.screenComponents[j].showOriginalValue != "undefined") {
-                ComponentResults.VisibleOriginal = this.screenComponents[j].showOriginalValue;
-            }
         } catch (err) {};
     }
     return saveSessionNeeded;
@@ -1624,9 +1621,10 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
             if (ComponentResults.Visible) {
                 this.screenComponents[j].show = ComponentResults.Visible;
             }
-            if (typeof ComponentResults.VisibleOriginal != "undefined") {
-                this.screenComponents[j].showOriginalValue = ComponentResults.VisibleOriginal;
+            if (typeof ComponentResults.VisibleOriginal == "undefined") {
+                ComponentResults.VisibleOriginal = ComponentResults.Visible;
             }
+            this.screenComponents[j].showOriginalValue = ComponentResults.VisibleOriginal;
         } catch (err) {}
     }
 };
@@ -1708,7 +1706,7 @@ ITSTestScreen.prototype.generateScreenInDiv = function (divId, context, divPostf
                     TestResults = storageObject["__" + this.id] ;
                     var ComponentResults = TestResults["__" + this.screenComponents[i].id];
                 } catch(err) {};
-                var x = myTemplate.generate_test_taking_view(newDivID, true, 'X' + i + 'Y' + divPostfix, this.screenComponents[i].templateValues, PnP, true, context, preferHTML, ComponentResults.Value, preload, preloadCallback);
+                var x = myTemplate.generate_test_taking_view(newDivID, true, 'X' + i + 'Y' + divPostfix, this.screenComponents[i].templateValues, PnP, true, context, preferHTML, ComponentResults.Value, preload, preloadCallback, i);
                 if ((typeof x === "number") && (preload)) {
                     preloadCount += x;
                 }

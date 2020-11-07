@@ -20,6 +20,7 @@ document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "
 document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Support/ITS_UI.js'><\/script>");
 document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Support/ITSControllers.js'><\/script>");
 document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Support/ITSMessageBus.js'><\/script>");
+document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/Support/ITSActions.js'><\/script>");
 
 // datamodel files
 document.write("<script type='text/javascript' src='" + ITSJavaScriptVersion + "/DataModel/ITSCompanies.js'><\/script>");
