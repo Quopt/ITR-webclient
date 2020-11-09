@@ -333,7 +333,7 @@ ITSActionGotoScreen.prototype.generateElement = function (traceID, template_valu
     var selectStr = '';
     // now add the options from the default settings
     for (var i = 0; i < testdefinition.screens.length; i++) {
-        selectStr = (testdefinition.screens[i].varName == ActionValue) ? " selected " : "";
+        selectStr = (testdefinition.screens[i].varName == ActionValue.ScreenName) ? " selected " : "";
         select = select + '<option ' + selectStr + ' NoTranslate value="' + testdefinition.screens[i].varName + '">' + testdefinition.screens[i].varName + '</option>';
     }
     select = select + '</select></div>';
@@ -341,16 +341,12 @@ ITSActionGotoScreen.prototype.generateElement = function (traceID, template_valu
 };
 
 ITSActionGotoScreen.prototype.getValuesFromGeneratedElement = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values, fullTraceID) {
-    var var2 = ''; // seperate multiple values in var2 with |
-    var i = 1;
-    while (typeof $('#' + fullTraceID + 'Options' + i).val() != "undefined") {
-        if (var2 == '') {
-            var2 = $('#' + fullTraceID + 'Options' + i).val();
-        } else {
-            var2 = var2 + '&&&' + $('#' + fullTraceID + 'Options' + i).val();
-        }
-        i++;
-    }
+    var var2 = {};
+    var2.persistentProperties = "*ALL*";
+    var2._objectType = "ITSObject";
+
+    var2.ScreenName = $('#' + fullTraceID + 'Options1').val()
+
     return var2;
 };
 
@@ -359,8 +355,7 @@ ITSActionGotoScreen.prototype.executeAction = function (context, callback) {
 
     if (context.testTakingController.InTestTaking) context.testTakingController.switchNavBar();
     try {
-        var x = context.currentTestDefinition.findScreenIndexByName(context.ActionValue);
-        if ((x == -1) && !isNaN(eventParameters)) context.currentSessionTest.CurrentPage = parseInt(context.ActionValue);
+        var x = context.currentTestDefinition.findScreenIndexByName(context.ActionValue.ScreenName);
         if (x > -1) context.currentSessionTest.CurrentPage = x;
     } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Setting currentpage failed for "  + context.currentTestDefinition.TestName + "(" + context.currentSessionTest.CurrentPage + ")"  + err);  }
     context.testTakingController.saveCurrentTest();
