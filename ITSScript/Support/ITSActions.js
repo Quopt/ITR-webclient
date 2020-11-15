@@ -18,20 +18,20 @@ ITSActionList = function(session) {
 
     this.AvailableActions = [];
 
-    this.registerAction(new ITSActionStore(session));
-    this.registerAction(new ITSActionAutoStore(session));
-    this.registerAction(new ITSActionCheckSessionTime(session));
-    this.registerAction(new ITSActionEndSession(session));
-    this.registerAction(new ITSActionEndTest(session));
-    this.registerAction(new ITSActionEndTestTimeOut(session));
-    this.registerAction(new ITSActionGotoScreen(session));
-    this.registerAction(new ITSActionLogout(session));
-    this.registerAction(new ITSActionNextScreen(session));
-    this.registerAction(new ITSActionNextScreenIfAnswered(session));
-    this.registerAction(new ITSActionNextUnansweredScreen(session));
-    this.registerAction(new ITSActionNextUnansweredScreenWithProceed(session));
-    this.registerAction(new ITSActionPreviousScreen(session));
-    this.registerAction(new ITSActionShowItem(session));
+    this.registerAction(new ITSActionStore(session), false);
+    this.registerAction(new ITSActionAutoStore(session), false);
+    this.registerAction(new ITSActionCheckSessionTime(session), false);
+    this.registerAction(new ITSActionEndSession(session), false);
+    this.registerAction(new ITSActionEndTest(session), false);
+    this.registerAction(new ITSActionEndTestTimeOut(session), false);
+    this.registerAction(new ITSActionGotoScreen(session), false);
+    this.registerAction(new ITSActionLogout(session), false);
+    this.registerAction(new ITSActionNextScreen(session), false);
+    this.registerAction(new ITSActionNextScreenIfAnswered(session), false);
+    this.registerAction(new ITSActionNextUnansweredScreen(session), false);
+    this.registerAction(new ITSActionNextUnansweredScreenWithProceed(session), false);
+    this.registerAction(new ITSActionPreviousScreen(session), false);
+    this.registerAction(new ITSActionShowItem(session), false);
     this.registerAction(new ITSActionUpdateCurrentScreenFromSessionStorage(session));
 };
 
@@ -63,8 +63,10 @@ ITSActionList.prototype.getActionsForContextAsCSV = function (context) {
     return foundActions;
 }
 
-ITSActionList.prototype.registerAction = function (actionObject) {
+ITSActionList.prototype.registerAction = function (actionObject, sortActionList) {
     actionObject.parent = this;
+    if (typeof sortActionList == "undefined") sortActionList = true;
+
     // check if this action is not available yet, if so the update instead of add
     var found = false;
     for (var i=0; i < this.AvailableActions.length; i++) {
@@ -75,6 +77,9 @@ ITSActionList.prototype.registerAction = function (actionObject) {
         this.AvailableActions[i] = actionObject;
     } else {
         this.AvailableActions.push(actionObject);
+    }
+    if (sortActionList) {
+        this.AvailableActions.sort( function (a,b) { return a.Description.localeCompare(b.Description); } );
     }
 };
 

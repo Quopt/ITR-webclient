@@ -124,6 +124,7 @@ function ITSScreenTemplate(parent, session) {
     this.generator_summary_snippet = "";
     this.validation_snippet = "";
     this.isanswered_snippet = "";
+    this.custom_template_actions_snippet = "";
 
     this.PluginData = {};
     this.PluginData.persistentProperties = "*ALL*";
@@ -138,7 +139,7 @@ function ITSScreenTemplate(parent, session) {
     this.persistentProperties = ['ID', 'Description', 'Explanation', 'Remarks', 'TemplateVariables',
         'HTMLContent', 'HTMLContentPnP', 'HTMLContentSummary', 'get_value_snippet', 'set_value_snippet', 'TemplateType',
         'init_value_snippet', 'generator_snippet', 'generator_pnp_snippet', 'generator_summary_snippet', 'get_value_as_html_snippet',
-        'validation_snippet', 'isanswered_snippet', 'PluginData'];
+        'validation_snippet', 'isanswered_snippet', 'custom_template_actions_snippet', 'PluginData'];
 }
 
 ITSScreenTemplate.prototype.descriptionWithDBIndicator = function () {
@@ -185,6 +186,11 @@ ITSScreenTemplate.prototype.loadDetailSucces = function () {
     this.onErrorCallbacks.length = 0;
     this.onSuccessCallbacks.length = 0;
     this.detailsLoaded = true;
+    try {
+        if (this.custom_template_actions_snippet != '') {
+            eval(this.custom_template_actions_snippet);
+        }
+    } catch(err) { ITSLogger.logMessage(logLevel.ERROR,'Custom template actions on screen template '+this.Description+' failed : ' + err.message); }
 }
 
 ITSScreenTemplate.prototype.loadDetailError = function () {
@@ -832,10 +838,11 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
                     '<select NoTranslate class="form-control" onchange="' + on_element_command_for_all_elements + '(\'ACTIONCHANGED\'); " onkeyup="' + on_element_command_for_all_elements + '(\'ACTIONCHANGED\'); " id="' + traceID + '_' + actionCounter + '">';
                 // check if there are actions in the default settings, if not add them all
                 if (this.defaultValue == "") {
-                    this.defaultValue = ITSInstance.actions.getActionsForContextAsCSV('test');
+                    var option_array = ITSInstance.actions.getActionsForContextAsCSV('test').split(',');
+                } else {
+                    var option_array = this.defaultValue.split(',');
                 }
                 // now add the options from the default settings
-                var option_array = this.defaultValue.split(',');
                 var new_option = "";
                 for (var i = 0; i < option_array.length; i++) {
                     if (option_array[i].indexOf('|') >= 0) {

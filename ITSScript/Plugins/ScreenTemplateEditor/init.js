@@ -383,11 +383,13 @@ ITSScreenTemplateEditor.prototype.changeView= function (viewName) {
     $('#AdminInterfaceScreenTemplate-generator_pnp_snippet-div').hide();
     $('#AdminInterfaceScreenTemplate-generator_summary_snippet-div').hide();
     $('#AdminInterfaceScreenTemplate-get_value_as_html_snippet-div').hide();
+    $('#AdminInterfaceScreenTemplate-custom_template_actions_snippet-div').hide();
 
     $('#AdminInterfaceScreenTemplate-viewlist-default').removeClass('active');
     $('#AdminInterfaceScreenTemplate-viewlist-pnp').removeClass('active');
     $('#AdminInterfaceScreenTemplate-viewlist-summary').removeClass('active');
     $('#AdminInterfaceScreenTemplate-viewlist-html').removeClass('active');
+    $('#AdminInterfaceScreenTemplate-viewlist-customactions').removeClass('active');
 
     switch (viewName) {
          case 'default' :
@@ -413,6 +415,10 @@ ITSScreenTemplateEditor.prototype.changeView= function (viewName) {
          case 'html' :
              $('#AdminInterfaceScreenTemplate-get_value_as_html_snippet-div').show();
              $('#AdminInterfaceScreenTemplate-viewlist-html').addClass('active');
+             break;
+        case 'actions':
+             $('#AdminInterfaceScreenTemplate-custom_template_actions_snippet-div').show();
+             $('#AdminInterfaceScreenTemplate-viewlist-customactions').addClass('active');
              break;
      }
 };

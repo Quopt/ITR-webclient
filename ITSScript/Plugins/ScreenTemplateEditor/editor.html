@@ -168,6 +168,9 @@
             <li class="nav-item">
                 <a class="nav-link" id="AdminInterfaceScreenTemplate-viewlist-html" href="#" onclick="ITSInstance.newITSScreenTemplateEditorController.changeView('html');">Plain HTML view</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" id="AdminInterfaceScreenTemplate-viewlist-customactions" href="#" onclick="ITSInstance.newITSScreenTemplateEditorController.changeView('actions');">Custom actions</a>
+            </li>
         </ul>
     </div>
     <div class="row">
@@ -266,6 +269,13 @@
                 <div ace-edit id="AdminInterfaceScreenTemplate-genscript-HTML" notranslate data-field="currentTemplate.get_value_as_html_snippet" onkeyup="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController );"></div>
                 <script>
                     ace.initEditJavascript("AdminInterfaceScreenTemplate-genscript-HTML");
+                </script>
+            </div>
+            <div id="AdminInterfaceScreenTemplate-custom_template_actions_snippet-div" notranslate class="form-group">
+                <label id="AdminInterfaceScreenTemplate-labelGeneratorActionsValue" for="AdminInterfaceScreenTemplate-labelGeneratorActions">Custom actions</label>
+                <div ace-edit id="AdminInterfaceScreenTemplate-labelGeneratorActions" notranslate data-field="currentTemplate.custom_template_actions_snippet" onkeyup="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController );"></div>
+                <script>
+                    ace.initEditJavascript("AdminInterfaceScreenTemplate-labelGeneratorActions");
                 </script>
             </div>
         </div>
