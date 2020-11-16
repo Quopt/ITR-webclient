@@ -1513,7 +1513,7 @@
     })(window.navigator.userAgent.toLowerCase());
 
     // detect browser and show warning for unsupported browser
-    if (browser == "ie") { $('#LoginWindowIEWarning').removeAttr("style"); $('#LoginWindowIEWarning').attr("style","display:block"); };
+    if (browser == "ie") { $('#LoginWindowIEWarning').removeAttr("style"); $('#LoginWindowIEWarning').attr("style","display:block"); alert('You are using Microsoft Internet Explorer. This site is not compatible with internet explorer. Please use a modern and up to date browser like Google Chrome, Microsoft Edge or Firefox. This site will stop loading now.'); };
     if (browser == "other") { $('#LoginWindowUnknownBrowserWarning').removeAttr("style"); $('#LoginWindowUnknownBrowserWarning').attr("style","display:block"); };
 
 </script>
