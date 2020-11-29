@@ -1365,7 +1365,7 @@ ITSTest.prototype.findScaleByID = function (idToFind) {
 
 ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, PnP, additionalText, currentSession, currentSessionTest, candidate, preferHTML, preload, preloadCallback) {
     if (!preferHTML) preferHTML = false;
-    if (! additionalText) additionalText = "";
+    if (!additionalText) additionalText = "";
     var preloadCount = 0 ;
 
     for (var i=0; i < this.screens.length; i ++) {

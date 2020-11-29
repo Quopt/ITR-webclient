@@ -199,7 +199,7 @@ ITSScreenTemplate.prototype.loadDetailSucces = function () {
         }
     }
     try {
-        if (this.custom_template_actions_snippet != '') {
+        if (this.custom_template_actions_snippet != '') {d
             eval(this.custom_template_actions_snippet);
         }
     } catch(err) { ITSLogger.logMessage(logLevel.ERROR,'Custom template actions on screen template '+this.Description+' failed : ' + err.message); }
@@ -258,6 +258,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
     var func = emptyfunc;
     try {
         eval("func = function(id, num_blocks, varvalue, current_values, template_values, template, test_mode, preload, preloadCallback) { " + this.get_value_as_html_snippet + " }; ");
+        this.get_value_as_html_snippet_set = this.get_value_as_html_snippet != "";
     } catch (err) {
         ITSLogger.logMessage(logLevel.ERROR,"get_value_as_html_snippet contains error " + this.Description + " " + err.message );
     }
@@ -676,7 +677,11 @@ ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_di
     if (preferHTML) {
         var x = '';
         try {
-            x = this.runtime_get_values_as_html(id, RepeatBlockCount, actual_values, templatevalues, template, this, pnp_view ? "PNP" : "TT", preload, preloadCallback);
+            if (this.get_value_as_html_snippet_set) {
+                x = this.runtime_get_values_as_html(id, RepeatBlockCount, actual_values, templatevalues, template, this, pnp_view ? "PNP" : "TT", preload, preloadCallback);
+            } else {
+                x = undefined;
+            }
         }
         catch (err) {
                 ITSLogger.logMessage(logLevel.ERROR,"runtime_get_values_as_html failed for " +  id + " " + err.message );
