@@ -161,10 +161,12 @@ ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixF
     if (includeAnswers && !this.preloadDone) {
         // the answers overview should be generated. Check for preloading.
         for (var found = 0; found < this.SessionTests.length; found++) {
-            var x = this.SessionTests[found].testDefinition.generateQuestionOverview("SessionViewAnswersInterfaceEditTestAnswers",
-                this.SessionTests[found].Results, true, "_" + this.genNumber + "_" + found,
-                this, this.SessionTests[found], this.Person, true, true, this.createReportOverviewProcessPreload.bind(this));
-            if (typeof x === "number") this.preloadCounter += x;
+            if (this.SessionTests[found].testDefinition.PluginData.testHasArchiveImages) {
+                var x = this.SessionTests[found].testDefinition.generateQuestionOverview("SessionViewAnswersInterfaceEditTestAnswers",
+                    this.SessionTests[found].Results, true, "_" + this.genNumber + "_" + found,
+                    this, this.SessionTests[found], this.Person, true, true, this.createReportOverviewProcessPreload.bind(this));
+                if (typeof x === "number") this.preloadCounter += x;
+            }
         }
         if (this.preloadCounter > 0) {
             this.reportZIP.zip = zip;
