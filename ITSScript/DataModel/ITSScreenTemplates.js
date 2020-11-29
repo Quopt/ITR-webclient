@@ -190,7 +190,14 @@ ITSScreenTemplate.prototype.loadDetailSucces = function () {
     this.onErrorCallbacks.length = 0;
     this.onSuccessCallbacks.length = 0;
     this.detailsLoaded = true;
-    if (typeof this.TemplateVariables == "string") this.TemplateVariables = JSON.parse(this.TemplateVariables);
+    if (typeof this.TemplateVariables == "string") {
+        this.TemplateVariablesTemp = JSON.parse(this.TemplateVariables);
+        this.TemplateVariables = [];
+        for (var i=0; i < this.TemplateVariablesTemp.length; i++) {
+            this.newScreenTemplateVariable();
+            shallowCopy(this.TemplateVariablesTemp[i], this.TemplateVariables[i], true);
+        }
+    }
     try {
         if (this.custom_template_actions_snippet != '') {
             eval(this.custom_template_actions_snippet);
@@ -972,9 +979,7 @@ ITSScreenTemplateVariable.prototype.generate_LX_variable = function (traceID, te
 
         var tempTraceID = traceID + '_' + actionCounter;
         $('#' + tempTraceID).val(part1);
-        // to do : add the settings for the selected action from the template values and generate the options. xxx
-        // the value is formatted as 2 strings : 'ACTIONNAME', 'par1, par2, par3'
-        // this is only valid for the actions GotoScreen and ShowItem
+        // add the settings for the selected action from the template values and generate the options.
         var DivToAdd = traceID + 'Options' + actionCounter;
         $('#' + DivToAdd).empty();
         if (typeof testdefinition != "undefined") {
