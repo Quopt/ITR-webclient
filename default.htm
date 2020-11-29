@@ -1513,7 +1513,7 @@
     })(window.navigator.userAgent.toLowerCase());
 
     // detect browser and show warning for unsupported browser
-    if (browser == "ie") { $('#LoginWindowIEWarning').removeAttr("style"); $('#LoginWindowIEWarning').attr("style","display:block"); alert($('#LoginWindowIEWarning').text()); };
+    if (browser == "ie") { $('#LoginWindowIEWarning').removeAttr("style"); $('#LoginWindowIEWarning').attr("style","display:block"); alert($('#LoginWindowIEWarning').text()); document.write($('#LoginWindowIEWarning').text()); };
     if (browser == "other") { $('#LoginWindowUnknownBrowserWarning').removeAttr("style"); $('#LoginWindowUnknownBrowserWarning').attr("style","display:block"); };
 
 </script>

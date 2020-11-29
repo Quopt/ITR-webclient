@@ -30,6 +30,10 @@ ITSScreenTemplates.prototype.loadAvailableSucces = function () {
     }
     this.onErrorCallbacks.length = 0;
     this.onSuccessCallbacks.length = 0;
+    // loop through all templates and mark details as loaded
+    for (var i=0; i < this.screenTemplates.length; i++) {
+        this.screenTemplates[i].loadDetailSucces();
+    }
 };
 ITSScreenTemplates.prototype.loadAvailableError = function () {
     this.currentlyLoading = false;
@@ -186,6 +190,7 @@ ITSScreenTemplate.prototype.loadDetailSucces = function () {
     this.onErrorCallbacks.length = 0;
     this.onSuccessCallbacks.length = 0;
     this.detailsLoaded = true;
+    if (typeof this.TemplateVariables == "string") this.TemplateVariables = JSON.parse(this.TemplateVariables);
     try {
         if (this.custom_template_actions_snippet != '') {
             eval(this.custom_template_actions_snippet);
@@ -210,11 +215,12 @@ ITSScreenTemplate.prototype.loadDetailDefinition = function (whenLoaded, OnError
     if (OnError) {
         this.onErrorCallbacks.push(OnError);
     }
+    if (this.detailsLoaded) this.loadDetailSucces();
     if (!this.currentlyLoading) {
         this.currentlyLoading = true;
         var myITSSession = this.ITSSession;
 
-        if (this.dbsource ==0) {
+        if (this.dbsource==0) {
             ITSInstance.JSONAjaxLoader('screentemplates/' + this.ID, this, this.loadDetailSucces.bind(this), this.loadDetailError.bind(this),
                 undefined, 0, 999999, '','', 'N', "Y");
         } else {
