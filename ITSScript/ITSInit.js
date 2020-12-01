@@ -783,6 +783,15 @@ if (getUrlParameterValue('NoTTHeader')) {
 }
 if (getUrlParameterValue('Coupon')) {
     cookieHelper.setCookie('Coupon', getUrlParameterValue('Coupon'), 5);
+    try {
+        sessionStorage.setItem("Coupon", getUrlParameterValue('Coupon'));
+    } catch (err) { };
+}
+if (getUrlParameterValue('MailTo')) {
+    cookieHelper.setCookie('MailTo', getUrlParameterValue('MailTo'), 5);
+    try {
+        sessionStorage.setItem("MailTo", getUrlParameterValue('MailTo'));
+    } catch (err) { };
 }
 if (getUrlParameterValue('DarkMode')) {
     ITSInstance.UIController.changeDarkMode();

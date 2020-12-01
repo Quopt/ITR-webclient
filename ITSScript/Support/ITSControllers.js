@@ -669,8 +669,12 @@ ITSTestTakingController.prototype.endTest = function (forcedEnding) {
         this.currentTestIndex = nextTestIndex;
         $('#ITSTestTakingDiv').hide();
         $('#ITSTestTakingDivTestEnded').show();
-        if (typeof ITREndTestFunction !== "undefined") ITREndTestFunction();
-        if (window.parent) window.parent.postMessage("ITREndTestFunction", this.currentSession, "*")
+        try {
+            if (typeof ITREndTestFunction !== "undefined") ITREndTestFunction();
+        } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"ITREndTestFunction failed "  + err); }
+        try {
+           if (window.parent) window.parent.postMessage("ITREndTestFunction", this.currentSession, "*")
+        } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"ITREndTestFunction postmessage failed "  + err); }
     } else {
         if (nextTestIndex > -1) {
             this.nextTest(nextTestIndex);
@@ -769,6 +773,17 @@ ITSTestTakingController.prototype.generateReport = function() {
         cst.calculateScores(true, true);
         var reportText = this.repToGen.generateTestReport(this.currentSession, cst, false);
         $('#ITSTestTakingDivSessionEndedShowReportContent')[0].innerHTML = reportText;
+
+        // Mail if requested
+        var mailto = sessionStorage.getItem("MailTo");
+        if ((mailto != "") && (typeof mailto != "undefined")) {
+            var newMail = new ITSMail();
+            newMail.To = mailto;
+            newMail.Subject = this.currentSession.Description;
+            newMail.Body = reportText;
+
+            newMail.sendMail(function () {}, function () {});
+        }
     } catch (err) {}
 
     setTimeout( function () { ITSInstance.logoutController.logout('',false); }, 1000);
@@ -911,32 +926,6 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             this.saveCurrentTest();
             this.renderTestPage();
             break;
-/*
-        case "GotoScreen" :
-     		if (this.InTestTaking) this.switchNavBar();
-            try {
-                var x = this.currentTestDefinition.findScreenIndexByName(eventParameters);
-                if ((x == -1) && !isNaN(eventParameters)) this.currentSessionTest.CurrentPage = parseInt(eventParameters);
-                if (x > -1) this.currentSessionTest.CurrentPage = x;
-            } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Setting currentpage failed for "  + this.currentTestDefinition.TestName + "(" + this.currentSessionTest.CurrentPage + ")"  + err);  }
-            this.saveCurrentTest();
-            this.renderTestPage();
-            break;
-        case "ShowItem":
-            var variables = INIEventParametersToObject(eventParameters);
-            this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].saveScreenComponentsShowStatus();
-            if (variables.ResetShowStatusForAll=="on") { this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].restoreScreenComponentsShowStatus(); }
-            var showComponent = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].findComponentByID(variables.Element1);
-            if (typeof showComponent != "undefined") {
-                showComponent.show = variables.Element1Hide=="off";
-            }
-
-            this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(this.currentSessionTest.Results, this.generateScreenID, false, this.currentSession.PluginData, this.currentSession.SessionType==1);
-            this.saveCurrentTest();
-            this.renderTestPage();
-
-            break;
-*/
         case "Logout" :
             if (this.InTestTaking) this.switchNavBar();
             this.saveSession();
