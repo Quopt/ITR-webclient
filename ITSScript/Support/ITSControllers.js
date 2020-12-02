@@ -797,6 +797,9 @@ ITSTestTakingController.prototype.generateReport = function(switchUI) {
         if ((mailto.indexOf('@') > 0)) {
             var newMail = new ITSMail();
             newMail.To = mailto;
+            newMail.ReplyTo = mailto;
+            newMail.CC = "";
+            newMail.BCC = "";
             newMail.Subject = this.currentSession.Description;
             newMail.Body = reportText;
 
