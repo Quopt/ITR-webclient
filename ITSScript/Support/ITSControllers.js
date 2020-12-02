@@ -785,8 +785,9 @@ ITSTestTakingController.prototype.generateReport = function(switchUI) {
         }
 
         var cst = this.currentSession.sessionTestById(this.repToGen.TestID);
-        cst.calculateScores(true, true);
-        console.log(cst.Scores);
+        cst.calculateScores(false, true);
+        cst.saveToServer(function(){}, function(){}, true);
+        //console.log(cst.Scores);
         var reportText = this.repToGen.generateTestReport(this.currentSession, cst, false);
         $('#ITSTestTakingDivSessionEndedShowReportContent')[0].innerHTML = reportText;
         $('#ITSTestTakingDivSessionEndedShowURL')[0].innerText =  [location.protocol, '//', location.host, location.pathname].join('')+"?Lang="+ITSLanguage+"&ReviewID="+this.currentSession.ID+"&Poll="+this.currentSession.ShortLoginCode+ "&ReturnURL="+ cookieHelper.getCookie('ReturnURL');
