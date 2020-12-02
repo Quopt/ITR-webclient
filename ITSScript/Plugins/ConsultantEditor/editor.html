@@ -64,6 +64,21 @@
     </div>
 </div>
 
+<div class="bg-dark text-white well row col-12"><label id="ConsultantEditorSystemAccessHeader">System access</label></div>
+<div id="ConsultantEditorSystemAccess" class="row col-12">
+    <div class="col-3" id="ConsultantEditorSystemAccessDiv">
+        <div class="col-1">
+            <input type="checkbox" data-field="Active"
+                   onchange="DataBinderFrom('ConsultantEditorInterfaceSessionEdit', ITSInstance.ConsultantEditorController.currentConsultant );"
+                   class="form-check-input form-check-input-sm"
+                   id="ConsultantEditorInterfaceActiveUser"/>
+        </div>
+        <label class="col-sm-11"
+               id="ConsultantEditorInterfaceActiveUserHeader"
+               for="ConsultantEditorInterfaceActiveUser">User is allowed to login to this site</label>
+    </div>
+</div>
+
 <div class="bg-dark text-white well row col-12"><label id="ConsultantEditorSystemRightsHeader">System rights</label></div>
 <div id="ConsultantEditorSystemRights" class="row col-12">
     <div class="col-3" id="ConsultantEditorInterfaceMasterUserDiv">

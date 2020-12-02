@@ -219,26 +219,14 @@
 
     ITSReportTemplateLocalPublisherEditor.prototype.revokePublish = function (ID) {
         this.templateID = ID;
-        this.templateIndex = ITSInstance.ReportTemplates.findTemplateById(this.reportsList, ID);
-        if (this.templateIndex >= 0) {
-            this.currentTemplate = this.reportsList[this.templateIndex];
-            if (!this.currentTemplate.detailsLoaded) {
-                this.currentTemplate.loadTestDetailDefinition( this.removeFromMaster.bind(this),
-                    function () {
-                        ITSInstance.UIController.showError("ITSReportTemplateLocalPublisherLister.LoadTemplateFailed", "The report template could not be loaded at this moment.", '',
-                            'window.history.back();');
-                    });
-            } else {
-                this.removeFromMaster();
-            }
+        var tempTemplate = ITSInstance.reports.findReportByID(this.reportsList, ID);
+        if (tempTemplate != undefined) {
+            tempTemplate.deleteFromServerMaster(
+                function () { ITSInstance.UIController.showInfo ("ITSReportTemplateLocalPublisherLister.SaveTemplateOK", "The report template was successfully revoked as published template."); tempTemplate
+                    this.fireRequest(); }.bind(this),
+                function () { ITSInstance.UIController.showError("ITSReportTemplateLocalPublisherLister.SaveTemplateFailed", "The report template could not be published at this moment."); }
+            );
         }
-    };
-    ITSReportTemplateLocalPublisherEditor.prototype.removeFromMaster = function () {
-        this.currentTemplate.deleteFromServerMaster(
-            function () { ITSInstance.UIController.showInfo ("ITSReportTemplateLocalPublisherLister.SaveTemplateOK", "The report template was successfully revoked as published template.");
-                this.fireRequest(); }.bind(this),
-            function () { ITSInstance.UIController.showError("ITSReportTemplateLocalPublisherLister.SaveTemplateFailed", "The report template could not be published at this moment."); }
-        )
     };
 
     // register the portlet

@@ -225,6 +225,11 @@ ITSLogoutController = function () {
         cookieHelper.setCookie('NoTTHeader', '', 1);
         cookieHelper.setCookie('Coupon', '', 1);
         cookieHelper.setCookie('SessionID', '', 1);
+        var n = sessionStorage.length;
+        while(n--) {
+            var key = sessionStorage.key(n);
+            sessionStorage.removeItem(key);
+        }
 
         var length=history.length;
         history.go(-length);
@@ -732,6 +737,7 @@ ITSTestTakingController.prototype.endSessionChecker = function () {
                 $('#ITSTestTakingDiv').hide();
                 $('#ITSTestTakingDivSessionEnded').hide();
                 $('#NavbarsAdminLogoutButtonTT').hide();
+                $('#NavbarsTestTaking').hide();
                 $('#ITSTestTakingDivSessionEndedShowReport').show();
                 this.generateReport();
             }
@@ -760,8 +766,17 @@ ITSTestTakingController.prototype.endSessionChecker = function () {
     }
 };
 
-ITSTestTakingController.prototype.generateReport = function() {
+ITSTestTakingController.prototype.generateReport = function(switchUI) {
+    console.log('Generate report');
     try {
+        if (switchUI) {
+            $('#ITSTestTakingDiv').hide();
+            $('#ITSTestTakingDivSessionEnded').hide();
+            $('#NavbarsAdminLogoutButtonTT').hide();
+            $('#NavbarsTestTaking').hide();
+            $('#ITSTestTakingDivSessionEndedShowReport').show();
+        }
+
         if (typeof this.repToGen == "undefined") this.repToGen = ITSInstance.reports.newReport(false);
         if (!this.repToGen.detailsLoaded) {
             this.repToGen.ID = this.currentSession.PluginData.sessionParameters.reportID;
@@ -769,20 +784,22 @@ ITSTestTakingController.prototype.generateReport = function() {
             return;
         }
 
-        var cst = this.currentSession.sessionTestById( this.repToGen.TestID);
+        var cst = this.currentSession.sessionTestById(this.repToGen.TestID);
         cst.calculateScores(true, true);
+        console.log(cst.Scores);
         var reportText = this.repToGen.generateTestReport(this.currentSession, cst, false);
         $('#ITSTestTakingDivSessionEndedShowReportContent')[0].innerHTML = reportText;
+        $('#ITSTestTakingDivSessionEndedShowURL')[0].innerText =  [location.protocol, '//', location.host, location.pathname].join('')+"?Lang="+ITSLanguage+"&ReviewID="+this.currentSession.ID+"&Poll="+this.currentSession.ShortLoginCode+ "&ReturnURL="+ cookieHelper.getCookie('ReturnURL');
 
         // Mail if requested
-        var mailto = sessionStorage.getItem("MailTo");
-        if ((mailto != "") && (typeof mailto != "undefined")) {
+        var mailto = String(sessionStorage.getItem("MailTo"));
+        if ((mailto.indexOf('@') > 0)) {
             var newMail = new ITSMail();
             newMail.To = mailto;
             newMail.Subject = this.currentSession.Description;
             newMail.Body = reportText;
 
-            newMail.sendMail(function () {}, function () {});
+            newMail.sendConsultantMail(this.currentSession.ID, function () {}, function () {});
         }
     } catch (err) {}
 

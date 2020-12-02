@@ -541,10 +541,16 @@ ITSUIController = function () {
         ITSInstance.ITRSessionType = "testrun";
         ITSInstance.screenTemplates.loadAvailableScreenTemplates(); // always load the screen templates
 
-        // now initialise the editors and portlets. The may need more data.
-        //ITSInstance.UIController.registeredEditors.forEach( function (currentValue, index, arr) { if(typeof currentValue.afterTestRunLogin == 'function') { currentValue.afterTestRunLogin(); } } )
-        //ITSInstance.UIController.registeredPortlets.forEach( function (currentValue, index, arr) { if(typeof currentValue.afterTestRunLogin == 'function') { currentValue.afterTestRunLogin(); } } )
-        ITSInstance.testTakingController.startSession();
+        if (isUUID(sessionStorage.getItem("ReviewID"))) {
+            // load the session
+            cookieHelper.setCookie('SessionID',sessionStorage.getItem("ReviewID"),1);
+            ITSInstance.testTakingController.currentSession = new ITSCandidateSession(this, ITSInstance);
+            ITSInstance.testTakingController.currentSession.loadSession(sessionStorage.getItem("ReviewID"),
+                ITSInstance.testTakingController.generateReport.bind(ITSInstance.testTakingController, true),
+                ITSInstance.testTakingController.startSession.bind(ITSInstance.testTakingController), false, true);
+        } else {
+            ITSInstance.testTakingController.startSession();
+        }
     };
     this.enableDarkMode = function () {
         document.body.setAttribute('data-theme', 'dark');

@@ -45,6 +45,7 @@ ITSReports.prototype.loadAvailableReportsList = function (whenLoaded, whenError)
 
 ITSReports.prototype.loadSuccess = function () {
     this.listLoaded = true;
+    this.currentlyLoading = false;
     for (var i = 0; i < this.onSuccessCallbacks.length; i++) {
         setTimeout(this.onSuccessCallbacks[i], i);
     }
@@ -54,6 +55,7 @@ ITSReports.prototype.loadSuccess = function () {
 
 ITSReports.prototype.loadError = function () {
     this.listLoaded = false;
+    this.currentlyLoading = false;
     for (var i = 0; i < this.onErrorCallbacks.length; i++) {
         setTimeout(this.onErrorCallbacks[i], i);
     }
@@ -68,9 +70,9 @@ ITSReports.prototype.newReport = function (addToReportsList) {
 };
 
 ITSReports.prototype.findReportByID = function (reportsList, reportID) {
-    for (var i=0; i < this.reportsList.length; i++) {
-        if (this.reportsList[i].ID == reportID) {
-            return this.reportsList[i];
+    for (var i=0; i < reportsList.length; i++) {
+        if (reportsList[i].ID == reportID) {
+            return reportsList[i];
         }
     }
     return undefined;

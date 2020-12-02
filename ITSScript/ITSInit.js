@@ -774,6 +774,7 @@ if (getUrlParameterValue('AutoLogin')) {
 }
 if (getUrlParameterValue('Poll')) {
     OldURLparseURLandTakeAction = document.URL;
+    sessionStorage.setItem("Poll", getUrlParameterValue('Poll'));
     setTimeout(function () {
         $('#LoginWindowLoginButton').click();
     }, 100);
@@ -788,9 +789,13 @@ if (getUrlParameterValue('Coupon')) {
     } catch (err) { };
 }
 if (getUrlParameterValue('MailTo')) {
-    cookieHelper.setCookie('MailTo', getUrlParameterValue('MailTo'), 5);
     try {
         sessionStorage.setItem("MailTo", getUrlParameterValue('MailTo'));
+    } catch (err) { };
+}
+if (getUrlParameterValue('ReviewID')) {
+    try {
+        sessionStorage.setItem("ReviewID", getUrlParameterValue('ReviewID'));
     } catch (err) { };
 }
 if (getUrlParameterValue('DarkMode')) {

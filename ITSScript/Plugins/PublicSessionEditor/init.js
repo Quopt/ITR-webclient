@@ -214,7 +214,11 @@ ITSPublicSessionEditor.prototype.populateReportList = function () {
     var tempTest = {};
     for (var i=0; i < reports.length; i++) {
         selected = "";
-        if (reports[i].ID == this.currentSession.PluginData.sessionParameters.reportID) { selected = " selected='selected' ";}
+        try {
+            if (reports[i].ID == this.currentSession.PluginData.sessionParameters.reportID) {
+                selected = " selected='selected' ";
+            }
+        } catch (err) {};
         testDescription = "";
         if (reports[i].TestID != '') {
             //console.log(reports[i].TestID);
@@ -229,6 +233,9 @@ ITSPublicSessionEditor.prototype.populateReportList = function () {
 };
 
 ITSPublicSessionEditor.prototype.selectReportInEditor = function(object) {
+    if (typeof this.currentSession.PluginData.sessionParameters == "undefined") {
+        this.currentSession.PluginData.sessionParameters = {};
+    }
     this.currentSession.PluginData.sessionParameters.reportID = object.value;
 };
 

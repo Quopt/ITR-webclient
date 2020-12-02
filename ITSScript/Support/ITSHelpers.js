@@ -846,6 +846,12 @@ ITSMail.prototype.sendMail = function (OnSuccess, OnError) {
     ITSInstance.genericAjaxUpdate('sendmail', tempStr, OnSuccess, OnError );
 };
 
+ITSMail.prototype.sendConsultantMail = function (SessionID, OnSuccess, OnError) {
+    this.persistentProperties = "*ALL*";
+    var tempStr = ITSJSONStringify(this);
+    ITSInstance.genericAjaxUpdate('sendmailconsultant/' + SessionID, tempStr, OnSuccess, OnError );
+};
+
 function envSubstitute(textToScan, instanceObj, freeContext) {
     // substitute fields with values
     if (!textToScan) textToScan="";
@@ -1343,3 +1349,14 @@ function swapInObject (element1, element2, varname, templatevalues) {
         }
     }
 };
+
+// check if string is value ITR uuid
+function isUUID(uuid) {
+    let s = "" + uuid;
+
+    s = s.match('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$');
+    if (s === null) {
+        return false;
+    }
+    return true;
+}
