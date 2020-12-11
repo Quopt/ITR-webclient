@@ -1570,7 +1570,7 @@ ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, 
                         sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName] = ComponentResults.Value;
                         if (includeCookies) {
                             //console.log("Cookie %s %s", this.screenComponents[j].varComponentName, ComponentResults.Value);
-                            cookieHelper.setCookie(this.screenComponents[j].varComponentName, ComponentResults.Value, 31536000);
+                            cookieHelper.setCookie(this.screenComponents[j].varComponentName, ComponentResults.Value, 43800);
                         }
                         saveSessionNeeded = true;
                         //ITSLogger.logMessage(logLevel.ERROR,"S" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
