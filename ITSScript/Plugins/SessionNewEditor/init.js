@@ -58,7 +58,7 @@ ITSInviteNewCandidateEditor.prototype.loadTestAndBatteriesList = function() {
         if (typeof getUrlParameterValue("SessionType") != "undefined") { sessionType = parseInt(getUrlParameterValue("SessionType"));}
     } catch (err) { };
     if (sessionType == 0) { testType = 0; } else { testType = 1000;}
-    if (sessionType == 0) { batteryType = 100; } else { batteryType = 1000;}
+    if (sessionType == 0) { batteryType = 10; } else { batteryType = 1000;}
     if (! ITSInstance.users.currentUser.MayWorkWithBatteriesOnly) {
         ITSInstance.tests.testList.forEach(function callback(currentValue, index, array) {
             var includeTest = false;
