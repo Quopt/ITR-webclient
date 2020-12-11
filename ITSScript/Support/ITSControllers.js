@@ -771,12 +771,13 @@ ITSTestTakingController.prototype.generateReport = function(switchUI) {
     try {
         if (switchUI) {
             ITSInstance.UIController.EnablePublicTestTakingInterface();
-            $('#ITSTestTakingDivSessionEndedShowReport').css("top","10px");
-            $('#ITSTestTakingDivSessionEndedShowReport').css("position","absolute");
-            $('#ITSTestTakingDiv').hide();
-            $('#NavbarsTestTaking').hide();
-            $('#ITSTestTakingDivSessionEndedShowReport').show();
-            setTimeout(function () {$('#NavbarsTestTaking').hide();}, 1000);
+            setTimeout(function () {
+                $('#ITSTestTakingDivSessionEndedShowReport').css("top","10px");
+                $('#ITSTestTakingDivSessionEndedShowReport').css("position","absolute");
+                $('#ITSTestTakingDiv').hide();
+                $('#NavbarsTestTaking').hide();
+                $('#ITSTestTakingDivSessionEndedShowReport').show();
+                }, 1000);
         }
 
         if (typeof this.repToGen == "undefined") this.repToGen = ITSInstance.reports.newReport(false);

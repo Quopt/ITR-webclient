@@ -784,9 +784,6 @@ if (getUrlParameterValue('NoTTHeader')) {
 }
 if (getUrlParameterValue('Coupon')) {
     cookieHelper.setCookie('Coupon', getUrlParameterValue('Coupon'), 5);
-    try {
-        sessionStorage.setItem("Coupon", getUrlParameterValue('Coupon'));
-    } catch (err) { };
 }
 if (getUrlParameterValue('MailTo')) {
     try {

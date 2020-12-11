@@ -505,7 +505,7 @@
         if (ITSInstance.users.currentUser.PluginData.MailSettings.CopyMe) {
             newMail.BCC = ITSInstance.users.currentUser.Email;
         }
-
+z
         this.candidate = candidate;
         // add password and URL for group mails
         this.WWW = configBaseURL + "?TestTakingOnly=Y&Lang="+ this.templateList[this.selectedTemplateIndex].language + "&UserID=" + encodeURIComponent(candidate.EMail);

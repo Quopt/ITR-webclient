@@ -57,24 +57,63 @@ var cookieHelper = {
         d.setTime(d.getTime() + (exminutes * 60 * 1000));
         var expires = "expires=" + d.toUTCString();
         document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        this.setWithExpiryInLocalStorage(cname,cvalue,exminutes*60*1000);
     }
     , getCookie: function get(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
+        var value = this.getWithExpiryInLocalStorage(cname);
+        if (value == null) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
             }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
+            return "";
+        } else {
+            return value;
         }
-        return "";
     }
     , removeCookie: function (cname) {
         this.setCookie(cname,"",-99999999);
+        localStorage.removeItem(cname);
+    },
+    setWithExpiryInLocalStorage: function (key, value, ttl) {
+        // ttl in millisecs
+        const now = new Date()
+
+        // `item` is an object which contains the original value
+        // as well as the time when it's supposed to expire
+        const item = {
+            value: value,
+            expiry: now.getTime() + ttl,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+    },
+    getWithExpiryInLocalStorage: function (key) {
+        const itemStr = localStorage.getItem(key)
+
+        // if the item doesn't exist, return null
+        if (!itemStr) {
+            return null
+        }
+
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        // compare the expiry time of the item with the current time
+        if (now.getTime() > item.expiry) {
+            // If the item is expired, delete the item from storage
+            // and return null
+            localStorage.removeItem(key)
+            return null
+        }
+        return item.value
     }
 };
 
