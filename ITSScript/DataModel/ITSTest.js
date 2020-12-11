@@ -1606,12 +1606,12 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
             if (sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]) {
                 // use the varComponentName instead of the id so it can be re-used over questions and tests in the session
                 ComponentResults.Value = sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName];
-                if (includeCookies) {
-                    if ( (cookieHelper.getCookie(this.screenComponents[j].varComponentName) != '') && (ComponentResults.Value == '')) {
-                        ComponentResults.Value = cookieHelper.getCookie(this.screenComponents[j].varComponentName);
-                    }
-                }
                 //ITSLogger.logMessage(logLevel.ERROR,"U" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
+            }
+            if (includeCookies) {
+                if ( (cookieHelper.getCookie(this.screenComponents[j].varComponentName) != '') && (ComponentResults.Value == '')) {
+                    ComponentResults.Value = cookieHelper.getCookie(this.screenComponents[j].varComponentName);
+                }
             }
         }
         try {
