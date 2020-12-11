@@ -558,7 +558,7 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
                 //ITSLogger.logMessage(logLevel.ERROR,"Re-render");
                 $('#ITSTestTakingDiv').empty();
                 currentScreen.generateScreenInDiv('ITSTestTakingDiv', 'TT', this.generateScreenID);
-                currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results, this.generateScreenID, this.currentSession.PluginData, true); //this.currentSession.SessionType==1);
+                currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results, this.generateScreenID, this.currentSession.PluginData, sessionStorage.getItem("Poll") != null); //this.currentSession.SessionType==1);
             }
 
             this.checkScreenDynamicsLastResultsChecked = JSON.stringify(this.currentSessionTest.Results);
@@ -598,7 +598,7 @@ ITSTestTakingController.prototype.renderTestPage = function () {
                 } else {
                     currentScreen.generateScreenInDiv('ITSTestTakingDiv', 'TT', this.generateScreenID);
                     // load the current present values from the currentSessionTest.results into the screen
-                    currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results, this.generateScreenID, this.currentSession.PluginData, true);
+                    currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results, this.generateScreenID, this.currentSession.PluginData, sessionStorage.getItem("Poll") != null);
                 }
             } else {
                 this.currentSessionTest.CurrentPage++;

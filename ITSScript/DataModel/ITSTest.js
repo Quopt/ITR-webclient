@@ -1603,7 +1603,7 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
         template.generateTemplateFunctions();
         if (sessionStorageObject && this.screenComponents[j].storeAtSessionLevel) {
             if (!sessionStorageObject.sessionStorage) sessionStorageObject.sessionStorage = {};
-            //if (sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]) {
+            if (sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]) {
                 // use the varComponentName instead of the id so it can be re-used over questions and tests in the session
                 ComponentResults.Value = sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName];
                 if (includeCookies) {
@@ -1612,7 +1612,7 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
                     }
                 }
                 //ITSLogger.logMessage(logLevel.ERROR,"U" + this.screenComponents[j].varComponentName + "=" + sessionStorageObject.sessionStorage[this.screenComponents[j].varComponentName]);
-            //}
+            }
         }
         try {
             template.runtime_set_values('X' + j + 'Y' + postFix, this.screenComponents[j].templateValues.RepeatBlockCount, ComponentResults.Value, this.screenComponents[j].templateValues);
