@@ -823,7 +823,7 @@ ITSGroupSessionEditor.prototype.loadSessionForDownload = function () {
                         // we are done
                         this.zip.file('data.json', JSON.stringify(replaceCircular(this.resultsFile)));
                         if (this.couponsFile.length > 0) {
-                            this.zip.file('coupons.txt', this.couponsFile.join('\n\r'));
+                            this.zip.file('coupons.txt', this.couponsFile.join('\n'));
                         }
                         var fileName = ITSInstance.translator.getTranslatedString("ITSSessionEditor", "ScoreOverview", "Score overview");
                         this.zip.generateAsync({type : "blob", compression: "DEFLATE", compressionOptions: { level: 1 }}).then(function (blob) {
