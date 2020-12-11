@@ -815,7 +815,7 @@ ITSGroupSessionEditor.prototype.loadSessionForDownload = function () {
             tempSession.createReportOverviewInZip(this.zip, pad(this.tempCounter, 2) + " " + tempSession.Person.createHailing() + " " + tempSession.Description,
                 function (tempSession, zip) {
                     console.log(tempSession, this, this.tempCounter);
-                    this.couponsFile.concat(tempSession.couponsFile);
+                    this.couponsFile = this.couponsFile.concat(tempSession.couponsFile);
                     shallowCopy(tempSession.resultsFile, this.resultsFile);
                     this.archiveDownloadCounter--;
                     ITSInstance.UIController.showInterfaceAsWaitingProgress("" + this.archiveDownloadCounter);
