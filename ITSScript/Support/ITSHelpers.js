@@ -83,7 +83,38 @@ var cookieHelper = {
         this.setCookie(cname,"",-99999999);
         localStorage.removeItem(cname);
     },
-    setWithExpiryInLocalStorage: function (key, value, ttl) {
+    setSessionCookie: function (cname, cvalue, exminutes) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exminutes * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        this.setWithExpiryInLocalStorage(cname,cvalue,exminutes*60*1000, true);
+    }
+    , getSessionCookie: function get(cname) {
+        var value = this.getWithExpiryInLocalStorage(cname, true);
+        if (value == null) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        } else {
+            return value;
+        }
+    }
+    , removeSessionCookie: function (cname) {
+        this.setCookie(cname,"",-99999999);
+        sessionStorage.removeItem(cname);
+    },
+    setWithExpiryInLocalStorage: function (key, value, ttl, useSessionStorage) {
         // ttl in millisecs
         const now = new Date()
 
@@ -93,10 +124,19 @@ var cookieHelper = {
             value: value,
             expiry: now.getTime() + ttl,
         }
-        localStorage.setItem(key, JSON.stringify(item))
+        if (useSessionStorage) {
+            sessionStorage.setItem(key, JSON.stringify(item))
+        } else {
+            localStorage.setItem(key, JSON.stringify(item))
+        }
     },
-    getWithExpiryInLocalStorage: function (key) {
-        const itemStr = localStorage.getItem(key)
+    getWithExpiryInLocalStorage: function (key, useSessionStorage) {
+        var itemStr = "";
+        if (useSessionStorage) {
+            itemStr = sessionStorage.getItem(key)
+        } else {
+            itemStr = localStorage.getItem(key)
+        }
 
         // if the item doesn't exist, return null
         if (!itemStr) {
@@ -110,7 +150,11 @@ var cookieHelper = {
         if (now.getTime() > item.expiry) {
             // If the item is expired, delete the item from storage
             // and return null
-            localStorage.removeItem(key)
+            if (useSessionStorage) {
+                sessionStorage.removeItem(key);
+            } else {
+                localStorage.removeItem(key);
+            }
             return null
         }
         return item.value
@@ -129,20 +173,20 @@ function ITSLoginToken(ITSSession) {
 
 ITSLoginToken.prototype.set = function (Token) {
     this.IssuedToken = Token;
-    cookieHelper.setCookie("ITSLoginToken", this.ITSInstance.token.IssuedToken, 6);
+    cookieHelper.setSessionCookie("ITSLoginToken", this.ITSInstance.token.IssuedToken, 6);
 };
 ITSLoginToken.prototype.clear = function () {
     this.IssuedToken = "";
-    cookieHelper.removeCookie("ITSLoginToken");
+    cookieHelper.removeSessionCookie("ITSLoginToken");
 };
 ITSLoginToken.prototype.get = function () {
     if (this.IssuedToken != "") {
         return this.IssuedToken;
     } else {
-        var myToken = cookieHelper.getCookie("ITSLoginToken");
+        var myToken = cookieHelper.getSessionCookie("ITSLoginToken");
         if (myToken != "") {
             this.IssuedToken = myToken;
-            cookieHelper.setCookie("ITSLoginToken", this.IssuedToken, 6); // refresh
+            cookieHelper.setSessionCookie("ITSLoginToken", this.IssuedToken, 6); // refresh
             return this.IssuedToken;
         }
         else {
@@ -214,7 +258,7 @@ ITSLoginToken.prototype.keepTokenFresh = function () {
                         ITSLogger.logMessage(logLevel.INFO,'Token refreshed');
                     }
                 });
-                cookieHelper.setCookie("ITSLoginToken", this.IssuedToken, 6);
+                cookieHelper.setSessionCookie("ITSLoginToken", this.IssuedToken, 6);
             }
         }.bind(this), 1);
     } else {
