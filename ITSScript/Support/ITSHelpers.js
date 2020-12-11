@@ -130,26 +130,16 @@ function ITSLoginToken(ITSSession) {
 ITSLoginToken.prototype.set = function (Token) {
     this.IssuedToken = Token;
     cookieHelper.setCookie("ITSLoginToken", this.ITSInstance.token.IssuedToken, 6);
-    try {
-        sessionStorage.setItem("ITSLoginToken", this.ITSInstance.token.IssuedToken);
-    } catch (err) { };
 };
 ITSLoginToken.prototype.clear = function () {
     this.IssuedToken = "";
     cookieHelper.removeCookie("ITSLoginToken");
-    try {
-        sessionStorage.removeItem("ITSLoginToken");
-    } catch (err) { };
 };
 ITSLoginToken.prototype.get = function () {
     if (this.IssuedToken != "") {
         return this.IssuedToken;
     } else {
-        var myToken = "";
-        try {
-            myToken=sessionStorage.getItem("ITSLoginToken");
-        } catch (err) {  };
-        if (myToken == "") myToken = cookieHelper.getCookie("ITSLoginToken");
+        var myToken = cookieHelper.getCookie("ITSLoginToken");
         if (myToken != "") {
             this.IssuedToken = myToken;
             cookieHelper.setCookie("ITSLoginToken", this.IssuedToken, 6); // refresh

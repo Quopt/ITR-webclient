@@ -768,6 +768,8 @@ if (getUrlParameterValue('ReturnURL')) {
 }
 if (getUrlParameterValue('AutoLogin')) {
     OldURLparseURLandTakeAction = document.URL;
+    ITSInstance.token.clear();
+    ITSInstance.users.resetCurrentUser();
     setTimeout(function () {
         $('#LoginWindowLoginButton').click();
       }, 100);
