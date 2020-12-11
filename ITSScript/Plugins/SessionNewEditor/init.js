@@ -536,7 +536,7 @@ ITSInviteNewCandidateEditor.prototype.teachSession = function () {
     this.newSession.Description = $('#AdminInterfaceSessionNewSessionDescriptionFor').val();
     this.newSession.PersonID = this.newSession.ID;
     this.newSession.Person.ID = this.newSession.ID;
-    this.newSession.Person.EMail = "Teacher_" + ITSInstance.users.currentUser.Email + "_" + this.newSession.ID;
+    this.newSession.Person.EMail = "Teacher_" + this.newSession.ID;
     this.newSession.Person.Password = newGuid();
     this.newSession.Person.PersonType = 1000;
     this.newSession.relinkToCurrentPersonID();

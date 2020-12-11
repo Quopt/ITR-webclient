@@ -189,7 +189,7 @@
         }
         this.newPublicSession.SessionType = 1200;
         this.newPublicSession.regenerateCandidate();
-        this.newPublicSession.Person.EMail = "Teacher_" + this.newPublicSession.ID;
+        this.newPublicSession.Person.EMail = this.newPublicSession.Description;
         this.newPublicSession.Person.ID = this.currentSession.PluginData.teachingSession.PublicPersonID;
         this.newPublicSession.Person.PersonType = 1000;
         this.newPublicSession.relinkToCurrentPersonID();
