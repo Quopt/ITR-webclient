@@ -217,7 +217,7 @@
     ITSBatteryListerEditor.prototype.addNew = function (ID) {
         this.alreadyLoaded = document.URL;
         var TestType = parseInt(getUrlParameterValue("BatteryType"));
-        TestType == 10 ? TestType = 0 : TestType = TestType;eva
+        TestType == 10 ? TestType = 0 : TestType = TestType;
         ITSRedirectPath("BatteryEditor&BatteryType=" + getUrlParameterValue("BatteryType")+ "&TestType=" + TestType);
     };
 
