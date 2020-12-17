@@ -925,6 +925,18 @@ ITSMail.prototype.sendConsultantMail = function (SessionID, OnSuccess, OnError) 
     ITSInstance.genericAjaxUpdate('sendmailconsultant/' + SessionID, tempStr, OnSuccess, OnError );
 };
 
+function envSubstituteEvalExpression(expression, instanceObj, freeContext) {
+    try {
+        return eval("instanceObj." + expression);
+    }
+    catch (err) {
+        if (freeContext) {
+            return eval(expression);
+        }
+        else { throw "x"};
+    }
+}
+
 function envSubstitute(textToScan, instanceObj, freeContext) {
     // substitute fields with values
     if (!textToScan) textToScan="";
@@ -943,19 +955,14 @@ function envSubstitute(textToScan, instanceObj, freeContext) {
         // check if the property can be found in the instance object
         try {
             try {
-                result += eval("instanceObj." + varFound);
-            } catch (err) {
-                if (freeContext) {
-                    try {
-                        result += eval(varFound);
-                    }
-                    catch (err) {
-                        ITSLogger.logMessage(logLevel.ERROR,"eval failed for "  + varFound +  " with " + err );
-                    }
-                }
-                else { throw "x"};
+                result += envSubstituteEvalExpression(varFound, instanceObj, freeContext);
+            }
+            catch (err) {
+                var x = htmlDecode(varFound);
+                result += envSubstituteEvalExpression(x, instanceObj, freeContext);
             }
         } catch(err) {
+            ITSLogger.logMessage(logLevel.ERROR, "eval failed for " + varFound + " with " + err);
             result += "%%" + varFound + "%%";
         }
         // next
@@ -1432,4 +1439,20 @@ function isUUID(uuid) {
         return false;
     }
     return true;
+}
+
+function htmlEncode(value){
+    if (value) {
+        return jQuery('<div />').text(value).html();
+    } else {
+        return '';
+    }
+}
+
+function htmlDecode(value) {
+    if (value) {
+        return $('<div />').html(value).text();
+    } else {
+        return '';
+    }
 }
