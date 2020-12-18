@@ -244,6 +244,12 @@
                 </div>
 
                 <div class="row">
+                    <div class="form-group row">
+                        <span class="col-12">
+                         <label class="col-11 form-check-label col-form-label-sm" for="AdminInterfaceTestTemplateEditor-uselayoutfromprevious" id="AdminInterfaceTestTemplateEditor-uselayoutfrompreviouslabel">Use layout from previous screen</label>
+                         <input  id="AdminInterfaceTestTemplateEditor-uselayoutfromprevious" type="checkbox" class="form-check-input form-control-sm col-1"  data-field="currentScreen.UseLayoutsFromPreviousScreen" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScreens', ITSInstance.newITSTestEditorController); ITSInstance.newITSTestEditorController.loadScreensList(); "/>
+                        </span>
+                    </div>
                     <label class="col-12 col-form-label col-form-label-sm"
                            id="AdminInterfaceTestTemplateEditorScreenExplanationHeader"
                            for="AdminInterfaceTestTemplateEditorScreenExplanation">Screen comments</label>
@@ -252,7 +258,6 @@
                                            id="AdminInterfaceTestTemplateEditorScreenExplanation"/>
                     </div>
                 </div>
-
             </div>
             <div id="AdminInterfaceTestTemplateEditorScreenDynamicsDiv" NoTranslate class="row col-12 px-0 mx-0">
                 &nbsp;

@@ -18,7 +18,7 @@ function ITSTestTemplateEditor(session) {
     this.ITSSession = session;
     this.path = "TestTemplateEditor";
 
-    this.screenListElement = "<div id=\"AdminInterfaceTestTemplateEditorScreenList%%NR%%\" NoTranslate class=\"row mx-0 px-0 form-control-sm col-12\">\n" +
+    this.screenListElement = "<div id=\"AdminInterfaceTestTemplateEditorScreenList%%NR%%\" NoTranslate %%ADDITIONALSTYLE%% class=\"row mx-0 px-0 form-control-sm col-12\">\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenUp(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-up\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenDown(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-down\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.copyToNewScreen(%%NR%%);\"><i class=\"fa fa-xs fa-copy\"></i></button>\n" +
@@ -28,6 +28,7 @@ function ITSTestTemplateEditor(session) {
         "</div>";
     this.screenListElementID = /%%NR%%/g;
     this.screenListElementTestID = /%%ROW%%/g;
+    this.screenListElementAdditionalStyle = /%%ADDITIONALSTYLE%%/g;
 
     this.screenComponentListElement =
         "<div id=\"AdminInterfaceTestTemplateEditorScreenContents%%NR%%\" NoTranslate onclick=\"ITSInstance.newITSTestEditorController.focusOnScreenComponent(%%NR%%);\" class=\"row m-0 p-0 col-12 form-control-sm\">\n" +
@@ -513,6 +514,11 @@ ITSTestTemplateEditor.prototype.loadScreensList = function () {
         newScreenElement = this.screenListElement;
         newScreenElement = newScreenElement.replace(this.screenListElementID, i);
         newScreenElement = newScreenElement.replace(this.screenListElementTestID, this.currentTest.screens[i].varName);
+        if ((this.currentTest.screens[i].UseLayoutsFromPreviousScreen) && (i > 0)) {
+            newScreenElement = newScreenElement.replace(this.screenListElementAdditionalStyle, 'style="border-left: 4px dotted green;"');
+        } else {
+            newScreenElement = newScreenElement.replace(this.screenListElementAdditionalStyle, '');
+        }
         $('#AdminInterfaceTestTemplateEditorScreenHeader').append(newScreenElement);
     }
     if ((this.currentScreenIndex < 0) || (this.currentScreenIndex >= this.currentTest.screens.length)) {

@@ -651,6 +651,22 @@ ITSTest.prototype.makeTestScreenVarNamesUnique = function () {
     }
 };
 
+ITSTest.prototype.expandLayoutsFromPreviousScreens = function () {
+    for (var i = 1; i < this.screens.length ; i++) {
+        if (this.screens[i].UseLayoutsFromPreviousScreen) {
+            if (!this.screens[i].LayoutsFromPreviousScreensExpanded) {
+                // copy the layouts from the previous screen
+                for (var layoutcount = 0; layoutcount < this.screens[i-1].screenComponents.length; layoutcount++) {
+                    if (this.screens[i-1].screenComponents[layoutcount].TemplateType == 10) {
+                        this.screens[i].screenComponents.unshift(this.screens[i-1].screenComponents[layoutcount]);
+                    }
+                }
+                this.screens[i].LayoutsFromPreviousScreensExpanded = true;
+            }
+        }
+    }
+};
+
 function ITSTests(sess) {
     this.ITSSession = sess;
 
@@ -1205,8 +1221,12 @@ function ITSTestScreen(par, session) {
     this.screenComponents = []; //an array of ITSTestScreenComponent objects
     this.screenDynamics = []; //an array of ITSTestScreenDynamics objects
 
+    this.UseLayoutsFromPreviousScreen = false;
+
+    this.LayoutsFromPreviousScreensExpanded = false;
+
     this.persistentProperties = ["id", "varName", "explanation", "screenGroup", "show", "remarks", "beforeScreenScript",
-        "afterScreenScript", "screenComponents" , "screenDynamics"];
+        "afterScreenScript", "screenComponents" , "screenDynamics", "UseLayoutsFromPreviousScreen"];
 }
 
 ITSTestScreen.prototype.generatePlaceholderOverviewFor = function(indexToEnd, screenlist) {

@@ -471,6 +471,7 @@ ITSTestTakingController.prototype.prepareTest = function (index) {
     this.currentSessionTest = this.currentSession.SessionTests[this.currentTestIndex];
     this.currentTestDefinition = this.currentSession.SessionTests[this.currentTestIndex].testDefinition;
     this.candidate = this.currentSession.Person;
+    this.currentTestDefinition.expandLayoutsFromPreviousScreens();
 };
 
 ITSTestTakingController.prototype.sessionLoadingFailed = function () {

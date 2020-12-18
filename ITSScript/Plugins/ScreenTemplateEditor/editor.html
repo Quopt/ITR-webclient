@@ -53,9 +53,9 @@
                 <label id="AdminInterfaceScreenTemplate-templatetype" for="AdminInterfaceScreenTemplate-templatetype"
                        class="col-2 col-form-label">Template type</label>
                 <div class="col">
-                    <select NoTranslate class="form-control" id="AdminInterfaceScreenTemplate-templatetypeselect" data-field="currentTemplate.PluginData.TemplateTemplate" onchange="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController);" >
-                        <option id="AdminInterfaceScreenTemplate-templatetypeC" value="C">Component</option>
-                        <option id="AdminInterfaceScreenTemplate-templatetypeL" value="L">Layout</option>
+                    <select NoTranslate class="form-control" id="AdminInterfaceScreenTemplate-templatetypeselect" data-field="currentTemplate.TemplateType" onchange="DataBinderFrom('AdminInterfaceScreenTemplateEdit', ITSInstance.newITSScreenTemplateEditorController);" >
+                        <option id="AdminInterfaceScreenTemplate-templatetypeC" value="0">Component</option>
+                        <option id="AdminInterfaceScreenTemplate-templatetypeL" value="10">Layout</option>
                     </select>
                 </div>
             </div>
