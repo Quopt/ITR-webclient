@@ -652,12 +652,16 @@ ITSTest.prototype.makeTestScreenVarNamesUnique = function () {
 };
 
 ITSTest.prototype.expandLayoutsFromPreviousScreens = function () {
+    var templateIndex = 0;
     for (var i = 1; i < this.screens.length ; i++) {
         if (this.screens[i].UseLayoutsFromPreviousScreen) {
             if (!this.screens[i].LayoutsFromPreviousScreensExpanded) {
                 // copy the layouts from the previous screen
                 for (var layoutcount = 0; layoutcount < this.screens[i-1].screenComponents.length; layoutcount++) {
-                    if (this.screens[i-1].screenComponents[layoutcount].TemplateType == 10) {
+                    // locate the screen template using the template id
+
+                    templateIndex = ITSInstance.screenTemplates.findTemplateById (ITSInstance.screenTemplates.screenTemplates,  this.screens[i-1].screenComponents[layoutcount].templateID);
+                    if ((templateIndex>=0) && (ITSInstance.screenTemplates.screenTemplates[templateIndex].TemplateType == 10)) {
                         this.screens[i].screenComponents.unshift(this.screens[i-1].screenComponents[layoutcount]);
                     }
                 }
