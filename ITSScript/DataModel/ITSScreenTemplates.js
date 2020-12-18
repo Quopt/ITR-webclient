@@ -659,7 +659,7 @@ ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_di
 
     if(!preferHTML) preferHTML = false;
 
-    var __ret = this.generate_template_and_scan_for_repeatblocks(templatevalues, pnp_view, id, div);
+    var __ret = this.generate_template_and_scan_for_repeatblocks(templatevalues, pnp_view, id, div, init_mode);
 
     templatevalues = __ret.templatevalues;
     var template_id = __ret.template_id;
