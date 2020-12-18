@@ -227,7 +227,8 @@ ITSLoginToken.prototype.acquire = function (userName, password, okFunction, erro
             this.MultipleCompaniesFound = checkLogin.MultipleCompaniesFound;
             this.LoginProgress = "";
             this.MFAStatus = checkLogin.MFAStatus;
-            ITSLogger.logMessage(logLevel.ERROR,'Login OK , token issued = ' + this.IssuedToken + ' ' + this.ITSInstance.ID);
+            ITSLogger.logMessage(logLevel.INFO,'Login OK, token issued.' );
+            //ITSLogger.logMessage(logLevel.ERROR,'Login OK, token issued for instance = ' + this.IssuedToken + ' / ' + this.ITSInstance.ID);
 
             okFunction();
         },

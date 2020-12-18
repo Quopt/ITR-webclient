@@ -282,7 +282,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
 
     var func = emptyfunc;
     try {
-        eval("func = function(id, num_blocks, template_values) { " + this.generator_snippet + " }; ");
+        eval("func = function(id, num_blocks, template_values, test_mode) { " + this.generator_snippet + " }; ");
     } catch (err) {
         ITSLogger.logMessage(logLevel.ERROR,"generator_snippet contains error " + this.Description + " " + err.message );
     }
@@ -290,7 +290,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
 
     var func = emptyfunc;
     try {
-        eval("func = function(id, num_blocks, template_values) { " + this.generator_pnp_snippet + " }; ");
+        eval("func = function(id, num_blocks, template_values, test_mode) { " + this.generator_pnp_snippet + " }; ");
     } catch (err) {
         ITSLogger.logMessage(logLevel.ERROR,"generator_pnp_snippet contains error " + this.Description + " " + err.message );
     }
@@ -330,9 +330,11 @@ ITSScreenTemplate.prototype.getVariableValue = function (varName) {
     return "";
 };
 
-ITSScreenTemplate.prototype.generate_template_and_scan_for_repeatblocks = function (templatevalues, pnp_template, id, div) {
+ITSScreenTemplate.prototype.generate_template_and_scan_for_repeatblocks = function (templatevalues, pnp_template, id, div, test_mode) {
     this.generateTemplateFunctions();
     var template = "";
+
+    if (typeof test_mode == "undefined") { test_mode = 'TT'; }
 
     if (!templatevalues) {
         templatevalues = {"RepeatBlockCount": this.RepeatBlockCount};
@@ -345,12 +347,12 @@ ITSScreenTemplate.prototype.generate_template_and_scan_for_repeatblocks = functi
 
     // generate the template
     if (!pnp_template) {
-        template = this.runtime_generate(id, RepeatBlockCount, templatevalues);
+        template = this.runtime_generate(id, RepeatBlockCount, templatevalues, test_mode);
         if (typeof template == "undefined") {
             template = this.HTMLContent;
         }
     } else {
-        template = this.runtime_generate_pnp(id, RepeatBlockCount, templatevalues);
+        template = this.runtime_generate_pnp(id, RepeatBlockCount, templatevalues, test_mode);
         if (typeof template == "undefined") {
             template = this.HTMLContentPnP;
             if (template == "") {
@@ -402,7 +404,7 @@ ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templ
     // templatesvalues - any already filled in values for this template (js object)
     // pnp_template - true if this test editor view has to be generated with the PnP template
 
-    var __ret = this.generate_template_and_scan_for_repeatblocks(templatevalues, pnp_template, id, div);
+    var __ret = this.generate_template_and_scan_for_repeatblocks(templatevalues, pnp_template, id, div, 'TE');
 
     templatevalues = __ret.templatevalues;
     var template_id = __ret.template_id;
