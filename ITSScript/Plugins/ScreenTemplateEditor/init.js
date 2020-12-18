@@ -49,6 +49,7 @@ ITSScreenTemplateEditor.prototype.show = function () {
         // try to find the tempID in the array and if found switch to editing that template
         for (var i=0; i< ITSInstance.screenTemplates.screenTemplates.length; i++ ) {
             if ( ITSInstance.screenTemplates.screenTemplates[i].ID == tempID ) {
+                ITSInstance.screenTemplates.screenTemplates[i].detailsLoaded = false;
                 this.selectTemplate(i);
                 found =true;
                 break;
