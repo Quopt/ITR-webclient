@@ -659,7 +659,6 @@ ITSTest.prototype.expandLayoutsFromPreviousScreens = function () {
                 // copy the layouts from the previous screen
                 for (var layoutcount = 0; layoutcount < this.screens[i-1].screenComponents.length; layoutcount++) {
                     // locate the screen template using the template id
-
                     templateIndex = ITSInstance.screenTemplates.findTemplateById (ITSInstance.screenTemplates.screenTemplates,  this.screens[i-1].screenComponents[layoutcount].templateID);
                     if ((templateIndex>=0) && (ITSInstance.screenTemplates.screenTemplates[templateIndex].TemplateType == 10)) {
                         this.screens[i].screenComponents.unshift(this.screens[i-1].screenComponents[layoutcount]);
@@ -1256,6 +1255,28 @@ ITSTestScreen.prototype.generatePlaceholderOverviewFor = function(indexToEnd, sc
             }
         }
     }
+
+    // now add the placeholders from a previous screen if required
+    if (this.UseLayoutsFromPreviousScreen) {
+        // now first find the right screen
+        var i = this.myParent.findScreenIndexByID(this.id);
+        var extraplaceholders = [];
+
+        console.log(i);
+        while (i > 0) {
+            if (!this.myParent.screens[i].UseLayoutsFromPreviousScreen) break;
+            i--;
+        }
+
+        if (i >= 0) {
+            extraplaceholders = this.myParent.screens[i].generatePlaceholderOverviewFor(this.myParent.screens[i].screenComponents.length,
+                                                   this.myParent.screens[i].screenComponents);
+        }
+
+        console.log(extraplaceholders);
+
+        placeholdersfound = placeholdersfound.concat(extraplaceholders);
+    }
     return placeholdersfound;
 };
 
@@ -1340,6 +1361,14 @@ ITSTest.prototype.findScreenByID = function (idToFind) {
     return null;
 };
 
+ITSTest.prototype.findScreenIndexByID = function (idToFind) {
+    for (i = 0; i < this.screens.length; i++) {
+        if (this.screens[i].id == idToFind) {
+            return i;
+        }
+    }
+    return -1;
+};
 ITSTest.prototype.findScreenIndexByName = function (nameToFind) {
     for (i = 0; i < this.screens.length; i++) {
         if (this.screens[i].varName == nameToFind) {

@@ -541,6 +541,7 @@ ITSTestTemplateEditor.prototype.setCurrentScreenIndex = function (screenNum, tes
         this.currentScreen = this.currentTest.screens[screenNum];
         $('#AdminInterfaceTestTemplateEditorScreenContentsHeader').empty();
         tinyMCE.get("AdminInterfaceTestTemplateEditorScreenExplanation").setContent(this.currentScreen.remarks);
+        $('#AdminInterfaceTestTemplateEditor-uselayoutfromprevious').prop('checked', this.currentScreen.UseLayoutsFromPreviousScreen );
         var newScreenComponent = "";
         var template = {};
         if ((this.currentScreenComponentIndex < 0) || (this.currentScreenComponentIndex >= this.currentScreen.screenComponents.length)) {

@@ -243,18 +243,18 @@
                     </button>
                 </div>
 
-                <div class="row">
-                    <div class="form-group row">
-                        <span class="col-12">
-                         <label class="col-11 form-check-label col-form-label-sm" for="AdminInterfaceTestTemplateEditor-uselayoutfromprevious" id="AdminInterfaceTestTemplateEditor-uselayoutfrompreviouslabel">Use layout from previous screen</label>
-                         <input  id="AdminInterfaceTestTemplateEditor-uselayoutfromprevious" type="checkbox" class="form-check-input form-control-sm col-1"  data-field="currentScreen.UseLayoutsFromPreviousScreen" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScreens', ITSInstance.newITSTestEditorController); ITSInstance.newITSTestEditorController.loadScreensList(); "/>
-                        </span>
+                <div class="row col-12">
+                    <div class="form-check">
+                     <input id="AdminInterfaceTestTemplateEditor-uselayoutfromprevious" type="checkbox" class="form-check-input form-control-sm" data-field="currentScreen.UseLayoutsFromPreviousScreen" onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScreens', ITSInstance.newITSTestEditorController); ITSInstance.newITSTestEditorController.loadScreensList(); "/>
+                     <label class="form-check-label form-control-sm" for="AdminInterfaceTestTemplateEditor-uselayoutfromprevious" id="AdminInterfaceTestTemplateEditor-uselayoutfrompreviouslabel">Use layout from previous screen</label>
                     </div>
+                </div>
+                <div class="row">
                     <label class="col-12 col-form-label col-form-label-sm"
                            id="AdminInterfaceTestTemplateEditorScreenExplanationHeader"
                            for="AdminInterfaceTestTemplateEditorScreenExplanation">Screen comments</label>
                     <div class="col-12">
-                        <textarea-htmledit type="text" class="form-control form-control-sm"  data-field="currentScreen.remarks" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScreens', ITSInstance.newITSTestEditorController );"
+                     <textarea-htmledit type="text" data-field="currentScreen.remarks" onkeyup="DataBinderFrom('AdminInterfaceTestTemplateEditorTabScreens', ITSInstance.newITSTestEditorController );"
                                            id="AdminInterfaceTestTemplateEditorScreenExplanation"/>
                     </div>
                 </div>
