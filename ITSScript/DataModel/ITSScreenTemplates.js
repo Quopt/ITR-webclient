@@ -158,6 +158,11 @@ ITSScreenTemplate.prototype.descriptionWithDBIndicator = function () {
     }
 };
 
+ITSScreenTemplate.prototype.resetDetailsLoaded = function () {
+    this.detailsLoaded = false;
+    this.TemplateVariables = [];
+}
+
 ITSScreenTemplate.prototype.deleteFromServer = function (OnSuccess, OnError) {
     ITSInstance.genericAjaxDelete('screentemplates/' + this.ID, OnSuccess, OnError, "N", "Y");
 };

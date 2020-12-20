@@ -320,6 +320,7 @@ ITSTestTemplateEditor.prototype.show = function () {
         var tempID = getUrlParameterValue('id');
         if (tempID && (tempID != "")) {
             this.switchToTestEditView();
+            if (!this.templatesLoading) this.loadTestScreenTemplates();
             this.redirectUrl(tempID);
         } else {
             $('#AdminInterfaceTestTemplateEditorEdit').hide();
@@ -780,7 +781,7 @@ ITSTestTemplateEditor.prototype.addNewScreenTemplate = function (templateID) {
 
 ITSTestTemplateEditor.prototype.loadTestScreenTemplates = function () {
     var me= ITSInstance.newITSTestEditorController;
-    console.log(me);
+    //console.log(me);
     $('#AdminInterfaceTestTemplateEditorAddScreenComponentListDiv').empty();
     // check if all templates are fully loaded. we need me to get at the plugindata
     me.templatesLoading = false;

@@ -1262,7 +1262,7 @@ ITSTestScreen.prototype.generatePlaceholderOverviewFor = function(indexToEnd, sc
         var i = this.myParent.findScreenIndexByID(this.id);
         var extraplaceholders = [];
 
-        console.log(i);
+        //console.log(i);
         while (i > 0) {
             if (!this.myParent.screens[i].UseLayoutsFromPreviousScreen) break;
             i--;
@@ -1273,7 +1273,7 @@ ITSTestScreen.prototype.generatePlaceholderOverviewFor = function(indexToEnd, sc
                                                    this.myParent.screens[i].screenComponents);
         }
 
-        console.log(extraplaceholders);
+        //console.log(extraplaceholders);
 
         placeholdersfound = placeholdersfound.concat(extraplaceholders);
     }
