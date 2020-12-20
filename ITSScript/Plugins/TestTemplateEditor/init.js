@@ -12,6 +12,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+//# sourceURL=TestTemplateEditor/init.js
 
 // define the new candidate editor object in the global memspace so that everybody can use it
 function ITSTestTemplateEditor(session) {

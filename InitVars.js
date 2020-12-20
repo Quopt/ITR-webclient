@@ -40,70 +40,82 @@ if (window.location.href.indexOf('TestMode=Y') >= 0 ) {
 var loadOfficeComponentsAlreadyCalled = false;
 var loadPortletsCount, loadEditorsCount;
 
+function onDemandScript ( url, callback ) {
+    callback = (typeof callback != 'undefined') ? callback : {};
+
+    $.ajax({
+        type: "GET",
+        url: url,
+        success: callback,
+        dataType: "script",
+        cache: true
+    });
+}
+
 function loadOfficeComponents() {
     if (! loadOfficeComponentsAlreadyCalled) {
         loadOfficeComponentsAlreadyCalled = true;
 
         loadPortletsCount = 0;
         // %OFFICEPORTLETSTART%
-        $.getScript(ITSJavaScriptVersion + "/Plugins/SessionNewPortlet/init.js"); loadPortletsCount ++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/SessionProgressPortlet/init.js"); loadPortletsCount ++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/SessionOverviewPortlet/init.js"); loadPortletsCount ++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/TestCatalogPortlet/init.js"); loadPortletsCount ++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/CourseCatalogPortlet/init.js"); loadPortletsCount ++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/CreditsUsedPortlet/init.js"); loadPortletsCount ++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/UserPreferencesPortlet/init.js"); loadPortletsCount ++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/UsersLoggedInPortlet/init.js"); loadPortletsCount ++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/CourseTeachingSessionPortlet/init.js"); loadPortletsCount ++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/CourseClassroomSessionPortlet/init.js"); loadPortletsCount ++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/CourseIndividualSessionPortlet/init.js"); loadPortletsCount ++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/SessionNewPortlet/init.js");  loadPortletsCount ++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/SessionProgressPortlet/init.js"); loadPortletsCount ++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/SessionOverviewPortlet/init.js"); loadPortletsCount ++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/TestCatalogPortlet/init.js"); loadPortletsCount ++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/CourseCatalogPortlet/init.js"); loadPortletsCount ++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/CreditsUsedPortlet/init.js"); loadPortletsCount ++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/UserPreferencesPortlet/init.js"); loadPortletsCount ++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/UsersLoggedInPortlet/init.js"); loadPortletsCount ++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/CourseTeachingSessionPortlet/init.js"); loadPortletsCount ++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/CourseClassroomSessionPortlet/init.js"); loadPortletsCount ++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/CourseIndividualSessionPortlet/init.js"); loadPortletsCount ++;
         // %OFFICEPORTLETEND%
 
         // load all the editors and viewers
         loadEditorsCount = 0;
         // %OFFICEEDITORSTART%
-        $.getScript(ITSJavaScriptVersion + "/Plugins/SessionNewEditor/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/SessionEditor/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/TestCatalogViewer/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/ScreenTemplateEditor/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/TestTemplateEditor/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/SessionMailer/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/SessionViewAnswers/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/SessionViewReports/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/ReportTemplateEditor/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/SessionLister/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/PersonLister/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/PersonEditor/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/ResetPassword/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/ConsultantLister/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/ConsultantEditor/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/OrganisationLister/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/OrganisationEditor/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/GrantCredits/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/ScreenTemplateLocalPublisher/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/TestTemplateLocalPublisher/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/ReportTemplateLocalPublisher/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/CreditsUsedLister/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/CreditsOrderByMail/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/ServerSettings/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/ServerSettingsPublics/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/CustomerSettings/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/MailTemplateEditor/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/SessionChangeEditor/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/BatteryLister/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/BatteryEditor/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/GroupSessionEditor/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/GroupSessionLister/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/DownloadData/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/TranslationEditor/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/TokenLister/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/CreditsUsedListerServer/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/CreditsGrantedLister/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/ServerLogs/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/SessionAuditTrail/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/ServerData/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/PublicSessionEditor/init.js"); loadEditorsCount++;
-        $.getScript(ITSJavaScriptVersion + "/Plugins/CourseTeachingSession/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/SessionNewEditor/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/SessionEditor/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/TestCatalogViewer/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/ScreenTemplateEditor/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/TestTemplateEditor/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/SessionMailer/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/SessionViewAnswers/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/SessionViewReports/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/ReportTemplateEditor/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/SessionLister/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/PersonLister/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/PersonEditor/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/ResetPassword/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/ConsultantLister/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/ConsultantEditor/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/OrganisationLister/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/OrganisationEditor/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/GrantCredits/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/ScreenTemplateLocalPublisher/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/TestTemplateLocalPublisher/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/ReportTemplateLocalPublisher/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/CreditsUsedLister/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/CreditsOrderByMail/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/ServerSettings/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/ServerSettingsPublics/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/CustomerSettings/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/MailTemplateEditor/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/SessionChangeEditor/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/BatteryLister/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/BatteryEditor/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/GroupSessionEditor/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/GroupSessionLister/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/DownloadData/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/TranslationEditor/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/TokenLister/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/CreditsUsedListerServer/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/CreditsGrantedLister/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/ServerLogs/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/SessionAuditTrail/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/ServerData/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/PublicSessionEditor/init.js"); loadEditorsCount++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/CourseTeachingSession/init.js"); loadEditorsCount++;
         // %OFFICEEDITOREND%
     }
 };

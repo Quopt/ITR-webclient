@@ -12,6 +12,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+//# sourceURL=SessionLister/init.js
 
 (function() { // iife to prevent pollution of the global memspace
 
