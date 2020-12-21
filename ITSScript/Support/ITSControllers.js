@@ -24,6 +24,7 @@ ITSPasswordResetController.prototype.sendPasswordReset = function (showMessage) 
         tempHeaders['Username'] = $('#ForgotWindowinputUsername').val();
         tempHeaders['BaseURL'] = ITSInstance.baseURL;
         tempHeaders['ITRLang'] = ITSLanguage;
+        tempHeaders['BrowserID'] =  ITSInstance.BrowserID;
         $.ajax({url: ITSInstance.baseURLAPI + 'sendresetpassword', headers: tempHeaders, type: 'POST'});
         //ITSRedirectPath('Login');
         ITSInstance.UIController.activateScreenPath('Login');
@@ -50,6 +51,7 @@ ITSPasswordResetController.prototype.tryPasswordReset = function (showMessage) {
         tempHeaders['Password'] = $('#PasswordResetWindow1').val();
         tempHeaders['BaseURL'] = ITSInstance.baseURL;
         tempHeaders['ITRLang'] = ITSLanguage;
+        tempHeaders['BrowserID'] =  ITSInstance.BrowserID;
         tempHeaders['SessionID'] = getUrlParameterValue('Token');
         $.ajax({url: ITSInstance.baseURLAPI + 'resetpassword', headers: tempHeaders, type: 'POST'});
         ITSRedirectPath('');
@@ -125,7 +127,7 @@ ITSLoginController = function () {
         $.ajax({
             url: ITSInstance.baseURLAPI + 'login',
             headers: { 'UserID': ITSInstance.xusername, 'Password': ITSInstance.xpassword,
-                'SessionID' : ITSInstance.token.IssuedToken, 'CompanyID' : ITSInstance.token.companyID } ,
+                'SessionID' : ITSInstance.token.IssuedToken, 'CompanyID' : ITSInstance.token.companyID, 'BrowserID': ITSInstance.BrowserID } ,
             type: 'GET',
             error: function () {
                 ITSLogger.logMessage(logLevel.ERROR,'Selecting company failed.');
@@ -152,7 +154,8 @@ ITSLoginController = function () {
             headers: {
                 'UserID': ITSInstance.xusername,
                 'Password': ITSInstance.xpassword,
-                'CompanyID' : ITSInstance.token.companyID } ,
+                'CompanyID' : ITSInstance.token.companyID,
+                'BrowserID': ITSInstance.BrowserID } ,
             type: 'GET',
             error: function () {
                 ITSLogger.logMessage(logLevel.ERROR,'Getting QR code failed.');
@@ -173,6 +176,7 @@ ITSLoginController = function () {
                 'UserID': ITSInstance.xusername,
                 'Password': ITSInstance.xpassword,
                 'CompanyID' : ITSInstance.token.companyID,
+                'BrowserID': ITSInstance.BrowserID,
                 'MFACode' : $('#LoginWindowEnterMfaCodeValue').val()
             } ,
             type: 'POST',

@@ -133,6 +133,35 @@
             </div>
         </div>
     </div>
+
+    <div class="bg-dark text-white well"><label id="ServerSettingsDiv-Security">Security settings (change requires server restart)</label></div>
+    <div class="">
+        <div id="ServerSettingsDiv-SecurityDiv1" notranslate class="form-group row">
+            <label for="ServerSettingsDiv-CallRateLimit-val" id="ServerSettingsDivCallRateLimit-lbl" class="col-sm-4 col-form-label">Maximum calls per second per client (call rate limit)</label>
+            <div class="col-sm-8">
+             <input class="form-control" type="number" value="" min="1" max="1000" id="ServerSettingsDiv-CallRateLimit-val" onchange="ITSInstance.ServerSettingsController.changeCallRateLimitParameter(this.value);">
+            </div>
+        </div>
+        <div id="ServerSettingsDiv-SecurityDiv2" notranslate class="form-group row">
+            <label for="ServerSettingsDiv-ResultsLengthLimit-val" id="ServerSettingsDivResultsLengthLimit-lbl" class="col-sm-4 col-form-label">Maximum allowed length of Results blob</label>
+            <div class="col-sm-8">
+             <input class="form-control" type="number" value="" min="10000" max="10000000" id="ServerSettingsDiv-ResultsLengthLimit-val" onchange="ITSInstance.ServerSettingsController.changeResultsLengthLimitParameter(this.value);">
+            </div>
+        </div>
+        <div id="ServerSettingsDiv-SecurityDiv3" notranslate class="form-group row">
+            <label for="ServerSettingsDiv-ScoresLengthLimit-val" id="ServerSettingsDivScoresLengthLimit-lbl" class="col-sm-4 col-form-label">Maximum allowed lenght of Scores blob</label>
+            <div class="col-sm-8">
+             <input class="form-control" type="number" value="" min="10000" max="10000000" id="ServerSettingsDiv-ScoresLengthLimit-val" onchange="ITSInstance.ServerSettingsController.changeScoresLengthLimitParameter(this.value);">
+            </div>
+        </div>
+        <div id="ServerSettingsDiv-SecurityDiv4" notranslate class="form-group row">
+            <label for="ServerSettingsDiv-PluginDataLengthLimit-val" id="ServerSettingsDivPluginDataLengthLimit-lbl" class="col-sm-4 col-form-label">Maximum allowed length of PluginData field</label>
+            <div class="col-sm-8">
+             <input class="form-control" type="number" value="" min="1000" max="10000000" id="ServerSettingsDiv-PluginDataLengthLimit-val" onchange="ITSInstance.ServerSettingsController.changePluginDataLengthLimitParameter(this.value);">
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div id="ServerSettingsActions" class="needs-validation" novalidate class="row col-12">

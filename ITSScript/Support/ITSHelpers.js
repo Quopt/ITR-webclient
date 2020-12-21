@@ -209,6 +209,7 @@ ITSLoginToken.prototype.acquire = function (userName, password, okFunction, erro
         url: this.ITSInstance.baseURLAPI + 'login',
         context: this,
         headers: {
+            'BrowserID': ITSInstance.BrowserID,
             'Poll': poll,
             'UserID': userName,
             'Password': password,
@@ -245,7 +246,7 @@ ITSLoginToken.prototype.keepTokenFresh = function () {
             if (this.IssuedToken != '') {
                 $.ajax({
                     url: this.ITSInstance.baseURLAPI + 'checktoken',
-                    headers: {'SessionID': this.IssuedToken},
+                    headers: {'SessionID': this.IssuedToken, 'BrowserID': ITSInstance.BrowserID},
                     type: 'POST',
                     error: function () {
                         if (!$('#LoginWindowHeading').is(':visible')) {

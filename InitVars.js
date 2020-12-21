@@ -46,6 +46,7 @@ function onDemandScript ( url, callback ) {
     $.ajax({
         type: "GET",
         url: url,
+        headers: { 'BrowserID': ITSInstance.BrowserID},
         success: callback,
         dataType: "script",
         cache: true

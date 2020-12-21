@@ -335,6 +335,7 @@ ITSTranslator.prototype.loadAvailableTranslations = function (onSuccess, onError
         $.ajax({
             url: transFile,
             type: 'GET',
+            headers: { 'BrowserID': ITSInstance.BrowserID},
             success: function (data) {
                 this.availableTranslations = data;
                 this.availableTranslationsLoading = false;
@@ -388,6 +389,7 @@ ITSTranslator.prototype.switchLanguage = function (langCode, postLoadFunction) {
             $.ajax({
                     url: transFile,
                     type: 'GET',
+                    headers: { 'BrowserID': ITSInstance.BrowserID},
                     success: function (data) {
                         this.loadingLanguage = false;
                         if (data != "") {

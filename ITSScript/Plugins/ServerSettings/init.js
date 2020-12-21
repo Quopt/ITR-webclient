@@ -55,6 +55,11 @@
         this.CopyrightMessage = "";
         this.CompanyName = "";
         this.LOG_HANDLER_BACKUP_COUNT = "";
+        this.MAX_RESULTS_LIMIT = "";
+        this.MAX_SCORES_LIMIT = "";
+        this.MAX_PLUGINDATA_LIMIT = "";
+        this.MAX_CALL_LIMIT = "";
+
 
         ITSInstance.UIController.showInterfaceAsWaitingOn();
 
@@ -83,6 +88,14 @@
         ITSInstance.JSONAjaxLoader('systemsettings/LOG_HANDLER_BACKUP_COUNT', this.LOG_HANDLER_BACKUP_COUNT, this.LogHandlerBackupCountLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
             0, 999, "", "N", "Y", "N");
 
+        ITSInstance.JSONAjaxLoader('systemsettings/MAX_RESULTS_LIMIT', this.LOG_HANDLER_BACKUP_COUNT, this.LogHandlerResultsLimitLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
+            0, 999, "", "N", "Y", "N");
+        ITSInstance.JSONAjaxLoader('systemsettings/MAX_SCORES_LIMIT', this.LOG_HANDLER_BACKUP_COUNT, this.LogHandlerScoresLimitLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
+            0, 999, "", "N", "Y", "N");
+        ITSInstance.JSONAjaxLoader('systemsettings/MAX_PLUGINDATA_LIMIT', this.LOG_HANDLER_BACKUP_COUNT, this.LogHandlerPluginDataLimitLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
+            0, 999, "", "N", "Y", "N");
+        ITSInstance.JSONAjaxLoader('systemsettings/MAX_CALL_LIMIT', this.LOG_HANDLER_BACKUP_COUNT, this.LogHandlerCallLimitLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
+            0, 999, "", "N", "Y", "N");
 
         $('#ServerSettingsDiv').children().prop('disabled',true);
         if (ITSInstance.users.currentUser.IsMasterUser) {
@@ -150,6 +163,26 @@
         this.ParsLoaded();
     };
 
+    ITSServerSettingsEditor.prototype.LogHandlerResultsLimitLoaded = function (newValue) {
+        this.MAX_RESULTS_LIMIT = newValue;
+        this.ParsLoaded();
+    };
+
+    ITSServerSettingsEditor.prototype.LogHandlerScoresLimitLoaded = function (newValue) {
+        this.MAX_SCORES_LIMIT = newValue;
+        this.ParsLoaded();
+    };
+
+    ITSServerSettingsEditor.prototype.LogHandlerPluginDataLimitLoaded = function (newValue) {
+        this.MAX_PLUGINDATA_LIMIT = newValue;
+        this.ParsLoaded();
+    };
+
+    ITSServerSettingsEditor.prototype.LogHandlerCallLimitLoaded = function (newValue) {
+        this.MAX_CALL_LIMIT = newValue;
+        this.ParsLoaded();
+    };
+
     ITSServerSettingsEditor.prototype.ParsLoaded = function () {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         $('#ServerSettingsOrderByMailAddress').val(this.emailPar);
@@ -169,6 +202,12 @@
         $('#ServerSettingsDiv-MaxNumberOfConsulants-val').val(this.maxNumberOfConsultants);
 
         $('#ServerSettingsDiv-Logging-val').val(this.LOG_HANDLER_BACKUP_COUNT);
+
+        $('#ServerSettingsDiv-CallRateLimit-val').val(this.MAX_CALL_LIMIT);
+        $('#ServerSettingsDiv-ResultsLengthLimit-val').val(this.MAX_RESULTS_LIMIT);
+        $('#ServerSettingsDiv-ScoresLengthLimit-val').val(this.MAX_SCORES_LIMIT);
+        $('#ServerSettingsDiv-PluginDataLengthLimit-val').val(this.MAX_PLUGINDATA_LIMIT);
+
     };
 
     ITSServerSettingsEditor.prototype.ParsLoadedError = function (xhr) {
@@ -227,6 +266,22 @@
 
     ITSServerSettingsEditor.prototype.changeHistoricLogFilesParameter = function (newVal){
         if ($('#ServerSettingsDiv-SMTPUser-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/LOG_HANDLER_BACKUP_COUNT', newVal, function () {}, function () {}, "Y","N");
+    };
+
+    ITSServerSettingsEditor.prototype.changeCallRateLimitParameter = function (newVal){
+        if ($('#ServerSettingsDiv-CallRateLimit-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/MAX_CALL_LIMIT', newVal, function () {}, function () {}, "Y","N");
+    };
+
+    ITSServerSettingsEditor.prototype.changeResultsLengthLimitParameter = function (newVal){
+        if ($('#ServerSettingsDiv-ResultsLengthLimit-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/MAX_RESULTS_LIMIT', newVal, function () {}, function () {}, "Y","N");
+    };
+
+    ITSServerSettingsEditor.prototype.changeScoresLengthLimitParameter = function (newVal){
+        if ($('#ServerSettingsDiv-ScoresLengthLimit-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/MAX_SCORES_LIMIT', newVal, function () {}, function () {}, "Y","N");
+    };
+
+    ITSServerSettingsEditor.prototype.changePluginDataLengthLimitParameter = function (newVal){
+        if ($('#ServerSettingsDiv-PluginDataLengthLimit-val').is(":visible"))  ITSInstance.genericAjaxUpdate('systemsettings/MAX_PLUGINDATA_LIMIT', newVal, function () {}, function () {}, "Y","N");
     };
 
     ITSServerSettingsEditor.prototype.restartServer = function () {

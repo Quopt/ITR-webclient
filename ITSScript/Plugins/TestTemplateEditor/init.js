@@ -1807,7 +1807,8 @@ ITSTestTemplateEditor.prototype.translateScreenComponentVariable = function (com
                 this.translate_template.TemplateVariables[this.translate_component_variable_index].variableName + postfix];
             var tempHeaders = {
                 'SessionID': ITSInstance.token.IssuedToken,
-                'CompanyID': ITSInstance.token.companyID
+                'CompanyID': ITSInstance.token.companyID,
+                'BrowserID': ITSInstance.BrowserID
             };
             this.translate_calls++;
             ITSLogger.logMessage(logLevel.INFO,ITSInstance.baseURLAPI + "translate/" + this.translate_source_language + "/" + this.translate_target_language + " " + toTranslate);

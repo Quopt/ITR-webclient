@@ -65,6 +65,9 @@ ITSSession = function () {
     // current user special surface state flags
     this.MultipleSessionsFound = false;
     this.MultipleCompaniesFound = false;
+
+    // calc browser ID
+    this.BrowserID = newGuid();
 };
 
 ITSEmptyObject = function () {
@@ -116,7 +119,7 @@ ITSSession.prototype.genericAjaxLoaderProcessQueue = function () {
                 function (xhr, ajaxOptions, thrownError) {
                     var x = this.genericLoadQueue[0];
                     this.callProcessing = false;
-                    if (typeof x.OnError != "undefined") setTimeout(x.OnError.bind(x,xhr, ajaxOptions, thrownError),1);
+                    if (typeof x.OnError != "undefined") setTimeout(x.OnError.bind(x, xhr, ajaxOptions, thrownError),1);
                     this.genericLoadQueue.splice(0,1);
                     this.genericAjaxLoaderProcessQueue();
                 }.bind(this),
@@ -135,7 +138,7 @@ ITSSession.prototype.genericAjaxLoaderProcessQueue = function () {
 
 ITSSession.prototype.genericAjaxLoaderRunner = function (URL, objectToPutDataIn, OnSuccess, OnError, OnNewChild, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
     ITSLogger.logMessage(logLevel.INFO,'ajax load : ' + this.baseURLAPI + URL );
-    tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
+    tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID, 'BrowserID': ITSInstance.BrowserID};
     tempHeaders['StartPage'] = "-1";
     tempHeaders['PageSize'] = "0";
     tempHeaders['Sort'] = "";
@@ -275,7 +278,7 @@ ITSSession.prototype.JSONAjaxLoaderProcessQueue = function () {
 
 ITSSession.prototype.JSONAjaxLoaderRunner = function (URL, objectToPutDataIn, OnSuccess, OnError, DefaultObjectType, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString) {
     ITSLogger.logMessage(logLevel.INFO,'ajax JSON load : ' + this.baseURLAPI + URL + " M/C=" + IncludeMaster + "/" + IncludeClient);
-    tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
+    tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID, 'BrowserID': ITSInstance.BrowserID};
     tempHeaders['StartPage'] = "-1";
     tempHeaders['PageSize'] = "0";
     tempHeaders['Sort'] = "";
@@ -393,7 +396,7 @@ ITSSession.prototype.GenericAjaxUpdateProcessQueue = function () {
 };
 ITSSession.prototype.genericAjaxUpdateRunner = function (URL, objectToUpdate, OnSuccess, OnError, IncludeMaster, IncludeClient, dataType, ForceTranslation) {
     ITSLogger.logMessage(logLevel.INFO,'ajax update or create : ' + this.baseURLAPI + URL);
-    tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
+    tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID, 'BrowserID': ITSInstance.BrowserID};
     tempHeaders['IncludeMaster'] = "N";
     tempHeaders['IncludeClient'] = "Y";
     tempHeaders['ITRLang'] = ITSLanguage;
@@ -432,7 +435,7 @@ ITSSession.prototype.genericAjaxUpdateRunner = function (URL, objectToUpdate, On
 
 ITSSession.prototype.genericAjaxDelete = function (URL, OnSuccess, OnError, IncludeMaster, IncludeClient) {
     ITSLogger.logMessage(logLevel.INFO,'ajax delete : ' + this.baseURLAPI + URL );
-    var tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID};
+    var tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID, 'BrowserID': ITSInstance.BrowserID};
     if (IncludeMaster) {
         tempHeaders['IncludeMaster'] = IncludeMaster ;
     }
@@ -578,7 +581,8 @@ function getActiveSessions() {
             context: this,
             headers: {
                 'CompanyID': companyID,
-                'SessionID': ITSInstance.token.IssuedToken
+                'SessionID': ITSInstance.token.IssuedToken,
+                'BrowserID': ITSInstance.BrowserID
             },
             error: function () {
                 ITSLogger.logMessage(logLevel.ERROR, 'Retrieving amount of active sessions failed.');
@@ -602,6 +606,7 @@ function getCopyrightMessage() {
         url: ITSInstance.baseURLAPI + 'copyright',
         context: this,
         headers: {
+            'BrowserID': ITSInstance.BrowserID,
             'CompanyID': companyID
         },
         error: function () {
@@ -618,6 +623,7 @@ function getCopyrightMessage() {
     });
     var req = $.ajax({
         url: ITSInstance.baseURLAPI + 'companyname',
+        headers: { 'BrowserID': ITSInstance.BrowserID },
         context: this,
         error: function () {
             ITSLogger.logMessage(logLevel.ERROR,'Retrieving company name failed.');
@@ -632,6 +638,7 @@ function getCopyrightMessage() {
     });
     var req = $.ajax({
         url: ITSInstance.baseURLAPI + 'companylogo',
+        headers: { 'BrowserID': ITSInstance.BrowserID },
         context: this,
         error: function () {
             ITSLogger.logMessage(logLevel.ERROR,'Retrieving company logo failed.');

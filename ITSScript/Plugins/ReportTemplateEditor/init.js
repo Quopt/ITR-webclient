@@ -552,6 +552,7 @@
                 ITSInstance.UIController.showError('ReportTemplateEditor.TranslationTooLong', "The text in the report is too long to translate. Please split it up in smaller pieces of 5000 characters maximum for translation.")
             } else {
                 var tempHeaders = {
+                    'BrowserID': ITSInstance.BrowserID,
                     'SessionID': ITSInstance.token.IssuedToken,
                     'CompanyID': ITSInstance.token.companyID,
                     'ToTranslate': toTranslate
