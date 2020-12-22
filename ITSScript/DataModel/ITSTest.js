@@ -657,7 +657,7 @@ ITSTest.prototype.expandLayoutsFromPreviousScreens = function () {
         if (this.screens[i].UseLayoutsFromPreviousScreen) {
             if (!this.screens[i].LayoutsFromPreviousScreensExpanded) {
                 // copy the layouts from the previous screen
-                for (var layoutcount = 0; layoutcount < this.screens[i-1].screenComponents.length; layoutcount++) {
+                for (var layoutcount = this.screens[i-1].screenComponents.length-1; layoutcount >= 0; layoutcount--) {
                     // locate the screen template using the template id
                     templateIndex = ITSInstance.screenTemplates.findTemplateById (ITSInstance.screenTemplates.screenTemplates,  this.screens[i-1].screenComponents[layoutcount].templateID);
                     if ((templateIndex>=0) && (ITSInstance.screenTemplates.screenTemplates[templateIndex].TemplateType == 10)) {
@@ -1593,7 +1593,7 @@ ITSTestScreen.prototype.screenTemplatesLoaded = function () {
         if (template) allLoaded = template.detailsLoaded;
         if (!allLoaded)  break;
     }
-    return allLoaded;
+    return allLoaded || (this.screenComponents.length == 0);
 };
 
 ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, postfix, PnP, sessionStorageObject, includeCookies) {
