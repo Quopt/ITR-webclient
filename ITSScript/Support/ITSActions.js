@@ -33,6 +33,7 @@ ITSActionList = function(session) {
     this.registerAction(new ITSActionPreviousScreen(session), false);
     this.registerAction(new ITSActionShowItem(session), false);
     this.registerAction(new ITSActionUpdateCurrentScreenFromSessionStorage(session));
+    this.registerAction(new ITSActionShowScrollbars(session));
 };
 
 ITSActionList.prototype.getActionsForContext = function (context) {
@@ -427,6 +428,63 @@ ITSActionShowItem.prototype.executeAction = function (context, callback) {
     context.currentTestDefinition.screens[context.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(context.currentSessionTest.Results,  context.testTakingController.generateScreenID, false, context.currentSession.PluginData, context.currentSession.SessionType==1);
     context.testTakingController.saveCurrentTest();
     context.testTakingController.renderTestPage();
+
+    return returnObject;
+};
+
+ITSActionShowScrollbars = function (session) {
+    ITSAction.call(this, session);
+
+    this.Name = "ShowScrollbars";
+    this.Description = session.translator.getTranslatedString("ITSActions.js", "ShowScrollbars.Description", "Show or hide the main scrollbars on the browser window.");
+};
+
+ITSActionShowScrollbars.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue) {
+    var tempObj = ActionValue;
+    var selectStr = tempObj.ShowStatusX == "on" ? "checked" : "";
+    var select = '<div class="col-12 mx-0 px-0"><input type="checkbox" ' + selectStr + ' class="col-1" onchange="' + on_change_function + '" id="' + fullTraceID + 'OptionHideX"><label class="col-11" id="ShowScrollbars_HideXInsteadOfShow">Hide the horizontal scrollbars (instead of show)</label></div>';
+    var selectStr = tempObj.ShowStatusY == "on" ? "checked" : "";
+    var select = select + '<div class="col-12 mx-0 px-0"><input type="checkbox" ' + selectStr + ' class="col-1" onchange="' + on_change_function + '" id="' + fullTraceID + 'OptionHideY"><label class="col-11" id="ShowScrollbars_HideYInsteadOfShow">Hide the vertical scrollbars (instead of show)</label></div>';
+    $('#' + DivToAdd).append("<div class='row m-0 p-0 col-12 form-control-sm'>" + select + "</div>");
+};
+
+ITSActionShowScrollbars.prototype.getValuesFromGeneratedElement = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values, fullTraceID) {
+    var var2 = {};
+    var2.persistentProperties = "*ALL*";
+    var2._objectType = "ITSObject";
+    var2["ShowStatusX"] = ($('#' + fullTraceID + 'OptionHideX').prop('checked') ? "on" : "off");
+    var2["ShowStatusY"] = ($('#' + fullTraceID + 'OptionHideY').prop('checked') ? "on" : "off");
+    return var2;
+};
+
+ITSActionShowScrollbars.prototype.executeAction = function (context, callback) {
+    var returnObject = new ITSActionResult();
+
+    var variables = context.ActionValue;
+
+    if (variables.ShowStatusY =="on") {
+        $('body').css({
+            'overflow-y': 'hidden',
+            height: '100%'
+        });
+    } else {
+        $('body').css({
+            'overflow-y': 'auto',
+            height: '' });
+    }
+
+
+    if (variables.ShowStatusX =="on") {
+        $('body').css({
+            'overflow-x': 'hidden',
+            width: '100%'
+        });
+    } else {
+        $('body').css({
+            'overflow-x': 'auto',
+            width: ''
+        });
+    }
 
     return returnObject;
 };
