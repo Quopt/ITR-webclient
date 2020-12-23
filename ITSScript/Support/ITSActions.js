@@ -388,6 +388,13 @@ ITSActionShowItem.prototype.generateElement = function (traceID, template_values
         selectStr = (testdefinition.screens[currentScreenIndex].screenComponents[i].id == tempObj.Element1) ? " selected " : "";
         select = select + '<option ' + selectStr + ' NoTranslate value="' + testdefinition.screens[currentScreenIndex].screenComponents[i].id + '">' + testdefinition.screens[currentScreenIndex].screenComponents[i].varComponentName + '</option>';
     }
+    // now add the variables to view/hide from previous screen layouts
+    var previousLayoutsParameters = testdefinition.screens[currentScreenIndex].getScreenVariablesFromPreviousScreenLayouts(currentScreenIndex);
+    for (var i = 0; i < previousLayoutsParameters.length; i++) {
+        selectStr = (previousLayoutsParameters[i].id == tempObj.Element1) ? " selected " : "";
+        select = select + '<option ' + selectStr + ' NoTranslate value="' + previousLayoutsParameters[i].id + '">' + previousLayoutsParameters[i].varComponentName + '</option>';
+    }
+    // close the select
     select = select + '</select></div>';
     selectStr = tempObj.Element1Hide == "on" ? "checked" : "";
     select = select + '<div class="col-12 mx-0 px-0"><input type="checkbox" ' + selectStr + ' class="col-1" onchange="' + on_change_function + '" id="' + fullTraceID + 'Options1-2"><label class="col-11" id="ShowItem_HideInsteadOfShow">Hide the element instead of show</label></div>';

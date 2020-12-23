@@ -1289,6 +1289,29 @@ ITSTestScreen.prototype.getVisibilityStatusAsString = function() {
     return visibilityString;
 };
 
+ITSTestScreen.prototype.getScreenVariablesFromPreviousScreenLayouts = function (currentScreenIndex) {
+    var layoutsFound = [];
+    var templateIndex = 0;
+
+    if (!this.UseLayoutsFromPreviousScreen) return layoutsFound;
+
+    for (var i = currentScreenIndex-1; i >= 0 ; i--) {
+        if (!this.myParent.screens[i].UseLayoutsFromPreviousScreen) {
+            // copy the layouts from the previous screen
+            for (var layoutcount = 0; layoutcount < this.myParent.screens[i].screenComponents.length; layoutcount++) {
+                // locate the screen template using the template id
+                templateIndex = ITSInstance.screenTemplates.findTemplateById (ITSInstance.screenTemplates.screenTemplates,  this.myParent.screens[i].screenComponents[layoutcount].templateID);
+                if ((templateIndex>=0) && (ITSInstance.screenTemplates.screenTemplates[templateIndex].TemplateType == 10)) {
+                    layoutsFound.push(this.myParent.screens[i].screenComponents[layoutcount]);
+                }
+            }
+            break;
+        }
+    }
+
+    return layoutsFound;
+};
+
 ITSTestScreen.prototype.saveScreenComponentsShowStatus = function () {
     for (var i = 0; i < this.screenComponents.length; i++) {
         if (typeof this.screenComponents[i].showOriginalValue == "undefined")
