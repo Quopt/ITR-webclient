@@ -186,6 +186,18 @@ ITSScreenTemplate.prototype.newScreenTemplateVariable = function () {
     return newTemplateVar;
 };
 
+ITSScreenTemplate.prototype.clone = function () {
+    var newTemplate = new ITSScreenTemplate(this.parent, this.ITSSession) ;
+
+    shallowCopy(this, newTemplate, true);
+    for (var i=0; i < this.TemplateVariables.length; i++) {
+        newTemplate.newScreenTemplateVariable();
+        shallowCopy(newTemplate.TemplateVariables[i], this.TemplateVariables[i], true);
+    }
+
+    return newTemplate;
+};
+
 ITSScreenTemplate.prototype.loadDetailSucces = function () {
     ITSLogger.logMessage(logLevel.INFO,"Loaded screen template details " + this.Description);
     this.currentlyLoading = false;

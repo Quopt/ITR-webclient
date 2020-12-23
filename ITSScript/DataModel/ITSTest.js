@@ -661,7 +661,7 @@ ITSTest.prototype.expandLayoutsFromPreviousScreens = function () {
                     // locate the screen template using the template id
                     templateIndex = ITSInstance.screenTemplates.findTemplateById (ITSInstance.screenTemplates.screenTemplates,  this.screens[i-1].screenComponents[layoutcount].templateID);
                     if ((templateIndex>=0) && (ITSInstance.screenTemplates.screenTemplates[templateIndex].TemplateType == 10)) {
-                        this.screens[i].screenComponents.unshift(this.screens[i-1].screenComponents[layoutcount]);
+                        this.screens[i].screenComponents.unshift(this.screens[i-1].screenComponents[layoutcount].clone());
                     }
                 }
                 this.screens[i].LayoutsFromPreviousScreensExpanded = true;
@@ -1787,6 +1787,14 @@ function ITSTestScreenComponent(par, session) {
 
     this.persistentProperties = ["id", "varComponentName", "templateValues", "excludeFromAnonimisedTestResults", "storeAtSessionLevel", "templateID", "show", "placeholderName"];
 }
+
+ITSTestScreenComponent.prototype.clone = function () {
+    var newComponent = new ITSTestScreenComponent(this.myParent, this.ITSSession);
+    shallowCopy(this, newComponent, true);
+    shallowCopy(this.templateValues, newComponent.templateValues, false);
+
+    return newComponent;
+};
 
 ITSTestScreenComponent.prototype.getColumnName = function () {
     return this.myParent.varName + "." + this.varComponentName;
