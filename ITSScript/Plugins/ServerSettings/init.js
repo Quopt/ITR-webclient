@@ -97,10 +97,17 @@
         ITSInstance.JSONAjaxLoader('systemsettings/MAX_CALL_LIMIT', this.LOG_HANDLER_BACKUP_COUNT, this.LogHandlerCallLimitLoaded.bind(this), this.ParsLoadedError.bind(this), ITSObject,
             0, 999, "", "N", "Y", "N");
 
+        ITSInstance.genericAjaxLoader('version', this.APIVersion, this.APIVersionLoaded.bind(this), this.APIVersionLoaded.bind(this));
+
         $('#ServerSettingsDiv').children().prop('disabled',true);
         if (ITSInstance.users.currentUser.IsMasterUser) {
             $('#ServerSettingsDiv').children().prop('disabled',false);
         }
+    };
+
+
+    ITSServerSettingsEditor.prototype.APIVersionLoaded = function (newValue) {
+        $('#ServerSettingsActions-version-label').text( newValue);
     };
 
     ITSServerSettingsEditor.prototype.mailParLoaded = function (newValue) {
