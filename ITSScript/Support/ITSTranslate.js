@@ -486,8 +486,10 @@ ITSTranslator.prototype.translate = function (stringid, originalString) {
     return this.getTranslatedString('', stringid, originalString);
 };
 
-ITSTranslator.prototype.translateDiv = function (divId, showLog) {
-    if (this.divsToTranslate.indexOf(divId) < 0) this.divsToTranslate.push(divId);
+ITSTranslator.prototype.translateDiv = function (divId, showLog, skipDivRegistration) {
+    if (typeof skipDivRegistration == "undefined") {
+        if (this.divsToTranslate.indexOf(divId) < 0) this.divsToTranslate.push(divId);
+    }
     if ((this.languageFileLoaded) || (ITSLanguage=="en")) {
         // translate this div
         var tN, tId;

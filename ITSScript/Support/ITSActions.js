@@ -34,6 +34,8 @@ ITSActionList = function(session) {
     this.registerAction(new ITSActionShowItem(session), false);
     this.registerAction(new ITSActionUpdateCurrentScreenFromSessionStorage(session));
     this.registerAction(new ITSActionShowScrollbars(session));
+
+    session.MessageBus.subscribe("Translations.LanguageSwitched", this.translateActionDescription.bind(this));
 };
 
 ITSActionList.prototype.getActionsForContext = function (context) {
@@ -93,6 +95,12 @@ ITSActionList.prototype.unregisterAction = function (actionName) {
     }
     if (found) {
         this.AvailableActions.splice(i,1);
+    }
+};
+
+ITSActionList.prototype.translateActionDescription = function () {
+    for (var i=0; i < this.AvailableActions.length; i++) {
+        this.AvailableActions[i].Description = this.ITSSession.translator.getTranslatedString("ITSActions.js", this.AvailableActions[i].Name + ".Description", this.AvailableActions[i].Description);
     }
 };
 

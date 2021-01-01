@@ -1012,6 +1012,7 @@ ITSScreenTemplateVariable.prototype.generate_LX_variable = function (traceID, te
                 ITSInstance.actions.findAction(part1).generateElement(traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd, tempTraceID, part2);
             } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"generate_LX_variable : ITSInstance.actions.findAction contains error " + part1 + " " + err.message ); }
 
+            ITSInstance.translator.translateDiv('#' + DivToAdd, false, true);
         }
     } // for
 };

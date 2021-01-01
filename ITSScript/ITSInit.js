@@ -34,6 +34,9 @@ ITSSession = function () {
     this.reports = new ITSReports(this, this); // contains all available reports of all types
     this.graph = new ITSGraph(this,this); // a graph object for helping to show and edit graphs
 
+    // messagebus
+    this.MessageBus = new ITSMessageBus();
+
     // controller objects
     this.loginController = new ITSLoginController(this);
     this.logoutController = new ITSLogoutController(this);
@@ -51,9 +54,6 @@ ITSSession = function () {
     // UI objects
     this.UIController = new ITSUIController(this);
     this.testTakingController = new ITSTestTakingController(this);
-
-    // messagebus
-    this.MessageBus = new ITSMessageBus();
 
     // generic support functions
     this.genericLoadQueue = [];
