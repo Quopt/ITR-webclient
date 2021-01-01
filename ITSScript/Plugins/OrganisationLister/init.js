@@ -42,6 +42,7 @@
             "   <th class='d-none d-sm-table-cell' id=\"ITSOrganisationListerEditor_DescriptionContactMail\" scope=\"col\">Contact e-mail</th>" +
             "   <th class='d-none d-sm-table-cell' id=\"ITSOrganisationListerEditor_DescriptionContactPhone\" scope=\"col\">Contact phone</th>" +
             "   <th class='d-none d-sm-table-cell' id=\"ITSOrganisationListerEditor_DescriptionLicenseEndDate\" scope=\"col\">License end date</th>" +
+            "   <th class='d-none d-sm-table-cell' id=\"ITSOrganisationListerEditor_DescriptionCurrentCreditLevel\" scope=\"col\">Credit level</th>" +
             "   <th scope=\"col\"></th>" +
             "  </tr>" +
             "  </thead>" +
@@ -54,6 +55,7 @@
             "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%CONTACTEMAIL%%</span></td>" +
             "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%CONTACTPHONE%%</span></td>" +
             "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%LICENSEENDDATE%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");'>%%CURRENTCREDITLEVEL%%</span></td>" +
             "   <td nowrap>" +
             "   <button type=\"button\" class=\"btn-xs btn-success\"" +
             "    onclick=\'ITSInstance.OrganisationListerController.viewOrganisation(\"%%ID%%\");\'>" +
@@ -70,7 +72,8 @@
         this.mContactEMail = /%%CONTACTEMAIL%%/g;
         this.mContactPhone = /%%CONTACTPHONE%%/g;
         this.mLicenseEndData = /%%LICENSEENDDATE%%/g;
-        
+        this.mCurrentCreditLevel = /%%CURRENTCREDITLEVEL%%/g;
+
     };
 
     ITSOrganisationListerEditor.prototype.init=function () {
@@ -142,6 +145,7 @@
             rowText = rowText.replace( this.mLicenseEndData, this.organisationsList[i].LicenseEndDate);
             rowText = rowText.replace( this.mCompanyName, this.organisationsList[i].CompanyName);
             rowText = rowText.replace( this.mCompanyCountry, this.organisationsList[i].CompanyCountry);
+            rowText = rowText.replace( this.mCurrentCreditLevel, this.organisationsList[i].CurrentCreditLevel);
 
             this.generatedTable += rowText;
         }
