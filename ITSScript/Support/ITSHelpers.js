@@ -1458,3 +1458,67 @@ function htmlDecode(value) {
         return '';
     }
 }
+
+// helpers for country and currency selection
+
+function generateCountrySelectList(currentCountryCode, includeNA) {
+    var select = "";
+    var selected = "";
+    if (includeNA) select = select + '<option NoTranslate value="">-</option>';
+
+    // sort by translation
+    if (typeof ITSCountryList[0].translatedCountryCode == "undefined") {
+        for (var i=0; i < ITSCountryList.length; i++) {
+            ITSCountryList[i].translatedCountryCode = ITSInstance.translator.getTranslatedString("ITSTranslate.js", "Country." + ITSCountryList[i].countryCode,  ITSCountryList[i].countryName );
+        }
+        ITSCountryList.sort(function(a, b) {
+            var nameA = a.translatedCountryCode.toUpperCase();
+            var nameB = b.translatedCountryCode.toUpperCase();
+            if (nameA < nameB) return -1;
+            if (nameA > nameB) return 1;
+            return 0;
+        });
+    }
+
+    for (var i=0; i < ITSCountryList.length; i++) {
+        // now add the options from the default settings
+        selected = "";
+        if (currentCountryCode == ITSCountryList[i].countryCode) selected = "selected ";
+        select = select + '<option '+selected+'NoTranslate value="' + ITSCountryList[i].countryCode + '">' +
+                ITSInstance.translator.getTranslatedString("ITSTranslate.js", "Country." + ITSCountryList[i].countryCode,  ITSCountryList[i].countryName ) +
+                '</option>';
+    }
+    select = select + '</select>';
+    return select;
+}
+
+function generateCurrencySelectList(currentCode, includeNA) {
+    var select = "";
+    var selected = "";
+    if (includeNA) select = select + '<option NoTranslate value="">-</option>';
+
+    // sort by translation
+    if (typeof ITSCurrencyCode[0].translatedCurrencyCode == "undefined") {
+        for (var i=0; i < ITSCurrencyCode.length; i++) {
+            ITSCurrencyCode[i].translatedCurrencyCode = ITSInstance.translator.getTranslatedString("ITSTranslate.js", "Currency." + ITSCurrencyCode[i].currencyCode,  ITSCurrencyCode[i].currencyDescription ) ;
+        }
+        ITSCurrencyCode.sort(function(a, b) {
+            var nameA = a.translatedCurrencyCode.toUpperCase();
+            var nameB = b.translatedCurrencyCode.toUpperCase();
+            if (nameA < nameB) return -1;
+            if (nameA > nameB) return 1;
+            return 0;
+        });
+    }
+
+    for (var i=0; i < ITSCurrencyCode.length; i++) {
+        // now add the options from the default settings
+        selected = "";
+        if (currentCode == ITSCurrencyCode[i].currencyCode) selected = "selected ";
+        select = select + '<option '+selected+'NoTranslate value="' + ITSCurrencyCode[i].currencyCode + '">' +
+            ITSInstance.translator.getTranslatedString("ITSTranslate.js", "Currency." + ITSCurrencyCode[i].currencyCode,  ITSCurrencyCode[i].currencyDescription ) +
+            '</option>';
+    }
+    select = select + '</select>';
+    return select;
+}

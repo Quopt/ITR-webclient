@@ -43,6 +43,8 @@
             "   <th id=\"ITSCreditsUsedListerServerEditor_Month\" scope=\"col\">Usage month</th>" +
             "   <th id=\"ITSCreditsUsedListerServerEditor_InvoiceCode\" scope=\"col\">Invoice code</th>" +
             "   <th id=\"ITSCreditsUsedListerServerEditor_TotalTicks\" scope=\"col\">Ticks used</th>" +
+            "   <th id=\"ITSCreditsUsedListerServerEditor_Currency\" scope=\"col\">Currency</th>" +
+            "   <th id=\"ITSCreditsUsedListerServerEditor_TotalAmount\" scope=\"col\">Amount</th>" +
             "   <th id=\"ITSCreditsUsedListerServerEditor_CompanyName\" scope=\"col\">Used for company</th>" +
             "   <th scope=\"col\"></th>" +
             "  </tr>" +
@@ -54,6 +56,8 @@
             "   <td><span notranslate'>%%UsageMonth%%</span></td>" +
             "   <td><span notranslate'>%%InvoiceCode%%</span></td>" +
             "   <td><span notranslate'>%%TotalTicks%%</span></td>" +
+            "   <td><span notranslate'>%%Currency%%</span></td>" +
+            "   <td><span notranslate'>%%Amount%%</span></td>" +
             "   <td><span notranslate'>%%CompanyName%%</span></td>" +
             "  </tr>";
         this.tablePart3 = "</tbody></table>" ;
@@ -63,6 +67,8 @@
         this.mNR = /%%NR%%/g;
         this.mInvoiceCode = /%%InvoiceCode%%/g;
         this.mTotalTicks = /%%TotalTicks%%/g;
+        this.mCurrency = /%%Currency%%/g;
+        this.mAmount = /%%Amount%%/g;
         this.mCompanyName = /%%CompanyName%%/g;
 
     };
@@ -122,6 +128,7 @@
             // generate table header
             this.generatedTable = this.tablePart1;
         }
+        var tempCompany = {} ;
 
         // generate the records for the returned data
         for (var i=0; i < this.CreditsUsedList.length; i++) {
@@ -133,6 +140,15 @@
             rowText = rowText.replace( this.mInvoiceCode, this.CreditsUsedList[i].InvoiceCode );
             rowText = rowText.replace( this.mTotalTicks, this.CreditsUsedList[i].ticks );
             rowText = rowText.replace( this.mCompanyName, this.CreditsUsedList[i].CompanyName);
+
+            tempCompany = ITSInstance.companies.findOtherCompanyByID(this.CreditsUsedList[i].ID);
+            if (typeof tempCompany != "undefined") {
+                console.log(tempCompany);
+                rowText = rowText.replace(this.mCurrency, tempCompany.InvoiceCurrency);
+                if (typeof tempCompany.PricePerCreditUnit != "undefined") {
+                    rowText = rowText.replace(this.mAmount, Number(tempCompany.PricePerCreditUnit) * Number(this.CreditsUsedList[i].ticks));
+                }
+            }
 
             this.generatedTable += rowText;
         }

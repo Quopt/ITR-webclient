@@ -44,8 +44,12 @@
         <div id="CreditsOrderByMailMailAmountRow" class="form-group row">
             <label for="CreditsOrderByMailAmount"
                    id="CreditsOrderByMailAmountLabel" class="col-sm-4 col-form-label">Amount of credit units to order x 1.000 units</label>
-            <div class="col-sm-8">
-             <input class="form-control col-sm-1" type="number" maxlength="2" novalidate value="1" id="CreditsOrderByMailAmount">
+            <div class="col-sm-2">
+                <input class="form-control col-sm-12" type="number" maxlength="2" novalidate value="1" min="1" onchange="ITSInstance.CreditsOrderByMailController.changeAmount();" id="CreditsOrderByMailAmount">
+            </div>
+            <div class="col-sm-6">
+                <label style="display: none" id="CreditsOrderByMailAmountCostsLabel" class="col-sm-4 col-form-label">Costs : </label>
+                <label style="display: none" notranslate id="CreditsOrderByMailAmountCosts" class="col-sm-4 col-form-label"></label>
             </div>
         </div>
     </div>

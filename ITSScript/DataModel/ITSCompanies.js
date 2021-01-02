@@ -46,13 +46,14 @@ function ITSCompany (uParent) {
     this.PluginData = {};
     this.PluginData.persistentProperties = "*ALL*";
     this.PluginData.ForbiddenPaths ='';
+    this.PricePerCreditUnit = 0.1;
 
     this.persistentProperties = [
       'ID','CostsPerTestInUnits','Active','CurrentCreditLevel','TestTakingDiscount','YearlyLicenseDiscount',
         'YearlyLicenseFee','ConcurrentOpenSessions','CompanyName','CompanyCountry',
         'InternationalVATNr','InvoiceAddress','MailAddress','VisitingAddress','CompanyLogo','ContactPerson','ContactPhone',
         'ContactEMail','AllowNegativeCredits','NoPublicTests','VATPercentage','LicenseStartDate','LicenseEndDate',
-        'InvoiceCurrency','AdministrativeID', 'CCEMail', 'PluginData', 'MFAEnabled'
+        'InvoiceCurrency','AdministrativeID', 'CCEMail', 'PluginData', 'MFAEnabled', 'PricePerCreditUnit'
     ];
     
     this.newCompany = false;

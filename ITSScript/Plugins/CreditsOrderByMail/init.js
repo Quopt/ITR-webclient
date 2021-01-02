@@ -62,6 +62,7 @@
         } else {
             $('#CreditsOrderByMailMailTo').val(this.emailPar);
         }
+        this.changeAmount();
     };
 
     ITSCreditsOrderByMailEditor.prototype.ParLoadedError = function () {
@@ -100,6 +101,16 @@
     ITSCreditsOrderByMailEditor.prototype.mailFailed = function (thrownError, xhr, ajaxOptions) {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         ITSInstance.UIController.showWarning('ITSCreditsOrderByMailEditor.MailFailed', 'Sending the e-mail failed.', xhr.responseText, "");
+    };
+
+    ITSCreditsOrderByMailEditor.prototype.changeAmount = function () {
+        if (typeof ITSInstance.companies.currentCompany.PluginData.PricePerCreditUnit != "unknown") {
+            if (Number(ITSInstance.companies.currentCompany.PluginData.PricePerCreditUnit) > 0) {
+                $('#CreditsOrderByMailAmountCostsLabel').show();
+                $('#CreditsOrderByMailAmountCosts').show();
+                $('#CreditsOrderByMailAmountCosts').text( precise_round((Number(ITSInstance.companies.currentCompany.PricePerCreditUnit) * 1000 * Number($('#CreditsOrderByMailAmount').val())), 2) + " " + ITSInstance.companies.currentCompany.InvoiceCurrency);
+            }
+        }
     };
 
     // register the portlet

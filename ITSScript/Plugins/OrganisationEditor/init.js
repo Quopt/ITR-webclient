@@ -72,6 +72,12 @@
             $('#OrganisationInterfaceSessionEdit').show();
             ITSInstance.UIController.initNavBar();
 
+            // generate the select dropdowns
+            $('#OrganisationEditorInterfaceCompanyCountry').empty();
+            $('#OrganisationEditorInterfaceCompanyCountry').append(generateCountrySelectList('',true) );
+            $('#OrganisationEditorInterfaceInvoiceCurrency').empty();
+            $('#OrganisationEditorInterfaceInvoiceCurrency').append(generateCurrencySelectList('',true) );
+
             if ((this.currentOrganisation.ID != this.OrganisationID) && (!this.currentOrganisation.detailsLoaded)) {
                 ITSInstance.UIController.showInterfaceAsWaitingOn();
                 this.currentOrganisation = new ITSCompany(ITSInstance);
