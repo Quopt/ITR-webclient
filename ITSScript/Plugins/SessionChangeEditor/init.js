@@ -355,6 +355,8 @@ ITSChangeExistingSessionEditor.prototype.emailAddressChanged = function ( newVal
     // the email address has changed. check if this is a known user. If so then update the password, name etc and stored persid. If not generate a new person id.
     // the session cannot be saved until this check is complete
 
+    $('#AdminInterfaceChangeSessionCandidateFor').val($('#AdminInterfaceChangeSessionCandidateFor').val().trim());
+
     // is this a consultant? That is NOT allowed.
     $('#AdminInterfaceSessionChangeAccountExists').hide();
     if (typeof ITSInstance.users.findUserByLogin(newValue, true) != "undefined") {
@@ -385,6 +387,9 @@ ITSChangeExistingSessionEditor.prototype.saveCurrentSession = function ( onSucce
     // email adres must be set and last name
     if (this.currentSession.Person.EMail == "") {
         ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','PersonMissing','You have not selected a person to add for this session.')
+    }
+    if (this.currentSession.Person.EMail.length < 4) {
+        ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','PersonTooShort','The name of the person is less than 4 characters. This is not allowed.');
     }
     if ((this.currentSession.Person.Password.length <= 6) && (! this.existingUserFound)) {
         ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','PasswordMissing','The password is not set or less than 6 characters.')

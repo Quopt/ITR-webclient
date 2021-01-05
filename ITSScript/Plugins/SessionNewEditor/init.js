@@ -373,6 +373,9 @@ ITSInviteNewCandidateEditor.prototype.saveNewSession = function ( onSuccessCallb
     if (this.newSession.Person.EMail == "") {
         ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','PersonMissing','You have not selected a person to add for this session.')
     }
+    if (this.newSession.Person.EMail.length < 4) {
+        ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','PersonTooShort','The name of the person is less than 4 characters. This is not allowed.');
+    }
     if ((this.newSession.Person.Password.length <= 6) && (! this.existingUserFound)) {
         ValidationMessage = ITSInstance.translator.getTranslatedString('SessionNewEditor','PasswordMissing','The password is not set or less than 6 characters.')
     }
@@ -426,6 +429,7 @@ ITSInviteNewCandidateEditor.prototype.saveNewSession = function ( onSuccessCallb
 ITSInviteNewCandidateEditor.prototype.emailAddressChanged = function ( newValue ) {
     // the email address has changed. check if this is a known user. If so then update the password, name etc and stored persid. If not generate a new person id.
     // is this a consultant? That is NOT allowed.
+    $('#AdminInterfaceSessionNewSessionCandidateFor').val($('#AdminInterfaceSessionNewSessionCandidateFor').val().trim());
     $('#AdminInterfaceSessionNewAccountExists').hide();
     if (typeof ITSInstance.users.findUserByLogin(newValue, true) != "undefined") {
         this.existingUserFound = true;
