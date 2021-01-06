@@ -45,6 +45,7 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
     var animationDuration = 2000;
     if (! animate) animationDuration = 0;
 
+    $('#'+id).width(template_values["Width"]).height(template_values["Height"]);
     $('<canvas>').attr({
         id: elementID
     }).css({
