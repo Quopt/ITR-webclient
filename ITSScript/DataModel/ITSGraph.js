@@ -131,6 +131,18 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
     Chart.defaults.global.animation.duration = animationDuration;
     Chart.defaults.global.backgroundColor = RGBcolourToNumber(255,255,255);
 
+    Chart.pluginService.register({
+        beforeDraw: function (chart, easing) {
+            var ctx = chart.chart.ctx;
+            var chartArea = chart.chartArea;
+
+            ctx.save();
+            ctx.fillStyle = "#FFFFFF"
+            ctx.fillRect(0, 0, chart.width, chart.height);
+            ctx.restore();
+        }
+    });
+
     if (template_values["Stacked"] == "T") {
         var myChart = new Chart(ctx, {
             type: template_values["Type"],
