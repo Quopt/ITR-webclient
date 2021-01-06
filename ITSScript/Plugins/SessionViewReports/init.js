@@ -196,6 +196,12 @@
         this.showReport(this.currentReport.ID);
     };
 
+    ITSSessionViewReportsEditor.prototype.downloadReportAsDoc = function () {
+        tinyMCE.triggerSave();
+        Export2Doc(tinyMCE.get("SessionViewReportsReportContent").getContent(), this.currentReport.Description + '.doc' );
+    };
+
+
     ITSSessionViewReportsEditor.prototype.showOriginalReport = function () {
         reportText = this.currentReport.generateTestReport(this.currentSession, this.currentSessionTest, false);
         tinyMCE.get("SessionViewReportsReportContent").setContent( reportText );
