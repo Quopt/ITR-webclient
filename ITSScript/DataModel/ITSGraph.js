@@ -45,12 +45,15 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
     var animationDuration = 2000;
     if (! animate) animationDuration = 0;
 
-    $('#'+id).width(template_values["Width"]).height(template_values["Height"]);
+    var Width = Number(template_values["Width"].replaceAll('px',''));
+    var Height = Number(template_values["Height"].replaceAll('px',''));
+
+    $('#'+id).width(Width).height(Height );
     $('<canvas>').attr({
         id: elementID
     }).css({
-        width: template_values["Width"],
-        height:  template_values["Height"]
+        width: Width  ,
+        height:  Height
     }).appendTo('#'+id);
     var canvas = document.getElementById(elementID);
     var ctx = canvas.getContext('2d');
@@ -140,6 +143,8 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
             ctx.fillStyle = "#FFFFFF"
             ctx.fillRect(0, 0, chart.width, chart.height);
             ctx.restore();
+            ctx.imageSmoothingQuality = "high";
+            ctx.imageSmoothingEnabled = true;
         }
     });
 
@@ -153,20 +158,20 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
             options: {
                 scales: {
                     xAxes: [{
-                        stacked: (template_values["Stacked"] == "T"),
+                        stacked: (String(template_values["Stacked"]) == "T"),
                         ticks: {
-                            display: (template_values["Show_x_axis_labels"] != "F")
+                            display: (String(template_values["Show_x_axis_labels"]) != "F")
                         }
                     }],
                     yAxes: [{
                         stacked: (template_values["Stacked"] == "T"),
                         ticks: {
-                            display: (template_values["Show_y_axis_labels"] != "F")
+                            display: (String(template_values["Show_y_axis_labels"]) != "F")
                         }
                     }]
                 },
                 legend: {
-                    display: (template_values["Show_legend"] == "T")
+                    display: (String(template_values["Show_legend"]) == "T")
                 }
             }
         });
@@ -181,16 +186,17 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
                 scales: {
                     xAxes: [{
                         ticks: {
-                            display: (template_values["Show_x_axis_labels"] != "F")
+                            display: (String(template_values["Show_x_axis_labels"]) != "F")
                         }
                     }],
                     yAxes: [{
                         ticks: {
-                            display: (template_values["Show_y_axis_labels"] != "F")
+                            display: (String(template_values["Show_y_axis_labels"]) != "F")
                         }
                     }]
-                },                legend: {
-                    display: (template_values["Show_legend"] == "T")
+                },
+                legend: {
+                    display: (String(template_values["Show_legend"]) == "T")
                 }
             }
         });
@@ -227,7 +233,7 @@ ITSGraph.prototype.generateGraphImage = function (textToScan, context) {
         }
         var myChart = this.showGraph(tempID, context, false);
         var url_base64 = document.getElementById('ITSGraph_canvas' + tempID).toDataURL('image/png');
-        var newSrc = '<img internal-blob style="background-color:white;" height="'+ this.Height +'" width="'+ this.Width + '" src="'+url_base64+'" alt="..." />' ;
+        var newSrc = '<img internal-blob style="background-color:white; height: '+this.Height+'; width: '+this.Width+';" height="'+ this.Height +'" width="'+ this.Width + '" src="'+url_base64+'" alt="..." />' ;
         var re = new RegExp(textToLookFor,"g");
         textToScan = textToScan.replace( re , newSrc);
         $("div").remove(tempID);
