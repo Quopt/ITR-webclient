@@ -198,7 +198,7 @@
 
     ITSSessionViewReportsEditor.prototype.downloadReportAsDoc = function () {
         tinyMCE.triggerSave();
-        Export2Doc(tinyMCE.get("SessionViewReportsReportContent").getContent(), this.currentReport.Description + '.doc' );
+        Export2Doc(tinyMCE.get("SessionViewReportsReportContent").getContent(), this.currentReport.Description );
     };
 
 

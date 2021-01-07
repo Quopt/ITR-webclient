@@ -1524,7 +1524,13 @@ function generateCurrencySelectList(currentCode, includeNA) {
 }
 
 function Export2Doc(htmlToExport, filename = ''){
-    var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+    var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title><style>"+
+        + '<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">'
+        + '<link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet" type="text/css">'
+        + '<link href="https://fonts.googleapis.com/css?family=Alegreya+Sans" rel="stylesheet" type="text/css">'
+        + '<link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet" type="text/css">'
+        + 'html,body {  font-size: 12pt; font-family: Alegreya Sans; } '
+        +"</style></head><body>";
     var postHtml = "</body></html>";
     var html = preHtml +
          htmlToExport.replaceAll('<!-- pagebreak -->','<br clear=all style="page-break-before: always" />') //<span style="page-break-before: always; clear:both;">&nbsp;</span>')
