@@ -627,6 +627,16 @@ ITSTest.prototype.getScaleVarsList = function (separator) {
     return result;
 };
 
+ITSTest.prototype.getScaleDescriptionsList = function (separator) {
+    if (!separator) separator = ",";
+    var result = "";
+    for (var i=0; i < this.scales.length; i++) {
+        result += this.scales[i].scaleDescription;
+        if (i < this.scales.length-1) result += separator;
+    }
+    return result;
+};
+
 ITSTest.prototype.getNormVarsList = function (separator) {
     if (!separator) separator = ",";
     var result = "";
