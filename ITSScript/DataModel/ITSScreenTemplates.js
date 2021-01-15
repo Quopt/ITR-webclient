@@ -140,6 +140,9 @@ function ITSScreenTemplate(parent, session) {
     this.currentlyLoading = false;
     this.detailsLoaded = false;
 
+    // is this a new template that has not been saved yet?
+    this.newTemplate = false;
+
     this.persistentProperties = ['ID', 'Description', 'Explanation', 'Remarks', 'TemplateVariables',
         'HTMLContent', 'HTMLContentPnP', 'HTMLContentSummary', 'get_value_snippet', 'set_value_snippet', 'TemplateType',
         'init_value_snippet', 'generator_snippet', 'generator_pnp_snippet', 'generator_summary_snippet', 'get_value_as_html_snippet',

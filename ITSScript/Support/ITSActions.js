@@ -175,6 +175,8 @@ ITSAction = function(session) {
                     // reporteditor (for report editor actions) note : reserved for future expansion
                     // report (for usage in a report) note : reserved for future expansion
     this.AsyncAction = false; // async actions will call back the executing object when their activity completes (either succesfull or not)
+
+    this.Indecnt = 0; // the amouunt of space to indent (for example 1 or -1) when showing the script
 };
 
 ITSAction.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID) {

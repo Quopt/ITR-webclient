@@ -50,13 +50,15 @@ ITSScreenTemplateEditor.prototype.show = function () {
         // try to find the tempID in the array and if found switch to editing that template
         for (var i=0; i< ITSInstance.screenTemplates.screenTemplates.length; i++ ) {
             if ( ITSInstance.screenTemplates.screenTemplates[i].ID == tempID ) {
-                if (!this.newTemplate) ITSInstance.screenTemplates.screenTemplates[i].resetDetailsLoaded();
+                if (!ITSInstance.screenTemplates.screenTemplates[i].newTemplate) {
+                    ITSInstance.screenTemplates.screenTemplates[i].resetDetailsLoaded();
+                }
                 this.selectTemplate(i);
-                found =true;
+                found=true;
                 break;
             }
         }
-        if (!found) { setTimeout (this.show.bind(this), 250); } // try again in 250 ms
+        if (!found) { setTimeout (this.show.bind(this), 500); } // try again
     }
     else {
         $('#AdminInterfaceScreenTemplateEdit').hide();
@@ -315,7 +317,8 @@ ITSScreenTemplateEditor.prototype.saveCurrentTemplate = function () {
     $('#AdminInterfaceScreenTemplate-saveIcon')[0].outerHTML = "<i id='AdminInterfaceScreenTemplate-saveIcon' class='fa fa-fw fa-life-ring fa-spin fa-lg'></i>";
     this.currentTemplate.saveToServer(function(){
         $('#AdminInterfaceScreenTemplate-saveIcon')[0].outerHTML = "<i id=\'AdminInterfaceScreenTemplate-saveIcon' class='fa fa-fw fa-thumbs-up'</i>";
-    }, function(errorText){
+        this.populateTemplates();
+    }.bind(this), function(errorText){
         $('#AdminInterfaceScreenTemplate-saveIcon')[0].outerHTML = "<i id='AdminInterfaceScreenTemplate-saveIcon' class='fa fa-fw fa-thumbs-up'></i>";
         ITSInstance.UIController.showDialog("ITSScreenTemplateEditorTemplateSaveError","Template details cannot be saved", "The template could not be saved. Please try again. Error details {0}",[ {btnCaption : "OK"} ], [ errorText ]);
     });
@@ -328,16 +331,14 @@ ITSScreenTemplateEditor.prototype.copyCurrentTemplate = function () {
     var newTemplate = ITSInstance.screenTemplates.newScreenTemplate();
     ITSJSONLoad(newTemplate, tempAsJson);
     // copy the values
-//    shallowCopy(tempAsJson, newTemplate);
-//    newTemplate.TemplateVariables = JSON.parse(newTemplate.TemplateVariables);
-///    newTemplate.afterLoad();
     newTemplate.detailsLoaded = true;
-    // reset the properties to a new template
+    // reset the properties for a new template
     newTemplate.ID = newGuid();
     newTemplate.Description = "Copy - " + newTemplate.Description;
+    newTemplate.newTemplate = true;
+    newTemplate.dbsource = this.currentTemplate.dbsource;
     // show in UI
     this.selectTemplate(ITSInstance.screenTemplates.screenTemplates.length - 1);
-    this.populateTemplates();
     this.redirectToTemplateIndex(ITSInstance.screenTemplates.screenTemplates.length - 1);
     // notify user
     ITSInstance.UIController.showDialog("ITSScreenTemplateEditorCopyTemplate","Template copied", "The template has been copied and can now be edited. It will not be stored until you choose to save it.",[ {btnCaption : "OK"} ]);
