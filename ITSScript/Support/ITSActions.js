@@ -100,7 +100,10 @@ ITSActionList.prototype.unregisterAction = function (actionName) {
 
 ITSActionList.prototype.translateActionDescription = function () {
     for (var i=0; i < this.AvailableActions.length; i++) {
-        this.AvailableActions[i].Description = this.ITSSession.translator.getTranslatedString("ITSActions.js", this.AvailableActions[i].Name + ".Description", this.AvailableActions[i].Description);
+        if (typeof this.AvailableActions[i].OriginalDescription == "undefined") {
+            this.AvailableActions[i].OriginalDescription = this.AvailableActions[i].Description;
+        }
+        this.AvailableActions[i].Description = this.ITSSession.translator.getTranslatedString("ITSActions.js", this.AvailableActions[i].Name + ".Description", this.AvailableActions[i].OriginalDescription);
     }
 };
 
