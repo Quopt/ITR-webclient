@@ -881,7 +881,7 @@ ITSTestTemplateEditor.prototype.moveScreenComponentDown = function (screenCompon
 };
 
 ITSTestTemplateEditor.prototype.copyScreenComponent = function (screenComponentId) {
-    if (screenComponentId < (this.currentScreen.screenComponents.length - 1)) {
+    if (screenComponentId < (this.currentScreen.screenComponents.length )) {
         this.currentScreen.copyScreenComponentToNewScreenComponent(screenComponentId,screenComponentId);
     }
     this.setCurrentScreenIndex(this.currentScreenIndex, true);
