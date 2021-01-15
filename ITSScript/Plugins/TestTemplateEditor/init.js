@@ -36,7 +36,7 @@ function ITSTestTemplateEditor(session) {
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenComponentUp(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-up\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenComponentDown(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-down\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.copyScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-copy\"></i></button>\n" +
-        "<div notranslate id=\"AdminInterfaceTestTemplateEditorScreenRow\"><input style=\"width:200px\"  type=\"text\" id=\"TestTemplateEditorSCREENCOMPONENT%%NR%%\" onkeyup=\"ITSInstance.newITSTestEditorController.editScreenComponentDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" />\n" +
+        "<div notranslate id=\"AdminInterfaceTestTemplateEditorScreenRow\"><input style=\"width:200px\"  type=\"text\" id=\"TestTemplateEditorSCREENCOMPONENT%%NR%%\" onfocusout=\"ITSInstance.newITSTestEditorController.editScreenComponentDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" />\n" +
         "<button type=\"button\" class=\"btn-xs btn-warning\" onclick=\"ITSInstance.newITSTestEditorController.deleteScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-trash\"></i></button>\n" +
         "<span>" +
         "<input type=\"checkbox\" notranslate id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_Privacy%%NR%%\" %%PRIVACY%% onchange=\"ITSInstance.newITSTestEditorController.changeScreenComponentPrivacy(%%NR%%, this.checked);\">\n" +

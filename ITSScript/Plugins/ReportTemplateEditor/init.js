@@ -407,6 +407,7 @@
         ITSReportTemplateEditor.prototype.saveCurrentReport = function () {
             $('#ReportTemplateInterfaceEditTabReportWriter_saveIcon')[0].outerHTML = "<i id='ReportTemplateInterfaceEditTabReportWriter_saveIcon' class='fa fa-fw fa-life-ring fa-spin fa-lg'></i>";
             this.currentReport.TestID = this.TestID;
+            DataBinderFrom('ReportTemplateInterfaceEditTabReportWriter', ITSInstance.ReportTemplateSessionController.currentReport );
             this.currentReport.saveToServer(this.saveCurrentReportSuccess.bind(this), this.saveCurrentReportError.bind(this));
         };
         ITSReportTemplateEditor.prototype.saveCurrentReportSuccess = function () {
