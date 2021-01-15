@@ -776,6 +776,7 @@ ITSTranslator.prototype.switchLanguage = function (langCode, postLoadFunction) {
         }
     } else {
         langCode = langCode.toLowerCase();
+        ITSInstance.MessageBus.publishMessage("Translations.LanguageChanged",this.currentTranslatedLanguage);
         if (langCode != "en") {
             // check if the language code is in the available translations
             this.loadingLanguage = true;

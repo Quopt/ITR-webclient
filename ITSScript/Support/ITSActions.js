@@ -36,6 +36,7 @@ ITSActionList = function(session) {
     this.registerAction(new ITSActionShowScrollbars(session));
 
     session.MessageBus.subscribe("Translations.LanguageSwitched", this.translateActionDescription.bind(this));
+    session.MessageBus.subscribe("Translations.LanguageChanged", this.translateActionDescription.bind(this));
 };
 
 ITSActionList.prototype.getActionsForContext = function (context) {
