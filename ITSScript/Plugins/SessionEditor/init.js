@@ -768,7 +768,7 @@
 
     ITSSessionEditor.prototype.archiveSession= function () {
         this.currentSession.Active = false;
-        if (this.currentSession.Status < 30) this.currentSession.Status = 30;
+        //if (this.currentSession.Status < 30) this.currentSession.Status = 30;
         $("#AdminInterfaceEditSessionEditArchiveTestIcon" )[0].outerHTML = '<i id="AdminInterfaceEditSessionEditArchiveTestIcon" class="fa fa-fw fa-life-ring fa-spin "></i>';
         this.currentSession.saveToServer(this.archiveSessionOK.bind(this),this.archiveSessionError.bind(this));
         this.toggleButtons();
