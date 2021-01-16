@@ -1566,3 +1566,10 @@ function Export2Doc(htmlToExport, filename = ''){
 
     document.body.removeChild(downloadLink);
 }
+
+// font awesome support
+function loadFontAwesomeJavascript() {
+    onDemandScript("fontawesome/js/all.js", function () {
+        window.FontAwesomeConfig.showMissingIcons = false;
+    } );
+}
