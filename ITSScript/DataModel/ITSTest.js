@@ -1457,9 +1457,7 @@ ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, P
     $('#'+hostDiv).css({
         "position" : "absolute",
         "left" : window.innerWidth*2,
-        "top" : window.innerHeight*2,
-        "display" : "none",
-        "visibility": "hidden"
+        "top" : window.innerHeight*2
     }).addClass('accelerated');
 
     for (var i=0; i < this.screens.length; i ++) {
@@ -1483,9 +1481,7 @@ ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, P
     $('#'+hostDiv).css({
         "position" : "",
         "left" : "",
-        "top" : "",
-        "display" : "",
-        "visibility": ""
+        "top" : ""
     });
 
     return preloadCount;
