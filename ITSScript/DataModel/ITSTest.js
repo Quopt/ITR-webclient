@@ -1454,6 +1454,14 @@ ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, P
     if (!additionalText) additionalText = "";
     var preloadCount = 0 ;
 
+    $('#'+hostDiv).css({
+        "position" : "absolute",
+        "left" : window.innerWidth*2,
+        "top" : window.innerHeight*2,
+        "display" : "none",
+        "visibility": "hidden"
+    });
+
     for (var i=0; i < this.screens.length; i ++) {
         if (PnP) {
             // execute the screen pre script for PnP view initialisation
@@ -1472,6 +1480,13 @@ ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, P
         }
     }
 
+    $('#'+hostDiv).css({
+        "position" : "",
+        "left" : "",
+        "top" : "",
+        "display" : "",
+        "visibility": ""
+    });
     return preloadCount;
 };
 

@@ -41,11 +41,11 @@
     <link href="css/bootstrap4-toggle.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="accelerated">
 <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top" id="NavbarsAdmin"
      style="left:48px;background-color: #331a00;display: none;max-height:49px;min-height:49px;">
     <a class="navbar-brand fixed-top">
-        <i id="menuIcon" style="position:fixed; top:5px; left:5px; z-index:99999;" class="fa fa-bars fa-2x" onclick="if ($('#NavBarsAdminSidebar:visible').length > 0) {$('#NavBarsAdminSidebar').hide();} else {$('#NavBarsAdminSidebar').show();}"></i>
+        <i id="menuIcon" style="position:fixed; top:5px; left:5px; z-index:99999;" class="fa fa-bars fa-2x" onclick="if ($('#NavBarsAdminSidebar:visible').length > 0) {$('#NavBarsAdminSidebar').hide();} else {$('#NavBarsAdminSidebar').show(); window.scrollTo(0, 0);}"></i>
     </a>
     <div class="form-inline col-6" id="NavbarsAdminLoginBlock" style="width:80%;color:white;vertical-align: bottom;"><label
             id="NavbarsLabelHeading" NoTranslate><label
