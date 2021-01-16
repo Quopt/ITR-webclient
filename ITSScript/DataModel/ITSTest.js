@@ -1460,7 +1460,7 @@ ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, P
         "top" : window.innerHeight*2,
         "display" : "none",
         "visibility": "hidden"
-    });
+    }).addClass('accelerated');
 
     for (var i=0; i < this.screens.length; i ++) {
         if (PnP) {
