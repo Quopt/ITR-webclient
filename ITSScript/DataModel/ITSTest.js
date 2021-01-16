@@ -1487,6 +1487,7 @@ ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, P
         "display" : "",
         "visibility": ""
     });
+
     return preloadCount;
 };
 
