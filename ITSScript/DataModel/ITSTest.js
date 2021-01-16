@@ -1462,8 +1462,6 @@ ITSTest.prototype.generateQuestionOverview = function (hostDiv, resultsToLoad, P
         "visibility": "hidden"
     }).addClass('accelerated');
 
-    unloadFontAwesome();
-
     for (var i=0; i < this.screens.length; i ++) {
         if (PnP) {
             // execute the screen pre script for PnP view initialisation
