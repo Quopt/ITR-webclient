@@ -37,6 +37,7 @@
                         ITSInstance.portletCreditManagement.creditUsagesLoaded,
                         ITSInstance.portletCreditManagement.creditUsagesError);
                     ITSInstance.portletCreditManagement.currentCompanyLoaded();
+                    ITSInstance.portletCreditManagement.checkCreditWarning();
                 }
             },
             hide: function () {
@@ -125,6 +126,36 @@
                     $('#AdminInterfaceCreditManagementViewButton').show();
                     if (ITSInstance.users.currentUser.MayOrderCredits) $('#AdminInterfaceCreditManagementOrderButton').show();
                     ITSInstance.MessageBus.subscribe("CurrentCompany.Refreshed", ITSInstance.portletCreditManagement.init_after_load);
+
+                }
+            },
+            checkCreditWarning : function () {
+                if (typeof ITSInstance.portletCreditManagement.lastCreditWarningCheck == "undefined") {
+                    ITSInstance.portletCreditManagement.lastCreditWarningCheck = new Date('2000-01-01').valueOf();
+                }
+
+                var currentDateTime = new Date().valueOf();
+
+                if ( ITSInstance.portletCreditManagement.lastCreditWarningCheck < currentDateTime) {
+                    setTimeout(ITSInstance.portletCreditManagement.checkCreditWarning, 2000);
+                    ITSInstance.portletCreditManagement.lastCreditWarningCheck = currentDateTime + 1999;
+                }
+
+                if (ITSInstance.companies.currentCompany) {
+                    if (ITSInstance.companies.currentCompany.CurrentCreditLevel < ITSInstance.companies.currentCompany.LowCreditWarningLevel) {
+                        $('#AdminInterfaceCreditManagementLowCreditsWarning').show();
+                        if ($('#AdminInterfaceCreditManagementLowCreditsWarning').hasClass('alert-danger')){
+                            $('#AdminInterfaceCreditManagementLowCreditsWarning').removeClass('alert-danger');
+                            $('#AdminInterfaceCreditManagementLowCreditsWarning').addClass('alert-info');
+                            $('#AdminInterfaceCreditManagementLowCreditsWarning').removeClass('alert-link');
+                        } else {
+                            $('#AdminInterfaceCreditManagementLowCreditsWarning').removeClass('alert-info');
+                            $('#AdminInterfaceCreditManagementLowCreditsWarning').addClass('alert-danger');
+                            $('#AdminInterfaceCreditManagementLowCreditsWarning').addClass('alert-link');
+                        }
+                    } else {
+                        $('#AdminInterfaceCreditManagementLowCreditsWarning').hide();
+                    }
                 }
             }
         }
