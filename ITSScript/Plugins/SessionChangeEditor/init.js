@@ -113,6 +113,15 @@ ITSChangeExistingSessionEditor.prototype.loadTestAndBatteriesList = function() {
             if (!$('#AdminInterfaceChangeSessionTestsIncludeOtherLanguages').is(':checked')) {
                 includeTest = includeTest && (currentValue.supportsLanguage(ITSLanguage));
             }
+            if (getUrlParameterValue('SessionType')) {
+                var sessionType = Number(getUrlParameterValue('SessionType'));
+                if ((sessionType >= 0) && (sessionType < 1000)) {
+                    includeTest = includeTest && currentValue.TestType == 0 ;
+                }
+                if ((sessionType >= 1000) && (sessionType < 2000)) {
+                    includeTest = includeTest && currentValue.TestType == 1000 ;
+                }
+            }
             if (includeTest) {
                 this.availableTestsAndBatteries.push({
                     "TestID": currentValue.ID,

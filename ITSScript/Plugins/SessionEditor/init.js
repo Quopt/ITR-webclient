@@ -826,7 +826,12 @@
 
     ITSSessionEditor.prototype.changeSession = function () {
         ITSInstance.changeSessionController.currentSession = this.currentSession;
-        ITSRedirectPath('ChangeSession&SessionID=' + this.currentSession.ID);
+        if (getUrlParameterValue('SessionType')) {
+            ITSRedirectPath('ChangeSession&SessionID=' + this.currentSession.ID + "&SessionType=" +getUrlParameterValue('SessionType'));
+        }
+        else {
+            ITSRedirectPath('ChangeSession&SessionID=' + this.currentSession.ID);
+        }
     };
 
     ITSSessionEditor.prototype.startTeachingSession = function () {

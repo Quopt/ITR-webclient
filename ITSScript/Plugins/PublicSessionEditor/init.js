@@ -125,6 +125,15 @@ ITSPublicSessionEditor.prototype.loadTestAndBatteriesList = function() {
             if (!$('#AdminInterfacePublicSessionTestsIncludeOtherLanguages').is(':checked')) {
                 includeTest = includeTest && (currentValue.supportsLanguage(ITSLanguage));
             }
+            if (getUrlParameterValue('SessionType')) {
+                var sessionType = Number(getUrlParameterValue('SessionType'));
+                if ((sessionType >= 0) && (sessionType < 1000)) {
+                    includeTest = includeTest && currentValue.TestType == 0 ;
+                }
+                if ((sessionType >= 1000) && (sessionType < 2000)) {
+                    includeTest = includeTest && currentValue.TestType == 1000 ;
+                }
+            }
             if (includeTest) {
                 this.availableTestsAndBatteries.push({
                     "TestID": currentValue.ID,
@@ -404,6 +413,10 @@ ITSPublicSessionEditor.prototype.saveCurrentSession = function ( onSuccessCallba
     var ValidationMessage = "";
     // check if all information is present to save the session
     DataBinderFrom("AdminInterfacePublicSession", this.currentSession);
+
+    if (getUrlParameterValue('SessionType')) {
+        this.currentSession.SessionType = Number(getUrlParameterValue('SessionType'));
+    }
 
     if (this.currentSession.Description == "") {
         ValidationMessage = ITSInstance.translator.getTranslatedString('PublicSessionEditor','DescriptionMissing','Please enter a description for this session.')

@@ -37,6 +37,8 @@
             if (ITSInstance.companies.currentCompany.PluginData.Preferences.EnablePublicSessions) {
                 ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', '#GroupSessionListerController.PublicSessionMenu', ITSInstance.translator.translate("#GroupSessionListerController.PublicSessionReadyMenu", "Public sessions"), "fa-user-plus", "ITSRedirectPath(\'GroupSessionLister&SessionType=200\');");
                 ITSInstance.UIController.registerMenuItem('#submenuSessionsLI', "#GroupSessionListerController.PublicSessionArchivedMenu", ITSInstance.translator.translate("#PublicSessionListerController.PublicSessionArchivedMenu", "Public sessions archive"), "fa-archive", "ITSRedirectPath(\'GroupSessionLister&SessionType=200&Status=Archived\');");
+                ITSInstance.UIController.registerMenuItem('#submenuCoursesLI', '#GroupSessionListerController.PublicCourseMenu', ITSInstance.translator.translate("#GroupSessionListerController.PublicCourseMenu", "Public courses"), "fa-user-friends", "ITSRedirectPath(\'GroupSessionLister&SessionType=1200\');");
+                ITSInstance.UIController.registerMenuItem('#submenuCoursesLI', "#GroupSessionListerController.PublicCourseArchivedMenu", ITSInstance.translator.translate("#GroupSessionListerController.PublicCourseArchivedMenu", "Public courses archive"), "fa-archive", "ITSRedirectPath(\'GroupSessionLister&SessionType=1200&Status=Archived\');");
             }
         }, true);
 
