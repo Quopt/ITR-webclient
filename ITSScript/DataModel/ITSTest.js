@@ -661,21 +661,35 @@ ITSTest.prototype.makeTestScreenVarNamesUnique = function () {
     }
 };
 
-ITSTest.prototype.expandLayoutsFromPreviousScreens = function () {
+ITSTest.prototype.expandLayoutsFromPreviousScreens = function (stopScreen) {
+    if (typeof stopScreen == "undefined") stopScreen = this.screens.length-1;
+    for (var i = 1; i <= stopScreen ; i++) {
+        this.expandLayoutsFromPreviousScreensForSpecificScreen(i);
+    }
+};
+
+ITSTest.prototype.removePreviousLayoutElements= function (stopScreen) {
+    if (typeof stopScreen == "undefined") stopScreen = this.screens.length;
+    for (var i = 1; i < stopScreen ; i++) {
+        this.screens[i].removePreviousLayoutElements();
+    }
+};
+
+ITSTest.prototype.expandLayoutsFromPreviousScreensForSpecificScreen = function (i) {
     var templateIndex = 0;
-    for (var i = 1; i < this.screens.length ; i++) {
-        if (this.screens[i].UseLayoutsFromPreviousScreen) {
-            if (!this.screens[i].LayoutsFromPreviousScreensExpanded) {
-                // copy the layouts from the previous screen
-                for (var layoutcount = this.screens[i-1].screenComponents.length-1; layoutcount >= 0; layoutcount--) {
-                    // locate the screen template using the template id
-                    templateIndex = ITSInstance.screenTemplates.findTemplateById (ITSInstance.screenTemplates.screenTemplates,  this.screens[i-1].screenComponents[layoutcount].templateID);
-                    if ((templateIndex>=0) && (ITSInstance.screenTemplates.screenTemplates[templateIndex].TemplateType == 10)) {
-                        this.screens[i].screenComponents.unshift(this.screens[i-1].screenComponents[layoutcount].clone());
-                    }
+
+    if (this.screens[i].UseLayoutsFromPreviousScreen) {
+        if (!this.screens[i].LayoutsFromPreviousScreensExpanded) {
+            // copy the layouts from the previous screen
+            for (var layoutcount = this.screens[i-1].screenComponents.length-1; layoutcount >= 0; layoutcount--) {
+                // locate the screen template using the template id
+                templateIndex = ITSInstance.screenTemplates.findTemplateById (ITSInstance.screenTemplates.screenTemplates,  this.screens[i-1].screenComponents[layoutcount].templateID);
+                if ((templateIndex>=0) && (ITSInstance.screenTemplates.screenTemplates[templateIndex].TemplateType == 10)) {
+                    this.screens[i].screenComponents.unshift(this.screens[i-1].screenComponents[layoutcount].clone());
+                    this.screens[i].screenComponents[0].insertedElementByPreviousLayout = true;
                 }
-                this.screens[i].LayoutsFromPreviousScreensExpanded = true;
             }
+            this.screens[i].LayoutsFromPreviousScreensExpanded = true;
         }
     }
 };
@@ -1237,6 +1251,7 @@ function ITSTestScreen(par, session) {
     this.UseLayoutsFromPreviousScreen = false;
 
     this.LayoutsFromPreviousScreensExpanded = false;
+    this.insertedElementByPreviousLayout = false; // true if this element was 'artificially' inserted as a layout element from a previous screen layout
 
     this.persistentProperties = ["id", "varName", "explanation", "screenGroup", "show", "remarks", "beforeScreenScript",
         "afterScreenScript", "screenComponents" , "screenDynamics", "UseLayoutsFromPreviousScreen"];
@@ -1288,6 +1303,27 @@ ITSTestScreen.prototype.generatePlaceholderOverviewFor = function(indexToEnd, sc
         placeholdersfound = placeholdersfound.concat(extraplaceholders);
     }
     return placeholdersfound;
+};
+
+ITSTestScreen.prototype.insertPreviousLayoutElements = function() {
+    // add the placeholders from a previous screen if required
+    if (this.UseLayoutsFromPreviousScreen) {
+        // now first find the right screen
+        var i = this.myParent.findScreenIndexByID(this.id);
+
+        this.myParent.expandLayoutsFromPreviousScreens(i);
+    }
+};
+
+ITSTestScreen.prototype.removePreviousLayoutElements = function() {
+    i = this.screenComponents.length -1;
+    while (i >= 0) {
+        if (this.screenComponents[i].insertedElementByPreviousLayout) {
+            this.screenComponents.splice(i,1);
+        }
+        i--;
+    }
+    this.LayoutsFromPreviousScreensExpanded = false;
 };
 
 ITSTestScreen.prototype.getVisibilityStatusAsString = function() {
@@ -1775,6 +1811,10 @@ ITSTestScreen.prototype.generateScreenInDiv = function (divId, context, divPostf
     if (!PnP) { PnP = false; }
     if (!preferHTML) preferHTML = false;
     var preloadCount = 0;
+    var stylePrefix = "";
+    var ownComponentCounter=0;
+    var previousTemplateType=0;
+    var templateOffsetCounter=0;
 
     for (var i = 0; i < this.screenComponents.length; i++) {
         if (this.screenComponents[i].show) {
@@ -1797,6 +1837,18 @@ ITSTestScreen.prototype.generateScreenInDiv = function (divId, context, divPostf
             var template = this.ITSSession.screenTemplates.findTemplateById(this.ITSSession.screenTemplates.screenTemplates, this.screenComponents[i].templateID);
             if (template >= 0) {
                 myTemplate = this.ITSSession.screenTemplates.screenTemplates[template];
+                // generate an edit button if needed
+                if ((! this.screenComponents[i].insertedElementByPreviousLayout) && (context == 'TE')) {
+                    stylePrefix = "";
+                    if (myTemplate.TemplateType == 10) {
+                        stylePrefix = "left:-16px; color:grey; top:"+ (templateOffsetCounter*16) + "px;";
+                    }
+                    $('#' + newDivID).append('<i class="fa fa-edit" style="position:absolute; pointer-events:auto; z-index:1001; '+stylePrefix+'" onclick="ITSInstance.newITSTestEditorController.focusOnScreenComponent('+ownComponentCounter+');"></i>');
+                    ownComponentCounter++;
+                    previousTemplateType=myTemplate.TemplateType;
+                    if (previousTemplateType==10) { templateOffsetCounter++; } else { templateOffsetCounter=0; }
+                }
+                // generate the control from the template
                 var ComponentResults = {};
                 ComponentResults.Value = '';
                 try {

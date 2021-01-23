@@ -205,8 +205,14 @@
         <div id="AdminInterfaceTestTemplateEditorScreenContents" NoTranslate class="col-6 mx-0 px-0">
             <div class="row mx-0 px-0 col-12 bg-dark text-white well">
                 <label id="AdminInterfaceTestTemplateEditorScreenContentsHeaderText">Screen contents</label>
+                <div class="text-success" style="margin: auto 0 auto auto;">
+                    <i class="fa fa-list" onclick="ITSInstance.newITSTestEditorController.enableViewList();"></i>&nbsp;
+                    <label id="AdminInterfaceTestTemplateEditorScreenContentsHeaderListIcon" onclick="ITSInstance.newITSTestEditorController.enableViewList();">List</label>&nbsp;
+                    <i class="fa fa-eye" onclick="ITSInstance.newITSTestEditorController.enableViewPreview();"></i>&nbsp;
+                    <label id="AdminInterfaceTestTemplateEditorScreenContentsHeaderPreviewIcon" onclick="ITSInstance.newITSTestEditorController.enableViewPreview();">Preview</label>&nbsp;</div>
             </div>
             <div NoTranslate id="AdminInterfaceTestTemplateEditorScreenContentsHeader" class="row mx-0 px-0 col-12"></div>
+            <div NoTranslate id="AdminInterfaceTestTemplateEditorScreenContentsHeaderPreview" class="row mx-0 px-0 col-12"></div>
         </div>
         <div class="col-4 mx-0 px-0 bg-light" id="AdminInterfaceTestTemplateEditorTabScreensColScreenItemSettings">
             <div class="row mx-0 px-0 col-12 bg-dark text-white well">

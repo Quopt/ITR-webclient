@@ -535,6 +535,14 @@ ITSTestTemplateEditor.prototype.setCurrentScreenIndex = function (screenNum, tes
     $('#AdminInterfaceTestTemplateEditorScreenContentButtons').hide();
     $('#AdminInterfaceTestTemplateEditorScreenDynamicsDiv').hide();
 
+    $('#AdminInterfaceTestTemplateEditorScreenContentsHeader').hide();
+    $('#AdminInterfaceTestTemplateEditorScreenContentsHeaderPreview').hide();
+    if (this.previewEnabled) {
+        $('#AdminInterfaceTestTemplateEditorScreenContentsHeaderPreview').show();
+    } else {
+        $('#AdminInterfaceTestTemplateEditorScreenContentsHeader').show();
+    }
+
     if ((screenNum >= 0) && (screenNum < this.currentTest.screens.length)) {
         $('#AdminInterfaceTestTemplateEditorScreenContentButtons').show();
         if (this.currentTest.PluginData.testHasScreenDynamics) $('#AdminInterfaceTestTemplateEditorScreenDynamicsDiv').show();
@@ -542,6 +550,7 @@ ITSTestTemplateEditor.prototype.setCurrentScreenIndex = function (screenNum, tes
         this.currentScreenIndex = screenNum;
         this.currentScreen = this.currentTest.screens[screenNum];
         $('#AdminInterfaceTestTemplateEditorScreenContentsHeader').empty();
+        $('#AdminInterfaceTestTemplateEditorScreenContentsHeaderPreview').empty();
         tinyMCE.get("AdminInterfaceTestTemplateEditorScreenExplanation").setContent(this.currentScreen.remarks);
         $('#AdminInterfaceTestTemplateEditor-uselayoutfromprevious').prop('checked', this.currentScreen.UseLayoutsFromPreviousScreen );
         var newScreenComponent = "";
@@ -576,6 +585,10 @@ ITSTestTemplateEditor.prototype.setCurrentScreenIndex = function (screenNum, tes
         }
         // load dynamics
         this.fillScreenDynamicsTable();
+        // generate preview
+        this.currentTest.expandLayoutsFromPreviousScreens(this.currentScreenIndex);
+        this.currentScreen.generateScreenInDiv('AdminInterfaceTestTemplateEditorScreenContentsHeaderPreview', 'TE', '_temp');
+        this.currentTest.removePreviousLayoutElements();
     }
 };
 
@@ -1896,6 +1909,16 @@ ITSTestTemplateEditor.prototype.copyFromTestScreen = function () {
     this.loadScreensListEmpty();
     this.currentTest.makeTestScreenVarNamesUnique();
     setTimeout(this.fillScreenTab.bind(this),250);
+};
+
+ITSTestTemplateEditor.prototype.enableViewPreview = function () {
+    this.previewEnabled = true;
+    ITSInstance.newITSTestEditorController.focusOnScreen(ITSInstance.newITSTestEditorController.currentScreenIndex);
+};
+
+ITSTestTemplateEditor.prototype.enableViewList = function () {
+    this.previewEnabled = false;
+    ITSInstance.newITSTestEditorController.focusOnScreen(ITSInstance.newITSTestEditorController.currentScreenIndex);
 };
 
 (function () { // iife to prevent pollution of the global memspace
