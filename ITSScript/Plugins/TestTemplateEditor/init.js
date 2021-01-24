@@ -537,8 +537,10 @@ ITSTestTemplateEditor.prototype.setCurrentScreenIndex = function (screenNum, tes
 
     $('#AdminInterfaceTestTemplateEditorScreenContentsHeader').hide();
     $('#AdminInterfaceTestTemplateEditorScreenContentsHeaderPreview').hide();
+    $('#AdminInterfaceTestTemplateEditorScreenVarNamePreview').hide();
     if (this.previewEnabled) {
         $('#AdminInterfaceTestTemplateEditorScreenContentsHeaderPreview').show();
+        $('#AdminInterfaceTestTemplateEditorScreenVarNamePreview').show();
     } else {
         $('#AdminInterfaceTestTemplateEditorScreenContentsHeader').show();
     }
@@ -551,7 +553,8 @@ ITSTestTemplateEditor.prototype.setCurrentScreenIndex = function (screenNum, tes
         this.currentScreen = this.currentTest.screens[screenNum];
         $('#AdminInterfaceTestTemplateEditorScreenContentsHeader').empty();
         $('#AdminInterfaceTestTemplateEditorScreenContentsHeaderPreview').empty();
-        tinyMCE.get("AdminInterfaceTestTemplateEditorScreenExplanation").setContent(this.currentScreen.remarks);
+        $('#AdminInterfaceTestTemplateEditorScreenVarNamePreview').empty();
+        setTimeout( tinyMCE.get("AdminInterfaceTestTemplateEditorScreenExplanation").setContent.bind(this,this.currentScreen.remarks), 500);
         $('#AdminInterfaceTestTemplateEditor-uselayoutfromprevious').prop('checked', this.currentScreen.UseLayoutsFromPreviousScreen );
         var newScreenComponent = "";
         var template = {};
@@ -567,9 +570,10 @@ ITSTestTemplateEditor.prototype.setCurrentScreenIndex = function (screenNum, tes
             var newDivID = "ITSTestTemplateEditorQuestionComponent" + i;
             newScreenComponent = newScreenComponent.replace(this.screenComponentListElementPreviewID, '<div class="col-12 row" NoTranslate id="' + newDivID + '"></div>');
             newScreenComponent = newScreenComponent.replace(this.screenComponentListElementRowID, x.varComponentName);
-            newScreenComponent = newScreenComponent.replace(this.screenComponentListElementPrivacyStatus, x.excludeFromAnonimisedTestResults ? "checked" : "")
-            newScreenComponent = newScreenComponent.replace(this.screenComponentListElementSessionStoreStatus, x.storeAtSessionLevel ? "checked" : "")
-            newScreenComponent = newScreenComponent.replace(this.screenComponentListElementSessionShowStatus, x.show ? "checked" : "")
+            newScreenComponent = newScreenComponent.replace(this.screenComponentListElementPrivacyStatus, x.excludeFromAnonimisedTestResults ? "checked" : "");
+            newScreenComponent = newScreenComponent.replace(this.screenComponentListElementSessionStoreStatus, x.storeAtSessionLevel ? "checked" : "");
+            newScreenComponent = newScreenComponent.replace(this.screenComponentListElementSessionShowStatus, x.show ? "checked" : "");
+            this.currentScreen.screenComponents[i].tempTestEditorCode = newScreenComponent;
 
             template = ITSInstance.screenTemplates.findTemplateById(ITSInstance.screenTemplates.screenTemplates, x.templateID);
             if (template >= 0) {
@@ -601,6 +605,11 @@ ITSTestTemplateEditor.prototype.generateCurrentScreenIndexTemplateVariables = fu
         }
     }
     if ((screenComponentNum >= 0) && (screenComponentNum < this.currentScreen.screenComponents.length)) {
+        if ( (this.currentScreenComponentIndex != screenComponentNum) || ($('#AdminInterfaceTestTemplateEditorScreenVarNamePreview').html() == "")) {
+            $('#AdminInterfaceTestTemplateEditorScreenVarNamePreview').empty();
+            $('#AdminInterfaceTestTemplateEditorScreenVarNamePreview').append(this.currentScreen.screenComponents[screenComponentNum].tempTestEditorCode);
+        }
+
         this.currentScreenComponentIndex = screenComponentNum;
         this.currentScreenComponent = this.currentScreen.screenComponents[screenComponentNum];
         var placeholderlist = this.currentScreen.generatePlaceholderOverviewFor(screenComponentNum, this.currentScreen.screenComponents);
