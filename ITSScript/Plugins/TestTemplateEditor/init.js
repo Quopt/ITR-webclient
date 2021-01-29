@@ -576,6 +576,7 @@ ITSTestTemplateEditor.prototype.setCurrentScreenIndex = function (screenNum, tes
             this.currentScreen.screenComponents[i].tempTestEditorCode = newScreenComponent;
 
             template = ITSInstance.screenTemplates.findTemplateById(ITSInstance.screenTemplates.screenTemplates, x.templateID);
+            template = ITSInstance.screenTemplates.findTemplateById(ITSInstance.screenTemplates.screenTemplates, x.templateID);
             if (template >= 0) {
                 template = ITSInstance.screenTemplates.screenTemplates[template];
                 // generate_test_taking_view div, add_to_div, id, templatevalues, pnp_view

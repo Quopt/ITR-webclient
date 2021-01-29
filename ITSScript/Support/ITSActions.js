@@ -61,7 +61,7 @@ ITSActionList.prototype.getActionsForContextAsCSV = function (context) {
         if (typeof this.AvailableActions[i].ContextArray == "undefined") {
             this.AvailableActions[i].ContextArray = this.AvailableActions[i].Context.split(',');
         }
-        found = this.AvailableActions[i].ContextArray.indexOf(context) > -1;
+        found = (this.AvailableActions[i].ContextArray.indexOf(context) > -1) || (ITSInstance.actions.AvailableActions[i].ContextArray[0] == "");
         if (found) foundActions += (foundActions.length == 0 ? "" : ",") + this.AvailableActions[i].Name + "|" + this.AvailableActions[i].Description.replace(/,/g, ';');
     }
     return foundActions;
@@ -168,19 +168,24 @@ ITSActionList.prototype.executeScriptInTestTakingStep = function() {
 };
 
 ITSAction = function(session) {
+    //console.log('ITSAction init', this,session);
+    //console.trace();
     this.parent = {};
     this.session = session;
 
+    this.Active = true; // true if this is an active action. False for actions that are only present for legacy purposes.
     this.Name = ""; // name of the action
     this.Description = ""; // description for this action
     this.HelpText = ""; // help text for this action (HTML OK)
-    this.Context = "test"; // a CSV seperated list of contexts, values are : test (for usage in testing),
+    this.Context = ""; // a CSV seperated list of contexts, values are : test (for usage in testing),
                     // testeditor (for test editor actions) note : reserved for future expansion
                     // reporteditor (for report editor actions) note : reserved for future expansion
                     // report (for usage in a report) note : reserved for future expansion
+                    // leave empty for all contexts
     this.AsyncAction = false; // async actions will call back the executing object when their activity completes (either succesfull or not)
 
-    this.Indecnt = 0; // the amouunt of space to indent (for example 1 or -1) when showing the script
+    this.preIndent = 0; // the amount of space to indent (for example 1 or -1) when showing the script action in the script editor
+    this.postIndent = 0; // the amount of space to indent (for example 1 or -1) when showing the script action in the script editor
 };
 
 ITSAction.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID) {

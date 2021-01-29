@@ -39,13 +39,16 @@ function ITSCompany (uParent) {
     this.VATPercentage = "21";
     this.LicenseStartDate = new Date();
     this.LicenseEndDate = new Date(2100,1,1);
-    this.InvoiceCurrency = "Euro";
+    this.InvoiceCurrency = "";
     this.AdministrativeID = "";
     this.MFAEnabled = false;
     this.CreditUsagesPerMonth = [];
     this.PluginData = {};
     this.PluginData.persistentProperties = "*ALL*";
     this.PluginData.ForbiddenPaths ='';
+    this.PluginData.Preferences = {};
+    this.PluginData.Preferences.SkipResearchQuestions = false;
+    this.PluginData.Preferences.EnablePublicSessions = false;
     this.PricePerCreditUnit = 0.1;
 
     this.persistentProperties = [

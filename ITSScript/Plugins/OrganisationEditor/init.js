@@ -78,14 +78,11 @@
             $('#OrganisationEditorInterfaceInvoiceCurrency').empty();
             $('#OrganisationEditorInterfaceInvoiceCurrency').append(generateCurrencySelectList('',true) );
 
-            if ((this.currentOrganisation.ID != this.OrganisationID) && (!this.currentOrganisation.detailsLoaded)) {
-                ITSInstance.UIController.showInterfaceAsWaitingOn();
-                this.currentOrganisation = new ITSCompany(ITSInstance);
-                this.currentOrganisation.ID = this.OrganisationID;
-                this.currentOrganisation.loadDetails(this.currentOrganisationLoaded.bind(this), this.currentOrganisationLoadedError.bind(this));
-            } else {
-                this.showCurrentOrganisation();
-            }
+            ITSInstance.UIController.showInterfaceAsWaitingOn();
+            this.currentOrganisation = new ITSCompany(ITSInstance);
+            this.currentOrganisation.ID = this.OrganisationID;
+            this.currentOrganisation.loadDetails(this.currentOrganisationLoaded.bind(this), this.currentOrganisationLoadedError.bind(this));
+
         }
         else // no parameter will not work for this screen
         {
@@ -106,7 +103,7 @@
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         if (this.currentOrganisation) {
             // now show the Organisations info by binding it to the form
-            DataBinderTo('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );
+            setTimeout( function () { DataBinderTo('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation ) } , 1);
             // and load up the costs per test override table
             this.showTestCostsOverrideTable();
         } else {

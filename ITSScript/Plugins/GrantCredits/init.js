@@ -102,6 +102,7 @@
     };
     ITSGrantCreditsEditor.prototype.showCurrentOrganisation = function() {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
+        window.scrollTo(0, 0);
         if (this.currentOrganisation) {
             // now show the Organisations info by binding it to the form
             // DataBinderTo('GrantCreditsInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation );
@@ -150,6 +151,7 @@
     ITSGrantCreditsEditor.prototype.grantOK = function () {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         ITSInstance.UIController.showInfo('ITSGrantCreditsEditor.SaveOK', 'The credits have been granted.', "", "window.history.back();");
+        this.creditGrants.loadCreditGrants(this.organisationID, this.loadCreditsList.bind(this), function () {});
     };
     ITSGrantCreditsEditor.prototype.grantError = function () {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
