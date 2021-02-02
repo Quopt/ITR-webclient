@@ -78,9 +78,10 @@
             $('#OrganisationEditorInterfaceInvoiceCurrency').empty();
             $('#OrganisationEditorInterfaceInvoiceCurrency').append(generateCurrencySelectList('',true) );
 
-            ITSInstance.UIController.showInterfaceAsWaitingOn();
             this.currentOrganisation = new ITSCompany(ITSInstance);
             this.currentOrganisation.ID = this.OrganisationID;
+
+            ITSInstance.UIController.showInterfaceAsWaitingOn();
             this.currentOrganisation.loadDetails(this.currentOrganisationLoaded.bind(this), this.currentOrganisationLoadedError.bind(this));
 
         }
@@ -172,8 +173,13 @@
         this.showCurrentOrganisation();
     };
     ITSOrganisationEditor.prototype.currentOrganisationLoadedError = function () {
-        ITSInstance.UIController.showError('OrganisationEditorController.NotFound', 'This Organisation cannot be found.');
-        window.history.back();
+        if (getUrlParameterValue('IsNew')!='true') {
+            ITSInstance.UIController.showError('OrganisationEditorController.NotFound', 'This Organisation cannot be found.');
+            window.history.back();
+        } else {
+            setTimeout( function () { DataBinderTo('OrganisationInterfaceSessionEdit', ITSInstance.OrganisationEditorController.currentOrganisation ) } , 1);
+            ITSInstance.UIController.showInterfaceAsWaitingOff();
+        }
     };
 
     ITSOrganisationEditor.prototype.save = function () {

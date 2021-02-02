@@ -199,7 +199,7 @@
     ITSOrganisationListerEditor.prototype.addNew = function () {
         var tempOrganisation = ITSInstance.companies.createNewCompany();
         ITSInstance.OrganisationEditorController.currentOrganisation = tempOrganisation;
-        ITSRedirectPath("OrganisationEditor&OrganisationID=" + tempOrganisation.ID);
+        ITSRedirectPath("OrganisationEditor&IsNew=true&OrganisationID=" + tempOrganisation.ID);
     };
     
 
