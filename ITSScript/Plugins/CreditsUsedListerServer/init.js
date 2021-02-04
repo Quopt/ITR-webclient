@@ -123,6 +123,13 @@
     };
 
     ITSCreditsUsedListerServerEditor.prototype.listLoaded = function () {
+        var totalCount = {};
+        var lastPeriod = "";
+        var totalPrice = 0;
+        var totalCurrency = "";
+        var totalKey = "";
+        var grandTotalPerCurrency = {};
+
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         if (this.currentPage ==0) {
             // generate table header
@@ -132,6 +139,18 @@
 
         // generate the records for the returned data
         for (var i=0; i < this.CreditsUsedList.length; i++) {
+            // generate total lines for period if required
+            if (i == 0) {
+                lastPeriod = this.CreditsUsedList[i].year + "-" + this.CreditsUsedList[i].month;
+            }
+            //console.log(lastPeriod, this.CreditsUsedList[i].year + "-" + this.CreditsUsedList[i].month);
+            if (lastPeriod != this.CreditsUsedList[i].year + "-" + this.CreditsUsedList[i].month) {
+                this.genTotalLines(totalCount,i-1);
+                totalCount = {};
+            }
+            lastPeriod = this.CreditsUsedList[i].year + "-" + this.CreditsUsedList[i].month;
+
+            // generate the usage line
             var rowText = this.tablePart2;
 
             rowText = rowText.replace( this.mNR, i + this.currentPage *100 +1 );
@@ -142,16 +161,28 @@
             rowText = rowText.replace( this.mCompanyName, this.CreditsUsedList[i].CompanyName);
 
             tempCompany = ITSInstance.companies.findOtherCompanyByID(this.CreditsUsedList[i].ID);
+            totalPrice = this.CreditsUsedList[i].ticks;
+            totalCurrency = 'ticks';
             if (typeof tempCompany != "undefined") {
                 console.log(tempCompany);
                 rowText = rowText.replace(this.mCurrency, tempCompany.InvoiceCurrency);
+                totalCurrency = tempCompany.InvoiceCurrency;
                 if (typeof tempCompany.PricePerCreditUnit != "undefined") {
-                    rowText = rowText.replace(this.mAmount, Number(tempCompany.PricePerCreditUnit) * Number(this.CreditsUsedList[i].ticks));
+                    totalPrice = Number(tempCompany.PricePerCreditUnit) * Number(this.CreditsUsedList[i].ticks);
+                    rowText = rowText.replace(this.mAmount, totalPrice);
                 }
             }
-
             this.generatedTable += rowText;
+
+            // keep totals
+            totalKey = this.CreditsUsedList[i].InvoiceCode + '.' + totalCurrency;
+            totalCount[totalKey] = typeof totalCount[totalKey] == "undefined" ? totalPrice : totalCount[totalKey] + totalPrice;
+            totalCount[totalCurrency] = typeof totalCount[totalCurrency] == "undefined" ? totalPrice : totalCount[totalCurrency] + totalPrice;
+            grandTotalPerCurrency[totalCurrency] = typeof grandTotalPerCurrency[totalCurrency] == "undefined" ? totalPrice : grandTotalPerCurrency[totalCurrency] + totalPrice;
+            totalCount.Period =  typeof totalCount.Period == "undefined" ? totalPrice : totalPrice + totalCount.Period;
         }
+        this.genTotalLines(totalCount, this.CreditsUsedList.length-1);
+        this.genTotalLines(grandTotalPerCurrency, this.CreditsUsedList.length-1, true);
 
         // if returned data is less than 100 records then hide the load more button
         $('#CreditsUsedListerServerTableFindMoreButton').hide();
@@ -169,6 +200,48 @@
         };
         $('#CreditsUsedListerServerTableSearchText').focus();
     };
+
+
+    ITSCreditsUsedListerServerEditor.prototype.genTotalLines = function (totalCount, i, skipUsageMonth) {
+        var table1 ="";
+        var table2 = "";
+        for (var key in totalCount) {
+            if (key != "Period") {
+                var tempRowText = this.tablePart2;
+                tempRowText = tempRowText.replace(this.mUsageYear, this.CreditsUsedList[i].year);
+                if (!skipUsageMonth) { tempRowText = tempRowText.replace(this.mUsageMonth, this.CreditsUsedList[i].month); }
+                else { tempRowText = tempRowText.replace(this.mUsageMonth, ""); }
+                tempRowText = tempRowText.replace(this.mInvoiceCode, key);
+                tempRowText = tempRowText.replace(this.mAmount, totalCount[key]);
+                tempRowText = tempRowText.replace(this.mCurrency, "");
+                tempRowText = tempRowText.replace(this.mCompanyName, "");
+                tempRowText = tempRowText.replace(this.mTotalTicks, "");
+                tempRowText = tempRowText.replace(this.mNR, "");
+                if (key.length > 3 ) {
+                    table1 += tempRowText;
+                } else {
+                    table2 += tempRowText;
+                }
+            }
+        }
+        this.generatedTable += table1 + table2;
+
+        if (typeof totalCount.period != "undefined") {
+            var tempRowText = this.tablePart2;
+            tempRowText = tempRowText.replace(this.mUsageYear, this.CreditsUsedList[i].year);
+            tempRowText = tempRowText.replace(this.mUsageMonth, this.CreditsUsedList[i].month);
+            tempRowText = tempRowText.replace(this.mInvoiceCode, '-');
+            tempRowText = tempRowText.replace(this.mAmount, totalCount.Period);
+            tempRowText = tempRowText.replace(this.mCurrency, "");
+            tempRowText = tempRowText.replace(this.mCompanyName, "");
+            tempRowText = tempRowText.replace(this.mTotalTicks, "");
+            tempRowText = tempRowText.replace(this.mNR, "");
+            this.generatedTable += tempRowText;
+        }
+
+        totalCount = {};
+        return {key, totalCount, tempRowText};
+    }
 
     ITSCreditsUsedListerServerEditor.prototype.listLoadingFailed = function () {
         ITSInstance.UIController.showInterfaceAsWaitingOff();
