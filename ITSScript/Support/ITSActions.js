@@ -145,7 +145,7 @@ ITSActionList.prototype.findAction = function (actionName) {
     }
 };
 
-ITSActionList.prototype.executeScriptInTestTaking = function (scriptObject, testTakingController, currentTestDefinition, currentSession, currentSessionTest, CurrentPage, ScreenComponentIndex, VariableName, CodeBlockNr, currentActionIndex) {
+ITSActionList.prototype.executeScriptInTestTaking = function (scriptObject, testTakingController, currentTestDefinition, currentSession, currentSessionTest, CurrentPage, ScreenComponentIndex, VariableName, CodeBlockNr, currentActionIndex, elementID) {
     // for each context an execute script action will be available. Override the one you need.
     if (typeof currentActionIndex == "undefined") currentActionIndex = 0;
     this.context = {};
@@ -159,6 +159,9 @@ ITSActionList.prototype.executeScriptInTestTaking = function (scriptObject, test
     this.context.VariableName = VariableName;
     this.context.CodeBlockNr = CodeBlockNr;
     this.context.currentStep = currentActionIndex;
+    this.context.elementID = elementID;
+    this.context.templateValues = currentTestDefinition.screens[currentSessionTest.CurrentPage].screenComponents[ScreenComponentIndex].templateValues;
+    //console.log(this.context);
     this.executeScriptInTestTakingStep(scriptObject);
 };
 
