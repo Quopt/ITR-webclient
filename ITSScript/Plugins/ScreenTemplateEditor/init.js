@@ -83,7 +83,7 @@ ITSScreenTemplateEditor.prototype.addNewTemplate = function () {
     // initialise a new template and load that in the template editor.
     var newTemplate = ITSInstance.screenTemplates.newScreenTemplate();
     newTemplate.detailsLoaded = true;
-    this.newTemplate = true;
+    newTemplate.newTemplate = true;
     this.selectTemplate(ITSInstance.screenTemplates.screenTemplates.length - 1);
     this.populateTemplates();
     this.redirectToTemplateIndex(ITSInstance.screenTemplates.screenTemplates.length - 1);
