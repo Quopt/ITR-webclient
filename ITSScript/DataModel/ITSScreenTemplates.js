@@ -653,7 +653,9 @@ ITSScreenTemplate.prototype.replace_variables_with_actual_values = function (rep
         }
     }
     // now scan for any remaining expressions. these will start with constVarEnvelope and end with constVarEnvelope
-    template = envSubstitute(template, this, true);
+    var tempthis = this;
+    tempthis['varvalues'] = varvalues;
+    template = envSubstitute(template, tempthis, true);
     return template;
 }
 
@@ -887,7 +889,11 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
                 for (var i = 0; i < option_array.length; i++) {
                     if (option_array[i].indexOf('|') >= 0) {
                         new_option = option_array[i].split('|');
-                        select = select + '<option NoTranslate value="' + new_option[0] + '">' + ITSInstance.translator.getTranslatedString("ScreenTemplateVariable." + this.ID + "." + this.variableName, new_option[0], new_option[1]) + '</option>';
+                        if (this.translatable) {
+                            select = select + '<option NoTranslate value="' + new_option[0] + '">' + ITSInstance.translator.getTranslatedString("ScreenTemplateVariable." + this.ID + "." + this.variableName, new_option[0], new_option[1]) + '</option>';
+                        } else {
+                            select = select + '<option NoTranslate value="' + new_option[0] + '">' + new_option[1] + '</option>';
+                        }
                     } else {
                         select = select + '<option NoTranslate value="' + option_array[i] + '">' + option_array[i] + '</option>';
                     }
