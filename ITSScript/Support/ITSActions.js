@@ -55,6 +55,7 @@ ITSActionList.prototype.getActionsForContext = function (context) {
 
 ITSActionList.prototype.getActionsForContextAsCSV = function (context) {
     var foundActions = "";
+    var foundActionName = "";
     // check if this action is known and then delete it
     var found = false;
     for (var i=0; i < this.AvailableActions.length; i++) {
@@ -62,7 +63,13 @@ ITSActionList.prototype.getActionsForContextAsCSV = function (context) {
             this.AvailableActions[i].ContextArray = this.AvailableActions[i].Context.split(',');
         }
         found = (this.AvailableActions[i].ContextArray.indexOf(context) > -1) || (ITSInstance.actions.AvailableActions[i].ContextArray[0] == "");
-        if (found) foundActions += (foundActions.length == 0 ? "" : ",") + this.AvailableActions[i].Name + "|" + this.AvailableActions[i].Description.replace(/,/g, ';');
+        if (found) {
+            foundActionName = this.AvailableActions[i].Category1 != "" ? this.AvailableActions[i].Category1 + "-": "" ;
+            foundActionName += this.AvailableActions[i].Category2 != "" ? this.AvailableActions[i].Category2 + "-": "" ;
+            foundActionName += this.AvailableActions[i].Category3 != "" ? this.AvailableActions[i].Category3 + "-": "" ;
+            foundActionName += this.AvailableActions[i].Description;
+            foundActions += (foundActions.length == 0 ? "" : ",") + this.AvailableActions[i].Name + "|" + foundActionName.replace(/,/g, ';');
+        }
     }
     return foundActions;
 }
@@ -83,9 +90,18 @@ ITSActionList.prototype.registerAction = function (actionObject, sortActionList)
         this.AvailableActions.push(actionObject);
     }
     if (sortActionList) {
-        this.AvailableActions.sort( function (a,b) { return a.Description.localeCompare(b.Description); } );
+        this.sortActionList();
     }
 };
+
+ITSActionList.prototype.sortActionList = function () {
+    this.AvailableActions.sort(
+        function (a,b) {
+            var compStr1 = a.Category1 +"-"+ a.Category2+"-"+a.Category3+"-"+a.Description;
+            var compStr2 = b.Category1 +"-"+ b.Category2+"-"+b.Category3+"-"+b.Description;
+            return compStr1.localeCompare(compStr2);
+        } );
+}
 
 ITSActionList.prototype.unregisterAction = function (actionName) {
     // check if this action is known and then delete it
@@ -103,9 +119,16 @@ ITSActionList.prototype.translateActionDescription = function () {
     for (var i=0; i < this.AvailableActions.length; i++) {
         if (typeof this.AvailableActions[i].OriginalDescription == "undefined") {
             this.AvailableActions[i].OriginalDescription = this.AvailableActions[i].Description;
+            this.AvailableActions[i].OriginalCategory1 = this.AvailableActions[i].Category1;
+            this.AvailableActions[i].OriginalCategory2 = this.AvailableActions[i].Category2;
+            this.AvailableActions[i].OriginalCategory3 = this.AvailableActions[i].Category3;
         }
         this.AvailableActions[i].Description = this.ITSSession.translator.getTranslatedString("ITSActions.js", this.AvailableActions[i].Name + ".Description", this.AvailableActions[i].OriginalDescription);
+        this.AvailableActions[i].Category1 = this.ITSSession.translator.getTranslatedString("ITSActions.js", this.AvailableActions[i].Name + ".Category", this.AvailableActions[i].Category1);
+        this.AvailableActions[i].Category2 = this.ITSSession.translator.getTranslatedString("ITSActions.js", this.AvailableActions[i].Name + ".Category", this.AvailableActions[i].Category2);
+        this.AvailableActions[i].Category3 = this.ITSSession.translator.getTranslatedString("ITSActions.js", this.AvailableActions[i].Name + ".Category", this.AvailableActions[i].Category3);
     }
+    this.sortActionList();
 };
 
 ITSActionList.prototype.findAction = function (actionName) {
@@ -184,6 +207,10 @@ ITSAction = function(session) {
                     // leave empty for all contexts
     this.AsyncAction = false; // async actions will call back the executing object when their activity completes (either succesfull or not)
 
+    this.Category1 = ""; // categories to group actions with in the UI
+    this.Category2 = "";
+    this.Category3 = "";
+
     this.preIndent = 0; // the amount of space to indent (for example 1 or -1) when showing the script action in the script editor
     this.postIndent = 0; // the amount of space to indent (for example 1 or -1) when showing the script action in the script editor
 };
@@ -224,6 +251,7 @@ ITSActionNone = function (session) {
     this.generateElement = ITSAction.prototype.generateElement;
     this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
     this.Name = "None";
+    this.Category1 = "Programming";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "None.Description", "No action");
 }
 
@@ -233,6 +261,7 @@ ITSActionStore = function (session) {
     this.generateElement = ITSAction.prototype.generateElement;
     this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
     this.Name = "Store";
+    this.Category1 = "Session";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "Store.Description", "Store the current results in the database");
 }
 
@@ -242,6 +271,7 @@ ITSActionAutoStore = function (session) {
     this.generateElement = ITSAction.prototype.generateElement;
     this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
     this.Name = "AutoStore";
+    this.Category1 = "Session";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "AutoStore.Description", "Store the current results in the database. This event is called every minute by the ITR automatically.");
 };
 
@@ -251,6 +281,7 @@ ITSActionUpdateCurrentScreenFromSessionStorage = function (session) {
     this.generateElement = ITSAction.prototype.generateElement;
     this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
     this.Name = "UpdateCurrentScreenFromSessionStorage";
+    this.Category1 = "Session";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "UpdateCurrentScreenFromSessionStorage.Description", "Update the current screen from the session storage");
 };
 
@@ -260,6 +291,7 @@ ITSActionEndTest = function (session) {
     this.generateElement = ITSAction.prototype.generateElement;
     this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
     this.Name = "EndTest";
+    this.Category1 = "Test";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "EndTest.Description", "End the current test. If there are tests left in the session then start the next one.");
 };
 
@@ -269,6 +301,7 @@ ITSActionEndTestTimeOut = function (session) {
     this.generateElement = ITSAction.prototype.generateElement;
     this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
     this.Name = "EndTestTimeOut";
+    this.Category1 = "Test";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "EndTestTimeOut.Description", "End the test because of a timeout");
 };
 
@@ -278,6 +311,7 @@ ITSActionEndSession = function (session) {
     this.generateElement = ITSAction.prototype.generateElement;
     this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
     this.Name = "EndSession";
+    this.Category1 = "Session";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "EndSession.Description", "End the current session");
 };
 
@@ -287,6 +321,7 @@ ITSActionNextScreenIfAnswered = function (session) {
     this.generateElement = ITSAction.prototype.generateElement;
     this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
     this.Name = "NextScreenIfAnswered";
+    this.Category1 = "Test";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "NextScreenIfAnswered.Description", "Go to the next screen in the test if the current screen is answered");
 };
 
@@ -296,6 +331,7 @@ ITSActionNextScreen = function (session) {
     this.generateElement = ITSAction.prototype.generateElement;
     this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
     this.Name = "NextScreen";
+    this.Category1 = "Test";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "NextScreen.Description", "Go to the next screen in the test");
 };
 
@@ -305,6 +341,7 @@ ITSActionNextUnansweredScreenWithProceed = function (session) {
     this.generateElement = ITSAction.prototype.generateElement;
     this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
     this.Name = "NextUnansweredScreenWithProceed";
+    this.Category1 = "Test";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "NextUnansweredScreenWithProceed.Description", "Go to the next unanswered screen in the test");
 };
 
@@ -314,6 +351,7 @@ ITSActionNextUnansweredScreen = function (session) {
     this.generateElement = ITSAction.prototype.generateElement;
     this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
     this.Name = "NextUnansweredScreen";
+    this.Category1 = "Test";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "NextUnansweredScreen.Description", "Go to the next unanswered screen in the test or stay on the current one if not answered yet");
 };
 
@@ -323,6 +361,7 @@ ITSActionPreviousScreen = function (session) {
     this.generateElement = ITSAction.prototype.generateElement;
     this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
     this.Name = "PreviousScreen";
+    this.Category1 = "Test";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "PreviousScreen.Description", "Go to the previous screen in the test");
 };
 
@@ -332,6 +371,7 @@ ITSActionLogout = function (session) {
     this.generateElement = ITSAction.prototype.generateElement;
     this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
     this.Name = "Logout";
+    this.Category1 = "User";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "Logout.Description", "Log the user out");
 };
 
@@ -341,6 +381,7 @@ ITSActionCheckSessionTime = function (session) {
     this.generateElement = ITSAction.prototype.generateElement;
     this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
     this.Name = "CheckSessionTime";
+    this.Category1 = "Session";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "CheckSessionTime.Description", "Check the session time for a session end date & time as set on the session");
 };
 
@@ -348,6 +389,7 @@ ITSActionGotoScreen = function (session) {
     ITSAction.call(this, session);
 
     this.Name = "GotoScreen";
+    this.Category1 = "Test";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "GotoScreen.Description", "Goto a specific screen in the test");
 };
 
@@ -393,6 +435,7 @@ ITSActionShowItem = function (session) {
     ITSAction.call(this, session);
 
     this.Name = "ShowItem";
+    this.Category1 = "Test";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "ShowItem.Description", "Show or hide a specific item on the current screen");
 };
 
@@ -455,6 +498,7 @@ ITSActionShowScrollbars = function (session) {
     ITSAction.call(this, session);
 
     this.Name = "ShowScrollbars";
+    this.Category1 = "User Interface";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "ShowScrollbars.Description", "Show or hide the main scrollbars on the browser window.");
 };
 
