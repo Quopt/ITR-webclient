@@ -975,7 +975,14 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
                 break;
         }
     } else {
-        $('#' + traceID).val(this.defaultValue);
+        switch (this.variableType) {
+            case "B":
+                console.log(traceID, this.defaultValue);
+                $('#' + traceID).prop('checked',this.defaultValue == 'T');
+                break;
+            default:
+                $('#' + traceID).val(this.defaultValue);
+        }
     }
 
     if (this.description.trim() != "") {
