@@ -32,8 +32,8 @@ ITSActionList = function(session) {
     this.registerAction(new ITSActionNextUnansweredScreenWithProceed(session), false);
     this.registerAction(new ITSActionPreviousScreen(session), false);
     this.registerAction(new ITSActionShowItem(session), false);
-    this.registerAction(new ITSActionUpdateCurrentScreenFromSessionStorage(session));
-    this.registerAction(new ITSActionShowScrollbars(session));
+    this.registerAction(new ITSActionUpdateCurrentScreenFromSessionStorage(session), false);
+    this.registerAction(new ITSActionShowScrollbars(session), false);
 
     session.MessageBus.subscribe("Translations.LanguageSwitched", this.translateActionDescription.bind(this));
     session.MessageBus.subscribe("Translations.LanguageChanged", this.translateActionDescription.bind(this));
