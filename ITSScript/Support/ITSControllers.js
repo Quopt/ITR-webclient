@@ -973,7 +973,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
 
             if (scriptScreenParameterCodeBlockNr <=1) { scriptScreenParameterCodeBlockNr = ""; } else { scriptScreenParameterCodeBlockNr = "_" + scriptScreenParameterCodeBlockNr;}
             var tempScript = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].screenComponents[scriptScreenParameterScreenComponentIndex].templateValues[scriptScreenVariableName+scriptScreenParameterCodeBlockNr];
-            ITSInstance.actions.executeScriptInTestTaking(tempScript, this, this.currentTestDefinition, this.currentSession, this.currentSessionTest, this.currentSessionTest.CurrentPage, scriptScreenParameterScreenComponentIndex, scriptScreenVariableName, scriptScreenParameterCodeBlockNr, scriptScreenParameterID);
+            ITSInstance.actions.executeScriptInTestTaking(tempScript, this, this.currentTestDefinition, this.currentSession, this.currentSessionTest, this.currentSessionTest.CurrentPage, scriptScreenParameterScreenComponentIndex, scriptScreenVariableName, scriptScreenParameterCodeBlockNr, 0, scriptScreenParameterID);
             break;
         default :
             if (eventName != '') ITSLogger.logMessage(logLevel.ERROR,"processEvent UNKNOWN event found : " + eventName + " " + eventParameters);

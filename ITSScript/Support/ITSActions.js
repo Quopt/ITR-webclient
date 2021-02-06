@@ -172,8 +172,9 @@ ITSActionList.prototype.executeScriptInTestTaking = function (scriptObject, test
     this.context.VariableName = VariableName;
     this.context.CodeBlockNr = CodeBlockNr;
     this.context.currentStep = currentActionIndex;
-    this.context.elementID = elementID;
+    this.context.elementID = elementID + CodeBlockNr;
     this.context.templateValues = currentTestDefinition.screens[currentSessionTest.CurrentPage].screenComponents[ScreenComponentIndex].templateValues;
+    //console.log(this.context);
     this.executeScriptInTestTakingStep(scriptObject);
 };
 
