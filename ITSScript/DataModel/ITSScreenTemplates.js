@@ -218,6 +218,10 @@ ITSScreenTemplate.prototype.loadDetailSucces = function () {
             shallowCopy(this.TemplateVariablesTemp[i], this.TemplateVariables[i], true);
         }
     }
+    if (typeof this.PluginData == "string") {
+        var tempString = this.PluginData;
+        this.PluginData = ITSJSONLoad(null, tempString, this.parent , this.ITSSession, "ITSObject");
+    }
     try {
         if (this.custom_template_actions_snippet != '') {d
             eval(this.custom_template_actions_snippet);
