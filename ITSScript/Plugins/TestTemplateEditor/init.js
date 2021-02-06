@@ -621,6 +621,20 @@ ITSTestTemplateEditor.prototype.generateCurrentScreenIndexTemplateVariables = fu
         if (template) {
             // show screen template description
             $('#AdminInterfaceTestTemplateEditorScreenVarNameText').text(this.currentTemplate.Description);
+
+            // refresh the screen scope actions
+            ITSInstance.actions.removeActionsForScope('screen');
+            // now re-add all screen component actions
+            for (var i = 0; i < this.currentScreen.screenComponents.length; i++) {
+                try {
+                    var tempTemplate = ITSInstance.screenTemplates.findTemplateById(ITSInstance.screenTemplates.screenTemplates, this.currentScreen.screenComponents[i].templateID);
+                    if (ITSInstance.screenTemplates.screenTemplates[tempTemplate].custom_template_actions_snippet.trim() != "") {
+                        eval(ITSInstance.screenTemplates.screenTemplates[tempTemplate].custom_template_actions_snippet);
+                    }
+                } catch (err) {}
+            }
+            ITSInstance.actions.sortActionList();
+
             template.generate_test_editor_view('AdminInterfaceTestTemplateEditorScreenVar', 'TE' + screenComponentNum + 'Y', templateValues, false,
                 'ITSInstance.newITSTestEditorController.templateValueChanged();',
                 'ITSInstance.newITSTestEditorController.templateAddElement();',
@@ -638,7 +652,6 @@ ITSTestTemplateEditor.prototype.templatePlaceHolderChanged = function (newVal) {
     this.currentScreenComponent.placeholderName = newVal;
 };
 ITSTestTemplateEditor.prototype.templatePlaceHolderCommand = function (Command, value1, value2) {
-    console.log(Command, value1, value2);
     if (Command == "DELETE") {
         ITSInstance.newITSTestEditorController.currentTemplate.deleteElement(value1, ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues);
         ITSInstance.newITSTestEditorController.editScreenComponentDescription(ITSInstance.newITSTestEditorController.currentScreenComponentIndex, ITSInstance.newITSTestEditorController.currentScreenComponent.varComponentName);
@@ -1821,7 +1834,6 @@ ITSTestTemplateEditor.prototype.translateScreenComponent = function (componentIn
 ITSTestTemplateEditor.prototype.translateScreenComponentVariable = function (componentVariableIndex) {
     this.translate_component_variable_index = componentVariableIndex;
 
-    console.log(this.translate_template.TemplateVariables[this.translate_component_variable_index]);
     if (this.translate_template.TemplateVariables[this.translate_component_variable_index].translatable) {
         for (var i=1; i <= this.currentTest.screens[this.translate_screen_index].screenComponents[this.translate_component_index].templateValues.RepeatBlockCount; i++) {
             var postfix = "";

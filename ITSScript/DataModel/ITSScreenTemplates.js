@@ -223,7 +223,7 @@ ITSScreenTemplate.prototype.loadDetailSucces = function () {
         this.PluginData = ITSJSONLoad(null, tempString, this.parent , this.ITSSession, "ITSObject");
     }
     try {
-        if (this.custom_template_actions_snippet != '') {d
+        if (this.custom_template_actions_snippet.trim() != '') {
             eval(this.custom_template_actions_snippet);
         }
     } catch(err) { ITSLogger.logMessage(logLevel.ERROR,'Custom template actions on screen template '+this.Description+' failed : ' + err.message); }
@@ -981,7 +981,6 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
     } else {
         switch (this.variableType) {
             case "B":
-                console.log(traceID, this.defaultValue);
                 $('#' + traceID).prop('checked',this.defaultValue == 'T');
                 break;
             default:

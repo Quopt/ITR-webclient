@@ -145,6 +145,19 @@ ITSActionList.prototype.findAction = function (actionName) {
     }
 };
 
+ITSActionList.prototype.removeActionsForScope = function (scope) {
+    // check if this action is known for this scope and then delete it
+    for (var i=this.AvailableActions.length-1; i >= 0; i--) {
+        if (typeof this.AvailableActions[i].ScopeArray == 'undefined') {
+            this.AvailableActions[i].ScopeArray =  this.AvailableActions[i].Scope.split(",");
+        }
+        found = this.AvailableActions[i].ScopeArray.indexOf(scope) >= 0;
+        if (found) {
+            this.AvailableActions.splice(i, 1);
+        };
+    }
+};
+
 ITSActionList.prototype.executeScriptInTestTaking = function (scriptObject, testTakingController, currentTestDefinition, currentSession, currentSessionTest, CurrentPage, ScreenComponentIndex, VariableName, CodeBlockNr, currentActionIndex, elementID) {
     // for each context an execute script action will be available. Override the one you need.
     if (typeof currentActionIndex == "undefined") currentActionIndex = 0;
@@ -161,7 +174,6 @@ ITSActionList.prototype.executeScriptInTestTaking = function (scriptObject, test
     this.context.currentStep = currentActionIndex;
     this.context.elementID = elementID;
     this.context.templateValues = currentTestDefinition.screens[currentSessionTest.CurrentPage].screenComponents[ScreenComponentIndex].templateValues;
-    //console.log(this.context);
     this.executeScriptInTestTakingStep(scriptObject);
 };
 
