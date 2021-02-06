@@ -194,8 +194,6 @@ ITSActionList.prototype.executeScriptInTestTakingStep = function() {
 };
 
 ITSAction = function(session) {
-    //console.log('ITSAction init', this,session);
-    //console.trace();
     this.parent = {};
     this.session = session;
 
@@ -213,6 +211,9 @@ ITSAction = function(session) {
     this.Category1 = ""; // categories to group actions with in the UI
     this.Category2 = "";
     this.Category3 = "";
+
+    this.Scope = ""; // the scope this actions is suitable for. Options are : empty (all scopes), screen (only available when the related
+                     // screen template is present in the current screen). More values may follow in the future and a csv list may be used.
 
     this.preIndent = 0; // the amount of space to indent (for example 1 or -1) when showing the script action in the script editor
     this.postIndent = 0; // the amount of space to indent (for example 1 or -1) when showing the script action in the script editor

@@ -1556,7 +1556,7 @@
         newTag.session.setMode("ace/mode/javascript");
         newTag.commands.addCommand({
             name: "Toggle Fullscreen",
-            bindKey: "F11",
+            bindKey: {win: 'Ctrl-F11', mac: 'Command-Option-F11'},
             exec: function(editor) {
                 $(editor.container).toggleClass("fullScreen");
                 $(editor.container).toggleClass("hundredpx");
