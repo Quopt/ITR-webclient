@@ -1856,6 +1856,7 @@ ITSTestScreen.prototype.generateScreenInDiv = function (divId, context, divPostf
                     TestResults = storageObject["__" + this.id] ;
                     var ComponentResults = TestResults["__" + this.screenComponents[i].id];
                 } catch(err) {};
+                this.screenComponents[i].currentOnScreenID = 'X' + i + 'Y' + divPostfix;
                 var x = myTemplate.generate_test_taking_view(newDivID, true, 'X' + i + 'Y' + divPostfix, this.screenComponents[i].templateValues, PnP, true, context, preferHTML, ComponentResults.Value, preload, preloadCallback, i);
                 if ((typeof x === "number") && (preload)) {
                     preloadCount += x;
