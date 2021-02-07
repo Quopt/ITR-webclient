@@ -124,9 +124,9 @@ ITSActionList.prototype.translateActionDescription = function () {
             this.AvailableActions[i].OriginalCategory3 = this.AvailableActions[i].Category3;
         }
         this.AvailableActions[i].Description = this.ITSSession.translator.getTranslatedString("ITSActions.js", this.AvailableActions[i].Name + ".Description", this.AvailableActions[i].OriginalDescription);
-        this.AvailableActions[i].Category1 = this.ITSSession.translator.getTranslatedString("ITSActions.js", this.AvailableActions[i].Name + ".Category", this.AvailableActions[i].Category1);
-        this.AvailableActions[i].Category2 = this.ITSSession.translator.getTranslatedString("ITSActions.js", this.AvailableActions[i].Name + ".Category", this.AvailableActions[i].Category2);
-        this.AvailableActions[i].Category3 = this.ITSSession.translator.getTranslatedString("ITSActions.js", this.AvailableActions[i].Name + ".Category", this.AvailableActions[i].Category3);
+        this.AvailableActions[i].Category1 = this.AvailableActions[i].Category1 != "" ? this.ITSSession.translator.getTranslatedString("ITSActions.js", this.AvailableActions[i].Name + ".Category", this.AvailableActions[i].Category1) : "";
+        this.AvailableActions[i].Category2 = this.AvailableActions[i].Category2 != "" ? this.ITSSession.translator.getTranslatedString("ITSActions.js", this.AvailableActions[i].Name + ".Category", this.AvailableActions[i].Category2) : "";
+        this.AvailableActions[i].Category3 = this.AvailableActions[i].Category3 != "" ? this.ITSSession.translator.getTranslatedString("ITSActions.js", this.AvailableActions[i].Name + ".Category", this.AvailableActions[i].Category3) : "";
     }
     this.sortActionList();
 };
