@@ -577,7 +577,7 @@ ITSActionShowMessage = function (session) {
 
     this.Name = "ShowMessage";
     this.Category1 = "User Interface";
-    this.Description = "Shows a message in a popup window. The message can be set. The message addition will never be translated.";
+    this.Description = "Shows a message in a popup window.";
 };
 
 ITSActionShowMessage.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue) {
