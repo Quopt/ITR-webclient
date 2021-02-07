@@ -18,6 +18,7 @@ ITSActionList = function(session) {
 
     this.AvailableActions = [];
 
+    this.registerAction(new ITSActionNone(session), false);
     this.registerAction(new ITSActionStore(session), false);
     this.registerAction(new ITSActionAutoStore(session), false);
     this.registerAction(new ITSActionCheckSessionTime(session), false);
@@ -34,6 +35,7 @@ ITSActionList = function(session) {
     this.registerAction(new ITSActionShowItem(session), false);
     this.registerAction(new ITSActionUpdateCurrentScreenFromSessionStorage(session), false);
     this.registerAction(new ITSActionShowScrollbars(session), false);
+    this.registerAction(new ITSActionShowMessage(session), false);
 
     session.MessageBus.subscribe("Translations.LanguageSwitched", this.translateActionDescription.bind(this));
     session.MessageBus.subscribe("Translations.LanguageChanged", this.translateActionDescription.bind(this));
@@ -565,6 +567,63 @@ ITSActionShowScrollbars.prototype.executeAction = function (context, callback) {
             width: ''
         });
     }
+
+    return returnObject;
+};
+
+
+ITSActionShowMessage = function (session) {
+    ITSAction.call(this, session);
+
+    this.Name = "ShowMessage";
+    this.Category1 = "User Interface";
+    this.Description = "Shows a message in a popup window. The message can be set. The message addition will never be translated.";
+};
+
+ITSActionShowMessage.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue) {
+    var tempObj = ActionValue;
+    if (typeof tempObj.Message == "undefined") { tempObj.Message = "";  tempObj.MessageAddition = ""; tempObj.Info = "on"; tempObj.Error = "off"; tempObj.Warning = "off"; }
+    var selectStr = tempObj.Message.replaceAll('"','`');
+    var select = '<div class="col-12 mx-0 px-0"><label class="col-6" id="ShowMessage_Message">Message (translated)</label><input type="text" value="' + selectStr + '" class="col-6" onchange="' + on_change_function + '" id="' + fullTraceID + 'Message"></div>';
+    selectStr = tempObj.MessageAddition.replaceAll('"','`');
+    select += '<div class="col-12 mx-0 px-0"><label class="col-6" id="ShowMessage_MessageAddition">Message (not translated)</label><input type="text" value="' + selectStr + '" class="col-6" onchange="' + on_change_function + '" id="' + fullTraceID + 'MessageAddition"></div>';
+
+    select += '<div class="col-12 mx-0 px-0"><label class="col-6" id="ShowMessage_MessageType">Type</label>';
+    selectStr = tempObj.Info == "on" ? "checked" : "";
+    select += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" ' + selectStr + ' onchange="' + on_change_function + '" name="' + fullTraceID + '" id="' + fullTraceID + 'Info" value="option1"><label class="form-check-label" id="' + fullTraceID + 'InfoLabel" for="' + fullTraceID + 'Info">Info</label></div>';
+    selectStr = tempObj.Warning == "on" ? "checked" : "";
+    select += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" ' + selectStr + ' onchange="' + on_change_function + '" name="' + fullTraceID + '" id="' + fullTraceID + 'Warning" value="option1"><label class="form-check-label" id="' + fullTraceID + 'WarningLabel" for="' + fullTraceID + 'Warning">Warning</label></div>';
+    selectStr = tempObj.Error == "on" ? "checked" : "";
+    select += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" ' + selectStr + ' onchange="' + on_change_function + '" name="' + fullTraceID + '" id="' + fullTraceID + 'Error" value="option1"><label class="form-check-label" id="' + fullTraceID + 'ErrorLabel" for="' + fullTraceID + 'Error">Error</label></div>';
+    select += '</div>';
+
+    //console.log(tempObj);
+    $('#' + DivToAdd).append("<div class='row m-0 p-0 col-12 form-control-sm'>" + select + "</div>");
+};
+
+ITSActionShowMessage.prototype.getValuesFromGeneratedElement = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values, fullTraceID) {
+    var var2 = {};
+    var2.persistentProperties = "*ALL*";
+    var2._objectType = "ITSObject";
+    var2["Message"] = $('#' + fullTraceID + 'Message').val();
+    var2["MessageAddition"] = $('#' + fullTraceID + 'MessageAddition').val();
+    var2["Info"] = $('#' + fullTraceID + 'Info').is(':checked') ? "on" : "off";
+    var2["Warning"] = $('#' + fullTraceID + 'Warning').is(':checked') ? "on" : "off";
+    var2["Error"] = $('#' + fullTraceID + 'Error').is(':checked') ? "on" : "off";
+    return var2;
+};
+
+ITSActionShowMessage.prototype.executeAction = function (context, callback) {
+    var returnObject = new ITSActionResult();
+
+    var variables = context.ActionValue;
+
+    if (variables.Info == "on")
+        ITSInstance.UIController.showInfo("ITSActionShowMessage",variables.Message, variables.MessageAddition, "");
+    if (variables.Warning == "on")
+        ITSInstance.UIController.showWarning("ITSActionShowMessage",variables.Message, variables.MessageAddition, "");
+    if (variables.Error == "on")
+        ITSInstance.UIController.showError("ITSActionShowMessage",variables.Message, variables.MessageAddition, "");
 
     return returnObject;
 };
