@@ -972,8 +972,12 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             var scriptScreenVariableName = eventParameters.split(',')[3];
 
             if (scriptScreenParameterCodeBlockNr <=1) { scriptScreenParameterCodeBlockNr = ""; } else { scriptScreenParameterCodeBlockNr = "_" + scriptScreenParameterCodeBlockNr;}
-            var tempScript = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].screenComponents[scriptScreenParameterScreenComponentIndex].templateValues[scriptScreenVariableName+scriptScreenParameterCodeBlockNr];
-            ITSInstance.actions.executeScriptInTestTaking(tempScript, this, this.currentTestDefinition, this.currentSession, this.currentSessionTest, this.currentSessionTest.CurrentPage, scriptScreenParameterScreenComponentIndex, scriptScreenVariableName, scriptScreenParameterCodeBlockNr, 0, scriptScreenParameterID);
+            try {
+                var tempScript = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].screenComponents[scriptScreenParameterScreenComponentIndex].templateValues[scriptScreenVariableName + scriptScreenParameterCodeBlockNr];
+                ITSInstance.actions.executeScriptInTestTaking(tempScript, this, this.currentTestDefinition, this.currentSession, this.currentSessionTest, this.currentSessionTest.CurrentPage, scriptScreenParameterScreenComponentIndex, scriptScreenVariableName, scriptScreenParameterCodeBlockNr, 0, scriptScreenParameterID);
+            } catch (err) {
+                ITSLogger.logMessage(logLevel.ERROR,'Action execution failed (' + eventName + "/" + eventParameters + ') : ' + err.message);
+            }
             break;
         default :
             if (eventName != '') ITSLogger.logMessage(logLevel.ERROR,"processEvent UNKNOWN event found : " + eventName + " " + eventParameters);
