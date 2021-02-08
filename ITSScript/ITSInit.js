@@ -33,6 +33,7 @@ ITSSession = function () {
     this.screenTemplates = new ITSScreenTemplates(this); // contains all the available screen templates
     this.reports = new ITSReports(this, this); // contains all available reports of all types
     this.graph = new ITSGraph(this,this); // a graph object for helping to show and edit graphs
+    this.hook = {}; // a hook object for screen templates or other temporary functions/objects
 
     // messagebus
     this.MessageBus = new ITSMessageBus();
