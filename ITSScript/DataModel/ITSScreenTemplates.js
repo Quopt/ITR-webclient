@@ -68,6 +68,8 @@ ITSScreenTemplates.prototype.loadAvailableScreenTemplates = function (whenLoaded
 ITSScreenTemplates.prototype.findTemplateById = function (theCollectionToSearch, TemplateID) {
     var i = 0;
     var found = false;
+    TemplateID = "" + TemplateID;
+
     while ((i < theCollectionToSearch.length) && (!found)) {
         if (theCollectionToSearch[i].ID.toUpperCase() == TemplateID.toUpperCase()) {
             found = true;
@@ -354,7 +356,7 @@ ITSScreenTemplate.prototype.getVariableValue = function (varName) {
     return "";
 };
 
-ITSScreenTemplate.prototype.generate_template_and_scan_for_repeatblocks = function (templatevalues, pnp_template, id, div, test_mode) {
+ITSScreenTemplate.prototype.generate_template_and_scan_for_repeatblocks = function (templatevalues, pnp_template, id, div, test_mode, actual_values) {
     this.generateTemplateFunctions();
     var template = "";
 
@@ -375,6 +377,13 @@ ITSScreenTemplate.prototype.generate_template_and_scan_for_repeatblocks = functi
         if (typeof template == "undefined") {
             template = this.HTMLContent;
         }
+    } else if (pnp_template == "summary") {
+        try {
+            template = this.runtime_generate_summary(id, RepeatBlockCount, templatevalues, actual_values);
+            if (typeof template == "undefined") {
+                template = this.HTMLContentSummary;
+            }
+         } catch (err) {}
     } else {
         template = this.runtime_generate_pnp(id, RepeatBlockCount, templatevalues, test_mode);
         if (typeof template == "undefined") {
@@ -685,7 +694,7 @@ ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_di
 
     if(!preferHTML) preferHTML = false;
 
-    var __ret = this.generate_template_and_scan_for_repeatblocks(templatevalues, pnp_view, id, div, init_mode);
+    var __ret = this.generate_template_and_scan_for_repeatblocks(templatevalues, pnp_view, id, div, init_mode, actual_values);
 
     templatevalues = __ret.templatevalues;
     var template_id = __ret.template_id;

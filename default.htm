@@ -1421,6 +1421,16 @@
                         $('#'+this.id)[0].onkeyup() ;
                     }
                 });
+                editor.on('blur', function (e) {
+                    if ($('#'+this.id)[0].onblur) {
+                        $('#'+this.id)[0].onblur() ;
+                    }
+                });
+                editor.on('focus', function (e) {
+                    if ($('#'+this.id)[0].onfocus) {
+                        $('#'+this.id)[0].onfocus() ;
+                    }
+                });
             }
         });
     }

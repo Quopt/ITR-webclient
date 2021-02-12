@@ -42,6 +42,12 @@
             "</div>";
         this.teachingCardElementScreenNumber = /%%SCREENNUMBER%%/g;
         this.teachingCardElementScreenExplanation = /%%SCREENEXPLANATION%%/g;
+
+        this.teachingCardSummaryElement =
+            "<div NoTranslate class=\"col-12\" id=\"CourseTeachingSessionGuidanceSummary%%ID%%\" style='break-inside: avoid; break-before: auto;'>" +
+            "</div>";
+        this.teachingCardSummaryElementID = /%%ID%%/g;
+
     };
 
     ITSCourseTeachingSessionEditor.prototype.init=function () {
@@ -59,6 +65,8 @@
         $('#NavBarsFooter').show();
         $('#CourseTeachingSessionInterfaceSessionEdit').show();
         ITSInstance.UIController.initNavBar();
+        $('#CourseTeachingSessionSummariesWell').hide();
+        $('#CourseTeachingSessionSummariesMain').empty();
 
         this.loadSession();
         setTimeout(this.teachingSessionMonitoring.bind(this), 1000);
@@ -166,6 +174,28 @@
 
                 // re-translate the portlet
                 ITSInstance.translator.translateDiv("#CourseTeachingSessionInterfaceSessionEdit");
+
+                // check if there are screen components that have summaries available in the current screen, but only when the screen has changed or refresh needed
+                if ( (this.refreshCounter == 10) || (this.currentScreen != currentScreen) ) {
+                    this.currentScreen = currentScreen;
+                    this.refreshCounter = 0;
+
+                    this.summaryScreenComponents = currentScreen.screenComponentsWithSummaries();
+
+                    $('#CourseTeachingSessionSummariesMain').empty();
+
+                    for (var i=0; i< this.summaryScreenComponents.length; i ++) {
+                        // append div
+                        template =  this.teachingCardSummaryElement ;
+                        template = template.replace(this.teachingCardSummaryElementID, i);
+                        $('#CourseTeachingSessionSummariesMain').append(template);
+                    }
+                    // (re)load sessions and generate div contents for CourseTeachingSessionGuidanceSummary
+                    this.teachingSessions= {};
+                    ITSInstance.genericAjaxLoader('sessions/' + this.currentSession.ID + "/" + this.teachingWindow.ITSInstance.testTakingController.currentTestDefinition.ID + "/results" , this.teachingSessions, this.teachingSessionsLoaded.bind(this), function () {});
+                }
+                this.refreshCounter ++;
+
             } else {
                 $('#CourseTeachingSessionGuidanceRight').empty();
                 $('#CourseTeachingSessionGuidanceLeft').empty();
@@ -175,9 +205,46 @@
         }
     };
 
+    ITSCourseTeachingSessionEditor.prototype.teachingSessionsLoaded = function (data) {
+        // loaded, data to object array
+        //console.log(data);
+        var tempObject = JSON.parse(data);
+        this.tempObject = tempObject;
+        var resultsArray = {};
+        //console.log(tempObject);
+        // get the results out of the data for the screen components we are interested in
+        for (var i=0; i < tempObject.tests.length; i++) {
+            var tempTest = tempObject.tests[i];
+            for (var summaries = 0; summaries < this.summaryScreenComponents.length; summaries++) {
+                if (typeof resultsArray[this.summaryScreenComponents[summaries].id] == "undefined") {
+                    resultsArray[this.summaryScreenComponents[summaries].id] = []
+                }
+                if (typeof tempTest.Results["__" + this.currentScreen.id]["__" + this.summaryScreenComponents[summaries].id] != "undefined") {
+                    resultsArray[this.summaryScreenComponents[summaries].id].push( tempTest.Results["__" + this.currentScreen.id]["__" + this.summaryScreenComponents[summaries].id] );
+                }
+            }
+        }
+        this.resultsArray= resultsArray;
+        // now generate the summary views
+        var divName = "";
+        if (this.summaryScreenComponents.length > 0) {$('#CourseTeachingSessionSummariesWell').show();}
+        else { $('#CourseTeachingSessionSummariesWell').hide(); }
+        for (var summaries = 0; summaries < this.summaryScreenComponents.length; summaries++) {
+            divName = "CourseTeachingSessionGuidanceSummary" + summaries;
+
+            var templateIndex = ITSInstance.screenTemplates.findTemplateById(ITSInstance.screenTemplates.screenTemplates, this.summaryScreenComponents[summaries].templateID);
+            this.tempTemplate = ITSInstance.screenTemplates.screenTemplates[templateIndex];
+
+            if (templateIndex >= 0) {
+                this.tempTemplate.generate_test_taking_view(divName, true, 'X' + summaries + 'Y', this.summaryScreenComponents[summaries].templateValues, "summary", false, {}, false, resultsArray[this.summaryScreenComponents[summaries].id], false, function () {}, 0);
+            }
+        }
+    }
+
     ITSCourseTeachingSessionEditor.prototype.showPublicSessionURL = function () {
         // show the URL and create the session in the meantime
         this.newPublicSession = this.currentSession.clone();
+        this.newPublicSession.GroupSessionID = this.currentSession.ID;
         if (typeof this.currentSession.PluginData.teachingSession == "undefined") {
             this.currentSession.PluginData.teachingSession = {};
             this.currentSession.PluginData.teachingSession.PublicSessionID = newGuid();

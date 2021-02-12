@@ -252,7 +252,7 @@ ITSSession.prototype.JSONAjaxLoaderProcessQueue = function () {
                 function (data) {
                     var x = this.genericJSONLoadQueue[0];
                     this.callJSONLoaderProcessing = false;
-                    //console.log("OK", x);
+                    //console.log("OK", x, data);
                     if (typeof x.OnSuccess != "undefined") setTimeout(x.OnSuccess.bind(x, data),1);
                     this.genericJSONLoadQueue.splice(0,1);
                     this.JSONAjaxLoaderProcessQueue();

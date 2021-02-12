@@ -1358,6 +1358,31 @@ ITSTestScreen.prototype.getScreenVariablesFromPreviousScreenLayouts = function (
     return layoutsFound;
 };
 
+ITSTestScreen.prototype.hasSummaryTemplates = function () {
+    var templateIndex = -1;
+    for (var i = 0; i < this.screenComponents.length; i++) {
+        templateIndex = this.ITSSession.screenTemplates.findTemplateById(this.ITSSession.screenTemplates.screenTemplates, this.screenComponents[i].templateID);
+        if (templateIndex >= 0) {
+            if (this.ITSSession.screenTemplates.screenTemplates[templateIndex].HTMLContentSummary.trim() != "")
+                return true;
+        }
+    }
+    return false;
+}
+
+ITSTestScreen.prototype.screenComponentsWithSummaries = function () {
+    var templateIndex = -1;
+    var screenComponentsWithSummaries = [];
+    for (var i = 0; i < this.screenComponents.length; i++) {
+        templateIndex = this.ITSSession.screenTemplates.findTemplateById(this.ITSSession.screenTemplates.screenTemplates, this.screenComponents[i].templateID);
+        if (templateIndex >= 0) {
+            if (this.ITSSession.screenTemplates.screenTemplates[templateIndex].HTMLContentSummary.trim() != "")
+                screenComponentsWithSummaries.push(this.screenComponents[i]);
+        }
+    }
+    return screenComponentsWithSummaries;
+}
+
 ITSTestScreen.prototype.saveScreenComponentsShowStatus = function () {
     for (var i = 0; i < this.screenComponents.length; i++) {
         if (typeof this.screenComponents[i].showOriginalValue == "undefined")
@@ -1896,6 +1921,13 @@ ITSTestScreenComponent.prototype.clone = function () {
 
 ITSTestScreenComponent.prototype.getColumnName = function () {
     return this.myParent.varName + "." + this.varComponentName;
+};
+
+
+ITSTestScreenComponent.prototype.getTemplate = function () {
+    var templateIndex = this.ITSSession.screenTemplates.findTemplateById(this.ITSSession.screenTemplates.screenTemplates, this.templateID);
+    if (templateIndex < 0) { return undefined; }
+    else { return this.ITSSession.screenTemplates.screenTemplates[templateIndex]; }
 };
 
 ITSTestScreen.prototype.getStatusProperties = function () {
