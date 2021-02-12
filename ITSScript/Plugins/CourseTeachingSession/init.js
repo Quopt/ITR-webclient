@@ -216,12 +216,14 @@
         for (var i=0; i < tempObject.tests.length; i++) {
             var tempTest = tempObject.tests[i];
             for (var summaries = 0; summaries < this.summaryScreenComponents.length; summaries++) {
-                if (typeof resultsArray[this.summaryScreenComponents[summaries].id] == "undefined") {
-                    resultsArray[this.summaryScreenComponents[summaries].id] = []
-                }
-                if (typeof tempTest.Results["__" + this.currentScreen.id]["__" + this.summaryScreenComponents[summaries].id] != "undefined") {
-                    resultsArray[this.summaryScreenComponents[summaries].id].push( tempTest.Results["__" + this.currentScreen.id]["__" + this.summaryScreenComponents[summaries].id] );
-                }
+                try {
+                    if (typeof resultsArray[this.summaryScreenComponents[summaries].id] == "undefined") {
+                        resultsArray[this.summaryScreenComponents[summaries].id] = []
+                    }
+                    if (typeof tempTest.Results["__" + this.currentScreen.id]["__" + this.summaryScreenComponents[summaries].id] != "undefined") {
+                        resultsArray[this.summaryScreenComponents[summaries].id].push(tempTest.Results["__" + this.currentScreen.id]["__" + this.summaryScreenComponents[summaries].id]);
+                    }
+                } catch (err) {}
             }
         }
         this.resultsArray= resultsArray;
