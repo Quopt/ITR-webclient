@@ -45,10 +45,10 @@
 
         this.teachingCardSummaryElement =
             "<div NoTranslate class=\"col-12\" id=\"CourseTeachingSessionGuidanceSummary%%ID%%\" style='break-inside: avoid; break-before: auto;'>" +
-            "  <a class=\" col-12 btn btn-secondary btn-sm\" notranslate data-toggle=\"collapse\" href=\"#CourseTeachingSessionGuidanceSummary%%ID%%Content\" role=\"button\" aria-expanded=\"false\" aria-controls=\"CourseTeachingSessioncollapse%%ID%%Content\">\n" +
+            "  <a class=\" col-12 btn btn-secondary btn-sm\" notranslate data-toggle=\"collapse\" href=\"#CourseTeachingSessionGuidanceSummary%%ID%%Content\" role=\"button\" aria-expanded=\"true\" aria-controls=\"CourseTeachingSessionGuidanceSummary%%ID%%Content\">\n" +
             "    %%DESCRIPTION%%\n" +
             "  </a></div>" +
-            "<div NoTranslate class=\"col-12 collapse \" id=\"CourseTeachingSessionGuidanceSummary%%ID%%Content\" style='break-inside: avoid; break-before: auto;'>" +
+            "<div NoTranslate class=\"col-12 collapse.show \" id=\"CourseTeachingSessionGuidanceSummary%%ID%%Content\" style='break-inside: avoid; break-before: auto;'>" +
             "</div>";
         this.teachingCardSummaryElementID = /%%ID%%/g;
         this.teachingCardSummaryElementDescription = /%%DESCRIPTION%%/g;
@@ -192,6 +192,7 @@
                             template = template.replace(this.teachingCardSummaryElementID, i);
                             template = template.replace(this.teachingCardSummaryElementDescription, this.summaryScreenComponents[i].varComponentName);
                             $('#CourseTeachingSessionSummariesMain').append(template);
+                            $("#CourseTeachingSessionGuidanceSummary" + i + "Content").click();
                         }
                     }
                     this.currentScreen = currentScreen;
