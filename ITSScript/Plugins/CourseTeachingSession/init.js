@@ -45,8 +45,13 @@
 
         this.teachingCardSummaryElement =
             "<div NoTranslate class=\"col-12\" id=\"CourseTeachingSessionGuidanceSummary%%ID%%\" style='break-inside: avoid; break-before: auto;'>" +
+            "  <a class=\" col-12 btn btn-secondary btn-sm\" notranslate data-toggle=\"collapse\" href=\"#CourseTeachingSessionGuidanceSummary%%ID%%Content\" role=\"button\" aria-expanded=\"false\" aria-controls=\"CourseTeachingSessioncollapse%%ID%%Content\">\n" +
+            "    %%DESCRIPTION%%\n" +
+            "  </a></div>" +
+            "<div NoTranslate class=\"col-12 collapse \" id=\"CourseTeachingSessionGuidanceSummary%%ID%%Content\" style='break-inside: avoid; break-before: auto;'>" +
             "</div>";
         this.teachingCardSummaryElementID = /%%ID%%/g;
+        this.teachingCardSummaryElementDescription = /%%DESCRIPTION%%/g;
 
     };
 
@@ -177,19 +182,21 @@
 
                 // check if there are screen components that have summaries available in the current screen, but only when the screen has changed or refresh needed
                 if ( (this.refreshCounter == 10) || (this.currentScreen != currentScreen) ) {
+                    if (this.currentScreen != currentScreen) {
+                        $('#CourseTeachingSessionSummariesMain').empty();
+                        this.summaryScreenComponents = currentScreen.screenComponentsWithSummaries();
+
+                        for (var i=0; i< this.summaryScreenComponents.length; i ++) {
+                            // append div
+                            template =  this.teachingCardSummaryElement ;
+                            template = template.replace(this.teachingCardSummaryElementID, i);
+                            template = template.replace(this.teachingCardSummaryElementDescription, this.summaryScreenComponents[i].varComponentName);
+                            $('#CourseTeachingSessionSummariesMain').append(template);
+                        }
+                    }
                     this.currentScreen = currentScreen;
                     this.refreshCounter = 0;
 
-                    this.summaryScreenComponents = currentScreen.screenComponentsWithSummaries();
-
-                    $('#CourseTeachingSessionSummariesMain').empty();
-
-                    for (var i=0; i< this.summaryScreenComponents.length; i ++) {
-                        // append div
-                        template =  this.teachingCardSummaryElement ;
-                        template = template.replace(this.teachingCardSummaryElementID, i);
-                        $('#CourseTeachingSessionSummariesMain').append(template);
-                    }
                     // (re)load sessions and generate div contents for CourseTeachingSessionGuidanceSummary
                     this.teachingSessions= {};
                     ITSInstance.genericAjaxLoader('sessions/' + this.currentSession.ID + "/" + this.teachingWindow.ITSInstance.testTakingController.currentTestDefinition.ID + "/results" , this.teachingSessions, this.teachingSessionsLoaded.bind(this), function () {});
@@ -229,10 +236,11 @@
         this.resultsArray= resultsArray;
         // now generate the summary views
         var divName = "";
-        if (this.summaryScreenComponents.length > 0) {$('#CourseTeachingSessionSummariesWell').show();}
-        else { $('#CourseTeachingSessionSummariesWell').hide(); }
+        if (this.summaryScreenComponents.length <= 0) {$('#CourseTeachingSessionSummariesWell').hide(); }
         for (var summaries = 0; summaries < this.summaryScreenComponents.length; summaries++) {
-            divName = "CourseTeachingSessionGuidanceSummary" + summaries;
+            divName = "CourseTeachingSessionGuidanceSummary" + summaries + "Content";
+            $('#' + divName).empty();
+            $('#CourseTeachingSessionSummariesWell').show();
 
             var templateIndex = ITSInstance.screenTemplates.findTemplateById(ITSInstance.screenTemplates.screenTemplates, this.summaryScreenComponents[summaries].templateID);
             this.tempTemplate = ITSInstance.screenTemplates.screenTemplates[templateIndex];
