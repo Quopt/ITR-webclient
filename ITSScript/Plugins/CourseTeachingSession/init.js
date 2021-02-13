@@ -245,25 +245,31 @@
 
     ITSCourseTeachingSessionEditor.prototype.showPublicSessionURL = function () {
         // show the URL and create the session in the meantime
-        this.newPublicSession = this.currentSession.clone();
-        this.newPublicSession.GroupSessionID = this.currentSession.ID;
-        if (typeof this.currentSession.PluginData.teachingSession == "undefined") {
-            this.currentSession.PluginData.teachingSession = {};
-            this.currentSession.PluginData.teachingSession.PublicSessionID = newGuid();
-            this.currentSession.PluginData.teachingSession.PublicPersonID = newGuid();
-            this.currentSession.saveToServer(function () {}, function () {});
+        if (typeof this.newPublicSession == "undefined") {
+            this.newPublicSession = this.currentSession.clone();
+            this.newPublicSession.GroupSessionID = this.currentSession.ID;
+            if (typeof this.currentSession.PluginData.teachingSession == "undefined") {
+                this.currentSession.PluginData.teachingSession = {};
+                this.currentSession.PluginData.teachingSession.PublicSessionID = newGuid();
+                this.currentSession.PluginData.teachingSession.PublicPersonID = newGuid();
+                this.currentSession.saveToServer(function () {
+                }, function () {
+                });
+            }
+            this.newPublicSession.ID = this.currentSession.PluginData.teachingSession.PublicSessionID;
+            for (var i = 0; i < this.newPublicSession.SessionTests.length; i++) {
+                this.newPublicSession.SessionTests[i].SessionID = this.newPublicSession.ID;
+            }
+            this.newPublicSession.SessionType = 1200;
+            this.newPublicSession.regenerateCandidate();
+            this.newPublicSession.Person.EMail = this.newPublicSession.Description;
+            this.newPublicSession.Person.ID = this.currentSession.PluginData.teachingSession.PublicPersonID;
+            this.newPublicSession.Person.PersonType = 1000;
+            this.newPublicSession.relinkToCurrentPersonID();
+            this.newPublicSession.saveToServerIncludingTestsAndPerson(function () {
+            }, function () {
+            }, false, false);
         }
-        this.newPublicSession.ID = this.currentSession.PluginData.teachingSession.PublicSessionID;
-        for (var i=0; i < this.newPublicSession.SessionTests.length; i++) {
-            this.newPublicSession.SessionTests[i].SessionID = this.newPublicSession.ID;
-        }
-        this.newPublicSession.SessionType = 1200;
-        this.newPublicSession.regenerateCandidate();
-        this.newPublicSession.Person.EMail = this.newPublicSession.Description;
-        this.newPublicSession.Person.ID = this.currentSession.PluginData.teachingSession.PublicPersonID;
-        this.newPublicSession.Person.PersonType = 1000;
-        this.newPublicSession.relinkToCurrentPersonID();
-        this.newPublicSession.saveToServerIncludingTestsAndPerson(function(){},function(){},false, false);
         var newUrl=location.protocol + '//' + location.host + location.pathname.replace("/default.htm","/") + "?Poll=" + this.newPublicSession.ShortLoginCode;
         ITSInstance.UIController.showURL('', newUrl,'', newUrl);
     };
