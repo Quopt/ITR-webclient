@@ -1715,6 +1715,10 @@ ITSTestScreen.prototype.updateResultsStorageFromDivs = function (storageObject, 
 
     for (var j = 0; j < this.screenComponents.length; j++) {
         var ComponentResults = TestResults["__" + this.screenComponents[j].id];
+        if (typeof ComponentResults == "undefined") {
+            ComponentResults = {};
+            TestResults["__" + this.screenComponents[j].id] = ComponentResults;
+        }
 
         var templateIndex = this.ITSSession.screenTemplates.findTemplateById(this.ITSSession.screenTemplates.screenTemplates, this.screenComponents[j].templateID);
         var template =  this.ITSSession.screenTemplates.screenTemplates[templateIndex];
