@@ -1671,7 +1671,6 @@ ITSTest.prototype.prepareResultsStorage = function (storageObject) {
         for (var compCounter = 0; compCounter < this.screens[i].screenComponents.length; compCounter++) {
             var ComponentResults = {};
             ComponentResults.Value = "";
-            ComponentResults.Visible = true;
 
             if (TestResults["__" + this.screens[i].screenComponents[compCounter].id]) {
                 ComponentResults = TestResults["__" + this.screens[i].screenComponents[compCounter].id];
@@ -1779,7 +1778,7 @@ ITSTestScreen.prototype.updateDivsFromResultStorage = function (storageObject, p
         }
         try {
             template.runtime_set_values('X' + j + 'Y' + postFix, this.screenComponents[j].templateValues.RepeatBlockCount, ComponentResults.Value, this.screenComponents[j].templateValues);
-        } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Runtime set values failed " + err.message); }
+        } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Runtime set values failed " + this.varName + "/" + this.screenComponents[j].varComponentName + ":" + err.message); }
         try {
             if (ComponentResults.Visible) {
                 this.screenComponents[j].show = ComponentResults.Visible;
