@@ -1330,7 +1330,7 @@ ITSTestScreen.prototype.getVisibilityStatusAsString = function() {
     var visibilityString = "";
 
     for (var i=0; i < this.screenComponents.length - 1; i++){
-        visibilityString += this.screenComponents[i]this.screenComponents[j]. ? "Y" : "N";
+        visibilityString += this.screenComponents[i].show ? "Y" : "N";
     }
     return visibilityString;
 };
