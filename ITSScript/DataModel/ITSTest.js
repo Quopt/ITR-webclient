@@ -1330,7 +1330,7 @@ ITSTestScreen.prototype.getVisibilityStatusAsString = function() {
     var visibilityString = "";
 
     for (var i=0; i < this.screenComponents.length - 1; i++){
-        visibilityString += this.screenComponents[i].show ? "Y" : "N";
+        visibilityString += this.screenComponents[i]this.screenComponents[j]. ? "Y" : "N";
     }
     return visibilityString;
 };
@@ -1683,7 +1683,11 @@ ITSTest.prototype.prepareResultsStorage = function (storageObject) {
             }
             TestResults[this.screens[i].screenComponents[compCounter].varComponentName] = ComponentResults;
 
-            ComponentResults.Visible = this.screens[i].screenComponents[compCounter].show;
+            if (typeof ComponentResults.Visible == "undefined") {
+                ComponentResults.Visible = this.screens[i].screenComponents[compCounter].show;
+            } else {
+                this.screens[i].screenComponents[compCounter].show = ComponentResults.Visible;
+            }
             ComponentResults.Anonimise = this.screens[i].screenComponents[compCounter].excludeFromAnonimisedTestResults;
         }
     }
@@ -1842,6 +1846,14 @@ ITSTestScreen.prototype.generateScreenInDiv = function (divId, context, divPostf
     var templateOffsetCounter=0;
 
     for (var i = 0; i < this.screenComponents.length; i++) {
+        var ComponentResults = {};
+        ComponentResults.Value = '';
+        try {
+            var TestResults = {};
+            TestResults = storageObject["__" + this.id] ;
+            var ComponentResults = TestResults["__" + this.screenComponents[i].id];
+        } catch(err) {};
+
         if (this.screenComponents[i].show) {
             // now generate the screen component with the resultsToLoad
             var newDivID = "";
@@ -1874,13 +1886,6 @@ ITSTestScreen.prototype.generateScreenInDiv = function (divId, context, divPostf
                     if (previousTemplateType==10) { templateOffsetCounter++; } else { templateOffsetCounter=0; }
                 }
                 // generate the control from the template
-                var ComponentResults = {};
-                ComponentResults.Value = '';
-                try {
-                    var TestResults = {};
-                    TestResults = storageObject["__" + this.id] ;
-                    var ComponentResults = TestResults["__" + this.screenComponents[i].id];
-                } catch(err) {};
                 this.screenComponents[i].currentOnScreenID = 'X' + i + 'Y' + divPostfix;
                 var x = myTemplate.generate_test_taking_view(newDivID, true, 'X' + i + 'Y' + divPostfix, this.screenComponents[i].templateValues, PnP, true, context, preferHTML, ComponentResults.Value, preload, preloadCallback, i);
                 if ((typeof x === "number") && (preload)) {

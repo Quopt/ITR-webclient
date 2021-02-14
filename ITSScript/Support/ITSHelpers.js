@@ -636,7 +636,7 @@ function addPropertiesToXMLNode(xmlDoc, node, baseObject, propertiesArray) {
     }
 }
 
-function shallowCopy(original, target , propertiesOnly) {
+function shallowCopy(original, target , propertiesOnly, log) {
     try {
         var i, keys = Object.getOwnPropertyNames(original);
         for (i = 0; i < keys.length; i += 1) {
@@ -645,6 +645,9 @@ function shallowCopy(original, target , propertiesOnly) {
                     // copy ONLY non-object type properties into the clone
                     Object.defineProperty(target, keys[i],
                         Object.getOwnPropertyDescriptor(original, keys[i]));
+                    //if (keys[i].indexOf('Visible') >= 0) console.log('copied ', log, original[keys[i]], keys[i]);
+                } else {
+                    //console.log('ignored ', log, original[keys[i]], keys[i]);
                 }
             } else {
                 // copy EACH property into the clone
@@ -775,7 +778,8 @@ const replaceCircular = (obj, level = 0, already = new WeakSet()) => {
     }
 }
 
-function scanITSJsonLoadObject(tempObject, someITSObject, parentITSObject, ITSInstanceObject, DefaultObjectType) {
+function scanITSJsonLoadObject(tempObject, someITSObject, parentITSObject, ITSInstanceObject, DefaultObjectType, log) {
+    if (typeof log == "undefined") log="" + typeof someITSObject;
     // copy the arrays and sub objects
     try {
         var i, keys = Object.getOwnPropertyNames(tempObject);
@@ -797,7 +801,7 @@ function scanITSJsonLoadObject(tempObject, someITSObject, parentITSObject, ITSIn
                     var tempITSObject = eval( "new " +  ( (tempObjectType == "") ?  DefaultObjectType : (tempObject[keys[i]][j])._objectType ) + "(parentITSObject, ITSInstanceObject);");
                     if (! someITSObject[keys[i]] ) { someITSObject[keys[i]] = [] ; };
                     someITSObject[keys[i]].push( tempITSObject);
-                    scanITSJsonLoadObject(tempObject[keys[i]][j], tempITSObject, tempITSObject, ITSInstanceObject, DefaultObjectType);
+                    scanITSJsonLoadObject(tempObject[keys[i]][j], tempITSObject, tempITSObject, ITSInstanceObject, DefaultObjectType, log + '['+j+']');
                 }
             } else {
                 // this is not an array but an object, create it and add it
@@ -806,18 +810,27 @@ function scanITSJsonLoadObject(tempObject, someITSObject, parentITSObject, ITSIn
                     if ((tempObject[keys[i]])['_objectType'] != undefined) { tempObjectType = (tempObject[keys[i]])['_objectType']; }
                     var tempITSObject = eval("new " +  ( (tempObjectType == "") ? DefaultObjectType : (tempObject[keys[i]])._objectType) + "(parentITSObject, ITSInstanceObject);");
                 } else {
-                    var tempITSObject = {};
+                    if (typeof someITSObject[keys[i]] == "undefined" ) {
+                        var tempITSObject = {};
+                    } else {
+                        var tempITSObject = someITSObject[keys[i]];
+                    }
                 }
                 someITSObject[keys[i]] = tempITSObject;
-                scanITSJsonLoadObject(tempObject[keys[i]], tempITSObject, tempITSObject, ITSInstanceObject, DefaultObjectType);
+                scanITSJsonLoadObject(tempObject[keys[i]], tempITSObject, tempITSObject, ITSInstanceObject, DefaultObjectType, log + "." + keys[i]);
             }
         }
     }
 
-    // copy the properties after removing the object type
-    // tempObject._objectType = null;
-    shallowCopy(tempObject, someITSObject, true);
-    if ((someITSObject.postLoad) && (typeof someITSObject.postLoad == "function")) someITSObject.postLoad();
+    // copy the properties
+    var i, keys = Object.getOwnPropertyNames(tempObject);
+    shallowCopy(tempObject, someITSObject, true, log);
+
+    if ((someITSObject.postLoad) && (typeof someITSObject.postLoad == "function")) {
+        someITSObject.postLoad();
+    }
+
+    return someITSObject;
 }
 
 function ITSJSONLoad(someITSObject, JSONString, parentITSObject, ITSInstanceObject, DefaultObjectType) {
@@ -834,7 +847,7 @@ function ITSJSONLoad(someITSObject, JSONString, parentITSObject, ITSInstanceObje
         someITSObject = eval( "new " + ( (tempObjectType == "") ? DefaultObjectType : tempObject._objectType) + "(parentITSObject, ITSInstanceObject);");
     }
 
-    scanITSJsonLoadObject(tempObject, someITSObject, parentITSObject, ITSInstanceObject, DefaultObjectType);
+    someITSObject = scanITSJsonLoadObject(tempObject, someITSObject, parentITSObject, ITSInstanceObject, DefaultObjectType, "");
 
     return someITSObject;
 }
