@@ -571,7 +571,7 @@ ITSTestTakingController.prototype.checkScreenDynamics = function (screenNotRende
     }
 };
 
-ITSTestTakingController.prototype.renderTestPage = function () {
+ITSTestTakingController.prototype.renderTestPage = function (rerender) {
     // this.currentSessionTest.CurrentPage
     // do we need to show this page? If not show the next page
     // is this page beyond the last page of the test? end the test
@@ -601,6 +601,7 @@ ITSTestTakingController.prototype.renderTestPage = function () {
                 if (this.checkScreenDynamicsForChanges) {
                     this.checkScreenDynamics(true);
                 } else {
+                    currentScreen.reRender = (rerender == true);
                     currentScreen.generateScreenInDiv('ITSTestTakingDiv', 'TT', this.generateScreenID);
                     // load the current present values from the currentSessionTest.results into the screen
                     currentScreen.updateDivsFromResultStorage(this.currentSessionTest.Results, this.generateScreenID, this.currentSession.PluginData, sessionStorage.getItem("Poll") != null);

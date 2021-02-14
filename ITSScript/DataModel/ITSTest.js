@@ -1887,6 +1887,7 @@ ITSTestScreen.prototype.generateScreenInDiv = function (divId, context, divPostf
                 }
                 // generate the control from the template
                 this.screenComponents[i].currentOnScreenID = 'X' + i + 'Y' + divPostfix;
+                this.screenComponents[i].templateValues.reRender = (this.reRender == true);
                 var x = myTemplate.generate_test_taking_view(newDivID, true, 'X' + i + 'Y' + divPostfix, this.screenComponents[i].templateValues, PnP, true, context, preferHTML, ComponentResults.Value, preload, preloadCallback, i);
                 if ((typeof x === "number") && (preload)) {
                     preloadCount += x;

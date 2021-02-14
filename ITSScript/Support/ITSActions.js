@@ -508,7 +508,7 @@ ITSActionShowItem.prototype.executeAction = function (context, callback) {
 
     context.currentTestDefinition.screens[context.currentSessionTest.CurrentPage].updateResultsStorageFromDivs(context.currentSessionTest.Results,  context.testTakingController.generateScreenID, false, context.currentSession.PluginData, context.currentSession.SessionType==1);
     context.testTakingController.saveCurrentTest();
-    context.testTakingController.renderTestPage();
+    context.testTakingController.renderTestPage(true);
 
     return returnObject;
 };
