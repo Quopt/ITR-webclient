@@ -41,7 +41,7 @@
         this.tablePart2 = "  <tr>" +
             "   <th scope=\"row\">%%NR%%</th>" +
             "   <td class='d-none d-sm-table-cell'><span notranslate>%%DATETIME%%</span></td>" +
-            "   <td class='d-none d-sm-table-cell'><span notranslate>%%WHO%%</span></td>" +
+            "   <td class='d-none d-sm-table-cell'><span notranslate id='SATT_%%NR%%'>%%WHO%%</span></td>" +
             "   <td class='d-none d-sm-table-cell'><span notranslate>%%MESSAGE%%</span></td>" +
             "  </tr>";
         this.tablePart3 = "</tbody></table>" ;
@@ -50,6 +50,8 @@
         this.mDATETIME = /%%DATETIME%%/g;
         this.mWHO = /%%WHO%%/g;
         this.mMESSAGE = /%%MESSAGE%%/g;
+
+        this.pageSize = 25;
     };
 
     ITSSessionAuditTrailEditor.prototype.init=function () {
@@ -89,6 +91,8 @@
             this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
             ITSInstance.UIController.showInterfaceAsWaitingOn(0);
             $('#SessionAuditTrailList').empty();
+            $('#SessionAuditTrailFindMoreButton').hide();
+            this.objectType = -1;
             this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this));
         }
         else if (getUrlParameterValue('ObjectType')) {
@@ -100,8 +104,9 @@
             ITSInstance.UIController.showInterfaceAsWaitingOn();
             $('#SessionAuditTrailInterfaceEditHeader').hide();
             $('#SessionAuditTrailObjectTypeHeader').show();
+            $('#SessionAuditTrailFindMoreButton').hide();
 
-            this.loadByObjectType(getUrlParameterValue('ObjectType'));
+            this.loadByObjectType(getUrlParameterValue('ObjectType'), 0);
         }
         else // no parameter will not work for this screen
         {
@@ -111,6 +116,7 @@
 
     ITSSessionAuditTrailEditor.prototype.sessionLoaded = function () {
         // session is loaded now load the audit trail
+        this.pageNumber = 0;
         this.currentSession.loadAuditTrail(this.auditTrailLoaded.bind(this), this.sessionLoadingFailed.bind(this));
     };
     ITSSessionAuditTrailEditor.prototype.sessionLoadingFailed = function () {
@@ -119,11 +125,20 @@
         ITSInstance.UIController.showError("SessionAuditTrail.SessionLoadingFailed", "The session could not be loaded at this moment, please refresh your browser page and try again.", "", "history.back();");
     };
 
-    ITSSessionAuditTrailEditor.prototype.loadByObjectType = function (otype) {
-        this.currentSession = {};
-        this.currentSession.AuditTrail = {};
-        this.personArray = {};
-        ITSInstance.JSONAjaxLoader('audittrail/objecttype/' + otype, this.currentSession.AuditTrail, this.auditTrailLoaded.bind(this), this.sessionLoadingFailed.bind(this), "ITSObject", 0, 999, "CreateDate desc");
+    ITSSessionAuditTrailEditor.prototype.loadByObjectType = function (otype, pageNumber) {
+        if (typeof this.currentSession == "undefined") {
+            this.currentSession = {};
+            this.currentSession.AuditTrail = [];
+            this.personArray = {};
+        }
+        this.pageNumber = pageNumber;
+        this.objectType = otype;
+        if (pageNumber > 0) {
+            this.currentSession.NewAuditTrail = [];
+            ITSInstance.JSONAjaxLoader('audittrail/objecttype/' + otype, this.currentSession.NewAuditTrail, this.auditTrailLoaded.bind(this), this.sessionLoadingFailed.bind(this), "ITSObject", pageNumber, 25, "CreateDate desc");
+        } else {
+            ITSInstance.JSONAjaxLoader('audittrail/objecttype/' + otype, this.currentSession.AuditTrail, this.auditTrailLoaded.bind(this), this.sessionLoadingFailed.bind(this), "ITSObject", pageNumber, 25, "CreateDate desc");
+        }
     };
 
     ITSSessionAuditTrailEditor.prototype.auditTrailLoaded = function () {
@@ -137,25 +152,38 @@
                         ITSInstance.translator.getTranslatedString("SessionAuditTrail.init.js", "PersonNotFound", "Unknown");
                     ITSInstance.JSONAjaxLoader('persons/' + this.currentSession.AuditTrail[i].UserID,
                         this.personArray[this.currentSession.AuditTrail[i].UserID],
-                        this.auditTrailLoaded.bind(this), this.auditTrailLoaded.bind(this));
+                        this.updateAuditTrail.bind(this), function () {});
                     ITSInstance.JSONAjaxLoader('logins/' + this.currentSession.AuditTrail[i].UserID,
                         this.personArray[this.currentSession.AuditTrail[i].UserID],
-                        function () {
-                        }, function () {
-                        });
-                    return;
+                        this.updateAuditTrail.bind(this), function () {});
                 }
             }
         }
-        setTimeout(this.generateAuditTrail.bind(this), 1000);
+        this.generateAuditTrail();
+    };
+
+    ITSSessionAuditTrailEditor.prototype.updateAuditTrail = function () {
+        for (var i=0; i < this.currentSession.AuditTrail.length; i++) {
+            if (typeof this.personArray[this.currentSession.AuditTrail[i].UserID] != "undefined") {
+                if (typeof this.personArray[this.currentSession.AuditTrail[i].UserID].Email != "undefined") {
+                    $('#SATT_' + (i + 1)).text(this.personArray[this.currentSession.AuditTrail[i].UserID].Email);
+                }
+            }
+        }
     };
 
     ITSSessionAuditTrailEditor.prototype.generateAuditTrail = function () {
         // all data loaded, show the audit trail on screen
-        $('#SessionAuditTrailList').empty();
+        if (this.pageNumber == 0) {
+            $('#SessionAuditTrailList').empty();
+            this.TablePart2Generated = "";
+        } else {
+            this.currentSession.AuditTrail = this.currentSession.AuditTrail.concat(this.currentSession.NewAuditTrail);
+        }
         var newTable = this.tablePart1;
         var rowText = "";
-        for (var i=0; i < this.currentSession.AuditTrail.length; i++) {
+        var startCount = this.pageNumber * this.pageSize;
+        for (var i=startCount; i < this.currentSession.AuditTrail.length; i++) {
             rowText = this.tablePart2;
 
             rowText = rowText.replace( this.mNR, i+1);
@@ -183,14 +211,33 @@
 
             rowText = rowText.replace(this.mMESSAGE, message);
 
-            newTable += rowText;
+            this.TablePart2Generated += rowText;
         }
+        newTable += this.TablePart2Generated;
         newTable += this.tablePart3;
 
-        $('#SessionAuditTrailList').append(newTable);
+        if (this.pageNumber > 0) {
+            $('#SessionAuditTrailList').empty();
+            $('#SessionAuditTrailList').append(newTable);
+        }
+        else
+        {
+            $('#SessionAuditTrailList').append(newTable);
+        }
+
+        $('#SessionAuditTrailFindMoreButton').hide();
+        if (this.currentSession.AuditTrail.length - startCount == this.pageSize) {
+            $('#SessionAuditTrailFindMoreButton').show();
+            this.pageNumber++;
+        }
+
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         ITSInstance.translator.translateDiv("#SessionAuditTrailInterfaceSessionEdit");
     };
+
+    ITSSessionAuditTrailEditor.prototype.findMore = function () {
+        this.loadByObjectType( this.objectType, this.pageNumber);
+    }
 
     // register the portlet
     ITSInstance.SessionAuditTrailController = new ITSSessionAuditTrailEditor();

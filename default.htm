@@ -1422,6 +1422,9 @@
                     }
                 });
                 editor.on('blur', function (e) {
+                    if ($('#'+this.id)[0].onkeyup) {
+                        $('#'+this.id)[0].onkeyup() ;
+                    }
                     if ($('#'+this.id)[0].onblur) {
                         $('#'+this.id)[0].onblur() ;
                     }
