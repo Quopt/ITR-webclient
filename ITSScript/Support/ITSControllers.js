@@ -773,7 +773,7 @@ ITSTestTakingController.prototype.endSessionChecker = function () {
 };
 
 ITSTestTakingController.prototype.generateReport = function(switchUI) {
-    console.log('Generate report');
+    //console.log('Generate report');
     try {
         if (switchUI) {
             ITSInstance.UIController.EnablePublicTestTakingInterface();

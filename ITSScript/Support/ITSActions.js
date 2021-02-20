@@ -36,6 +36,13 @@ ITSActionList = function(session) {
     this.registerAction(new ITSActionUpdateCurrentScreenFromSessionStorage(session), false);
     this.registerAction(new ITSActionShowScrollbars(session), false);
     this.registerAction(new ITSActionShowMessage(session), false);
+    this.registerAction(new ITSActionIfStatement(session), false);
+    this.registerAction(new ITSActionIfElseStatement(session), false);
+    this.registerAction(new ITSActionIfEndIfStatement(session), false);
+    this.registerAction(new ITSActionElseIfStatement(session), false);
+    this.registerAction(new ITSActionLoopStatement(session), false);
+    this.registerAction(new ITSActionLoopEndStatement(session), false);
+    this.registerAction(new ITSActionAssignStatement(session), false);
 
     session.MessageBus.subscribe("Translations.LanguageSwitched", this.translateActionDescription.bind(this));
     session.MessageBus.subscribe("Translations.LanguageChanged", this.translateActionDescription.bind(this));
@@ -65,7 +72,7 @@ ITSActionList.prototype.getActionsForContextAsCSV = function (context) {
             this.AvailableActions[i].ContextArray = this.AvailableActions[i].Context.split(',');
         }
         found = (this.AvailableActions[i].ContextArray.indexOf(context) > -1) || (ITSInstance.actions.AvailableActions[i].ContextArray[0] == "");
-        if (found) {
+        if ((found) && (this.AvailableActions[i].Visible)) {
             foundActionName = this.AvailableActions[i].Category1 != "" ? this.AvailableActions[i].Category1 + "-": "" ;
             foundActionName += this.AvailableActions[i].Category2 != "" ? this.AvailableActions[i].Category2 + "-": "" ;
             foundActionName += this.AvailableActions[i].Category3 != "" ? this.AvailableActions[i].Category3 + "-": "" ;
@@ -168,14 +175,20 @@ ITSActionList.prototype.executeScriptInTestTaking = function (scriptObject, test
     this.context.testTakingController = testTakingController;
     this.context.currentTestDefinition = currentTestDefinition;
     this.context.currentSession = currentSession;
+    if (typeof currentSession.PluginData.Vars == "undefined") { currentSession.PluginData.Vars = new ITSObject(this,ITSInstance, true); }
+    this.context.sessionVars = currentSession.PluginData.Vars;
     this.context.currentSessionTest = currentSessionTest;
-    this.context.CurrentPage = CurrentPage;
-    this.context.ScreenComponentIndex = ScreenComponentIndex;
-    this.context.VariableName = VariableName;
-    this.context.CodeBlockNr = CodeBlockNr;
+    if (typeof currentSessionTest.PluginData.Vars == "undefined") { currentSessionTest.PluginData.Vars = new ITSObject(this,ITSInstance, true); }
+    this.context.vars = currentSessionTest.PluginData.Vars;
+    this.context.currentPage = CurrentPage;
+    this.context.screenComponentIndex = ScreenComponentIndex;
+    this.context.variableName = VariableName;
+    this.context.codeBlockNr = CodeBlockNr;
     this.context.currentStep = currentActionIndex;
     this.context.elementID = elementID + CodeBlockNr;
     this.context.templateValues = currentTestDefinition.screens[currentSessionTest.CurrentPage].screenComponents[ScreenComponentIndex].templateValues;
+    this.context.currentScreen = currentTestDefinition.screens[currentSessionTest.CurrentPage];
+    this.context.temp = {};
     //console.log(this.context);
     this.executeScriptInTestTakingStep(scriptObject);
 };
@@ -183,6 +196,7 @@ ITSActionList.prototype.executeScriptInTestTaking = function (scriptObject, test
 ITSActionList.prototype.executeScriptInTestTakingStep = function() {
     // go to the next step
     this.context.currentStep ++;
+    //console.log('execute step ' + this.context.currentStep);
     if (this.context.currentStep > this.context.scriptObject.ActionCounter) {
         return;
     }
@@ -191,7 +205,7 @@ ITSActionList.prototype.executeScriptInTestTakingStep = function() {
     if (typeof actionObject != "undefined") {
         // execute the action
         try {
-            this.context.ActionValue = this.context.scriptObject['Action' +  this.context.currentStep].ActionValue;
+            this.context.actionValue = this.context.scriptObject['Action' +  this.context.currentStep].ActionValue;
             var actionResult = actionObject.executeAction(this.context, this.executeScriptInTestTakingStep.bind(this));
             if (actionObject.AsyncAction) return; // we do not wait for async functions. An async function needs to recall this function and provide its own error handling
             if (!actionResult.StatusOK) {
@@ -213,6 +227,7 @@ ITSAction = function(session) {
     this.session = session;
 
     this.Active = true; // true if this is an active action. False for actions that are only present for legacy purposes.
+    this.Visible = true; // true for actions that are user selectable. False for actions that are inserted by the system
     this.Name = ""; // name of the action
     this.Description = ""; // description for this action
     this.HelpText = ""; // help text for this action (HTML OK)
@@ -441,7 +456,7 @@ ITSActionGotoScreen.prototype.executeAction = function (context, callback) {
 
     if (context.testTakingController.InTestTaking) context.testTakingController.switchNavBar();
     try {
-        var x = context.currentTestDefinition.findScreenIndexByName(context.ActionValue.ScreenName);
+        var x = context.currentTestDefinition.findScreenIndexByName(context.actionValue.ScreenName);
         if (x > -1) context.currentSessionTest.CurrentPage = x;
     } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Setting currentpage failed for "  + context.currentTestDefinition.TestName + "(" + context.currentSessionTest.CurrentPage + ")"  + err);  }
     context.testTakingController.saveCurrentTest();
@@ -498,7 +513,7 @@ ITSActionShowItem.prototype.getValuesFromGeneratedElement = function (template_p
 ITSActionShowItem.prototype.executeAction = function (context, callback) {
     var returnObject = new ITSActionResult();
 
-    var variables = context.ActionValue;
+    var variables = context.actionValue;
     context.currentTestDefinition.screens[context.currentSessionTest.CurrentPage].saveScreenComponentsShowStatus();
     if (variables.ResetShowStatusForAll=="on") { context.currentTestDefinition.screens[context.currentSessionTest.CurrentPage].restoreScreenComponentsShowStatus(); }
     var showComponent = context.currentTestDefinition.screens[context.currentSessionTest.CurrentPage].findComponentByID(variables.Element1);
@@ -542,7 +557,7 @@ ITSActionShowScrollbars.prototype.getValuesFromGeneratedElement = function (temp
 ITSActionShowScrollbars.prototype.executeAction = function (context, callback) {
     var returnObject = new ITSActionResult();
 
-    var variables = context.ActionValue;
+    var variables = context.actionValue;
 
     if (variables.ShowStatusY =="on") {
         $('body').css({
@@ -584,9 +599,9 @@ ITSActionShowMessage.prototype.generateElement = function (traceID, template_val
     var tempObj = ActionValue;
     if (typeof tempObj.Message == "undefined") { tempObj.Message = "";  tempObj.MessageAddition = ""; tempObj.Info = "on"; tempObj.Error = "off"; tempObj.Warning = "off"; }
     var selectStr = tempObj.Message.replaceAll('"','`');
-    var select = '<div class="col-12 mx-0 px-0"><label class="col-6" id="ShowMessage_Message">Message (translated)</label><input type="text" value="' + selectStr + '" class="col-6" onchange="' + on_change_function + '" id="' + fullTraceID + 'Message"></div>';
+    var select = '<div class="col-12 mx-0 px-0"><label class="col-6" id="ShowMessage_Message">Message (translated)</label><input type="text" value="' + selectStr + '" class="col-6" onkeyup="' + on_change_function + '" id="' + fullTraceID + 'Message"></div>';
     selectStr = tempObj.MessageAddition.replaceAll('"','`');
-    select += '<div class="col-12 mx-0 px-0"><label class="col-6" id="ShowMessage_MessageAddition">Message (not translated)</label><input type="text" value="' + selectStr + '" class="col-6" onchange="' + on_change_function + '" id="' + fullTraceID + 'MessageAddition"></div>';
+    select += '<div class="col-12 mx-0 px-0"><label class="col-6" id="ShowMessage_MessageAddition">Message (not translated)</label><input type="text" value="' + selectStr + '" class="col-6" onkeyup="' + on_change_function + '" id="' + fullTraceID + 'MessageAddition"></div>';
 
     select += '<div class="col-12 mx-0 px-0"><label class="col-6" id="ShowMessage_MessageType">Type</label>';
     selectStr = tempObj.Info == "on" ? "checked" : "";
@@ -616,7 +631,7 @@ ITSActionShowMessage.prototype.getValuesFromGeneratedElement = function (templat
 ITSActionShowMessage.prototype.executeAction = function (context, callback) {
     var returnObject = new ITSActionResult();
 
-    var variables = context.ActionValue;
+    var variables = context.actionValue;
 
     if (variables.Info == "on")
         ITSInstance.UIController.showInfo("ITSActionShowMessage",variables.Message, variables.MessageAddition, "");
@@ -624,6 +639,551 @@ ITSActionShowMessage.prototype.executeAction = function (context, callback) {
         ITSInstance.UIController.showWarning("ITSActionShowMessage",variables.Message, variables.MessageAddition, "");
     if (variables.Error == "on")
         ITSInstance.UIController.showError("ITSActionShowMessage",variables.Message, variables.MessageAddition, "");
+
+    return returnObject;
+};
+
+
+ITSActionIfStatement = function (session) {
+    ITSAction.call(this, session);
+
+    this.Name = "If";
+    this.Category1 = "Programming";
+    this.Description = "If then else for evaluating a condition";
+    this.postIndent = 1;
+};
+
+ITSActionIfStatement.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator, actionCounter) {
+    //console.log(traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator, actionCounter)
+    var tempObj = ActionValue;
+    if (typeof ActionValue.Expression == "undefined" ) {
+        ActionValue.Expression="";
+        ActionValue.ExpressionID = newGuid();
+
+        // insert the actions
+        template_values[varNameForTemplateValues].ActionCounter += 1;
+        var temp = template_values[varNameForTemplateValues].ActionCounter;
+
+        template_values[varNameForTemplateValues]["Action" + (temp)] = new ITSObject(template_values,ITSInstance,true);
+        template_values[varNameForTemplateValues]["Action" + (temp)].ActionName  = 'EndIf';
+        template_values[varNameForTemplateValues]["Action" + (temp)].ActionValue = new ITSObject(template_values,ITSInstance,true);
+        template_values[varNameForTemplateValues]["Action" + (temp)].ActionValue.ExpressionID  = ActionValue.ExpressionID;
+
+        for (var j = temp; j > (actionCounter+1); j--) {
+            swapInObject(j, j-1, 'Action', template_values[varNameForTemplateValues]);
+        }
+
+        template_values[varNameForTemplateValues].ActionCounter += 1;
+        var temp = template_values[varNameForTemplateValues].ActionCounter;
+
+        template_values[varNameForTemplateValues]["Action" + (temp)] = new ITSObject(template_values,ITSInstance,true);
+        template_values[varNameForTemplateValues]["Action" + (temp)].ActionName  = 'Else';
+        template_values[varNameForTemplateValues]["Action" + (temp)].ActionValue = new ITSObject(template_values,ITSInstance,true);
+        template_values[varNameForTemplateValues]["Action" + (temp)].ActionValue.ExpressionID  = ActionValue.ExpressionID;
+
+        for (var j = temp; j > (actionCounter+1); j--) {
+            swapInObject(j, j-1, 'Action', template_values[varNameForTemplateValues]);
+        }
+    }
+    var select = '<label class="col-6" id="IfStatementExpression"><b>Expression</b></label><textarea notranslate class="col-6" ExpressionID="'+tempObj.ExpressionID+'" onkeyup="' + on_change_function + '" id="' + fullTraceID + 'Expression">' + tempObj.Expression + '</textarea>';
+    $('#' + DivToAdd).append("<div class='row m-0 p-0 col-12 form-control-sm'>" + select + "</div>");
+
+    // switch off the appropriate buttons
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'CLONE', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DROPDOWN', 'READONLY');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'UP', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DOWN', 'HIDE');
+};
+
+
+ITSActionIfStatement.prototype.beforeDelete = function (template_values, my_action, action_index) {
+    //console.log('before delete');
+    var actionMax = my_action.ActionCounter;
+    var expressionID = my_action["Action" + action_index].ActionValue.ExpressionID;
+    for (var i=actionMax; i > action_index; i--) {
+        //console.log('DELETE -- ',i,my_action["Action" + i]);
+        try {
+            if ((typeof my_action["Action" + i].ActionValue != 'undefined') &&
+                (my_action["Action" + i].ActionValue.ExpressionID == expressionID)) {
+                // found ! now delete
+                //console.log('DELETE2 -- ',i,my_action["Action" + i].ActionValue.ExpressionID);
+                for (var j = i ; j <= my_action.ActionCounter; j++) {
+                    swapInObject(j, j + 1, 'Action', my_action);
+                }
+                my_action.ActionCounter--;
+            }
+        } catch(err) {}
+    }
+};
+
+ITSActionIfStatement.prototype.getValuesFromGeneratedElement = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values, fullTraceID) {
+    var var2 = {};
+    var2.persistentProperties = "*ALL*";
+    var2._objectType = "ITSObject";
+    var2["Expression"] = $('#' + fullTraceID + 'Expression').val();
+    var2["ExpressionID"] = $('#' + fullTraceID + 'Expression').attr('ExpressionID');
+    return var2;
+};
+
+ITSActionIfStatement.prototype.executeAction = function (context, callback) {
+    var returnObject = new ITSActionResult();
+
+    var variables = context.actionValue;
+
+    // evaluate the expression. if false or error go to the first ELSE statement.
+    var resultVal = false;
+    try {
+        //console.log('expression ' , variables.Expression);
+        //console.log(' = ', eval(variables.Expression));
+        resultVal = eval(variables.Expression);
+        //console.log(' = ', resultVal);
+    } catch (err) {
+        ITSLogger.logMessage(logLevel.ERROR,'ITSActionIfStatement.executeAction evaluate expression failed : '+variables.Expression+' : ' + err.message);
+    }
+    context.temp[variables.ExpressionID] = resultVal;
+    if (resultVal == false) {
+        for (var i = context.currentStep + 1; i <= context.templateValues[context.variableName].ActionCounter ; i++) {
+            try {
+                //console.log(i, variables, variables.ExpressionID, context.templateValues[context.variableName]['Action' + i].ActionValue);
+                if (variables.ExpressionID == context.templateValues[context.variableName]['Action' + i].ActionValue.ExpressionID) {
+                    if ( (context.templateValues[context.variableName]['Action' + i].ActionName == 'ElseIf') ||
+                        (context.templateValues[context.variableName]['Action' + i].ActionName == 'Else') ||
+                        (context.templateValues[context.variableName]['Action' + i].ActionName == 'EndIf') ) {
+                        // found !
+                        context.currentStep = i;
+                        if (context.templateValues[context.variableName]['Action' + i].ActionName == 'ElseIf') context.currentStep = i-1;
+                        break;
+                    }
+                }
+            } catch (err) {
+            }
+        }
+    }
+
+    return returnObject;
+};
+
+ITSActionIfElseStatement = function (session) {
+    ITSAction.call(this, session);
+
+    this.Name = "Else";
+    this.Category1 = "Programming";
+    this.Description = "Else branch of if then else";
+    this.Visible = false;
+    this.preIndent = -1;
+    this.postIndent = 1;
+};
+
+ITSActionIfElseStatement.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator) {
+    var tempObj = ActionValue;
+    var select = '<div class="col-12 mx-0 px-0" ExpressionID="'+tempObj.ExpressionID+'" notranslate id="'+fullTraceID+'Expression"><label class="col-6" id="IfElseStatementExpression"><b>Else</b></label></div>';
+    $('#' + DivToAdd).append("<div class='row m-0 p-0 col-12 form-control-sm'>" + select + "</div>");
+
+    // switch off the appropriate buttons
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DROPDOWN', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'UP', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DOWN', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DELETE', 'HIDE');
+};
+
+ITSActionIfElseStatement.prototype.afterClone = function (template_values, my_action, original_action_index, cloned_action_index) {
+    //console.log('after clone', my_action, my_action["Action" + original_action_index]);
+    my_action["Action" + original_action_index].ActionName = 'ElseIf';
+    my_action["Action" + original_action_index].ActionValue.Expression = '';
+};
+
+ITSActionIfElseStatement.prototype.getValuesFromGeneratedElement = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values, fullTraceID) {
+    var var2 = {};
+    var2.persistentProperties = "*ALL*";
+    var2._objectType = "ITSObject";
+    var2["ExpressionID"] = $('#' + fullTraceID + 'Expression').attr('ExpressionID');
+    return var2;
+};
+
+ITSActionIfElseStatement.prototype.executeAction = function (context, callback) {
+    var returnObject = new ITSActionResult();
+
+    var variables = context.actionValue;
+
+    // if we already evaluated an expression then go to endif
+    if (context.temp[variables.ExpressionID]) {
+        for (var i = context.currentStep + 1; i <= context.templateValues[context.variableName].ActionCounter ; i++) {
+            try {
+                if (variables.ExpressionID == context.templateValues[context.variableName]['Action' + i].ActionValue.ExpressionID) {
+                    if (context.templateValues[context.variableName]['Action' + i].ActionName == 'EndIf')  {
+                        // found !
+                        context.currentStep = i;
+                        return returnObject;
+                    }
+                }
+            } catch (err) {
+            }
+        }
+    }
+
+    return returnObject;
+};
+
+ITSActionIfEndIfStatement = function (session) {
+    ITSAction.call(this, session);
+
+    this.Name = "EndIf";
+    this.Category1 = "Programming";
+    this.Description = "End of the if then else evaluation";
+    this.Visible = false;
+    this.preIndent = -1;
+};
+
+ITSActionIfEndIfStatement.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator) {
+    var tempObj = ActionValue;
+    var select = '<div class="col-12 mx-0 px-0" ExpressionID="'+tempObj.ExpressionID+'" id="'+fullTraceID+'Expression" notranslate><label class="col-6" id="IfEndIfStatementExpression"><b>End if</b></label></div>';
+    $('#' + DivToAdd).append("<div class='row m-0 p-0 col-12 form-control-sm'>" + select + "</div>");
+
+    // switch off the appropriate buttons
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DROPDOWN', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'UP', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DOWN', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DELETE', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'CLONE', 'HIDE');
+};
+
+ITSActionIfEndIfStatement.prototype.getValuesFromGeneratedElement = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values, fullTraceID) {
+    var var2 = {};
+    var2.persistentProperties = "*ALL*";
+    var2._objectType = "ITSObject";
+    var2["ExpressionID"] = $('#' + fullTraceID + 'Expression').attr('ExpressionID');
+    return var2;
+};
+
+ITSActionIfEndIfStatement.prototype.executeAction = function (context, callback) {
+    var returnObject = new ITSActionResult();
+
+    var variables = context.actionValue;
+
+    // do nothing, just execute the next line
+
+    return returnObject;
+};
+
+ITSActionElseIfStatement = function (session) {
+    ITSAction.call(this, session);
+
+    this.Name = "ElseIf";
+    this.Category1 = "Programming";
+    this.Description = "Else if for evaluating another condition";
+    this.Visible = false;
+    this.preIndent = -1;
+    this.postIndent = 1;
+};
+
+ITSActionElseIfStatement.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator, actionCounter) {
+    //console.log(traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator, actionCounter)
+    var tempObj = ActionValue;
+    var select = '<label class="col-6" id="ElseIfStatementExpression"><b>Else if</b></label><textarea notranslate ExpressionID="'+tempObj.ExpressionID+'" class="col-6" onkeyup="' + on_change_function + '" id="' + fullTraceID + 'Expression">' + tempObj.Expression + '</textarea>';
+    $('#' + DivToAdd).append("<div class='row m-0 p-0 col-12 form-control-sm'>" + select + "</div>");
+
+    // switch off the appropriate buttons
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'CLONE', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DROPDOWN', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'UP', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DOWN', 'HIDE');
+};
+
+ITSActionElseIfStatement.prototype.getValuesFromGeneratedElement = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values, fullTraceID) {
+    var var2 = {};
+    var2.persistentProperties = "*ALL*";
+    var2._objectType = "ITSObject";
+    var2["Expression"] = $('#' + fullTraceID + 'Expression').val();
+    var2["ExpressionID"] = $('#' + fullTraceID + 'Expression').attr('ExpressionID');
+    return var2;
+};
+
+ITSActionElseIfStatement.prototype.executeAction = function (context, callback) {
+    var returnObject = new ITSActionResult();
+
+    var variables = context.actionValue;
+
+    // if we already evaluated an expression then go to endif
+    //console.log('Expression found ? ',variables, context.temp[variables.ExpressionID]);
+    if (context.temp[variables.ExpressionID]) {
+        for (var i = context.currentStep + 1; i <= context.templateValues[context.variableName].ActionCounter ; i++) {
+            try {
+                //console.log(variables.ExpressionID, context.templateValues[context.variableName]['Action' + i].ActionValue.ExpressionID, context.templateValues[context.variableName]['Action' + i].ActionName);
+                if (variables.ExpressionID == context.templateValues[context.variableName]['Action' + i].ActionValue.ExpressionID) {
+                    if (context.templateValues[context.variableName]['Action' + i].ActionName == 'EndIf')  {
+                        // found !
+                        context.currentStep = i;
+                        return returnObject;
+                    }
+                }
+            } catch (err) {
+            }
+        }
+    }
+
+    // evaluate the expression. Jump to the next ELSE or END IF statement
+    var resultVal = false;
+    try {
+        //console.log('expression ' , variables.Expression);
+        //console.log(' = ', eval(variables.Expression));
+        resultVal = eval(variables.Expression);
+        //console.log(' = ', resultVal);
+    } catch (err) {
+        ITSLogger.logMessage(logLevel.ERROR,'ITSActionElseIfStatement.executeAction evaluate expression failed : '+variables.Expression+' : ' + err.message);
+    }
+    context.temp[variables.ExpressionID] = resultVal;
+    if (resultVal == false) {
+        //console.log(context);
+        //console.log(context.templateValues);
+        for (var i = context.currentStep + 1; i <= context.templateValues[context.variableName].ActionCounter ; i++) {
+            try {
+                //console.log('ELSEIF NEXT ', i, variables, variables.ExpressionID, context.templateValues[context.variableName]['Action' + i].ActionValue);
+                if (variables.ExpressionID == context.templateValues[context.variableName]['Action' + i].ActionValue.ExpressionID) {
+                    if ( (context.templateValues[context.variableName]['Action' + i].ActionName == 'ElseIf') ||
+                         (context.templateValues[context.variableName]['Action' + i].ActionName == 'Else') ||
+                         (context.templateValues[context.variableName]['Action' + i].ActionName == 'EndIf') ) {
+                        // found !
+                        context.currentStep = i;
+                        if (context.templateValues[context.variableName]['Action' + i].ActionName == 'ElseIf') context.currentStep = i-1;
+                        break;
+                    }
+                }
+            } catch (err) {
+            }
+        }
+    }
+    //console.log('Next step : ', context.currentStep);
+
+    return returnObject;
+};
+
+
+ITSActionLoopStatement = function (session) {
+    ITSAction.call(this, session);
+
+    this.Name = "Loop";
+    this.Category1 = "Programming";
+    this.Description = "Loop while a condition is true";
+    this.postIndent = 1;
+};
+
+ITSActionLoopStatement.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator, actionCounter) {
+    //console.log(traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator, actionCounter)
+    var tempObj = ActionValue;
+    if (typeof ActionValue.Expression == "undefined" ) {
+        ActionValue.Expression="";
+        ActionValue.ExpressionID = newGuid();
+
+        // insert the actions
+        template_values[varNameForTemplateValues].ActionCounter += 1;
+        var temp = template_values[varNameForTemplateValues].ActionCounter;
+
+        template_values[varNameForTemplateValues]["Action" + (temp)] = new ITSObject(template_values,ITSInstance,true);
+        template_values[varNameForTemplateValues]["Action" + (temp)].ActionName  = 'EndLoop';
+        template_values[varNameForTemplateValues]["Action" + (temp)].ActionValue = new ITSObject(template_values,ITSInstance,true);
+        template_values[varNameForTemplateValues]["Action" + (temp)].ActionValue.ExpressionID  = ActionValue.ExpressionID;
+
+        for (var j = temp; j > (actionCounter+1); j--) {
+            swapInObject(j, j-1, 'Action', template_values[varNameForTemplateValues]);
+        }
+
+    }
+    var select = '<label class="col-6" id="LoopStatementExpression"><b>Loop while</b></label><textarea notranslate ExpressionID="'+tempObj.ExpressionID+'" class="col-6" onkeyup="' + on_change_function + '" id="' + fullTraceID + 'Expression">' + tempObj.Expression + '</textarea>';
+    $('#' + DivToAdd).append("<div class='row m-0 p-0 col-12 form-control-sm'>" + select + "</div>");
+
+    // switch off the appropriate buttons
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'CLONE', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DROPDOWN', 'READONLY');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'UP', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DOWN', 'HIDE');
+};
+
+
+ITSActionLoopStatement.prototype.beforeDelete = function (template_values, my_action, action_index) {
+    //console.log('before delete');
+    var actionMax = my_action.ActionCounter;
+    var expressionID = my_action["Action" + action_index].ActionValue.ExpressionID;
+    for (var i=actionMax; i > action_index; i--) {
+        try {
+            if ((typeof my_action["Action" + i].ActionValue != 'undefined') &&
+                (my_action["Action" + i].ActionValue.ExpressionID == expressionID)) {
+                for (var j = i ; j <= my_action.ActionCounter; j++) {
+                    swapInObject(j, j + 1, 'Action', my_action);
+                }
+                my_action.ActionCounter--;
+            }
+        } catch(err) {}
+    }
+};
+
+ITSActionLoopStatement.prototype.getValuesFromGeneratedElement = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values, fullTraceID) {
+    var var2 = {};
+    var2.persistentProperties = "*ALL*";
+    var2._objectType = "ITSObject";
+    var2["Expression"] = $('#' + fullTraceID + 'Expression').val();
+    var2["ExpressionID"] = $('#' + fullTraceID + 'Expression').attr('ExpressionID');
+    return var2;
+};
+
+ITSActionLoopStatement.prototype.executeAction = function (context, callback) {
+    var returnObject = new ITSActionResult();
+
+    var variables = context.actionValue;
+
+    // evaluate the expression. if false or error go to the ENDLOOP statement.
+    var resultVal = false;
+    try {
+        //console.log('LOOP EVAL ',variables.Expression);
+        //console.log(eval(variables.Expression));
+        resultVal = eval(variables.Expression);
+    } catch (err) {
+        ITSLogger.logMessage(logLevel.ERROR,'ITSActionLoopStatement.executeAction evaluate expression failed : '+variables.Expression+' : ' + err.message);
+    }
+    if (resultVal == false) {
+        var exitFound = false;
+        //console.log('LOOP EXIT');
+        for (var i = context.currentStep + 1; i <= context.templateValues[context.variableName].ActionCounter ; i++) {
+            try {
+                //console.log('LOOP EXIT', i, variables.ExpressionID , context, context.templateValues[context.variableName]['Action' + i].ActionValue.ExpressionID);
+                if (variables.ExpressionID == context.templateValues[context.variableName]['Action' + i].ActionValue.ExpressionID) {
+                    // found !
+                    context.currentStep = i;
+                    exitFound = true;
+                    break;
+                }
+            } catch (err) {
+            }
+        }
+        if (!exitFound) {
+            // emergency exit
+            context.currentStep  = context.templateValues[context.variableName].ActionCounter;
+            ITSLogger.logMessage(logLevel.ERROR,'ITSActionLoopStatement.executeAction - EMERGENCY LOOP EXIT FOUND ! ');
+        }
+    }
+
+    return returnObject;
+};
+
+ITSActionLoopEndStatement = function (session) {
+    ITSAction.call(this, session);
+
+    this.Name = "EndLoop";
+    this.Category1 = "Programming";
+    this.Description = "End of the loop";
+    this.Visible = false;
+    this.preIndent = -1;
+};
+
+ITSActionLoopEndStatement.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator) {
+    var tempObj = ActionValue;
+    var select = '<div class="col-12 mx-0 px-0" ExpressionID="'+ActionValue.ExpressionID+'" id="'+fullTraceID+'Expression" notranslate><label class="col-6" id="LoopEndStatementExpression"><b>End loop</b></label></div>';
+    $('#' + DivToAdd).append("<div class='row m-0 p-0 col-12 form-control-sm'>" + select + "</div>");
+
+    // switch off the appropriate buttons
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DROPDOWN', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'UP', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DOWN', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DELETE', 'HIDE');
+    screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'CLONE', 'HIDE');
+};
+
+ITSActionLoopEndStatement.prototype.getValuesFromGeneratedElement = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values, fullTraceID) {
+    var var2 = {};
+    var2.persistentProperties = "*ALL*";
+    var2._objectType = "ITSObject";
+    var2["ExpressionID"] = $('#' + fullTraceID + 'Expression').attr('ExpressionID');
+    return var2;
+};
+
+ITSActionLoopEndStatement.prototype.executeAction = function (context, callback) {
+    var returnObject = new ITSActionResult();
+
+    var variables = context.actionValue;
+
+    // find the loop statement and jump back
+    for (var i=context.currentStep-1; i>=0 ; i--) {
+        try {
+            if (variables.ExpressionID == context.templateValues[context.variableName]['Action' + i].ActionValue.ExpressionID) {
+                // found !
+                context.currentStep = i - 1;
+                break;
+            }
+        } catch (err) {}
+    }
+
+    return returnObject;
+};
+
+ITSActionAssignStatement = function (session) {
+    ITSAction.call(this, session);
+
+    this.Name = "Assign";
+    this.Category1 = "Programming";
+    this.Description = "Assign a value to a variable";
+};
+
+ITSActionAssignStatement.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator, actionCounter) {
+    //console.log(traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator, actionCounter)
+    var tempObj = ActionValue;
+    if (typeof ActionValue.Expression == "undefined" ) {
+        ActionValue.Expression="";
+        ActionValue.VariableName="";
+        ActionValue.ExpressionID = newGuid();
+    }
+    var select = '<div class="row m-0 p-0 col-12 form-control-sm">';
+    select += '<label class="col-4" id="AssignStatementVariable"><b>Assign value to</b></label><label class="col-2"><i>context.vars.</i></label><input type="text" ExpressionID="'+tempObj.ExpressionID+'" notranslate value="' + tempObj.VariableName + '" class="col-6" onkeyup="' + on_change_function + '" id="' + fullTraceID + 'VariableName"></input>';
+    select += '</div><div class="col-12 mx-0 px-0">';
+    select += '<label class="col-6" id="AssignStatementExpression"><b>Expression</b></label><textarea notranslate class="col-6" onkeyup="' + on_change_function + '" id="' + fullTraceID + 'Expression">' + tempObj.Expression + '</textarea>';
+    select += '</div>';
+    $('#' + DivToAdd).append("<div class='row m-0 p-0 col-12 form-control-sm'>" + select + "</div>");
+    $('#' + fullTraceID + 'VariableName').keyup(function () { this.value = this.value.replace(/\W/g, ''); });
+};
+
+
+ITSActionAssignStatement.prototype.getValuesFromGeneratedElement = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values, fullTraceID) {
+    var var2 = {};
+    var2.persistentProperties = "*ALL*";
+    var2._objectType = "ITSObject";
+    var2["Expression"] = $('#' + fullTraceID + 'Expression').val();
+    var2["VariableName"] = $('#' + fullTraceID + 'VariableName').val();
+    var2["ExpressionID"] = $('#' + fullTraceID + 'VariableName').attr('ExpressionID');
+    return var2;
+};
+
+ITSActionAssignStatement.prototype.executeAction = function (context, callback) {
+    var returnObject = new ITSActionResult();
+
+    var variables = context.actionValue;
+
+    var resultVal = undefined;
+    if (variables.Expression.trim() != "") {
+        try {
+            //console.log('ASSIGNMENT ',variables.Expression);
+            //console.log(eval(variables.Expression));
+            resultVal = eval(variables.Expression);
+        } catch (err) {
+            ITSLogger.logMessage(logLevel.ERROR,'ITSActionAssignStatement.executeAction evaluate failed : ' + variables.VariableName + '=' + variables.Expression +'. error : ' + err.message);
+        }
+    }
+
+    // evaluate the expression and assign the result to the variable
+    if (variables.VariableName.indexOf('__') == 0) {
+        // this variable exists directly on the context
+        try {
+            let varList = variables.VariableName.indexOf(2).split('.');
+            for (var i=0; i < varList.length; i ++) {
+                if (eval ( 'typeof context.' +  varList.slice(0,i+1).join('.') ) == "undefined") {
+                    eval ( 'context.' +  varList.slice(0,i+1).join('.') + '= new ITSObject(this,ITSInstance,true)');
+                }
+            }
+            eval('context.' + variables.VariableName.indexOf(2) + '=' + resultVal);
+        } catch (err) {
+            ITSLogger.logMessage(logLevel.ERROR,'ITSActionAssignStatement.executeAction assigment failed : ' + variables.VariableName + '=' + variables.Expression +'. error : ' + err.message);
+        }
+    }
+    else {
+        context.vars[variables.VariableName] = resultVal;
+    }
 
     return returnObject;
 };

@@ -437,6 +437,7 @@ ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templ
     // templatesvalues - any already filled in values for this template (js object)
     // pnp_template - true if this test editor view has to be generated with the PnP template
 
+    var regenerate_required = false;
     var __ret = this.generate_template_and_scan_for_repeatblocks(templatevalues, pnp_template, id, div, 'TE');
 
     templatevalues = __ret.templatevalues;
@@ -472,7 +473,7 @@ ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templ
     for (var i = 0; i < this.TemplateVariables.length; i++) {
         // is this a repeat block var? If so generate at the bottom ...
         if (repeat_block_vars.indexOf(this.TemplateVariables[i]) < 0) {
-            this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, 0, on_change_function, testdefinition, "", 0,0, currentScreenIndex, on_element_command);
+            regenerate_required = regenerate_required || this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, 0, on_change_function, testdefinition, "", 0,0, currentScreenIndex, on_element_command);
         }
     }
     var first_on_element_command = "";
@@ -481,7 +482,7 @@ ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templ
         for (var i = 0; i < this.TemplateVariables.length; i++) {
             // is this a repeat block var? If so we can generate it now !
             if (repeat_block_vars.indexOf(this.TemplateVariables[i]) >= 0) {
-                this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, repeat_block_counter + 1, on_change_function, testdefinition, first_on_element_command , repeat_block_counter+1, this.RepeatBlockCount, currentScreenIndex, on_element_command );
+                regenerate_required = regenerate_required || this.TemplateVariables[i].generate_variable_for_test_editor(this, div, templatevalues, repeat_block_counter + 1, on_change_function, testdefinition, first_on_element_command , repeat_block_counter+1, this.RepeatBlockCount, currentScreenIndex, on_element_command );
                 first_on_element_command = "";
             }
         }
@@ -492,6 +493,8 @@ ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templ
         $('#' + div).append('<button type="button" class="btn-sm btn-success" onclick="' + on_add_element_function + '"><i class="fa fa-sm fa-plus"></i></button>');
         $('#' + div).append('<button type="button" class="btn-sm btn-success" onclick="' + on_delete_element_function + '"><i class="fa fa-sm fa-minus"></i></button>');
     }
+
+    return regenerate_required;
 };
 
 ITSScreenTemplate.prototype.swap = function (element1, element2, templatevalues) {
@@ -780,6 +783,7 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
     var bgcolor = "bg-light";
     var buttons = "";
     var select = "";
+    var regenerate_required = false;
 
     if (repeat_block_counter % 2 == 1) {
         bgcolor = "bg-secondary";
@@ -883,11 +887,14 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             var actionMax = template_values[varNameForTemplateValues].ActionCounter;
             var countForLabel="";
             var borderForDiv="";
+            if (typeof this.collapsedStatus == 'undefined') this.collapsedStatus = {};
+            // style="position:fixed; left:5%; top:5%; z-index:10000; height:90%; width:90%;"
+            var totalSelect = '<span id="SLX_'+traceID+'" style="overflow-y: auto; overflow-x:hidden"><i style="position:relative;float:left;top:0px;left:4px" class="fa fa-s fa-binoculars" id="LX_'+traceID+'"></i>';
             for (var actionCounter = 1; actionCounter <= actionMax; actionCounter ++) {
                 if (actionMax > 1) countForLabel = ' #' + actionCounter;
                 borderForDiv = "";
                 if (actionCounter < 2) borderForDiv = 'style="border-top:1px silver dotted;"';
-                select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0 ' + bgcolor + '" '+borderForDiv+'>' +
+                select = '<div NoTranslate id="DIV1_SLX_'+traceID + "_" + actionCounter +'" class="row col-12 mr-0 ml-1 px-0 ' + bgcolor + '" '+borderForDiv+'>' +
                     '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + countForLabel + '</label>' +
                     '<div NoTranslate class="col-6 mx-0 px-0">' +
                     '<select NoTranslate class="form-control" onchange="' + on_element_command_for_all_elements + '(\'ACTIONCHANGED\'); " onkeyup="' + on_element_command_for_all_elements + '(\'ACTIONCHANGED\'); " id="' + traceID + '_' + actionCounter + '">';
@@ -913,16 +920,39 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
                 }
                 select = select + '</select></div></div>';
                 borderForDiv = 'style="border-bottom:1px silver dotted;"';
-                select += '<div NoTranslate class="row col-12 mr-0 ml-1 px-0 ' + bgcolor + '" '+borderForDiv+'>';
+                select += '<div NoTranslate id="DIV2_SLX_'+traceID + "_" + actionCounter +'" class="row col-12 mr-0 ml-1 px-0 ' + bgcolor + '" '+borderForDiv+'>';
                 var buttons= "";
-                buttons += "<button type=\"button\" class=\"btn-xs btn-default\" onclick=\"" + on_element_command_for_all_elements + "('ACTIONADD','" + varNameForTemplateValues + "'," + actionCounter + ");\"><i class=\"fa fa-xs fa-plus\"></i></button>\n";
-                if (actionCounter > 1) buttons += "<button type=\"button\" class=\"btn-xs btn-default\" onclick=\"" + on_element_command_for_all_elements + "('ACTIONUP','" + varNameForTemplateValues + "'," + actionCounter + ");\"><i class=\"fa fa-xs fa-arrow-up\"></i></button>\n";
-                if (actionCounter < actionMax) buttons += "<button type=\"button\" class=\"btn-xs btn-default\" onclick=\"" + on_element_command_for_all_elements + "('ACTIONDOWN','" + varNameForTemplateValues + "'," + actionCounter + ");\"><i class=\"fa fa-xs fa-arrow-down\"></i></button>\n";
-                if (actionMax > 1) buttons += "<button type=\"button\" class=\"btn-xs btn-default\" onclick=\"" + on_element_command_for_all_elements + "('ACTIONDELETE','" + varNameForTemplateValues + "'," + actionCounter + ");\"><i class=\"fa fa-xs fa-trash\"></i></button>\n";
+                // add button
+                buttons += "<button id=\"LX_ADD_" + traceID + "_" + actionCounter + "\" type=\"button\" class=\"btn-xs btn-default\" onclick=\" lastScrollPosY=$('#SLX_"+traceID+"')[0].scrollTop; " + on_element_command_for_all_elements + "('ACTIONADD','" + varNameForTemplateValues + "'," + actionCounter + ");\"><i class=\"fa fa-xs fa-plus\"></i></button>\n";
+                // clone button
+                buttons += "<button id=\"LX_CLONE_" + traceID + "_" + actionCounter + "\" type=\"button\" class=\"btn-xs btn-default\" onclick=\" lastScrollPosY=$('#SLX_"+traceID+"')[0].scrollTop; " + on_element_command_for_all_elements + "('ACTIONCLONE','" + varNameForTemplateValues + "'," + actionCounter + ");\"><i class=\"fa fa-xs fa-copy\"></i></button>\n";
+                // up button
+                if (actionCounter > 1) buttons += "<button type=\"button\" id=\"LX_UP_" + traceID + "_" + actionCounter + "\" class=\"btn-xs btn-default\" onclick=\" lastScrollPosY=$('#SLX_"+traceID+"')[0].scrollTop; " + on_element_command_for_all_elements + "('ACTIONUP','" + varNameForTemplateValues + "'," + actionCounter + ");\"><i class=\"fa fa-xs fa-arrow-up\"></i></button>\n";
+                // down button
+                if (actionCounter < actionMax) buttons += "<button type=\"button\" id=\"LX_DOWN_" + traceID + "_" + actionCounter + "\" class=\"btn-xs btn-default\" onclick=\" lastScrollPosY=$('#SLX_"+traceID+"')[0].scrollTop; " + on_element_command_for_all_elements + "('ACTIONDOWN','" + varNameForTemplateValues + "'," + actionCounter + ");\"><i class=\"fa fa-xs fa-arrow-down\"></i></button>\n";
+                // trash button
+                if (actionMax > 1) buttons += "<button type=\"button\" id=\"LX_DELETE_" + traceID + "_" + actionCounter + "\" class=\"btn-xs btn-default btn-warning\" onclick=\" lastScrollPosY=$('#SLX_"+traceID+"')[0].scrollTop; " + on_element_command_for_all_elements + "('ACTIONDELETE','" + varNameForTemplateValues + "'," + actionCounter + ");\"><i class=\"fa fa-xs fa-trash\"></i></button>\n";
                 select += '<div NoTranslate class="col-4 mx-0 px-0 btn-group" style="height:25px">'+buttons+'</div>';
                 select += '<div NoTranslate class="col-8 mx-0 px-0" id="' + traceID  +  'Options'+ actionCounter + '"></div>';
                 select += "</div>";
-                $('#' + div_to_add_to).append(select);
+                totalSelect += select;
+            }
+            $('#' + div_to_add_to).append(totalSelect+'</span>');
+            // add the onclick on the icon for zoom
+            $('#LX_' +traceID).click(
+                function(me) {
+                    //console.log(this, me.target.id);
+                    if (typeof this.collapsedStatus[me.target.id] == 'undefined') {
+                        this.collapsedStatus[me.target.id] = false;
+                    } else {
+                        this.collapsedStatus[me.target.id] = !this.collapsedStatus[me.target.id];
+                    }
+                    toggleModal('S' + me.target.id);
+                }.bind(this)
+            );
+            if (this.collapsedStatus['LX_' +traceID] == false) {
+                toggleModal('SLX_' +traceID, true);
+                $('#SLX_' + traceID)[0].scroll(0,lastScrollPosY);
             }
             break;
         case "I" :
@@ -975,7 +1005,8 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
                 break;
             case "LX" :
                 try {
-                    this.generate_LX_variable(traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues);
+                    regenerate_required = this.generate_LX_variable(traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues);
+                    //console.log(template_values);
                 }  catch (err) {
                     ITSLogger.logMessage(logLevel.ERROR,"generate_LX_variable failed " + err.message);
                 }
@@ -1007,12 +1038,20 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
     if (colorpicker) {
         jscolor.installByClassName('jscolor');
     }
+
+    return regenerate_required;
 };
 
 ITSScreenTemplateVariable.prototype.generate_LX_variable = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues) {
     // loop through all actions in this list
     var actionMax = template_values[varNameForTemplateValues].ActionCounter;
-    for (var actionCounter = 1; actionCounter <= actionMax; actionCounter ++) {
+    var part1 = "";
+    var part2 = "";
+    var regenerate_required = false;
+    var actionCounter = 1;
+    var indentCounter = 0;
+    var myAction = {};
+    while (actionCounter <= actionMax) {
         if (typeof template_values[varNameForTemplateValues]["Action" + actionCounter]  == "undefined") {
             template_values[varNameForTemplateValues]["Action" + actionCounter] = {};
             template_values[varNameForTemplateValues]["Action" + actionCounter].persistentProperties = "*ALL*";
@@ -1022,24 +1061,73 @@ ITSScreenTemplateVariable.prototype.generate_LX_variable = function (traceID, te
         }
 
         // get the action and variables
-        var part1 = template_values[varNameForTemplateValues]["Action" + actionCounter].ActionName;
-        var part2 = template_values[varNameForTemplateValues]["Action" + actionCounter].ActionValue;
+        part1 = template_values[varNameForTemplateValues]["Action" + actionCounter].ActionName;
+        part2 = template_values[varNameForTemplateValues]["Action" + actionCounter].ActionValue;
 
         var tempTraceID = traceID + '_' + actionCounter;
         $('#' + tempTraceID).val(part1);
+        // check if the setting is set in the dropdown, otherwise the option is not there. then add it.
+        if ($('#' + tempTraceID).val(part1) != part1) {
+            $('#' + tempTraceID).append('<option NoTranslate value="' + part1 + '">' + part1 + '</option>');
+            $('#' + tempTraceID).val(part1);
+        }
         // add the settings for the selected action from the template values and generate the options.
         var DivToAdd = traceID + 'Options' + actionCounter;
         $('#' + DivToAdd).empty();
         if (typeof testdefinition != "undefined") {
 
+            myAction = undefined;
             try {
-                ITSInstance.actions.findAction(part1).generateElement(traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd, tempTraceID, part2);
-            } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"generate_LX_variable : ITSInstance.actions.findAction contains error " + part1 + " " + err.message ); }
+                myAction = ITSInstance.actions.findAction(part1);
+                indentCounter += myAction.preIndent;
+                // generate indent
+                console.log(indentCounter, myAction);
+                if (indentCounter != 0) {
+                    $('#DIV1_SLX_' + tempTraceID).css('border-left', 'solid chartreuse ' + (indentCounter * 5) + 'px');
+                    $('#DIV2_SLX_' + tempTraceID).css('border-left', 'solid chartreuse ' + (indentCounter * 5) + 'px');
+                }
+                // generate element
+                myAction.generateElement(traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd, tempTraceID, part2, this, actionCounter);
+                if (actionMax != template_values[varNameForTemplateValues].ActionCounter) {
+                    regenerate_required = true;
+                    //console.log('NEW ELEMENTS FOUND ! ',template_values, varNameForTemplateValues, actionMax ,template_values[varNameForTemplateValues].ActionCounter);
+                }
+                actionMax = template_values[varNameForTemplateValues].ActionCounter;
+            } catch (err) {
+                //console.log(varNameForTemplateValues, actionCounter,template_values[varNameForTemplateValues],  template_values[varNameForTemplateValues]["Action" + actionCounter]);
+                ITSLogger.logMessage(logLevel.ERROR,"generate_LX_variable : ITSInstance.actions.findAction contains error " + part1 + " " + err.message );
+            }
+            if (myAction != undefined) indentCounter += myAction.postIndent;
 
             ITSInstance.translator.translateDiv('#' + DivToAdd, false, true);
         }
-    } // for
+        actionCounter ++;
+    } // while
+
+    return regenerate_required;
 };
+
+ITSScreenTemplateVariable.prototype.switch_actionelement_state = function (fullTraceID, elementToSwitch, switchOff) {
+    var preFix = 'LX_';
+    var betweenFix = '_';
+    if (elementToSwitch == 'DROPDOWN') {
+        preFix="";
+        betweenFix="";
+        elementToSwitch = "";
+    }
+    if (switchOff == 'HIDE') {
+        $('#' + preFix + elementToSwitch + betweenFix + fullTraceID).hide();
+    }
+    if (switchOff == 'SHOW') {
+        $('#' + preFix + elementToSwitch + betweenFix + fullTraceID).show();
+    }
+    if (switchOff == 'READONLY') {
+        $('#' + preFix + elementToSwitch + betweenFix + fullTraceID).attr("disabled", true);
+    }
+    if (switchOff == 'WRITABLE') {
+        $('#' + preFix + elementToSwitch + betweenFix + fullTraceID).attr("disabled", false);
+    }
+}
 
 ITSScreenTemplateVariable.prototype.get_variable_value_for_test_editor = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values) {
     // generate variable name

@@ -694,7 +694,9 @@ function isEmpty(map) {
 }
 
 // empty compatible object for JSON stringify & load functions
-function ITSObject(par,session) { }
+function ITSObject(par,session,persistable) {
+    if (persistable) { this._objectType = "ITSObject"; this.persistentProperties = "*ALL*";}
+}
 
 
 function ITSJSONStringify(someITSObject) {
@@ -1439,6 +1441,7 @@ function swapInObject (element1, element2, varname, templatevalues) {
             // do nothing for now
         }
         else {
+            //console.log(tempVal1, tempVal2, ElemIndex1, ElemIndex2);
             templatevalues[varname + ElemIndex1] = tempVal2;
             templatevalues[varname + ElemIndex2] = tempVal1;
         }
@@ -1585,4 +1588,15 @@ function loadFontAwesomeJavascript() {
     onDemandScript("fontawesome/js/all.js", function () {
         window.FontAwesomeConfig.showMissingIcons = false;
     } );
+}
+
+// toggle screen component to modal and back
+function toggleModal(id, forceShow) {
+    if ((!forceShow) && ($('#'+id).hasClass('modal-backdrop')) ) {
+        $('#'+id).removeClass('modal-backdrop');
+        $('#'+id).removeClass('bg-light');
+    } else {
+        $('#'+id).addClass('modal-backdrop');
+        $('#'+id).addClass('bg-light');
+    }
 }

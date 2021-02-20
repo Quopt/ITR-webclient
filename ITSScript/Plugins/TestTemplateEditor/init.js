@@ -635,7 +635,7 @@ ITSTestTemplateEditor.prototype.generateCurrentScreenIndexTemplateVariables = fu
             }
             ITSInstance.actions.sortActionList();
 
-            template.generate_test_editor_view('AdminInterfaceTestTemplateEditorScreenVar', 'TE' + screenComponentNum + 'Y', templateValues, false,
+            var regenerate_required = template.generate_test_editor_view('AdminInterfaceTestTemplateEditorScreenVar', 'TE' + screenComponentNum + 'Y', templateValues, false,
                 'ITSInstance.newITSTestEditorController.templateValueChanged();',
                 'ITSInstance.newITSTestEditorController.templateAddElement();',
                 'ITSInstance.newITSTestEditorController.templateDeleteElement();',
@@ -644,6 +644,11 @@ ITSTestTemplateEditor.prototype.generateCurrentScreenIndexTemplateVariables = fu
                 this.currentTest,
                 "ITSInstance.newITSTestEditorController.templatePlaceHolderCommand",
                 this.currentScreenIndex);
+            if (regenerate_required) {
+                //console.log('regen');
+                this.generateCurrentScreenIndexTemplateVariables(screenComponentNum, templateValues, template, template_id);
+                return;
+            }
             $('#AdminInterfaceTestTemplateEditorScreenVar').append('<small>' + this.currentScreenComponent.getColumnName() + '</small>');
         }
     }
@@ -652,6 +657,7 @@ ITSTestTemplateEditor.prototype.templatePlaceHolderChanged = function (newVal) {
     this.currentScreenComponent.placeholderName = newVal;
 };
 ITSTestTemplateEditor.prototype.templatePlaceHolderCommand = function (Command, value1, value2) {
+    console.log(Command, value1, value2);
     if (Command == "DELETE") {
         ITSInstance.newITSTestEditorController.currentTemplate.deleteElement(value1, ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues);
         ITSInstance.newITSTestEditorController.editScreenComponentDescription(ITSInstance.newITSTestEditorController.currentScreenComponentIndex, ITSInstance.newITSTestEditorController.currentScreenComponent.varComponentName);
@@ -671,16 +677,44 @@ ITSTestTemplateEditor.prototype.templatePlaceHolderCommand = function (Command, 
         ITSInstance.newITSTestEditorController.templateValueChangedProcess();
         ITSInstance.newITSTestEditorController.editScreenComponentDescription(ITSInstance.newITSTestEditorController.currentScreenComponentIndex, ITSInstance.newITSTestEditorController.currentScreenComponent.varComponentName);
     }
-    if (Command == 'ACTIONADD') {
+    if ((Command == 'ACTIONADD') || (Command == 'ACTIONCLONE')) {
         ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1].ActionCounter++;
-        ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1]['Action'+ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1].ActionCounter] = {};
+        ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1]['Action' +
+              ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1].ActionCounter] =
+                  new ITSObject(ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues,ITSInstance,true);
+
         for (var i=ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1].ActionCounter-1; i > value2; i--) {
-            swapInObject(i+1, i, 'Action', ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1]);
+           swapInObject(i+1, i, 'Action', ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1]);
         }
+
+        if (Command == 'ACTIONCLONE') {
+            shallowCopy(
+                ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1]['Action' + value2],
+                ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1]['Action' + (value2 + 1)]);
+            try {
+                var actionName = ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1]['Action' + value2].ActionName;
+                var tempAction = ITSInstance.actions.findAction(actionName);
+                if (typeof tempAction.afterClone != "undefined") {
+                    tempAction.afterClone(ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues,
+                        ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1],
+                        value2, value2+1);
+                }
+            } catch(err) {}
+        }
+
         ITSInstance.newITSTestEditorController.editScreenComponentDescription(ITSInstance.newITSTestEditorController.currentScreenComponentIndex, ITSInstance.newITSTestEditorController.currentScreenComponent.varComponentName);
         ITSInstance.newITSTestEditorController.templateValueChanged();
     }
     if (Command == 'ACTIONDELETE') {
+        try {
+            var actionName = ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1]['Action' + value2].ActionName;
+            var tempAction = ITSInstance.actions.findAction(actionName);
+            if (typeof tempAction.beforeDelete != "undefined") {
+                tempAction.beforeDelete(ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues,
+                    ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1],
+                    value2);
+            }
+        } catch(err) {}
         for (var i=value2; i <= ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1].ActionCounter; i++) {
             swapInObject(i, i+1, 'Action', ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues[value1]);
         }
