@@ -802,7 +802,7 @@ function scanITSJsonLoadObject(tempObject, someITSObject, parentITSObject, ITSIn
                     if (!DefaultObjectType) DefaultObjectType="ITSObject";
                     var tempITSObject = eval( "new " +  ( (tempObjectType == "") ?  DefaultObjectType : (tempObject[keys[i]][j])._objectType ) + "(parentITSObject, ITSInstanceObject);");
                     if (! someITSObject[keys[i]] ) { someITSObject[keys[i]] = [] ; };
-                    someITSObject[keys[i]].push( tempITSObject);
+                    try { someITSObject[keys[i]].push( tempITSObject); } catch (err) {};
                     scanITSJsonLoadObject(tempObject[keys[i]][j], tempITSObject, tempITSObject, ITSInstanceObject, DefaultObjectType, log + '['+j+']');
                 }
             } else {
