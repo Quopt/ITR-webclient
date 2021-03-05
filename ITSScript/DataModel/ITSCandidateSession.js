@@ -34,7 +34,7 @@ ITSCandidateSession = function (session, ITSSession) {
     //this.PersonID = this.Person.ID;
     this.regenerateCandidate();
 
-    this.SessionType = 0; // 0 = PersonSession. 1=Public (might be temporary) session. 4 = Group session. 200 = public base session.
+    this.SessionType = 0; // 0 = PersonSession. 1=Public (might be temporary) session. 3=PnP session (no candidate). 4 = Group session. 200 = public base session.
     // 1000 = Course session (group session), 1001 teaching session for specific course part, 1002 = individual course session from group session,
     //  1003 = individual course session, 1200 = polling session
     // (0-300 reserved for testing, 1000-1300 reserved for educational)
@@ -667,7 +667,7 @@ ITSCandidateSession.prototype.sessionLoaded = function () {
         this.SessionTests[i].loadDetails(this.testLoadedFine.bind(this,i), this.sessionLoadingFailed.bind(this), this.InTestTaking);
     }
     // load the candidate information
-    if ((this.SessionType != 100) && (this.SessionType != 1000)) {
+    if ((this.SessionType != 3) && (this.SessionType != 100) && (this.SessionType != 1000)) {
         this.personRequired = true;
         ITSInstance.JSONAjaxLoader('persons/' + this.PersonID, this.Person, this.testLoadedFine.bind(this), this.sessionLoadingFailed.bind(this));
     }

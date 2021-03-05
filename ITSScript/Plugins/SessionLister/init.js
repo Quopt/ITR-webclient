@@ -273,6 +273,9 @@
         else if (parseInt(getUrlParameterValue("SessionType")) == 1003) {
             ITSRedirectPath("Session&SessionType=1003&SessionID=" + sessionID);
         }
+        else if (parseInt(getUrlParameterValue("SessionType")) == 3) {
+            ITSRedirectPath("Session&SessionType=3&SessionID=" + sessionID);
+        }
         else {
             ITSRedirectPath("Session&SessionID=" + sessionID);
         }

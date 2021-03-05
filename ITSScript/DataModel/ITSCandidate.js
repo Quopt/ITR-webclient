@@ -51,7 +51,7 @@ ITSCandidate = function (parent, ITSSession) {
     this.Sex = 0; // 0 unknown, 1 male, 2 female, 3 gender neutral
     this.Password = "";
 
-    this.PersonType = 0 ; // 0 = candidate, 1000 = teacher
+    this.PersonType = 0 ; // 0 = candidate, 1000 = teacher, 1 = generic system user (only one present with id 00000000-0000-0000-0000-000000000000)
 
     this.newCandidate = true;
 

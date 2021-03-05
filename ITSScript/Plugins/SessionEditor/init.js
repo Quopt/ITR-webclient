@@ -260,6 +260,10 @@
             $('#AdminInterfaceEditSessionEditButtonBar').show();
             $('#AdminInterfaceEditSessionEditButtonBarTeaching').hide();
         }
+        if (getUrlParameterValue("SessionType") == 3) {
+            $('#AdminInterfaceEditSessionChange').hide();
+            $('#AdminInterfaceEditSessionEditArchiveTest').hide();
+        }
 
         // set the user download preferences
         if ((typeof ITSInstance.users.currentUser.PluginData.DownloadSettings != "undefined") && (typeof ITSInstance.users.currentUser.PluginData.DownloadSettings.Reports != "undefined")) {

@@ -116,15 +116,17 @@
             } else {
                 // add a save button
                 $("#SessionViewAnswersInterfaceEditTestAnswers").append ('<button type="button" class="btn btn-default btn-success" id="SessionViewAnswersInterfaceEditTestAnswers_saveButton" onclick="ITSInstance.SessionViewAnswersSessionController.saveTestResults();"><i id="SessionViewAnswersInterfaceEditTestAnswers-saveIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="SessionViewAnswersInterfaceEditTestAnswers-saveButtonLabel">Save changes</span></button>')
+                $("#SessionViewAnswersInterfaceEditTestAnswers").append ('<button type="button" class="btn btn-default btn-success" id="SessionViewAnswersInterfaceEditTestAnswers_saveAndBackButton" onclick="ITSInstance.SessionViewAnswersSessionController.saveTestResults(true);"><i id="SessionViewAnswersInterfaceEditTestAnswers-saveAndBackIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="SessionViewAnswersInterfaceEditTestAnswers-saveAndBackButtonLabel">Save changes & back</span></button>')
             }
         }
         ITSInstance.UIController.showInterfaceAsWaitingOff();
         ITSInstance.UIController.showInterfaceAsWaitingOffForceShow();
     };
 
-    ITSSessionViewAnswersEditor.prototype.saveTestResults = function () {
+    ITSSessionViewAnswersEditor.prototype.saveTestResults = function (goBack) {
         var oneday = new Date();
         oneday.setHours(oneday.getHours() - 24);
+        this.goBack = goBack;
         if ( (this.currentSession.SessionTests[this.currentTestIndex].TestEnd < new Date(2001,1,1) ) ||
             (this.currentSession.SessionTests[this.currentTestIndex].testDefinition.Costs <= 0) ||
             (this.currentSession.SessionTests[this.currentTestIndex].TestEnd >= oneday) ) {
@@ -140,6 +142,7 @@
 
     ITSSessionViewAnswersEditor.prototype.saveSessionTestOK = function () {
         $('#SessionViewAnswersInterfaceEditTestAnswers-saveIcon')[0].outerHTML = "<i id='SessionViewAnswersInterfaceEditTestAnswers-saveIcon' class='fa fa-fw fa-thumbs-up'></i>";
+        if (this.goBack) { window.history.back(); }
     };
 
     ITSSessionViewAnswersEditor.prototype.saveSessionTestError = function () {

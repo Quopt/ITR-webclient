@@ -70,6 +70,7 @@ function loadOfficeComponents() {
         onDemandScript(ITSJavaScriptVersion + "/Plugins/CourseTeachingSessionPortlet/init.js"); loadPortletsCount ++;
         onDemandScript(ITSJavaScriptVersion + "/Plugins/CourseClassroomSessionPortlet/init.js"); loadPortletsCount ++;
         onDemandScript(ITSJavaScriptVersion + "/Plugins/CourseIndividualSessionPortlet/init.js"); loadPortletsCount ++;
+        onDemandScript(ITSJavaScriptVersion + "/Plugins/SessionPnPPortlet/init.js"); loadPortletsCount ++;
         // %OFFICEPORTLETEND%
 
         // load all the editors and viewers
