@@ -224,6 +224,9 @@
             $('#' + tabID).show();
             $('#' + id).addClass("text-info");
 
+            DataBinderTo('ReportTemplateInterfaceEditTabReportInformation', this.currentReport);
+            DataBinderTo('ReportTemplateInterfaceEditTabReportWriter', this.currentReport);
+
             switch (tabID) {
                 case "ReportTemplateInterfaceEditTabReportInformation" :
                     this.fillReportInformationTab();
