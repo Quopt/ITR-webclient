@@ -1044,7 +1044,7 @@ function envSubstituteFromArray(textToScan, envSubstArr) {
         varFound = textToScan.substring(scanPos +2, textToScan.indexOf("%%", scanPos+2));
         // check if the property can be found in the instance object
 
-        result += "%%" + envSubstArr[Number(varFound)] + "%%";
+        if (typeof envSubstArr[Number(varFound)] != "undefined") result += "%%" + envSubstArr[Number(varFound)] + "%%";
 
         // next
         oldScanPos = scanPos+varFound.length+4;

@@ -1021,3 +1021,95 @@ ITSTranslator.prototype.postFullTranslations = function (langCode) {
     }
 };
 
+ITSTranslator.prototype.translateLargeStringWithPlaceholders = function (onSucces, onError, stringToTranslate, sourceLanguage, targetLanguage) {
+    // note : you can only translate ONE string at any given time in parallel
+    if (this.toTranslateBusy) onError();
+    this.toTranslateOnError = onError;
+    this.toTranslateOnSucces = onSucces;
+    this.toTranslateInputText = envSubstituteToArray(stringToTranslate);
+    this.toTranslateBusy = true;
+    this.toTranslate_target_language = targetLanguage;
+    this.toTranslate_source_language = sourceLanguage;
+
+    // check if the translation div is there, if not add hidden
+    if ($('#ITRTranslatorDivForTranslation').length ==0) {
+        $('body').append('<div id="ITRTranslatorDivForTranslation"></div>');
+        $('#ITRTranslatorDivForTranslation').hide();
+    }
+
+    var toTranslate = encodeURI(this.toTranslateInputText.result);
+    if (toTranslate.length > 4900) { // try to translate a larger text in one go so the AI can make a better translation
+        $('#ITRTranslatorDivForTranslation').html(this.toTranslateInputText.result);
+        this.translateArray = [];
+        this.translateArrayCount = -1;
+        for (var i=0; i < $('#ITRTranslatorDivForTranslation').children().length; i++) {
+            this.translateArray.push( $('#ITRTranslatorDivForTranslation').children()[i] );
+        }
+        this.translateLargeStringWithPlaceholdersFromArray();
+    } else {
+        var tempHeaders = {
+            'BrowserID': ITSInstance.BrowserID,
+            'SessionID': ITSInstance.token.IssuedToken,
+            'CompanyID': ITSInstance.token.companyID,
+            'ToTranslate': toTranslate
+        };
+
+        $.ajax({
+            url: ITSInstance.baseURLAPI + "translate/" + this.toTranslate_source_language + "/" + this.toTranslate_target_language,
+            headers: tempHeaders,
+            error: function () {
+                this.toTranslateBusy = false;
+                this.toTranslateOnError();
+            }.bind(this),
+            success: function (data) {
+                //console.log(data);
+                this.toTranslateBusy = false;
+                this.toTranslateText = envSubstituteFromArray(data, this.toTranslateInputText.envSubstArr);
+                this.toTranslateOnSucces(this.toTranslateText);
+            }.bind(this),
+            type: 'GET'
+        });
+    }
+};
+
+ITSTranslator.prototype.translateLargeStringWithPlaceholdersFromArray = function () {
+    this.translateArrayCount++;
+
+    if (this.translateArrayCount < this.translateArray.length) {
+        if (typeof this.translateArray[this.translateArrayCount] == "undefined") {
+            this.translateLargeStringWithPlaceholdersFromArray();
+            return;
+        }
+        var toTranslate = encodeURI(this.translateArray[this.translateArrayCount].outerHTML);
+
+        var tempHeaders = {
+            'BrowserID': ITSInstance.BrowserID,
+            'SessionID': ITSInstance.token.IssuedToken,
+            'CompanyID': ITSInstance.token.companyID,
+            'ToTranslate': toTranslate
+        };
+
+        $.ajax({
+            url: ITSInstance.baseURLAPI + "translate/" + this.toTranslate_source_language + "/" + this.toTranslate_target_language,
+            headers: tempHeaders,
+            error: function () {
+                this.toTranslateBusy = false;
+                this.toTranslateOnError();
+            }.bind(this),
+            success: function (data) {
+                console.log(data);
+                this.translateArray[this.translateArrayCount] = data;
+                this.translateLargeStringWithPlaceholdersFromArray();
+            }.bind(this),
+            type: 'GET'
+        });
+    } else {
+        this.toTranslateBusy = false;
+        var totalText = "";
+        for (var i=0; i < this.translateArray.length; i++){
+            if (typeof this.translateArray[i] != "undefined") totalText += this.translateArray[i];
+        }
+        this.toTranslateText = envSubstituteFromArray(totalText, this.toTranslateInputText.envSubstArr);
+        this.toTranslateOnSucces(this.toTranslateText);
+    }
+};
