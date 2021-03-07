@@ -130,6 +130,9 @@
                 if (this.status == "Done") {
                     this.sortField = "EndedAt desc, Description";
                 }
+                if ((this.status == "Done") && (parseInt(getUrlParameterValue("SessionType")) == 3)) {
+                    this.sortField = "AllowedStartDateTime desc, Description";
+                }
             }
             if (getUrlParameterValue('ConsultantID')) {
                 this.consultantID = getUrlParameterValue('ConsultantID');
