@@ -809,12 +809,29 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
         $('#' + div_to_add_to).append(buttons);
     }
     // generate the variable in the div
-    switch (this.variableType) { // T = text, A = textarea, H = HTML text, L = list, B = boolean, E = explanation (no controls), C = Color picker, P = Placeholder
+    switch (this.variableType) { // T = text, TN = number, A = textarea, H = HTML text, L = list, B = boolean, E = explanation (no controls), C = Color picker, P = Placeholder
         case "T" :
             select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0 '+bgcolor+'">' +
                 '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
                 '<div NoTranslate class="col-6 mx-0 px-0">' +
                 '<input NoTranslate class="form-control" type="text" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" placeholder="screen template default value" id="' + traceID + '">' +
+                '</div></div>';
+            $('#' + div_to_add_to).append(select);
+            break;
+        case "TN" :
+            var minMaxExtra = "";
+            var option_array = this.defaultValue.split(' ');
+            //default = 0, min=1,max=2,step=3
+            try {
+                minMaxExtra = "value=" + option_array[0];
+                minMaxExtra += " min=" + option_array[1];
+                minMaxExtra += " max=" + option_array[2];
+                minMaxExtra += " step=" + option_array[3];
+            } catch (err) {}
+            select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0 '+bgcolor+'">' +
+                '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
+                '<div NoTranslate class="col-6 mx-0 px-0">' +
+                '<input NoTranslate class="form-control" type="number" '+minMaxExtra+' onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" placeholder="screen template default value" id="' + traceID + '">' +
                 '</div></div>';
             $('#' + div_to_add_to).append(select);
             break;
@@ -988,6 +1005,9 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
             case "T" :
                 $('#' + traceID).val(template_values[varNameForTemplateValues]);
                 break;
+            case "TN" :
+                $('#' + traceID).val(template_values[varNameForTemplateValues]);
+                break;
             case "P" :
                 $('#' + traceID).val(template_values[varNameForTemplateValues]);
                 break;
@@ -1022,6 +1042,11 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
         switch (this.variableType) {
             case "B":
                 $('#' + traceID).prop('checked',this.defaultValue == 'T');
+                break;
+            case "TN" :
+                try {
+                    $('#' + traceID).val(template_values[varNameForTemplateValues].split(' ')[0]);
+                } catch (err) { }
                 break;
             default:
                 $('#' + traceID).val(this.defaultValue);
@@ -1135,6 +1160,9 @@ ITSScreenTemplateVariable.prototype.get_variable_value_for_test_editor = functio
     // now get the value depending on the type of variable
     switch (this.variableType) { // T = text, A = textarea, H = HTML text, L = list, B = boolean, C= color picker, P=Placeholder
         case "T" :
+            return $('#' + traceID).val();
+            break;
+        case "TN" :
             return $('#' + traceID).val();
             break;
         case "P" :
