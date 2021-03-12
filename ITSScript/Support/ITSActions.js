@@ -20,6 +20,8 @@ ITSActionList = function(session) {
 
     this.registerAction(new ITSActionNone(session), false);
     this.registerAction(new ITSActionStore(session), false);
+    this.registerAction(new ITSActionStop(session), false);
+    this.registerAction(new ITSActionRegenerateScreen(session), false);
     this.registerAction(new ITSActionAutoStore(session), false);
     this.registerAction(new ITSActionCheckSessionTime(session), false);
     this.registerAction(new ITSActionEndSession(session), false);
@@ -43,6 +45,7 @@ ITSActionList = function(session) {
     this.registerAction(new ITSActionLoopStatement(session), false);
     this.registerAction(new ITSActionLoopEndStatement(session), false);
     this.registerAction(new ITSActionAssignStatement(session), false);
+    this.registerAction(new ITSActionGetComponentValue(session), false);
 
     session.MessageBus.subscribe("Translations.LanguageSwitched", this.translateActionDescription.bind(this));
     session.MessageBus.subscribe("Translations.LanguageChanged", this.translateActionDescription.bind(this));
@@ -211,6 +214,9 @@ ITSActionList.prototype.executeScriptInTestTakingStep = function() {
             if (!actionResult.StatusOK) {
                 if (actionResult.ShowMessage) ITSInstance.UIController.showError('', actionResult.ErrorMessage); // show a message in case of failure as requested by the action. The action is responsible for trnaslation
                 if (!actionResult.Continue) return; // the script should be aborted as requested by the action
+                if (actionResult.ErrorCode != 0) {
+                     ITSLogger.logMessage(logLevel.ERROR, 'Script stopped because of error ' + actionResult.ErrorCode + " - " + console.trace() );
+                }
             }
         } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Action execution failed for "  + actionObject.Name + " in step " + this.context.currentStep + " - cause : " + err);  }
         // execute next step
@@ -271,11 +277,29 @@ ITSAction.prototype.executeAction = function (context, callback) {
     return returnObject;
 };
 
+ITSAction.prototype.deleteRelatedElements = function (template_values, my_action, action_index) {
+    //console.log('delete related elements');
+    var actionMax = my_action.ActionCounter;
+    var expressionID = my_action["Action" + action_index].ActionValue.ExpressionID;
+    for (var i=actionMax; i > action_index; i--) {
+        try {
+            if ((typeof my_action["Action" + i].ActionValue != 'undefined') &&
+                (my_action["Action" + i].ActionValue.ExpressionID == expressionID)) {
+                for (var j = i ; j <= my_action.ActionCounter; j++) {
+                    swapInObject(j, j + 1, 'Action', my_action);
+                }
+                my_action.ActionCounter--;
+            }
+        } catch(err) {}
+    }
+};
+
 ITSActionResult = function () {
     this.ShowMessage = false; // show message to the user in case of error conditions
     this.ErrorMessage = ""; // message to show in error conditions
     this.StatusOK = true; // true if the action result is OK
     this.Continue = true; // true if the script can continue excuting
+    this.ErrorCode = 0; // 0 = no error. Any other code is an error
 };
 
 // default ITS actions
@@ -298,6 +322,46 @@ ITSActionStore = function (session) {
     this.Category1 = "Session";
     this.Description = session.translator.getTranslatedString("ITSActions.js", "Store.Description", "Store the current results in the database");
 }
+
+ITSActionStop = function (session) {
+    ITSAction.call(this, session);
+
+    this.generateElement = ITSAction.prototype.generateElement;
+    this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
+
+    this.Name = "Stop";
+    this.Category1 = "Programming";
+    this.Description = "Stops all script execution and waits for the next user action.";
+}
+
+ITSActionStop.prototype.executeAction = function (context, callback) {
+    var returnObject = new ITSActionResult();
+
+    returnObject.StatusOK = false;
+    returnObject.Continue = false;
+    returnObject.ErrorCode = 0;
+
+    return returnObject;
+};
+
+ITSActionRegenerateScreen = function (session) {
+    ITSAction.call(this, session);
+
+    this.generateElement = ITSAction.prototype.generateElement;
+    this.getValuesFromGeneratedElement = ITSAction.prototype.getValuesFromGeneratedElement;
+
+    this.Name = "Regenerate screen";
+    this.Category1 = "User Interface";
+    this.Description = "Regenerate the screen with the changes made in the script.";
+}
+
+ITSActionRegenerateScreen.prototype.executeAction = function (context, callback) {
+    var returnObject = new ITSActionResult();
+
+    context.testTakingController.renderTestPage(true);
+
+    return returnObject;
+};
 
 ITSActionAutoStore = function (session) {
     ITSAction.call(this, session);
@@ -446,7 +510,8 @@ ITSActionGotoScreen.prototype.getValuesFromGeneratedElement = function (template
     var2.persistentProperties = "*ALL*";
     var2._objectType = "ITSObject";
 
-    var2.ScreenName = $('#' + fullTraceID + 'Options1').val()
+    var2.ScreenName = $('#' + fullTraceID + 'Options1').val();
+    var2.ScreenNameText = $('#' + fullTraceID + 'Options1 option:selected').text();
 
     return var2;
 };
@@ -505,6 +570,8 @@ ITSActionShowItem.prototype.getValuesFromGeneratedElement = function (template_p
     var2.persistentProperties = "*ALL*";
     var2._objectType = "ITSObject";
     var2["Element1"] = $('#' + fullTraceID + 'Options1-1').val();
+    var2["Element1Text"] = $('#' + fullTraceID + 'Options1-1 option:selected').text();
+
     var2["Element1Hide"] = ($('#' + fullTraceID + 'Options1-2').prop('checked') ? "on" : "off");
     var2["ResetShowStatusForAll"] = ($('#' + fullTraceID + 'Options3').prop('checked') ? "on" : "off");
     return var2;
@@ -605,11 +672,11 @@ ITSActionShowMessage.prototype.generateElement = function (traceID, template_val
 
     select += '<div class="col-12 mx-0 px-0"><label class="col-6" id="ShowMessage_MessageType">Type</label>';
     selectStr = tempObj.Info == "on" ? "checked" : "";
-    select += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" ' + selectStr + ' onchange="' + on_change_function + '" name="' + fullTraceID + '" id="' + fullTraceID + 'Info" value="option1"><label class="form-check-label" id="' + fullTraceID + 'InfoLabel" for="' + fullTraceID + 'Info">Info</label></div>';
+    select += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" ' + selectStr + ' onchange="' + on_change_function + '" name="' + fullTraceID + '" id="' + fullTraceID + 'Info" value="option1"><label class="form-check-label" notranslate id="' + fullTraceID + 'InfoLabel" for="' + fullTraceID + 'Info">Info</label></div>';
     selectStr = tempObj.Warning == "on" ? "checked" : "";
-    select += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" ' + selectStr + ' onchange="' + on_change_function + '" name="' + fullTraceID + '" id="' + fullTraceID + 'Warning" value="option1"><label class="form-check-label" id="' + fullTraceID + 'WarningLabel" for="' + fullTraceID + 'Warning">Warning</label></div>';
+    select += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" ' + selectStr + ' onchange="' + on_change_function + '" name="' + fullTraceID + '" id="' + fullTraceID + 'Warning" value="option1"><label class="form-check-label" notranslate id="' + fullTraceID + 'WarningLabel" for="' + fullTraceID + 'Warning">Warning</label></div>';
     selectStr = tempObj.Error == "on" ? "checked" : "";
-    select += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" ' + selectStr + ' onchange="' + on_change_function + '" name="' + fullTraceID + '" id="' + fullTraceID + 'Error" value="option1"><label class="form-check-label" id="' + fullTraceID + 'ErrorLabel" for="' + fullTraceID + 'Error">Error</label></div>';
+    select += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" ' + selectStr + ' onchange="' + on_change_function + '" name="' + fullTraceID + '" id="' + fullTraceID + 'Error" value="option1"><label class="form-check-label" notranslate id="' + fullTraceID + 'ErrorLabel" for="' + fullTraceID + 'Error">Error</label></div>';
     select += '</div>';
 
     //console.log(tempObj);
@@ -650,7 +717,9 @@ ITSActionIfStatement = function (session) {
     this.Name = "If";
     this.Category1 = "Programming";
     this.Description = "If then else for evaluating a condition";
-    this.postIndent = 1;
+    this.preIndent = 1;
+
+    this.deleteRelatedElements = ITSAction.prototype.deleteRelatedElements;
 };
 
 ITSActionIfStatement.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator, actionCounter) {
@@ -693,27 +762,15 @@ ITSActionIfStatement.prototype.generateElement = function (traceID, template_val
     screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DROPDOWN', 'READONLY');
     screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'UP', 'HIDE');
     screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DOWN', 'HIDE');
+    if (template_values[varNameForTemplateValues].ActionCounter <= 3)
+        screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DELETE', 'HIDE');
+
 };
 
 
 ITSActionIfStatement.prototype.beforeDelete = function (template_values, my_action, action_index) {
     //console.log('before delete');
-    var actionMax = my_action.ActionCounter;
-    var expressionID = my_action["Action" + action_index].ActionValue.ExpressionID;
-    for (var i=actionMax; i > action_index; i--) {
-        //console.log('DELETE -- ',i,my_action["Action" + i]);
-        try {
-            if ((typeof my_action["Action" + i].ActionValue != 'undefined') &&
-                (my_action["Action" + i].ActionValue.ExpressionID == expressionID)) {
-                // found ! now delete
-                //console.log('DELETE2 -- ',i,my_action["Action" + i].ActionValue.ExpressionID);
-                for (var j = i ; j <= my_action.ActionCounter; j++) {
-                    swapInObject(j, j + 1, 'Action', my_action);
-                }
-                my_action.ActionCounter--;
-            }
-        } catch(err) {}
-    }
+    this.deleteRelatedElements(template_values, my_action, action_index);
 };
 
 ITSActionIfStatement.prototype.getValuesFromGeneratedElement = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values, fullTraceID) {
@@ -770,8 +827,8 @@ ITSActionIfElseStatement = function (session) {
     this.Category1 = "Programming";
     this.Description = "Else branch of if then else";
     this.Visible = false;
-    this.preIndent = -1;
-    this.postIndent = 1;
+    //this.preIndent = -1;
+    //this.postIndent = 1;
 };
 
 ITSActionIfElseStatement.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator) {
@@ -831,7 +888,7 @@ ITSActionIfEndIfStatement = function (session) {
     this.Category1 = "Programming";
     this.Description = "End of the if then else evaluation";
     this.Visible = false;
-    this.preIndent = -1;
+    this.postIndent = -1;
 };
 
 ITSActionIfEndIfStatement.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator) {
@@ -872,8 +929,6 @@ ITSActionElseIfStatement = function (session) {
     this.Category1 = "Programming";
     this.Description = "Else if for evaluating another condition";
     this.Visible = false;
-    this.preIndent = -1;
-    this.postIndent = 1;
 };
 
 ITSActionElseIfStatement.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator, actionCounter) {
@@ -964,7 +1019,9 @@ ITSActionLoopStatement = function (session) {
     this.Name = "Loop";
     this.Category1 = "Programming";
     this.Description = "Loop while a condition is true";
-    this.postIndent = 1;
+    this.preIndent = 1;
+
+    this.deleteRelatedElements = ITSAction.prototype.deleteRelatedElements;
 };
 
 ITSActionLoopStatement.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator, actionCounter) {
@@ -996,24 +1053,13 @@ ITSActionLoopStatement.prototype.generateElement = function (traceID, template_v
     screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DROPDOWN', 'READONLY');
     screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'UP', 'HIDE');
     screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DOWN', 'HIDE');
+    if (template_values[varNameForTemplateValues].ActionCounter <= 2)
+        screenTemplateGenerator.switch_actionelement_state(fullTraceID, 'DELETE', 'HIDE');
 };
 
 
 ITSActionLoopStatement.prototype.beforeDelete = function (template_values, my_action, action_index) {
-    //console.log('before delete');
-    var actionMax = my_action.ActionCounter;
-    var expressionID = my_action["Action" + action_index].ActionValue.ExpressionID;
-    for (var i=actionMax; i > action_index; i--) {
-        try {
-            if ((typeof my_action["Action" + i].ActionValue != 'undefined') &&
-                (my_action["Action" + i].ActionValue.ExpressionID == expressionID)) {
-                for (var j = i ; j <= my_action.ActionCounter; j++) {
-                    swapInObject(j, j + 1, 'Action', my_action);
-                }
-                my_action.ActionCounter--;
-            }
-        } catch(err) {}
-    }
+    this.deleteRelatedElements(template_values, my_action, action_index);
 };
 
 ITSActionLoopStatement.prototype.getValuesFromGeneratedElement = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values, fullTraceID) {
@@ -1071,7 +1117,7 @@ ITSActionLoopEndStatement = function (session) {
     this.Category1 = "Programming";
     this.Description = "End of the loop";
     this.Visible = false;
-    this.preIndent = -1;
+    this.postIndent = -1;
 };
 
 ITSActionLoopEndStatement.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue, screenTemplateGenerator) {
@@ -1182,8 +1228,107 @@ ITSActionAssignStatement.prototype.executeAction = function (context, callback) 
         }
     }
     else {
-        context.vars[variables.VariableName] = resultVal;
+        if ( (typeof context.vars[variables.VariableName] != "undefined") && (resultVal == undefined) ) {
+            // do nothing. the variable already exists.
+        } else {
+            context.vars[variables.VariableName] = resultVal;
+        }
     }
 
     return returnObject;
 };
+
+ITSActionGetComponentValue = function (session) {
+    ITSAction.call(this, session);
+
+    this.Name = "GetComponentValue";
+    this.Category1 = "User Interface";
+    this.Description = "Get the current or configured values for the indicated component.";
+};
+
+ITSActionGetComponentValue.prototype.generateElement = function (traceID, template_values, testdefinition, on_change_function, currentScreenIndex, varNameForTemplateValues, DivToAdd , fullTraceID, ActionValue) {
+    var select =
+        '<div NoTranslate class="col-12 mx-0 px-0">' +
+        '<select NoTranslate class="form-control" onchange="' + on_change_function + '" onkeyup="' + on_change_function + '" id="' + fullTraceID + 'Options1-1">' +
+        '<option NoTranslate value="">-</option>';
+    var selectStr = '';
+    var tempObj = ActionValue;
+    // now add the options from the default settings
+    for (var i = 0; i < testdefinition.screens[currentScreenIndex].screenComponents.length; i++) {
+        selectStr = (testdefinition.screens[currentScreenIndex].screenComponents[i].id == tempObj.Element1) ? " selected " : "";
+        select = select + '<option ' + selectStr + ' NoTranslate value="' + testdefinition.screens[currentScreenIndex].screenComponents[i].id + '">' + testdefinition.screens[currentScreenIndex].screenComponents[i].varComponentName + '</option>';
+    }
+    // now add the variables to view/hide from previous screen layouts
+    var previousLayoutsParameters = testdefinition.screens[currentScreenIndex].getScreenVariablesFromPreviousScreenLayouts(currentScreenIndex);
+    for (var i = 0; i < previousLayoutsParameters.length; i++) {
+        selectStr = (previousLayoutsParameters[i].id == tempObj.Element1) ? " selected " : "";
+        select = select + '<option ' + selectStr + ' NoTranslate value="' + previousLayoutsParameters[i].id + '">' + previousLayoutsParameters[i].varComponentName + '</option>';
+    }
+    // close the select
+    select = select + '</select></div>';
+
+    // type of value
+    if (typeof tempObj.ValueType == "undefined") tempObj.ValueType = "current";
+    if (typeof tempObj.ExpressionID == "undefined") tempObj.ExpressionID = newGuid();
+    if (typeof tempObj.VariableName == "undefined") tempObj.VariableName = "";
+
+    select += '<div class="col-12 mx-0 px-0"><label class="col-6" id="GetComponentValue_GetValueType">Type</label>';
+    selectStr = tempObj.ValueType == "current" ? "checked" : "";
+    select += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" ' + selectStr + ' onchange="' + on_change_function + '" name="' + fullTraceID + '" id="' + fullTraceID + 'Current" value="option1"><label notranslate class="form-check-label" id="' + fullTraceID + 'CurrentLabel" for="' + fullTraceID + 'Current">Current</label></div>';
+    selectStr = tempObj.ValueType == "configured" ? "checked" : "";
+    select += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" ' + selectStr + ' onchange="' + on_change_function + '" name="' + fullTraceID + '" id="' + fullTraceID + 'Configured" value="option1"><label notranslate class="form-check-label" id="' + fullTraceID + 'ConfiguredLabel" for="' + fullTraceID + 'Configured">Configured</label></div>';
+    select += '</div>';
+
+    // list of possible variables
+    select += '<div class="row m-0 p-0 col-12 form-control-sm">';
+    select += '<label class="col-4" id="AssignStatementVariable">Assign value to</label><label class="col-2"><i>context.vars.</i></label><input type="text" ExpressionID="'+tempObj.ExpressionID+'" notranslate value="' + tempObj.VariableName + '" class="col-6" onkeyup="' + on_change_function + '" id="' + fullTraceID + 'VariableName"></input>';
+    select += '</div>';
+
+    $('#' + DivToAdd).append("<div class='row m-0 p-0 col-12 form-control-sm'>" + select + "</div>");
+};
+
+ITSActionGetComponentValue.prototype.getValuesFromGeneratedElement = function (template_parent, div_to_add_to, repeat_block_counter, varNameForTemplateValues, template_values, fullTraceID) {
+    var var2 = {};
+    var2.persistentProperties = "*ALL*";
+    var2._objectType = "ITSObject";
+    var2["Element1"] = $('#' + fullTraceID + 'Options1-1').val();
+    var2["Element1Text"] = $('#' + fullTraceID + 'Options1-1 option:selected').text();
+
+    var2["ValueType"] = "current";
+    if ($('#' + fullTraceID + 'Configured').is(':checked')) var2["ValueType"] = "configured";
+
+    var2["VariableName"] = $('#' + fullTraceID + 'VariableName').val();
+
+    return var2;
+};
+
+ITSActionGetComponentValue.prototype.executeAction = function (context, callback) {
+    var returnObject = new ITSActionResult();
+
+    var variables = context.actionValue;
+
+    // locate the screen
+    var newVal = "";
+    var showComponent = context.currentTestDefinition.screens[context.currentSessionTest.CurrentPage].findComponentByID(variables.Element1);
+
+    if (variables.ValueType == "current") {
+        var screenTemplate = ITSInstance.screenTemplates.screenTemplates[ITSInstance.screenTemplates.findTemplateById(ITSInstance.screenTemplates.screenTemplates, showComponent.templateID)];
+        newVal = screenTemplate.runtime_get_values(showComponent.currentOnScreenID, showComponent.templateValues.RepeatBlockCount, showComponent.templateValues);
+    } else {
+        newVal = showComponent.templateValues;
+    }
+
+    try {
+        eval ('context.vars.' + variables.VariableName + '=newVal');
+    } catch (err) { }
+    return returnObject;
+};
+/*
+voorbeelden :
+
+huidige on screen waarde
+ITSInstance.screenTemplates.screenTemplates[ITSInstance.screenTemplates.findTemplateById(ITSInstance.screenTemplates.screenTemplates, ITSInstance.testTakingController.currentSessionTest.testDefinition.screens[1].screenComponents[3].templateID)].runtime_get_values(ITSInstance.testTakingController.currentSessionTest.testDefinition.screens[1].screenComponents[3].currentOnScreenID, ITSInstance.testTakingController.currentSessionTest.testDefinition.screens[1].screenComponents[3].templateValues.RepeatBlockCount)
+
+huidige template waardes
+ITSInstance.testTakingController.currentSessionTest.testDefinition.screens[0].screenComponents[5].templateValues
+ */

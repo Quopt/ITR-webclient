@@ -287,6 +287,7 @@ ITSLoggerObject.prototype.logMessage=function (logLevel, message, messageParamet
     }
     if ((logLevel <= this.logLevel) && (this.loggingEnabled)) {
         console.log(message);
+        console.trace();
     }
 };
 

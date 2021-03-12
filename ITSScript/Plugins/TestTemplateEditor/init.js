@@ -36,7 +36,7 @@ function ITSTestTemplateEditor(session) {
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenComponentUp(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-up\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.moveScreenComponentDown(%%NR%%);\"><i class=\"fa fa-xs fa-arrow-down\"></i></button>\n" +
         "<button type=\"button\" class=\"btn-xs btn-success\" onclick=\"ITSInstance.newITSTestEditorController.copyScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-copy\"></i></button>\n" +
-        "<div notranslate id=\"AdminInterfaceTestTemplateEditorScreenRow\"><input style=\"width:200px\"  type=\"text\" id=\"TestTemplateEditorSCREENCOMPONENT%%NR%%\" onfocusout=\"ITSInstance.newITSTestEditorController.editScreenComponentDescription(%%NR%%, this.value);\" value=\"%%ROW%%\" />\n" +
+        "<div notranslate id=\"AdminInterfaceTestTemplateEditorScreenRow\"><input style=\"width:200px\"  type=\"text\" id=\"TestTemplateEditorSCREENCOMPONENT%%NR%%\" onfocusout=\"ITSInstance.newITSTestEditorController.editScreenComponentDescription(%%NR%%, this.value,true);\" value=\"%%ROW%%\" />\n" +
         "<button type=\"button\" class=\"btn-xs btn-warning\" onclick=\"ITSInstance.newITSTestEditorController.deleteScreenComponent(%%NR%%);\"><i class=\"fa fa-xs fa-trash\"></i></button>\n" +
         "<span>" +
         "<input type=\"checkbox\" notranslate id=\"AdminInterfaceTestTemplateEditorScreenComponentRow_Privacy%%NR%%\" %%PRIVACY%% onchange=\"ITSInstance.newITSTestEditorController.changeScreenComponentPrivacy(%%NR%%, this.checked);\">\n" +
@@ -657,7 +657,7 @@ ITSTestTemplateEditor.prototype.templatePlaceHolderChanged = function (newVal) {
     this.currentScreenComponent.placeholderName = newVal;
 };
 ITSTestTemplateEditor.prototype.templatePlaceHolderCommand = function (Command, value1, value2) {
-    console.log(Command, value1, value2);
+    //console.log(Command, value1, value2);
     if (Command == "DELETE") {
         ITSInstance.newITSTestEditorController.currentTemplate.deleteElement(value1, ITSInstance.newITSTestEditorController.currentScreenComponent.templateValues);
         ITSInstance.newITSTestEditorController.editScreenComponentDescription(ITSInstance.newITSTestEditorController.currentScreenComponentIndex, ITSInstance.newITSTestEditorController.currentScreenComponent.varComponentName);
@@ -814,10 +814,14 @@ ITSTestTemplateEditor.prototype.editScreenDescription = function (id, newText) {
     $('#TestTemplateEditorSCREEN' + id).val(this.currentTest.screens[id].varName);
 };
 
-ITSTestTemplateEditor.prototype.editScreenComponentDescription = function (id, newText) {
+ITSTestTemplateEditor.prototype.editScreenComponentDescription = function (id, newText, onlyWhenChanged) {
+    var redraw = true;
+    if (onlyWhenChanged)
+        redraw = this.currentScreen.screenComponents[id].varComponentName != newText.replace(/\W/g, '');
     this.currentScreen.screenComponents[id].varComponentName = newText.replace(/\W/g, '');
     $('#TestTemplateEditorSCREENCOMPONENT' + id).val(this.currentScreen.screenComponents[id].varComponentName);
-    this.generateCurrentScreenIndexTemplateVariables(this.currentScreenComponentIndex,
+    if (redraw)
+      this.generateCurrentScreenIndexTemplateVariables(this.currentScreenComponentIndex,
         this.currentScreenComponent.templateValues, undefined,
         this.currentScreenComponent.templateID);
 };

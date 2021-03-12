@@ -821,12 +821,12 @@ ITSScreenTemplateVariable.prototype.generate_variable_for_test_editor = function
         case "TN" :
             var minMaxExtra = "";
             var option_array = this.defaultValue.split(' ');
-            //default = 0, min=1,max=2,step=3
+            //default = 0, step=1, min=2,max=3
             try {
                 minMaxExtra = "value=" + option_array[0];
-                minMaxExtra += " min=" + option_array[1];
-                minMaxExtra += " max=" + option_array[2];
-                minMaxExtra += " step=" + option_array[3];
+                minMaxExtra += " step=" + option_array[1];
+                minMaxExtra += " min=" + option_array[2];
+                minMaxExtra += " max=" + option_array[3];
             } catch (err) {}
             select = '<div NoTranslate class="row col-12 mr-0 ml-1 px-0 '+bgcolor+'">' +
                 '<label NoTranslate for="' + traceID + '" class="col-6 mx-0 px-0 col-form-label">' + this.variableName + '</label>' +
@@ -1106,7 +1106,7 @@ ITSScreenTemplateVariable.prototype.generate_LX_variable = function (traceID, te
                 myAction = ITSInstance.actions.findAction(part1);
                 indentCounter += myAction.preIndent;
                 // generate indent
-                console.log(indentCounter, myAction);
+                //console.log(indentCounter, myAction);
                 if (indentCounter != 0) {
                     $('#DIV1_SLX_' + tempTraceID).css('border-left', 'solid chartreuse ' + (indentCounter * 5) + 'px');
                     $('#DIV2_SLX_' + tempTraceID).css('border-left', 'solid chartreuse ' + (indentCounter * 5) + 'px');

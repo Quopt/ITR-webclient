@@ -374,6 +374,8 @@ ITSScreenTemplateEditor.prototype.uploadCurrentTemplate_process = function (file
 };
 
 ITSScreenTemplateEditor.prototype.changeView= function (viewName) {
+    var curScrollPos = $(window).scrollTop();
+
     $('#AdminInterfaceScreenTemplate-htmltemplate-div').hide();
     $('#AdminInterfaceScreenTemplate-summary-div').hide();
     $('#AdminInterfaceScreenTemplate-pnptemplate-div').hide();
@@ -425,6 +427,8 @@ ITSScreenTemplateEditor.prototype.changeView= function (viewName) {
              $('#AdminInterfaceScreenTemplate-viewlist-customactions').addClass('active');
              break;
      }
+
+    setTimeout( function() { $(window).scrollTop(curScrollPos); }.bind(curScrollPos) , 1);
 };
 
 (function () { // iife to prevent pollution of the global memspace
