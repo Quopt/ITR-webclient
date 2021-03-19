@@ -497,7 +497,7 @@ ITSScreenTemplate.prototype.generate_test_editor_view = function (div, id, templ
     return regenerate_required;
 };
 
-ITSScreenTemplate.prototype.swap = function (element1, element2, templatevalues) {
+ITSScreenTemplate.prototype.swapElement = function (element1, element2, templatevalues) {
     // NOTE : The element1 and element2 are 1-based ! So element 0 is not valid!
     var ElemIndex1 = "_" + element1;
     var ElemIndex2 = "_" + element2;
@@ -518,11 +518,9 @@ ITSScreenTemplate.prototype.swap = function (element1, element2, templatevalues)
             }
         }
     }
-};
+}
 
 ITSScreenTemplate.prototype.deleteElement = function (element1, templatevalues) {
-    // NOTE : element1 is 1-based ! So element 0 is not valid!
-
     if (element1 >0)  {
         var tempVal = "";
         for (var bubble=element1; bubble < this.RepeatBlockCount; bubble++ ) {
@@ -537,16 +535,16 @@ ITSScreenTemplate.prototype.deleteElement = function (element1, templatevalues) 
                     // do nothing for now
                 }
                 else
-                    {
-                        templatevalues[this.TemplateVariables[i].variableName + ElemIndex1] = tempVal2;
-                        templatevalues[this.TemplateVariables[i].variableName + ElemIndex2] = tempVal1;
-                    }
+                {
+                    templatevalues[this.TemplateVariables[i].variableName + ElemIndex1] = tempVal2;
+                    templatevalues[this.TemplateVariables[i].variableName + ElemIndex2] = tempVal1;
                 }
             }
         }
+    }
 
-        templatevalues.RepeatBlockCount--;
-    };
+    templatevalues.RepeatBlockCount--;
+}
 
 ITSScreenTemplate.prototype.extract_test_editor_view_templatevalues = function (div, id, pnp_template) {
     // repeatblockcount is taken from this object. This means UI state is in this object. Fine for now.

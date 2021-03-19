@@ -304,25 +304,27 @@
             }
         };
 
-        ITSReportTemplateEditor.prototype.showGraphInEditor = function (index) {
+        ITSReportTemplateEditor.prototype.showGraphInEditor = function (index, me) {
+            if (typeof me == "undefined") me = this;
             if (index > 0) {
                 index = index - 1;
-                this.currentGraph = this.currentReport.ReportGraphs[index];
-                this.currentGraphIndex = index;
+                me.currentGraph = me.currentReport.ReportGraphs[index];
+                me.currentGraphIndex = index;
                 $('#GraphEditor').show();
-                DataBinderTo('ReportTemplateInterfaceEditTabGraphBuilder', this.currentGraph);
+                DataBinderTo('ReportTemplateInterfaceEditTabGraphBuilder', me.currentGraph);
                 $('#ReportTemplateInterfaceEditTabGraphBuilder-Select')[0].selectedIndex = index + 1;
 
                 // now show the graphs settings
-                this.testEditorID = "X" + getNewSimpleGeneratorNumber('ui_gen', 999999) + "Y";
-                this.testTakingID = "X" + getNewSimpleGeneratorNumber('ui_gen', 999999) + "Y";
-                this.currentTemplate = ITSInstance.screenTemplates.newScreenTemplate();
-                ITSJSONLoad( this.currentTemplate, ITSJSONStringify(ITSGraph_editTemplate) );
-                this.currentTemplate.generate_test_editor_view('GraphEditorProperties', this.testEditorID, this.currentReport.ReportGraphs[this.currentGraphIndex], false,
+                me.testEditorID = "X" + getNewSimpleGeneratorNumber('ui_gen', 999999) + "Y";
+                me.testTakingID = "X" + getNewSimpleGeneratorNumber('ui_gen', 999999) + "Y";
+                me.currentTemplate = ITSInstance.screenTemplates.newScreenTemplate();
+                ITSJSONLoad( me.currentTemplate, ITSJSONStringify(ITSGraph_editTemplate) );
+                me.currentTemplate.generate_test_editor_view('GraphEditorProperties', me.testEditorID, me.currentReport.ReportGraphs[me.currentGraphIndex], false,
                     'ITSInstance.ReportTemplateSessionController.updatePreviews();',
                     'ITSInstance.ReportTemplateSessionController.addRepeatBlock();',
-                    'ITSInstance.ReportTemplateSessionController.removeRepeatBlock();');
-                this.updatePreviews();
+                    'ITSInstance.ReportTemplateSessionController.removeRepeatBlock();',
+                    '','','','','ITSInstance.ReportTemplateSessionController.changePreviews');
+                me.updatePreviews();
             } else {
                 $('#GraphEditor').hide();
                 $('#ReportTemplateInterfaceEditTabGraphBuilder-Select')[0].selectedIndex = 0;
@@ -345,6 +347,27 @@
             this.setRepeatBlock( this.currentTemplate.RepeatBlockCount - 1);
         };
 
+
+        ITSReportTemplateEditor.prototype.changePreviews = function (action, value) {
+            var scroll = $(window).scrollTop();
+            var c = ITSInstance.ReportTemplateSessionController;
+            var varlist = "Series_color_end,Series_color_start,Series_data,Series_fill,Series_line_curve,Series_line_show,Series_line_tension,Series_name,Series_point_size,Series_point_type,Series_type,StackGroup";
+
+            if (action=='UP') {
+                swapElementsInObject(value,value-1, c.currentReport.ReportGraphs[c.currentGraphIndex],varlist);
+            }
+            if (action=='DOWN') {
+                swapElementsInObject(value,value+1, c.currentReport.ReportGraphs[c.currentGraphIndex],varlist);
+            }
+            if (action=='DELETE') {
+                swapElementsInObject(value,c.currentReport.ReportGraphs[c.currentGraphIndex].RepeatBlockCount,c.currentReport.ReportGraphs[c.currentGraphIndex], varlist);
+                c.currentReport.ReportGraphs[c.currentGraphIndex].RepeatBlockCount--;
+            }
+            c.showGraphInEditor(c.currentGraphIndex+1, c);
+
+            $(window).scrollTop(scroll);
+        };
+
         ITSReportTemplateEditor.prototype.setRepeatBlock = function (repeat_block_count) {
             var temp = this.currentTemplate.extract_test_editor_view_templatevalues('GraphEditorProperties', this.testEditorID, false);
             shallowCopy(temp, this.currentReport.ReportGraphs[this.currentGraphIndex]);
@@ -353,7 +376,8 @@
             this.currentTemplate.generate_test_editor_view('GraphEditorProperties', this.testEditorID, this.currentReport.ReportGraphs[this.currentGraphIndex], false,
                 'ITSInstance.ReportTemplateSessionController.updatePreviews();',
                 'ITSInstance.ReportTemplateSessionController.addRepeatBlock();',
-                'ITSInstance.ReportTemplateSessionController.removeRepeatBlock();');
+                'ITSInstance.ReportTemplateSessionController.removeRepeatBlock();',
+                '','','','','ITSInstance.ReportTemplateSessionController.changePreviews');
         };
 
         ITSReportTemplateEditor.prototype.addNewGraphInEditor = function () {

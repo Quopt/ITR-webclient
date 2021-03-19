@@ -1428,27 +1428,6 @@ function convertDateToCode(newdate) {
     return newCode;
 };
 
-// generic swap function
-function swapInObject (element1, element2, varname, templatevalues) {
-    // NOTE : The element1 and element2 are 1-based ! So element 0 is not valid!
-    var ElemIndex1 = element1;
-    var ElemIndex2 = element2;
-
-    if ((element1 >0) && (element2 >0)) {
-        var tempVal = "";
-        tempVal1 = templatevalues[varname + ElemIndex1];
-        tempVal2 = templatevalues[varname + ElemIndex2];
-        if ((typeof tempVal1 === "undefined") || (typeof tempVal2 === "undefined")) {
-            // do nothing for now
-        }
-        else {
-            //console.log(tempVal1, tempVal2, ElemIndex1, ElemIndex2);
-            templatevalues[varname + ElemIndex1] = tempVal2;
-            templatevalues[varname + ElemIndex2] = tempVal1;
-        }
-    }
-};
-
 // check if string is value ITR uuid
 function isUUID(uuid) {
     let s = "" + uuid;
@@ -1599,5 +1578,41 @@ function toggleModal(id, forceShow) {
     } else {
         $('#'+id).addClass('modal-backdrop');
         $('#'+id).addClass('bg-light');
+    }
+}
+
+// generic swap function
+function swapInObject (element1, element2, varname, templatevalues) {
+    // NOTE : The element1 and element2 are 1-based ! So element 0 is not valid!
+    var ElemIndex1 = element1;
+    var ElemIndex2 = element2;
+
+    if ((element1 >0) && (element2 >0)) {
+        var tempVal = "";
+        tempVal1 = templatevalues[varname + ElemIndex1];
+        tempVal2 = templatevalues[varname + ElemIndex2];
+        if ((typeof tempVal1 === "undefined") || (typeof tempVal2 === "undefined")) {
+            // do nothing for now
+        }
+        else {
+            //console.log(tempVal1, tempVal2, ElemIndex1, ElemIndex2);
+            templatevalues[varname + ElemIndex1] = tempVal2;
+            templatevalues[varname + ElemIndex2] = tempVal1;
+        }
+    }
+};
+
+function swapElementsInObject(val1,val2,templatevalues,varlist) {
+    var val1_postfix = val1 > 1 ? "_" + val1 : "";
+    var val2_postfix = val2 > 1 ? "_" + val2 : "";
+    var varListArr = varlist.split(',');
+    var a,b;
+
+    for (var item=0; item < varListArr.length; item++) {
+        a = templatevalues[varListArr[item] + val1_postfix];
+        b = templatevalues[varListArr[item] + val2_postfix];
+        templatevalues[varListArr[item] + val1_postfix] = b;
+        templatevalues[varListArr[item] + val2_postfix] = a;
+        //console.log(item, varListArr[item],a,b);
     }
 }
