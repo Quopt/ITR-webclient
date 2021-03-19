@@ -360,7 +360,9 @@
                 swapElementsInObject(value,value+1, c.currentReport.ReportGraphs[c.currentGraphIndex],varlist);
             }
             if (action=='DELETE') {
-                swapElementsInObject(value,c.currentReport.ReportGraphs[c.currentGraphIndex].RepeatBlockCount,c.currentReport.ReportGraphs[c.currentGraphIndex], varlist);
+                for (var i=value; i < c.currentReport.ReportGraphs[c.currentGraphIndex].RepeatBlockCount; i++) {
+                    swapElementsInObject(i, i+1, c.currentReport.ReportGraphs[c.currentGraphIndex], varlist);
+                }
                 c.currentReport.ReportGraphs[c.currentGraphIndex].RepeatBlockCount--;
             }
             c.showGraphInEditor(c.currentGraphIndex+1, c);
