@@ -62,8 +62,12 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
     var ctx = canvas.getContext('2d');
 
     graphObj.Y_axis_labels="";
+    graphObj.X_axis_labels="";
     if (template_values["Y_axis_labels"] != "") {
         graphObj.Y_axis_labels = envSubstitute(template_values["Y_axis_labels"], context,true);
+    }
+    if (template_values["X_axis_labels"] != "") {
+        graphObj.X_axis_labels = envSubstitute(template_values["X_axis_labels"], context,true);
     }
 
     if (template_values["Pre_graph_script"] != "") {
@@ -156,78 +160,63 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
         }
     });
 
-    if (template_values["Stacked"] == "T") {
-        var myChart = new Chart(ctx, {
-            type: template_values["Type"],
-            data: {
-                labels: tempLabels.split(","),
-                datasets: dsets
+
+    var myChart = new Chart(ctx, {
+        type: template_values["Type"],
+        data: {
+            labels: tempLabels.split(","),
+            datasets: dsets
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: (envSubstitute(template_values["X_axis_title"], context, true).trim() != ""),
+                        labelString: envSubstitute(template_values["X_axis_title"], context, true),
+                    },
+                    stacked: (String(template_values["Stacked"]) == "T"),
+                    ticks: {
+                        display: (String(template_values["Show_x_axis_labels"]) != "F"),
+                        callback: function(value, index, values) {
+                            console.log(value, index, values, graphObj.X_axis_labels);
+                            if (graphObj.X_axis_labels.trim() != "") {
+                                var labelArr = graphObj.X_axis_labels.split(',');
+                                if (index >= labelArr.length) { return value}
+                                var val = labelArr[index];
+                                return val == "" ? undefined : val;
+                            } else {
+                                return value;
+                            }
+                        }.bind(graphObj)
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: (envSubstitute(template_values["Y_axis_title"], context,true).trim() !=""),
+                        labelString: envSubstitute(template_values["Y_axis_title"], context,true),
+                    },
+                    stacked: (template_values["Stacked"] == "T"),
+                    ticks: {
+                        display: (String(template_values["Show_y_axis_labels"]) != "F"),
+                        callback: function(value, index, values) {
+                            console.log(value, index, values, graphObj.Y_axis_labels);
+                            if (graphObj.Y_axis_labels.trim() != "") {
+                                var labelArr = graphObj.Y_axis_labels.split(',');
+                                if (index >= labelArr.length) { return value}
+                                var val = labelArr[index];
+                                return val == "" ? undefined : val;
+                            } else {
+                                return value;
+                            }
+                        }.bind(graphObj)
+                    }
+                }]
             },
-            options: {
-                scales: {
-                    xAxes: [{
-                        scaleLabel: {
-                            display: (envSubstitute(template_values["X_axis_title"], context, true).trim() != ""),
-                            labelString: envSubstitute(template_values["X_axis_title"], context, true),
-                        },
-                        stacked: (String(template_values["Stacked"]) == "T"),
-                        ticks: {
-                            display: (String(template_values["Show_x_axis_labels"]) != "F"),
-                        }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: (envSubstitute(template_values["Y_axis_title"], context,true).trim() !=""),
-                            labelString: envSubstitute(template_values["Y_axis_title"], context,true),
-                        },
-                        stacked: (template_values["Stacked"] == "T"),
-                        ticks: {
-                            display: (String(template_values["Show_y_axis_labels"]) != "F"),
-                            callback: function(value, index, values) {
-                                console.log(value, index, values, graphObj.Y_axis_labels);
-                                if (graphObj.Y_axis_labels.trim() != "") {
-                                    var labelArr = graphObj.Y_axis_labels.split(',');
-                                    if (index >= labelArr.length) { return value}
-                                    var val = labelArr[index];
-                                    return val == "" ? undefined : val;
-                                } else {
-                                    return value;
-                                }
-                            }.bind(graphObj)
-                        }
-                    }]
-                },
-                legend: {
-                    display: (String(template_values["Show_legend"]) == "T")
-                }
+            legend: {
+                display: (String(template_values["Show_legend"]) == "T")
             }
-        });
-    } else {
-        var myChart = new Chart(ctx, {
-            type: template_values["Type"],
-            data: {
-                labels: tempLabels.split(","),
-                datasets: dsets
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        ticks: {
-                            display: (String(template_values["Show_x_axis_labels"]) != "F")
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            display: (String(template_values["Show_y_axis_labels"]) != "F")
-                        }
-                    }]
-                },
-                legend: {
-                    display: (String(template_values["Show_legend"]) == "T")
-                }
-            }
-        });
-    }
+        }
+    });
 
     return myChart;
 };
@@ -319,6 +308,14 @@ ITSGraph_editTemplate = {
         },
         {
             "_objectType": "ITSScreenTemplateVariable",
+            "ID": "ea21ac13-0c14-4a55-1842-52784491956f",
+            "variableName": "Series_labels",
+            "description": "A comma seperated list of label names",
+            "defaultValue": "",
+            "variableType": "T", "persistentProperties": "*ALL*"
+        },
+        {
+            "_objectType": "ITSScreenTemplateVariable",
             "ID": "74988ddb-5390-4659-9640-9d7c7cd833a9",
             "variableName": "Show_x_axis_labels",
             "description": "Show the labels for the X axis",
@@ -327,9 +324,9 @@ ITSGraph_editTemplate = {
         },
         {
             "_objectType": "ITSScreenTemplateVariable",
-            "ID": "ea21ac13-0c14-4a55-1842-52784491956f",
-            "variableName": "Series_labels",
-            "description": "A comma seperated list of label names",
+            "ID": "9ebecfc3-de5f-4965-8514-6f35c36f72e5",
+            "variableName": "X_axis_labels",
+            "description": "Labels for the X axis (CSV list) if other labels are needed. An empty value hides the tick line if possible.",
             "defaultValue": "",
             "variableType": "T", "persistentProperties": "*ALL*"
         },
@@ -353,7 +350,7 @@ ITSGraph_editTemplate = {
             "_objectType": "ITSScreenTemplateVariable",
             "ID": "ca38e3b3-8b8e-4a9f-9db1-a81e9af7c345",
             "variableName": "Y_axis_labels",
-            "description": "Labels for the Y axis (CSV list) if other labels are needed. An empty value hides the tick line.",
+            "description": "Labels for the Y axis (CSV list) if other labels are needed. An empty value hides the tick line if possible.",
             "defaultValue": "",
             "variableType": "T", "persistentProperties": "*ALL*"
         },
