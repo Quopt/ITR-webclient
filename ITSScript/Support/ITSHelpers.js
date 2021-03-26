@@ -944,6 +944,7 @@ ITSMail.prototype.sendConsultantMail = function (SessionID, OnSuccess, OnError) 
 };
 
 function envSubstituteEvalExpression(expression, instanceObj, freeContext) {
+    var context = instanceObj;
     try {
         return eval("instanceObj." + expression);
     }

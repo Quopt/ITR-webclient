@@ -33,8 +33,11 @@ function ITSGraph() {
     this._objectType = "ITSGraph";
 };
 
-function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, context, animate) {
+function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, context, animate, graphObj) {
     var elementID = 'ITSGraph_canvas' +id;
+    if (typeof graphObj == "undefined") {
+        graphObj = new ITSGraph();
+    }
 
     if (typeof(template_values) == "string") {
         var tempObject = JSON.parse(template_values);
@@ -57,6 +60,11 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
     }).appendTo('#'+id);
     var canvas = document.getElementById(elementID);
     var ctx = canvas.getContext('2d');
+
+    graphObj.Y_axis_labels="";
+    if (template_values["Y_axis_labels"] != "") {
+        graphObj.Y_axis_labels = envSubstitute(template_values["Y_axis_labels"], context,true);
+    }
 
     if (template_values["Pre_graph_script"] != "") {
         var tempScript = envSubstitute(template_values["Pre_graph_script"], context,true);
@@ -158,15 +166,34 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
             options: {
                 scales: {
                     xAxes: [{
+                        scaleLabel: {
+                            display: (envSubstitute(template_values["X_axis_title"], context, true).trim() != ""),
+                            labelString: envSubstitute(template_values["X_axis_title"], context, true),
+                        },
                         stacked: (String(template_values["Stacked"]) == "T"),
                         ticks: {
-                            display: (String(template_values["Show_x_axis_labels"]) != "F")
+                            display: (String(template_values["Show_x_axis_labels"]) != "F"),
                         }
                     }],
                     yAxes: [{
+                        scaleLabel: {
+                            display: (envSubstitute(template_values["Y_axis_title"], context,true).trim() !=""),
+                            labelString: envSubstitute(template_values["Y_axis_title"], context,true),
+                        },
                         stacked: (template_values["Stacked"] == "T"),
                         ticks: {
-                            display: (String(template_values["Show_y_axis_labels"]) != "F")
+                            display: (String(template_values["Show_y_axis_labels"]) != "F"),
+                            callback: function(value, index, values) {
+                                console.log(value, index, values, graphObj.Y_axis_labels);
+                                if (graphObj.Y_axis_labels.trim() != "") {
+                                    var labelArr = graphObj.Y_axis_labels.split(',');
+                                    if (index >= labelArr.length) { return value}
+                                    var val = labelArr[index];
+                                    return val == "" ? undefined : val;
+                                } else {
+                                    return value;
+                                }
+                            }.bind(graphObj)
                         }
                     }]
                 },
@@ -206,7 +233,7 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
 };
 
 ITSGraph.prototype.showGraph = function (id, context, animate) {
-    return generateGraph(this.ID, id, -1, false, ITSJSONStringify(this), context, animate);
+    return generateGraph(this.ID, id, -1, false, ITSJSONStringify(this), context, animate, this);
 };
 
 ITSGraph.prototype.generateGraphImage = function (textToScan, context) {
@@ -300,6 +327,22 @@ ITSGraph_editTemplate = {
         },
         {
             "_objectType": "ITSScreenTemplateVariable",
+            "ID": "ea21ac13-0c14-4a55-1842-52784491956f",
+            "variableName": "Series_labels",
+            "description": "A comma seperated list of label names",
+            "defaultValue": "",
+            "variableType": "T", "persistentProperties": "*ALL*"
+        },
+        {
+            "_objectType": "ITSScreenTemplateVariable",
+            "ID": "814a4809-39f2-4b80-8030-296ca28519a4",
+            "variableName": "X_axis_title",
+            "description": "X axis title",
+            "defaultValue": "",
+            "variableType": "T", "persistentProperties": "*ALL*"
+        },
+        {
+            "_objectType": "ITSScreenTemplateVariable",
             "ID": "53851335-1bbf-40c9-b234-4be2249380b1",
             "variableName": "Show_y_axis_labels",
             "description": "Show the labels for the Y axis",
@@ -308,19 +351,27 @@ ITSGraph_editTemplate = {
         },
         {
             "_objectType": "ITSScreenTemplateVariable",
+            "ID": "ca38e3b3-8b8e-4a9f-9db1-a81e9af7c345",
+            "variableName": "Y_axis_labels",
+            "description": "Labels for the Y axis (CSV list) if other labels are needed. An empty value hides the tick line.",
+            "defaultValue": "",
+            "variableType": "T", "persistentProperties": "*ALL*"
+        },
+        {
+            "_objectType": "ITSScreenTemplateVariable",
+            "ID": "a5a033f5-6a8c-45de-8ad1-e4e470d81810",
+            "variableName": "Y_axis_title",
+            "description": "Y axis title",
+            "defaultValue": "",
+            "variableType": "T", "persistentProperties": "*ALL*"
+        },
+        {
+            "_objectType": "ITSScreenTemplateVariable",
             "ID": "c50045fd-94a8-4f62-fb3f-0a32bfef4a27",
             "variableName": "Pre_graph_script",
             "description": "",
             "defaultValue": "",
             "variableType": "A", "persistentProperties": "*ALL*"
-        },
-        {
-            "_objectType": "ITSScreenTemplateVariable",
-            "ID": "ea21ac13-0c14-4a55-1842-52784491956f",
-            "variableName": "Series_labels",
-            "description": "A comma seperated list of label names",
-            "defaultValue": "",
-            "variableType": "T", "persistentProperties": "*ALL*"
         },
         {
             "_objectType": "ITSScreenTemplateVariable",
@@ -336,6 +387,14 @@ ITSGraph_editTemplate = {
             "variableName": "Series_color_start",
             "description": "The color of this series",
             "defaultValue": "EEEEEE",
+            "variableType": "C", "persistentProperties": "*ALL*"
+        },
+        {
+            "_objectType": "ITSScreenTemplateVariable",
+            "ID": "7fc268b8-bf68-486d-d765-c3c689ab4e95",
+            "variableName": "Series_color_end",
+            "description": "",
+            "defaultValue": "AAAAAA",
             "variableType": "C", "persistentProperties": "*ALL*"
         },
         {
@@ -369,14 +428,6 @@ ITSGraph_editTemplate = {
             "description": "If the series is of another type then the graph override it here, In general only bar and line types can be mixed.",
             "defaultValue": "|None,radar|Radar,bar|Bar,doughnut|Doughnut,pie|Pie,line|Line,polarArea|Polar",
             "variableType": "L", "persistentProperties": "*ALL*"
-        },
-        {
-            "_objectType": "ITSScreenTemplateVariable",
-            "ID": "7fc268b8-bf68-486d-d765-c3c689ab4e95",
-            "variableName": "Series_color_end",
-            "description": "",
-            "defaultValue": "AAAAAA",
-            "variableType": "C", "persistentProperties": "*ALL*"
         },
         {
             "_objectType": "ITSScreenTemplateVariable",
