@@ -178,7 +178,7 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
                     ticks: {
                         display: (String(template_values["Show_x_axis_labels"]) != "F"),
                         callback: function(value, index, values) {
-                            console.log(value, index, values, graphObj.X_axis_labels);
+                            //console.log(value, index, values, graphObj.X_axis_labels);
                             if (graphObj.X_axis_labels.trim() != "") {
                                 var labelArr = graphObj.X_axis_labels.split(',');
                                 if (index >= labelArr.length) { return value}
@@ -199,7 +199,7 @@ function generateGraph (graphGuid, id, num_blocks, test_mode, template_values, c
                     ticks: {
                         display: (String(template_values["Show_y_axis_labels"]) != "F"),
                         callback: function(value, index, values) {
-                            console.log(value, index, values, graphObj.Y_axis_labels);
+                            //console.log(value, index, values, graphObj.Y_axis_labels);
                             if (graphObj.Y_axis_labels.trim() != "") {
                                 var labelArr = graphObj.Y_axis_labels.split(',');
                                 if (index >= labelArr.length) { return value}

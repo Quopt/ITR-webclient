@@ -819,12 +819,12 @@ ITSTestTakingController.prototype.generateReport = function(switchUI) {
     setTimeout( function () { ITSInstance.logoutController.logout('',false); }, 1000);
 };
 
-function processEvent (eventName, eventParameters) {
+function processEvent (eventName, eventParameters, infoObject) {
     if ( (!ITSInstance.testTakingController.currentSessionTest) && (eventName == "AutoStore")) {
         // auto store call from outside the test taking controller, process if setup properly
         ITSInstance.testTakingController.autoStore(false);
     } else {
-        ITSInstance.testTakingController.processEvent(eventName, eventParameters);
+        ITSInstance.testTakingController.processEvent(eventName, eventParameters, infoObject);
     }
 };
 
@@ -844,7 +844,7 @@ ITSTestTakingController.prototype.autoStore = function (InTestTaking) {
     }
 };
 
-ITSTestTakingController.prototype.processEvent = function (eventName, eventParameters) {
+ITSTestTakingController.prototype.processEvent = function (eventName, eventParameters, infoObject) {
     // supported events and parameters :
     //  EndTest
     //  EndTestTimeOut - the test is ended because a timer ended the test. No validations will be performed
@@ -855,6 +855,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
     //  Logout - the user wants to logout. No screen validation is performed.
     //  CheckSessionTime
     //  NOTE : before switching screens with ANY event the current screen is validated first, unless otherwise noted in the event list above
+    // infoObject is an object with additional information about the event (which may or may not be required by the actions to be executed)
 
     // save the results from the current screen into the Results object if the current session test
     if (this.currentTestDefinition && this.currentSessionTest) {
@@ -975,7 +976,7 @@ ITSTestTakingController.prototype.processEvent = function (eventName, eventParam
             if (scriptScreenParameterCodeBlockNr <=1) { scriptScreenParameterCodeBlockNr = ""; } else { scriptScreenParameterCodeBlockNr = "_" + scriptScreenParameterCodeBlockNr;}
             try {
                 var tempScript = this.currentTestDefinition.screens[this.currentSessionTest.CurrentPage].screenComponents[scriptScreenParameterScreenComponentIndex].templateValues[scriptScreenVariableName + scriptScreenParameterCodeBlockNr];
-                ITSInstance.actions.executeScriptInTestTaking(tempScript, this, this.currentTestDefinition, this.currentSession, this.currentSessionTest, this.currentSessionTest.CurrentPage, scriptScreenParameterScreenComponentIndex, scriptScreenVariableName, scriptScreenParameterCodeBlockNr, 0, scriptScreenParameterID);
+                ITSInstance.actions.executeScriptInTestTaking(tempScript, this, this.currentTestDefinition, this.currentSession, this.currentSessionTest, this.currentSessionTest.CurrentPage, scriptScreenParameterScreenComponentIndex, scriptScreenVariableName, scriptScreenParameterCodeBlockNr, 0, scriptScreenParameterID, infoObject);
             } catch (err) {
                 ITSLogger.logMessage(logLevel.ERROR,'Action execution failed (' + eventName + "/" + eventParameters + ') : ' + err.message);
             }

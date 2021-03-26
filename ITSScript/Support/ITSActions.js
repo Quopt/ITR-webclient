@@ -170,7 +170,7 @@ ITSActionList.prototype.removeActionsForScope = function (scope) {
     }
 };
 
-ITSActionList.prototype.executeScriptInTestTaking = function (scriptObject, testTakingController, currentTestDefinition, currentSession, currentSessionTest, CurrentPage, ScreenComponentIndex, VariableName, CodeBlockNr, currentActionIndex, elementID) {
+ITSActionList.prototype.executeScriptInTestTaking = function (scriptObject, testTakingController, currentTestDefinition, currentSession, currentSessionTest, CurrentPage, ScreenComponentIndex, VariableName, CodeBlockNr, currentActionIndex, elementID, infoObject) {
     // for each context an execute script action will be available. Override the one you need.
     if (typeof currentActionIndex == "undefined") currentActionIndex = 0;
     this.context = {};
@@ -183,6 +183,7 @@ ITSActionList.prototype.executeScriptInTestTaking = function (scriptObject, test
     this.context.currentSessionTest = currentSessionTest;
     if (typeof currentSessionTest.PluginData.Vars == "undefined") { currentSessionTest.PluginData.Vars = new ITSObject(this,ITSInstance, true); }
     this.context.vars = currentSessionTest.PluginData.Vars;
+    this.context.event = infoObject;
     this.context.currentPage = CurrentPage;
     this.context.screenComponentIndex = ScreenComponentIndex;
     this.context.variableName = VariableName;

@@ -300,7 +300,7 @@ ITSScreenTemplate.prototype.generateTemplateFunctions = function () {
 
     var func = emptyfunc;
     try {
-        eval("func = function(id, num_blocks, test_mode, template_values) { " + this.init_value_snippet + " }; ");
+        eval("func = function(id, num_blocks, test_mode, template_values, screenComponentIndex) { " + this.init_value_snippet + " }; ");
     } catch (err) {
         ITSLogger.logMessage(logLevel.ERROR,"init_value_snippet contains error " + this.Description + " " + err.message );
     }
@@ -746,7 +746,7 @@ ITSScreenTemplate.prototype.generate_test_taking_view = function (div, add_to_di
             if (!init_mode) {
                 init_mode = "";
             }
-            this.runtime_init_values(id, RepeatBlockCount, init_mode, templatevalues);
+            this.runtime_init_values(id, RepeatBlockCount, init_mode, templatevalues, screenComponentIndex);
         }
     }
 };
