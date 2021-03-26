@@ -702,11 +702,11 @@ ITSActionShowMessage.prototype.executeAction = function (context, callback) {
     var variables = context.actionValue;
 
     if (variables.Info == "on")
-        ITSInstance.UIController.showInfo("ITSActionShowMessage",variables.Message, variables.MessageAddition, "");
+        ITSInstance.UIController.showInfo("ITSActionShowMessage",variables.Message, envSubstitute(variables.MessageAddition, context, true), "");
     if (variables.Warning == "on")
-        ITSInstance.UIController.showWarning("ITSActionShowMessage",variables.Message, variables.MessageAddition, "");
+        ITSInstance.UIController.showWarning("ITSActionShowMessage",variables.Message,  envSubstitute(variables.MessageAddition, context, true), "");
     if (variables.Error == "on")
-        ITSInstance.UIController.showError("ITSActionShowMessage",variables.Message, variables.MessageAddition, "");
+        ITSInstance.UIController.showError("ITSActionShowMessage",variables.Message,  envSubstitute(variables.MessageAddition, context, true), "");
 
     return returnObject;
 };
