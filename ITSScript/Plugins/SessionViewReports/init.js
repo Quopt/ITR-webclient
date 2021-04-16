@@ -105,7 +105,7 @@
                 var reportsFound = 0;
                 var firstReportID = "";
                 for (i = 0; i < ITSInstance.reports.reportsList.length; i++) {
-                    if (ITSInstance.reports.reportsList[i].TestID == this.currentSessionTest.TestID) {
+                    if ((ITSInstance.reports.reportsList[i].TestID == this.currentSessionTest.TestID) && ITSInstance.reports.reportsList[i].Active) {
                         $('#SessionViewReportsSelectHeaderDropdownButtonOptions').append('<button class="dropdown-item" type="button" onclick="ITSInstance.SessionViewReportsSessionController.showReport(\'' + ITSInstance.reports.reportsList[i].ID + '\');">' +
                             ITSInstance.reports.reportsList[i].getReportDescriptionWithDBIndicator() + '</button>');
                         reportsFound++;

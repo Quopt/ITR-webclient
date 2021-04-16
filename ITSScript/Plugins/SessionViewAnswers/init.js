@@ -115,8 +115,9 @@
                 $("#SessionViewAnswersInterfaceEditTestAnswers *").attr("disabled", true);
             } else {
                 // add a save button
-                $("#SessionViewAnswersInterfaceEditTestAnswers").append ('<button type="button" class="btn btn-default btn-success" id="SessionViewAnswersInterfaceEditTestAnswers_saveButton" onclick="ITSInstance.SessionViewAnswersSessionController.saveTestResults();"><i id="SessionViewAnswersInterfaceEditTestAnswers-saveIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="SessionViewAnswersInterfaceEditTestAnswers-saveButtonLabel">Save changes</span></button>')
-                $("#SessionViewAnswersInterfaceEditTestAnswers").append ('<button type="button" class="btn btn-default btn-success" id="SessionViewAnswersInterfaceEditTestAnswers_saveAndBackButton" onclick="ITSInstance.SessionViewAnswersSessionController.saveTestResults(true);"><i id="SessionViewAnswersInterfaceEditTestAnswers-saveAndBackIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="SessionViewAnswersInterfaceEditTestAnswers-saveAndBackButtonLabel">Save changes & back</span></button>')
+                $("#SessionViewAnswersInterfaceEditTestAnswers").append ('<button type="button" class="btn btn-default btn-success" id="SessionViewAnswersInterfaceEditTestAnswers_saveButton" onclick="ITSInstance.SessionViewAnswersSessionController.saveTestResults();"><i id="SessionViewAnswersInterfaceEditTestAnswers-saveIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="SessionViewAnswersInterfaceEditTestAnswers-saveButtonLabel">Save changes</span></button>');
+                $("#SessionViewAnswersInterfaceEditTestAnswers").append ('<button type="button" class="btn btn-default btn-success" id="SessionViewAnswersInterfaceEditTestAnswers_saveAndBackButton" onclick="ITSInstance.SessionViewAnswersSessionController.saveTestResults(true);"><i id="SessionViewAnswersInterfaceEditTestAnswers-saveAndBackIcon" class="fa fa-fw fa-thumbs-up"></i> <span id="SessionViewAnswersInterfaceEditTestAnswers-saveAndBackButtonLabel">Save changes & back</span></button>');
+                ITSInstance.translator.translateDiv("#SessionViewAnswersInterfaceSessionEdit");
             }
         }
         ITSInstance.UIController.showInterfaceAsWaitingOff();
