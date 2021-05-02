@@ -313,6 +313,7 @@ ITSReport.prototype.loadDetailError = function () {
 };
 
 ITSReport.prototype.saveToServer = function (OnSuccess, OnError) {
+    this.Generation++;
     this.saveToServerMaster(OnSuccess, OnError, false);
 };
 
