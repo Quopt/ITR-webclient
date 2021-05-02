@@ -159,7 +159,8 @@ function ITSReport(par, session) {
     this.Generation = 1;
     this.dbsource = 0;
 
-    this.persistentProperties = ['ID',
+    this.persistentProperties = [
+        'ID',
         'Description',
         'Explanation',
         'InvoiceCode' ,
@@ -177,7 +178,7 @@ function ITSReport(par, session) {
         'TestID',
         'TestIDs',
         'ReportText',
-        'Generation'];
+        'Generation' ];
 
     this.currentlyLoading = false;
     this.detailsLoaded = false;
@@ -313,7 +314,6 @@ ITSReport.prototype.loadDetailError = function () {
 };
 
 ITSReport.prototype.saveToServer = function (OnSuccess, OnError) {
-    this.Generation++;
     this.saveToServerMaster(OnSuccess, OnError, false);
 };
 
