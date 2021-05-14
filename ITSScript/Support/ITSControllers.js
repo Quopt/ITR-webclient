@@ -1017,7 +1017,8 @@ ITSTestTakingController.prototype.saveCurrentTest = function () {
     var sessionPostObject = {};
     this.currentSessionTest.calcTotalPages();
     sessionPostObject.sessionTest = this.currentSessionTest;
-    sessionPostObject.numberOfRetries = 3;
+    sessionPostObject.numberOfRetries = 1;
+/* Start save immediately now
     if (this.saveCurrentTestObjectBusy) {
         this.saveCurrentTestObjectBacklog = {} ;
         this.saveCurrentTestObjectBacklog[this.currentSessionTest.ID] = sessionPostObject;
@@ -1025,6 +1026,8 @@ ITSTestTakingController.prototype.saveCurrentTest = function () {
     } else {
         this.saveCurrentTestRetry(sessionPostObject);
     }
+*/
+    this.saveCurrentTestRetry(sessionPostObject);
 };
 
 ITSTestTakingController.prototype.saveCurrentTestRetry = function (sessionPostObject, xhr, ajaxOptions, thrownError) {
