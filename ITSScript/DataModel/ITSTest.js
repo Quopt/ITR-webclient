@@ -1406,7 +1406,12 @@ ITSTestScreen.prototype.checkValidations = function (storageObject, messageSepar
         var templateIndex = this.ITSSession.screenTemplates.findTemplateById(this.ITSSession.screenTemplates.screenTemplates, this.screenComponents[i].templateID);
         var template =  this.ITSSession.screenTemplates.screenTemplates[templateIndex];
         var ComponentResults = TestResults["__" + this.screenComponents[i].id];
-        var checkMessage = template.runtime_validate( 'X' + i + 'Y' + postfix, this.screenComponents[i].templateValues.RepeatBlockCount,'TT', this.screenComponents[i].templateValues, ComponentResults);
+        try {
+            var checkMessage = template.runtime_validate('X' + i + 'Y' + postfix, this.screenComponents[i].templateValues.RepeatBlockCount, 'TT', this.screenComponents[i].templateValues, ComponentResults);
+        } catch(err) {
+            ITSLogger.logMessage(logLevel.ERROR,"runtime_validate error : " + template.Description + " - " + err.message);
+            throw(err);
+        }
         if ( (checkMessage!='') && (checkMessage != undefined)) validationMessage = checkMessage + messageSeparator;
     }
     return validationMessage;
