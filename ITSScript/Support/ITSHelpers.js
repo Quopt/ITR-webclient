@@ -279,6 +279,7 @@ function ITSLoggerObject() {
     // log example : ITSLogger.logMessage(logLevel.INFO,"My message is %%here%%", "{'here':'there'}")
     this.logLevel = logLevel.ERROR;
     this.loggingEnabled = true;
+    this.showTrace = false;
 };
 
 ITSLoggerObject.prototype.logMessage=function (logLevel, message, messageParameters ) {
@@ -287,7 +288,7 @@ ITSLoggerObject.prototype.logMessage=function (logLevel, message, messageParamet
     }
     if ((logLevel <= this.logLevel) && (this.loggingEnabled)) {
         console.log(message);
-        console.trace();
+        if (this.showTrace) console.trace();
     }
 };
 
