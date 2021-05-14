@@ -89,7 +89,7 @@
             "<div class=\"progress-bar-animated progress-bar-striped bg-success\" role=\"progressbar\" notranslate id=\"AdminInterfaceEditSessionEditTestCardsProgress%%NR%%\" style=\"width: %%PROGRESS%%%\" aria-valuenow=\"0\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div>" +
             "</div>" +
             "<br/>" +
-            "<label id=\"AdminInterfaceEditSessionEditTestCardsTestStarted\">Test started : </label>&nbsp;<label id=\"AdminInterfaceEditSessionEditTestCardsTestStarted%%NR%%\">%%TESTSTART%%</label>" +
+            "<label id=\"AdminInterfaceEditSessionEditTestCardsTestStarted\">Test started : </label>&nbsp;<label notranslate id=\"AdminInterfaceEditSessionEditTestCardsTestStarted%%NR%%\">%%TESTSTART%%</label>" +
             "<div class=\"col-sm-12\">" +
             "<button type=\"button\" onclick=\"ITSInstance.editSessionController.restartTest(%%NR%%);\"class=\"btn-sm btn-warning\"><i id=\"AdminInterfaceEditSessionEditRestartTestIcon%%NR%%\" class=\"fa fa-fw fa-recycle aria-hidden='true'\"></i><span id=\"AdminInterfaceEditSessionEditRestartTest\">Restart test</span></button>" +
             "<button type=\"button\" onclick=\"ITSInstance.editSessionController.endTest(%%NR%%);\"class=\"btn-sm btn-warning\"><i id=\"AdminInterfaceEditSessionEditEndTestIcon%%NR%%\" class=\"fa fa-fw fa-arrow-right aria-hidden='true'\"></i><span id=\"AdminInterfaceEditSessionEditEndTest\">End test</span></button>" +
