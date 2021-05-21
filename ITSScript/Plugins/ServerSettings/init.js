@@ -297,6 +297,10 @@
         setTimeout( function () { location.reload(true); }, 30000);
     };
 
+    ITSServerSettingsEditor.prototype.clearServerCache = function () {
+        ITSInstance.genericAjaxUpdate('cache/clear', "{}", function (){}, function (){});
+    };
+
     // register the portlet
     ITSInstance.ServerSettingsController = new ITSServerSettingsEditor();
     ITSInstance.UIController.registerEditor(ITSInstance.ServerSettingsController);
