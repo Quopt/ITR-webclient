@@ -494,11 +494,13 @@
         var result = "<option value='00000000-0000-0000-0000-000000000000' notranslate>-</option>";
         var selected = "";
         for (var i = 0; i < normsList.length; i++) {
-            selected = '';
-            if (normsList[i].id == defaultNormID) {
-                selected = "selected='selected' ";
+            if (normsList[i].active) {
+                selected = '';
+                if (normsList[i].id == defaultNormID) {
+                    selected = "selected='selected' ";
+                }
+                result += "<option notranslate " + selected + "value ='" + normsList[i].id + "'>" + normsList[i].normDescription + "</option>";
             }
-            result += "<option notranslate " + selected + "value ='" + normsList[i].id + "'>" + normsList[i].normDescription + "</option>";
         }
         return result;
     };

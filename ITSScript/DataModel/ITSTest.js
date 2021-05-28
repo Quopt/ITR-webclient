@@ -552,12 +552,11 @@ ITSTest.prototype.copyTestScreenBase = function (source, insertPos, oldScreen, n
     return newScreen;
 };
 
-ITSTest.prototype.getScalesList = function (separator) {
+ITSTest.prototype.getScalesList = function (separator, includeInactive) {
     if (!separator) separator = ",";
     var result = "";
     for (var i=0; i < this.scales.length; i++) {
-        result += this.scales[i].scaleDescription;
-        if (i < this.scales.length-1) result += separator;
+        if (this.scales[i].showScale || includeInactive) result += (result == "" ? "" : separator) + this.scales[i].scaleDescription;
     }
     return result;
 };
@@ -617,22 +616,20 @@ ITSTest.prototype.getNormsList = function (separator) {
 };
 
 
-ITSTest.prototype.getScaleVarsList = function (separator) {
+ITSTest.prototype.getScaleVarsList = function (separator, includeInactive) {
     if (!separator) separator = ",";
     var result = "";
     for (var i=0; i < this.scales.length; i++) {
-        result += this.scales[i].scaleVarName;
-        if (i < this.scales.length-1) result += separator;
+        if (this.scales[i].showScale || includeInactive) result += (result == "" ? "" : separator) + this.scales[i].scaleVarName;
     }
     return result;
 };
 
-ITSTest.prototype.getScaleDescriptionsList = function (separator) {
+ITSTest.prototype.getScaleDescriptionsList = function (separator, includeInactive) {
     if (!separator) separator = ",";
     var result = "";
     for (var i=0; i < this.scales.length; i++) {
-        result += this.scales[i].scaleDescription;
-        if (i < this.scales.length-1) result += separator;
+        if (this.scales[i].showScale || includeInactive) result += (result == "" ? "" : separator) + this.scales[i].scaleDescription;
     }
     return result;
 };
