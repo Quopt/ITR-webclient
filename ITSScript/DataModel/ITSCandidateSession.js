@@ -1077,16 +1077,16 @@ ITSCandidateSessionTest.prototype.prepareTestStorage = function () {
     this.Results = this.testDefinition.prepareResultsStorage(this.Results);
 };
 
-ITSCandidateSessionTest.prototype.getScaleScores = function (separator) {
+ITSCandidateSessionTest.prototype.getScaleScores = function (separator, includeInactive) {
     if (!separator) separator = ",";
     var result = "";
     for (var i=0; i < this.testDefinition.scales.length; i++) {
-        if (this.Scores[ "__"+ this.testDefinition.scales[i].id ]) {
-            result += this.Scores["__" + this.testDefinition.scales[i].id].Score ;
-            if (i < this.testDefinition.scales.length-1) result += separator;
-        } else {
-            result += this.testDefinition.scales[i].defaultValue ;
-            if (i < this.testDefinition.scales.length-1) result += separator;
+        if (this.testDefinition.scales[i].showScale || includeInactive) {
+            if (this.Scores["__" + this.testDefinition.scales[i].id]) {
+                result += (result == "" ? "" : separator) + this.Scores["__" + this.testDefinition.scales[i].id].Score;
+            } else {
+                result += (result == "" ? "" : separator) + this.testDefinition.scales[i].defaultValue;
+            }
         }
     }
     return result;
@@ -1133,91 +1133,91 @@ ITSCandidateSessionTest.prototype.getMaxNormScore3 = function () {
     return 10;
 };
 
-ITSCandidateSessionTest.prototype.getNormScores = function (separator) {
+ITSCandidateSessionTest.prototype.getNormScores = function (separator, includeInactive) {
     if (!separator) separator = ",";
     var result = "";
     for (var i=0;  i < this.testDefinition.scales.length; i++) {
-        if (this.Scores[ "__"+ this.testDefinition.scales[i].id ]) {
-            result += this.Scores["__" + this.testDefinition.scales[i].id].NormScore;
-            if (i < this.testDefinition.scales.length-1) result += separator;
-        } else {
-            result += this.testDefinition.scales[i].defaultValue;
-            if (i < this.testDefinition.scales.length-1) result += separator;
+        if (this.testDefinition.scales[i].showScale || includeInactive) {
+            if (this.Scores["__" + this.testDefinition.scales[i].id]) {
+                result += (result == "" ? "" : separator) + this.Scores["__" + this.testDefinition.scales[i].id].NormScore;
+            } else {
+                result += (result == "" ? "" : separator) + this.testDefinition.scales[i].defaultValue;
+            }
         }
     }
     return result;
 };
 
-ITSCandidateSessionTest.prototype.getNormScores2 = function (separator) {
+ITSCandidateSessionTest.prototype.getNormScores2 = function (separator, includeInactive) {
     if (!separator) separator = ",";
     var result = "";
     for (var i=0;  i < this.testDefinition.scales.length; i++) {
-        if (this.Scores[ "__"+ this.testDefinition.scales[i].id ]) {
-            result += this.Scores["__" + this.testDefinition.scales[i].id].NormScore2;
-            if (i < this.testDefinition.scales.length-1) result += separator;
-        } else {
-            result += this.testDefinition.scales[i].defaultValue;
-            if (i < this.testDefinition.scales.length-1) result += separator;
+        if (this.testDefinition.scales[i].showScale || includeInactive) {
+            if (this.Scores["__" + this.testDefinition.scales[i].id]) {
+                result += (result == "" ? "" : separator) + this.Scores["__" + this.testDefinition.scales[i].id].NormScore2;
+            } else {
+                result += (result == "" ? "" : separator) + this.testDefinition.scales[i].defaultValue;
+            }
         }
     }
     return result;
 };
 
-ITSCandidateSessionTest.prototype.getNormScores3 = function (separator) {
+ITSCandidateSessionTest.prototype.getNormScores3 = function (separator, includeInactive) {
     if (!separator) separator = ",";
     var result = "";
     for (var i=0;  i < this.testDefinition.scales.length; i++) {
-        if (this.Scores[ "__"+ this.testDefinition.scales[i].id ]) {
-            result += this.Scores["__" + this.testDefinition.scales[i].id].NormScore3;
-            if (i < this.testDefinition.scales.length-1) result += separator;
-        } else {
-            result += this.testDefinition.scales[i].defaultValue;
-            if (i < this.testDefinition.scales.length-1) result += separator;
+        if (this.testDefinition.scales[i].showScale || includeInactive) {
+            if (this.Scores["__" + this.testDefinition.scales[i].id]) {
+                result += (result == "" ? "" : separator) + this.Scores["__" + this.testDefinition.scales[i].id].NormScore3;
+            } else {
+                result += (result == "" ? "" : separator) + this.testDefinition.scales[i].defaultValue;
+            }
         }
     }
     return result;
 };
 
-ITSCandidateSessionTest.prototype.getNormPercentileScores = function (separator) {
+ITSCandidateSessionTest.prototype.getNormPercentileScores = function (separator, includeInactive) {
     if (!separator) separator = ",";
     var result = "";
     for (var i=0;  i < this.testDefinition.scales.length; i++) {
-        if (this.Scores[ "__"+ this.testDefinition.scales[i].id ]) {
-            result += this.Scores["__" + this.testDefinition.scales[i].id].PercentileScore;
-            if (i < this.testDefinition.scales.length-1) result += separator;
-        } else {
-            result += this.testDefinition.scales[i].defaultValue ;
-            if (i < this.testDefinition.scales.length-1) result += separator;
+        if (this.testDefinition.scales[i].showScale || includeInactive) {
+            if (this.Scores["__" + this.testDefinition.scales[i].id]) {
+                result += (result == "" ? "" : separator) + this.Scores["__" + this.testDefinition.scales[i].id].PercentileScore;
+            } else {
+                result += (result == "" ? "" : separator) + this.testDefinition.scales[i].defaultValue;
+            }
         }
     }
     return result;
 };
 
-ITSCandidateSessionTest.prototype.getNormPercentileScores2 = function (separator) {
+ITSCandidateSessionTest.prototype.getNormPercentileScores2 = function (separator, includeInactive) {
     if (!separator) separator = ",";
     var result = "";
     for (var i=0;  i < this.testDefinition.scales.length; i++) {
-        if (this.Scores[ "__"+ this.testDefinition.scales[i].id ]) {
-            result += this.Scores["__" + this.testDefinition.scales[i].id].PercentileScore2;
-            if (i < this.testDefinition.scales.length-1) result += separator;
-        } else {
-            result += this.testDefinition.scales[i].defaultValue ;
-            if (i < this.testDefinition.scales.length-1) result += separator;
+        if (this.testDefinition.scales[i].showScale || includeInactive) {
+            if (this.Scores["__" + this.testDefinition.scales[i].id]) {
+                result += (result == "" ? "" : separator) + this.Scores["__" + this.testDefinition.scales[i].id].PercentileScore2;
+            } else {
+                result += (result == "" ? "" : separator) + this.testDefinition.scales[i].defaultValue;
+            }
         }
     }
     return result;
 };
 
-ITSCandidateSessionTest.prototype.getNormPercentileScores3 = function (separator) {
+ITSCandidateSessionTest.prototype.getNormPercentileScores3 = function (separator, includeInactive) {
     if (!separator) separator = ",";
     var result = "";
     for (var i=0;  i < this.testDefinition.scales.length; i++) {
-        if (this.Scores[ "__"+ this.testDefinition.scales[i].id ]) {
-            result += this.Scores["__" + this.testDefinition.scales[i].id].PercentileScore3;
-            if (i < this.testDefinition.scales.length-1) result += separator;
-        } else {
-            result += this.testDefinition.scales[i].defaultValue ;
-            if (i < this.testDefinition.scales.length-1) result += separator;
+        if (this.testDefinition.scales[i].showScale || includeInactive) {
+            if (this.Scores["__" + this.testDefinition.scales[i].id]) {
+                result += (result == "" ? "" : separator) + this.Scores["__" + this.testDefinition.scales[i].id].PercentileScore3;
+            } else {
+                result += (result == "" ? "" : separator) + this.testDefinition.scales[i].defaultValue;
+            }
         }
     }
     return result;
