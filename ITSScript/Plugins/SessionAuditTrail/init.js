@@ -62,7 +62,22 @@
     };
 
     ITSSessionAuditTrailEditor.prototype.show=function () {
-        if (getUrlParameterValue('SessionID')) {
+        if (getUrlParameterValue('ObjectType')) {
+            $('#NavbarsAdmin').show();
+            $('#NavbarsAdmin').visibility = 'visible';
+            $('#NavBarsFooter').show();
+            $('#SessionAuditTrailInterfaceSessionEdit').show();
+            ITSInstance.UIController.initNavBar();
+            ITSInstance.UIController.showInterfaceAsWaitingOn();
+            $('#SessionAuditTrailInterfaceEditHeader').hide();
+            $('#SessionAuditTrailObjectTypeHeader').show();
+            $('#SessionAuditTrailFindMoreButton').hide();
+
+            this.SessionID = getUrlParameterValue('SessionID');
+
+            this.loadByObjectType(getUrlParameterValue('ObjectType'), 0);
+        }
+        else if (getUrlParameterValue('SessionID')) {
             this.SessionID = getUrlParameterValue('SessionID');
             $('#NavbarsAdmin').show();
             $('#NavbarsAdmin').visibility = 'visible';
@@ -95,19 +110,6 @@
             this.objectType = -1;
             this.currentSession.loadSession(this.SessionID, this.sessionLoaded.bind(this), this.sessionLoadingFailed.bind(this));
         }
-        else if (getUrlParameterValue('ObjectType')) {
-            $('#NavbarsAdmin').show();
-            $('#NavbarsAdmin').visibility = 'visible';
-            $('#NavBarsFooter').show();
-            $('#SessionAuditTrailInterfaceSessionEdit').show();
-            ITSInstance.UIController.initNavBar();
-            ITSInstance.UIController.showInterfaceAsWaitingOn();
-            $('#SessionAuditTrailInterfaceEditHeader').hide();
-            $('#SessionAuditTrailObjectTypeHeader').show();
-            $('#SessionAuditTrailFindMoreButton').hide();
-
-            this.loadByObjectType(getUrlParameterValue('ObjectType'), 0);
-        }
         else // no parameter will not work for this screen
         {
             ITSInstance.UIController.activateScreenPath('Switchboard');
@@ -133,11 +135,14 @@
         }
         this.pageNumber = pageNumber;
         this.objectType = otype;
+
+        var filter = "";
+        if (typeof this.SessionID != "undefined") filter = "SessionID="+ this.SessionID;
         if (pageNumber > 0) {
             this.currentSession.NewAuditTrail = [];
-            ITSInstance.JSONAjaxLoader('audittrail/objecttype/' + otype, this.currentSession.NewAuditTrail, this.auditTrailLoaded.bind(this), this.sessionLoadingFailed.bind(this), "ITSObject", pageNumber, 25, "CreateDate desc", false, false, true, "","",true);
+            ITSInstance.JSONAjaxLoader('audittrail/objecttype/' + otype, this.currentSession.NewAuditTrail, this.auditTrailLoaded.bind(this), this.sessionLoadingFailed.bind(this), "ITSObject", pageNumber, 25, "CreateDate desc", false, false, true, filter,"",true);
         } else {
-            ITSInstance.JSONAjaxLoader('audittrail/objecttype/' + otype, this.currentSession.AuditTrail, this.auditTrailLoaded.bind(this), this.sessionLoadingFailed.bind(this), "ITSObject", pageNumber, 25, "CreateDate desc");
+            ITSInstance.JSONAjaxLoader('audittrail/objecttype/' + otype, this.currentSession.AuditTrail, this.auditTrailLoaded.bind(this), this.sessionLoadingFailed.bind(this), "ITSObject", pageNumber, 25, "CreateDate desc", false, false, true, filter,"");
         }
     };
 

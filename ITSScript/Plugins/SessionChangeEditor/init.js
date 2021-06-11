@@ -541,6 +541,10 @@ ITSChangeExistingSessionEditor.prototype.showAuditTrail = function () {
     ITSRedirectPath("SessionAuditTrail&SessionID=" + this.currentSession.ID);
 };
 
+ITSChangeExistingSessionEditor.prototype.showMailTrail = function () {
+    ITSRedirectPath("SessionAuditTrail&ObjectType=1001&SessionID=" + this.currentSession.ID);
+};
+
 (function() { // iife to prevent pollution of the global memspace
 
 // add the portlet at the proper place, add portlet.html to AdminInterfacePortlets

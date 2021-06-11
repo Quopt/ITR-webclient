@@ -446,7 +446,7 @@
             newMail.Body = tinyMCE.get("SessionMailerInterfaceSessionEditMailBody").getContent().toString();
 
             this.mailsToSend = 1;
-            newMail.sendMail(this.mailOK.bind(this), this.mailFailed.bind(this));
+            newMail.sendMail(this.mailOK.bind(this), this.mailFailed.bind(this), getUrlParameterValue('SessionID'));
         }
     };
 

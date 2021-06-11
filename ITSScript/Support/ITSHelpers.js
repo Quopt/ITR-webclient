@@ -932,16 +932,17 @@ ITSMail = function () {
     this.ReplyTo = "";
 };
 
-ITSMail.prototype.sendMail = function (OnSuccess, OnError) {
+ITSMail.prototype.sendMail = function (OnSuccess, OnError, LinkedSessionId) {
+    if (typeof LinkedSessionId == "undefined" ) LinkedSessionId = "";
     this.persistentProperties = "*ALL*";
     var tempStr = ITSJSONStringify(this);
-    ITSInstance.genericAjaxUpdate('sendmail', tempStr, OnSuccess, OnError );
+    ITSInstance.genericAjaxUpdate('sendmail', tempStr, OnSuccess, OnError, false,true, undefined,false,"", LinkedSessionId );
 };
 
-ITSMail.prototype.sendConsultantMail = function (SessionID, OnSuccess, OnError) {
+ITSMail.prototype.sendConsultantMail = function (SessionID, OnSuccess, OnError ) {
     this.persistentProperties = "*ALL*";
     var tempStr = ITSJSONStringify(this);
-    ITSInstance.genericAjaxUpdate('sendmailconsultant/' + SessionID, tempStr, OnSuccess, OnError );
+    ITSInstance.genericAjaxUpdate('sendmailconsultant/' + SessionID, tempStr, OnSuccess, OnError);
 };
 
 function envSubstituteEvalExpression(expression, instanceObj, freeContext) {

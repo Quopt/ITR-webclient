@@ -337,7 +337,7 @@ ITSSession.prototype.JSONAjaxLoaderRunner = function (URL, objectToPutDataIn, On
     });
 };
 
-ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSuccess, OnError, IncludeMaster, IncludeClient, dataType, ForceTranslation, label) {
+ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSuccess, OnError, IncludeMaster, IncludeClient, dataType, ForceTranslation, label, sessionid) {
     // if label is set remove all items from the queue with this label first
     if (typeof label==="string" && label != "") {
         var elements = this.genericJSONUpdateQueue.length - 1;
@@ -358,7 +358,8 @@ ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSucces
             "IncludeClient" : IncludeClient,
             "dataType" : dataType,
             "ForceTranslation" : ForceTranslation,
-            "label" : label
+            "label" : label,
+            "SessionId" : sessionid
         }
     );
     //console.log("Push",URL, this.genericJSONLoadQueue.length);
@@ -391,11 +392,12 @@ ITSSession.prototype.GenericAjaxUpdateProcessQueue = function () {
                 x.IncludeMaster,
                 x.IncludeClient,
                 x.dataType,
-                x.ForceTranslation);
+                x.ForceTranslation,
+                x.SessionId);
         }
     }
 };
-ITSSession.prototype.genericAjaxUpdateRunner = function (URL, objectToUpdate, OnSuccess, OnError, IncludeMaster, IncludeClient, dataType, ForceTranslation) {
+ITSSession.prototype.genericAjaxUpdateRunner = function (URL, objectToUpdate, OnSuccess, OnError, IncludeMaster, IncludeClient, dataType, ForceTranslation, sessionid) {
     ITSLogger.logMessage(logLevel.INFO,'ajax update or create : ' + this.baseURLAPI + URL);
     tempHeaders = {'SessionID': ITSInstance.token.IssuedToken, 'CompanyID': ITSInstance.token.companyID, 'BrowserID': ITSInstance.BrowserID};
     tempHeaders['IncludeMaster'] = "N";
@@ -410,8 +412,11 @@ ITSSession.prototype.genericAjaxUpdateRunner = function (URL, objectToUpdate, On
     if (ForceTranslation){
         tempHeaders['ForceTranslation'] = ForceTranslation
     }
+    if (sessionid) {
+        tempHeaders['LinkedSessionId'] = sessionid
+    }
     tempHeaders['TimeZoneOffset'] = "" + moment().utcOffset() / 60; //(new Date()).getTimezoneOffset()/60;
-
+console.log(tempHeaders);
     processDataCall = true;
     contentTypeCall = 'application/x-www-form-urlencoded; charset=UTF-8';
     if (dataType) { contentTypeCall = dataType; processDataCall = false; }
