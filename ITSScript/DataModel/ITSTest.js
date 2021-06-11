@@ -976,7 +976,7 @@ ITSTestNorm.prototype.normTest = function (session, sessionTest, candidate, resu
                         saveNormScore = false;
                         if ($.isNumeric(nc.rawScoreBorder) && $.isNumeric(score.Score)) {
                             // perform numeric comparison
-                            if (this.parameters.BorderValueTreatment == 2) {
+                            if ((this.parameters.BorderValueTreatment == 2) && (nc.rawScoreBorder != this.myParent.scales[s].minimumScore)) {
                                 if (Number(nc.rawScoreBorder) < Number(score.Score)) saveNormScore = true;
                             } else {
                                 if (Number(nc.rawScoreBorder) <= Number(score.Score)) saveNormScore = true;
