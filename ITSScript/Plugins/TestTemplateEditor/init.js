@@ -1362,6 +1362,7 @@ ITSTestTemplateEditor.prototype.loadNormMatrix = function () {
     toAdd = this.loadNormMatrixSub(false);
     $('#AdminInterfaceTestTemplateEditorNorm_NormColumnTable').append(toAdd);
     this.loadNormMatrixSub(true);
+    ITSInstance.translator.translateDiv("#AdminInterfaceTestTemplateEditorNorm_NormColumnTable");
 };
 
 ITSTestTemplateEditor.prototype.loadNormMatrixSub = function (setValue) {
