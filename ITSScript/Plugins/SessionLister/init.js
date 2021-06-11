@@ -36,6 +36,7 @@
             " <i class=\"fa fa-search\"></i></button></th></tr>" +
             "  <tr>" +
             "   <th scope=\"col\">#</th>" +
+            "   <th></th>" +
             "   <th id=\"ITSSessionListerEditor_DescriptionHeader\" scope=\"col\">Session description</th>" +
             "   <th id=\"ITSSessionListerEditor_DescriptionLogin\" scope=\"col\">Login</th>" +
             "   <th class='d-none d-sm-table-cell' id=\"ITSSessionListerEditor_DescriptionName\" scope=\"col\">Name</th>" +
@@ -50,6 +51,7 @@
             "  <tbody>" ;
         this.tablePart2 = "  <tr>" +
             "   <th scope=\"row\">%%NR%%</th>" +
+            "   <th>%%ICON%%</th>" +
             "   <td><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%DESCRIPTION%%</span></td>" +
             "   <td><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%LOGIN%%</span></td>" +
             "   <td class='d-none d-sm-table-cell'><span notranslate onclick='ITSInstance.SessionListerController.viewSession(\"%%SESSIONID%%\");'>%%NAME%%</span></td>" +
@@ -68,6 +70,7 @@
 
         this.mSessionID = /%%SESSIONID%%/g;
         this.mNR = /%%NR%%/g;
+        this.mICON = /%%ICON%%/g;
         this.mSTARTEDAT = /%%STARTEDAT%%/g;
         this.mENDEDAT = /%%ENDEDAT%%/g;
         this.mALLOWEDSTART = /%%ALLOWEDSTART%%/g;
@@ -86,67 +89,68 @@
     };
 
     ITSSessionListerEditor.prototype.show=function () {
+        $('#NavbarsAdmin').show();
+        $('#NavbarsAdmin').visibility = 'visible';
+        $('#NavBarsFooter').show();
+        $('#SessionListerInterfaceSessionEdit').show();
+        ITSInstance.UIController.initNavBar();
+
+        this.currentPage = 0;
+
+        // sessiontype
+        // groupid
+        // personid
+        this.sessionType = "0";
+        this.groupID = "";
+        this.groupSessionID = "";
+        this.personID = "";
+        this.consultantID = "";
+        this.sortField = "EndedAt desc, Description";
+        this.archived = "N"; // N No Y Yes
+        this.status = -1; // no status selection
+
         if (getUrlParameterValue('SessionType')) {
-            $('#NavbarsAdmin').show();
-            $('#NavbarsAdmin').visibility = 'visible';
-            $('#NavBarsFooter').show();
-            $('#SessionListerInterfaceSessionEdit').show();
-            ITSInstance.UIController.initNavBar();
-
-            this.currentPage = 0;
-
-            // sessiontype
-            // groupid
-            // personid
-            this.sessionType = "0";
-            this.groupID = "";
-            this.groupSessionID = "";
-            this.personID = "";
-            this.consultantID = "";
-            this.sortField = "EndedAt desc, Description";
-            this.archived = "N"; // N No Y Yes
-            this.status = -1; // no status selection
-
-            if (getUrlParameterValue('SessionType')) {
-                this.sessionType = getUrlParameterValue('SessionType');
-            }
-            if (getUrlParameterValue('GroupID')) {
-                this.groupID = getUrlParameterValue('GroupID');
-            }
-            if (getUrlParameterValue('GroupSessionID')) {
-                this.groupSessionID = getUrlParameterValue('GroupSessionID');
-            }
-            if (getUrlParameterValue('PersonID')) {
-                this.personID = getUrlParameterValue('PersonID');
-            }
-            if (getUrlParameterValue('Status')) {
-                this.status = getUrlParameterValue('Status');
-                if (this.status == "Busy") {
-                    this.sortField = "StartedAt desc, Description";
-                }
-                if (this.status == "Ready") {
-                    this.sortField = "CreateDate desc, AllowedStartDateTime desc, Description";
-                }
-                if (this.status == "Done") {
-                    this.sortField = "EndedAt desc, Description";
-                }
-                if ((this.status == "Done") && (parseInt(getUrlParameterValue("SessionType")) == 3)) {
-                    this.sortField = "AllowedStartDateTime desc, Description";
-                }
-            }
-            if (getUrlParameterValue('ConsultantID')) {
-                this.consultantID = getUrlParameterValue('ConsultantID');
-            }
-
-            // fields to show in the list for a session : Description, StartedAt, EndedAt, AllowedStartDateTime, AllowedEndDateTime
-            $('#SessionListerTable').empty();
-            this.searchField = "";
-            this.buildFilter(true);
+            this.sessionType = getUrlParameterValue('SessionType');
         }
-        else // no parameter will not work for this screen
-        {
-            ITSInstance.UIController.activateScreenPath('Switchboard');
+        if (getUrlParameterValue('GroupID')) {
+            this.groupID = getUrlParameterValue('GroupID');
         }
+        if (getUrlParameterValue('GroupSessionID')) {
+            this.groupSessionID = getUrlParameterValue('GroupSessionID');
+        }
+        if (getUrlParameterValue('PersonID')) {
+            this.personID = getUrlParameterValue('PersonID');
+        }
+        if (getUrlParameterValue('Status')) {
+            this.status = getUrlParameterValue('Status');
+            if (this.status == "Busy") {
+                this.sortField = "StartedAt desc, Description";
+            }
+            if (this.status == "Ready") {
+                this.sortField = "CreateDate desc, AllowedStartDateTime desc, Description";
+            }
+            if (this.status == "Done") {
+                this.sortField = "EndedAt desc, Description";
+            }
+            if ((this.status == "Done") && (parseInt(getUrlParameterValue("SessionType")) == 3)) {
+                this.sortField = "AllowedStartDateTime desc, Description";
+            }
+        }
+        if (getUrlParameterValue('ConsultantID')) {
+            this.consultantID = getUrlParameterValue('ConsultantID');
+        }
+
+        // fields to show in the list for a session : Description, StartedAt, EndedAt, AllowedStartDateTime, AllowedEndDateTime
+        $('#SessionListerTable').empty();
+        this.searchField = "";
+
+        // check if a starting search text is passed to this component
+        if (typeof this.tempSearchText != "undefined") {
+            this.searchField = this.tempSearchText;
+            this.setFocusOnSearchField = true;
+            delete this.tempSearchText;
+        }
+        this.buildFilter(true);
     };
 
     ITSSessionListerEditor.prototype.buildFilter = function (fireRequest) {
@@ -169,15 +173,21 @@
             $('#SessionListerInterfaceEditSessionEditHeaderStatus')[0].innerText =
                 ITSInstance.translator.translate("SessionListerController.SessionStatusDone", "ready for reporting");
         }
-        if (this.status == "Archived") { this.archived = "Y";
+        if (this.status == "Archived") {
+            this.archived = "Y";
             $('#SessionListerInterfaceEditSessionEditHeaderStatus')[0].innerText =
                 ITSInstance.translator.translate("SessionListerController.SessionStatusArchived", "archived");
         }
-        if (this.status == "All") { this.archived = "B";
+        if (this.status == "All") {
+            this.archived = "B";
             $('#SessionListerInterfaceEditSessionEditHeaderStatus')[0].innerText =
                 ITSInstance.translator.translate("SessionListerController.SessionStatusAll", "present");
         }
-        this.filter = this.filter == "" ? "SessionType=" + this.sessionType.split(",").join(",SessionType=") : this.filter + ",SessionType=" + this.sessionType.split(",").join(",SessionType=")
+        if (typeof this.sessionType == "undefined") {
+            this.filter = this.filter == "" ? "SessionType!=1" : this.filter + ",SessionType!=1"
+        } else {
+            this.filter = this.filter == "" ? "SessionType=" + this.sessionType.split(",").join(",SessionType=") : this.filter + ",SessionType=" + this.sessionType.split(",").join(",SessionType=")
+        }
         if ( this.personID.trim() != "") this.filter = this.filter == "" ? "PersonID=" + this.personID : this.filter + ",PersonID=" + this.personID;
         if ( this.groupID.trim() != "") this.filter = this.filter == "" ? "GroupID=" + this.groupID : this.filter + ",GroupID=" + this.groupID;
         if ( this.groupSessionID.trim() != "") this.filter = this.filter == "" ? "GroupSessionID=" + this.groupSessionID : this.filter + ",GroupSessionID=" + this.groupSessionID;
@@ -208,6 +218,10 @@
             rowText = rowText.replace( this.mNR, i + this.currentPage * 25 +1 );
             rowText = rowText.replace( this.mSessionID, this.sessionsList[i].ID );
             rowText = rowText.replace( this.mDESCRIPTION, this.sessionsList[i].Description );
+            if (this.sessionsList[i].Status == 10) rowText = rowText.replace( this.mICON, '<i class=\"fa fa-fw fa-1x fa-book-reader\"></i>');
+            if (this.sessionsList[i].Status < 30) rowText = rowText.replace( this.mICON, '<i class=\"fa fa-fw fa-1x fa-tasks\"></i>');
+            if (this.sessionsList[i].Status >= 30) rowText = rowText.replace( this.mICON, '<i class=\"fa fa-fw fa-1x fa-check\"></i>');
+            rowText = rowText.replace( this.mICON, '');
 
             this.sessionsList[i].StartedAt = convertISOtoITRDate(this.sessionsList[i].StartedAt);
             this.sessionsList[i].EndedAt = convertISOtoITRDate(this.sessionsList[i].EndedAt);
@@ -269,6 +283,8 @@
     };
 
     ITSSessionListerEditor.prototype.viewSession = function (sessionID) {
+        this.searchField = $('#SessionListerTableSearchText').val();
+        if (this.searchField.trim() != "") this.tempSearchText = this.searchField.trim();
         this.alreadyLoaded = document.URL;
         if (parseInt(getUrlParameterValue("SessionType")) == 1001) {
             ITSRedirectPath("Session&SessionType=1001&SessionID=" + sessionID);
