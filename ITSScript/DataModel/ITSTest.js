@@ -909,6 +909,7 @@ function ITSTestNorm(par, session) {
     this.parameters = {}; // additional norm parameters for this norm. These are objects with 2 properties : parName, parValue. during run time the are expanded as properties on this norm
     this.parameters.persistentProperties = "*ALL*";
     this.parameters.DefaultNormOrder = -1; // this norm is not selected by default
+    this.parameters.BorderValueTreatment = 1; // by default the border is up to and including
 
     this.normColumns = []; // there is one norm column per scales
 
@@ -975,8 +976,10 @@ ITSTestNorm.prototype.normTest = function (session, sessionTest, candidate, resu
                         saveNormScore = false;
                         if ($.isNumeric(nc.rawScoreBorder) && $.isNumeric(score.Score)) {
                             // perform numeric comparison
-                            if (Number(nc.rawScoreBorder) <= Number(score.Score)) {
-                                saveNormScore = true;
+                            if (this.parameters.BorderValueTreatment == 2) {
+                                if (Number(nc.rawScoreBorder) < Number(score.Score)) saveNormScore = true;
+                            } else {
+                                if (Number(nc.rawScoreBorder) <= Number(score.Score)) saveNormScore = true;
                             }
                         } else {
                             // perform string comparison

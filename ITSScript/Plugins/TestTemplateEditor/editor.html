@@ -557,6 +557,19 @@
             </div>
             <div class="row">
                 <label class="col-4 col-form-label col-form-label-sm"
+                       id="AdminInterfaceTestTemplateEditorNormBorderValueTreatmentLabel"
+                       for="AdminInterfaceTestTemplateEditorNormBorderValueTreatment">Norm columns raw score border value treatment</label>
+                <div class="col-4"><select notranslate class="form-control form-control-sm"
+                                           data-field="currentNorm.parameters.BorderValueTreatment"
+                                           onchange="DataBinderFrom('AdminInterfaceTestTemplateEditorTabNorms', ITSInstance.newITSTestEditorController );"
+                                           id="AdminInterfaceTestTemplateEditorNormBorderValueTreatment">
+                    <option value="1">Treat border value as up to and including (when a number)</option>
+                    <option value="2">Treat border value as up to (when a number)</option>
+                </select>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-4 col-form-label col-form-label-sm"
                        id="AdminInterfaceTestTemplateEditorNormExplanationHeader"
                        for="AdminInterfaceTestTemplateEditorNormExplanation">Norm explanation</label>
                 <div class="col-8">
