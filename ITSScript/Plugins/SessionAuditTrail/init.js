@@ -135,13 +135,14 @@
         this.objectType = otype;
         if (pageNumber > 0) {
             this.currentSession.NewAuditTrail = [];
-            ITSInstance.JSONAjaxLoader('audittrail/objecttype/' + otype, this.currentSession.NewAuditTrail, this.auditTrailLoaded.bind(this), this.sessionLoadingFailed.bind(this), "ITSObject", pageNumber, 25, "CreateDate desc");
+            ITSInstance.JSONAjaxLoader('audittrail/objecttype/' + otype, this.currentSession.NewAuditTrail, this.auditTrailLoaded.bind(this), this.sessionLoadingFailed.bind(this), "ITSObject", pageNumber, 25, "CreateDate desc", false, false, true, "","",true);
         } else {
             ITSInstance.JSONAjaxLoader('audittrail/objecttype/' + otype, this.currentSession.AuditTrail, this.auditTrailLoaded.bind(this), this.sessionLoadingFailed.bind(this), "ITSObject", pageNumber, 25, "CreateDate desc");
         }
     };
 
     ITSSessionAuditTrailEditor.prototype.auditTrailLoaded = function () {
+        if (this.pageNumber >0) this.currentSession.AuditTrail = this.currentSession.AuditTrail.concat(this.currentSession.NewAuditTrail);
         // session and audit trail are loaded, check if we have all persons
         for (var i=0; i < this.currentSession.AuditTrail.length; i++) {
             if (this.currentSession.AuditTrail[i].UserID != '00000000-0000-0000-0000-000000000000') {
@@ -177,8 +178,6 @@
         if (this.pageNumber == 0) {
             $('#SessionAuditTrailList').empty();
             this.TablePart2Generated = "";
-        } else {
-            this.currentSession.AuditTrail = this.currentSession.AuditTrail.concat(this.currentSession.NewAuditTrail);
         }
         var newTable = this.tablePart1;
         var rowText = "";
