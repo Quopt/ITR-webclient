@@ -68,7 +68,7 @@
             reloadAfterDelay: function () {
                 if (! ITSInstance.portletTeachingClassroomSessions.waitingForReloadAfterDelay) {
                     ITSInstance.portletTeachingClassroomSessions.waitingForReloadAfterDelay = true;
-                    setTimeout(ITSInstance.portletTeachingClassroomSessions.reload, 1000);
+                    setTimeout(ITSInstance.portletTeachingClassroomSessions.reload, 10);
                 }
             },
             sessionsToShow: [],

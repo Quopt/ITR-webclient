@@ -366,6 +366,10 @@ ITSSession.prototype.genericAjaxUpdate = function (URL, objectToUpdate, OnSucces
     this.GenericAjaxUpdateProcessQueue();
 };
 
+ITSSession.prototype.GenericAjaxUpdateQueueLength = function () {
+    return this.genericJSONUpdateQueue.length;
+}
+
 ITSSession.prototype.GenericAjaxUpdateProcessQueue = function () {
     if (!this.callJSONUpdateProcessing) {
         if (this.genericJSONUpdateQueue.length > 0) {
@@ -416,7 +420,7 @@ ITSSession.prototype.genericAjaxUpdateRunner = function (URL, objectToUpdate, On
         tempHeaders['LinkedSessionId'] = sessionid
     }
     tempHeaders['TimeZoneOffset'] = "" + moment().utcOffset() / 60; //(new Date()).getTimezoneOffset()/60;
-console.log(tempHeaders);
+
     processDataCall = true;
     contentTypeCall = 'application/x-www-form-urlencoded; charset=UTF-8';
     if (dataType) { contentTypeCall = dataType; processDataCall = false; }

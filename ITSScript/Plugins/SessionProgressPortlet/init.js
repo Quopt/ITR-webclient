@@ -91,7 +91,7 @@
             reloadAfterDelay: function () {
                  if (! ITSInstance.portletBusySessions.waitingForReloadAfterDelay) {
                      ITSInstance.portletBusySessions.waitingForReloadAfterDelay = true;
-                     setTimeout(ITSInstance.portletBusySessions.reload, 1000);
+                     setTimeout(ITSInstance.portletBusySessions.reload, 10);
                  }
             },
             sessionsToShow: [],
