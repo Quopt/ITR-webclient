@@ -711,8 +711,8 @@ ITSTestTakingController.prototype.endSession = function () {
         setTimeout(this.endTest.bind(this, false),100);
     }
     // refresh session
-    this.refreshSessionCounter = 20;
-    setTimeout(function () { this.refreshSession(); }.bind(this) ,101);
+    this.refreshSessionCounter = 41;
+    setTimeout(function () { this.refreshSession(); }.bind(this) ,250);
 };
 
 ITSTestTakingController.prototype.refreshSession = function () {
