@@ -711,13 +711,15 @@ ITSTestTakingController.prototype.endSession = function () {
         setTimeout(this.endTest.bind(this, false),100);
     }
     // refresh session
+    this.refreshSessionCounter = 20;
     setTimeout(function () { this.refreshSession(); }.bind(this) ,101);
 };
 
 ITSTestTakingController.prototype.refreshSession = function () {
     // check if the update queue is empty, if so proceed, otherwise retry later
     console.log("refresh session", ITSInstance.GenericAjaxUpdateQueueLength(), this);
-    if (ITSInstance.GenericAjaxUpdateQueueLength() > 0) {
+    if ((ITSInstance.GenericAjaxUpdateQueueLength() > 0) && (this.refreshSessionCounter>0)) {
+        this.refreshSessionCounter--;
         setTimeout(function () { this.refreshSession(); }.bind(this) ,250);
     } else {
         this.currentSession.loadSession(this.currentSession.ID, this.endSessionChecker.bind(this), this.endSessionChecker.bind(this), true, true);
