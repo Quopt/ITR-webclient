@@ -696,13 +696,18 @@ ITSTestTakingController.prototype.endTest = function (forcedEnding) {
 };
 
 ITSTestTakingController.prototype.nextTest = function (nextTest) {
-    if (!nextTest) {
-        nextTest = this.currentTestIndex;
-    }
     // cls
     $('#ITSTestTakingDiv').empty();
     $('#ITSTestTakingDiv').show();
     $('#ITSTestTakingDivTestEnded').hide();
+    // call the next test
+    setTimeout(this.nextTestNow.bind(this,nextTest), 1);
+};
+
+ITSTestTakingController.prototype.nextTestNow = function (nextTest) {
+    if (!nextTest) {
+        nextTest = this.currentTestIndex;
+    }
     // start the new test
     this.prepareTest(nextTest);
     this.startTest();
