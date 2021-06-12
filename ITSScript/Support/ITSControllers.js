@@ -699,6 +699,11 @@ ITSTestTakingController.prototype.nextTest = function (nextTest) {
     if (!nextTest) {
         nextTest = this.currentTestIndex;
     }
+    // cls
+    $('#ITSTestTakingDiv').empty();
+    $('#ITSTestTakingDiv').show();
+    $('#ITSTestTakingDivTestEnded').hide();
+    // start the new test
     this.prepareTest(nextTest);
     this.startTest();
     this.renderTestPage();
