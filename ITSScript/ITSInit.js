@@ -216,7 +216,7 @@ ITSSession.prototype.genericAjaxLoaderRunner = function (URL, objectToPutDataIn,
 };
 ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSuccess, OnError, DefaultObjectType, PageNumber, PageSize, PageSort, IncludeArchived, IncludeMaster, IncludeClient, Filter, UnifiedSearchString, preferred) {
     if (typeof preferred == "undefined") preferred = false;
-    objectToPush =
+    var objectToPush =
         {
             "URL": URL,
             "objectToPutDataIn" : objectToPutDataIn,
@@ -237,7 +237,7 @@ ITSSession.prototype.JSONAjaxLoader = function (URL, objectToPutDataIn, OnSucces
     } else {
         this.genericJSONLoadQueue.push(objectToPush);
     }
-    //console.log("Push",URL, this.genericJSONLoadQueue.length);
+    console.log("Push",URL, this.genericJSONLoadQueue.length);
     this.JSONAjaxLoaderProcessQueue();
 };
 
@@ -327,12 +327,18 @@ ITSSession.prototype.JSONAjaxLoaderRunner = function (URL, objectToPutDataIn, On
         success: function (data, textStatus, xhr) {
             //ITSLogger.logMessage(logLevel.ERROR,ITSInstance.baseURLAPI + URL + '=' + data);
             if ((objectToPutDataIn) && (objectToPutDataIn !== "") ) {
-                ITSJSONLoad(objectToPutDataIn, data, objectToPutDataIn, ITSInstance, DefaultObjectType);
+                try {
+                    ITSJSONLoad(objectToPutDataIn, data, objectToPutDataIn, ITSInstance, DefaultObjectType);
+                }
+                catch (err) {
+                    ITSLogger.logMessage(logLevel.ERROR, 'JSONAjaxLoaderRunner data cannot be processed ' + err.message);
+                }
                 if (OnSuccess) OnSuccess();
             } else if (objectToPutDataIn === "") {
                 if (OnSuccess) OnSuccess(data);
             }
         },
+        timeout:10000,
         type: 'GET'
     });
 };
