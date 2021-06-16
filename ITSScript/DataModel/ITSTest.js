@@ -1028,7 +1028,7 @@ ITSTestNorm.prototype.normTest = function (session, sessionTest, candidate, resu
     try {
         eval("var func = function(session, sessiontest, candidate, testdefinition, scores, scales, itsinstance, normPostFix) { " + this.myParent.AfterNormingScript + " }; ");
         func(session, sessionTest, candidate, this, results, scores, ITSInstance, normPostFix);
-    } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Test before norming script failed for "  + this.TestName + " " + this.NormVarName   + err);  }
+    } catch (err) { ITSLogger.logMessage(logLevel.ERROR,"Test after norming script failed for "  + this.TestName + " " + this.NormVarName   + err);  }
 
 };
 
