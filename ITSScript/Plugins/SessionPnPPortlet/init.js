@@ -60,6 +60,7 @@
                     newSession.Status = 30;
                     newSession.newCandidateSessionTest( tempTest );
                     newSession.SessionTests[0].Status = 30;
+                    newSession.EndedAt = new Date.now();
                     newSession.saveToServerIncludingTestsAndPerson( ITSInstance.portletPnPSession.startNewSessionOK,
                          function () { ITSInstance.UIController.showInfo('portletPnPSession.InputMissing', 'Please enter a description and select a test for the PnP session.', "", "") } );
                 } else {
