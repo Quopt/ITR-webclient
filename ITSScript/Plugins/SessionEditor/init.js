@@ -375,9 +375,9 @@
                 var normIndex = currentTest.testDefinition.findNormById(currentTest.NormID2)
                 if ( (normIndex >= 0) && (currentTest.Scores["__" + currentTest.testDefinition.scales[i].id])) {
                     currentTest.normScores(normIndex,2);
-                    template = template.replace(this.testCardElementNorm2, currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].NormScore);
-                    if (currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].PercentileScoreSet) {
-                        template = template.replace(this.testCardElementPerc2, currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].PercentileScore);
+                    template = template.replace(this.testCardElementNorm2, currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].NormScore2);
+                    if (currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].PercentileScoreSet2) {
+                        template = template.replace(this.testCardElementPerc2, currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].PercentileScore2);
                         perc2Valid = true;
                     } else {
                         template = template.replace(this.testCardElementPerc2, '-');
@@ -388,9 +388,9 @@
                 var normIndex = currentTest.testDefinition.findNormById(currentTest.NormID3)
                 if ((normIndex >= 0) && (currentTest.Scores["__" + currentTest.testDefinition.scales[i].id])) {
                     currentTest.normScores(normIndex,3);
-                    template = template.replace(this.testCardElementNorm3, currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].NormScore);
-                    if (currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].PercentileScoreSet) {
-                        template = template.replace(this.testCardElementPerc3, currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].PercentileScore);
+                    template = template.replace(this.testCardElementNorm3, currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].NormScore3);
+                    if (currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].PercentileScoreSet3) {
+                        template = template.replace(this.testCardElementPerc3, currentTest.Scores["__" + currentTest.testDefinition.scales[i].id].PercentileScore3);
                         perc3Valid = true;
                     } else {
                         template = template.replace(this.testCardElementPerc3, '-');

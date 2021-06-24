@@ -164,7 +164,6 @@ ITSCompanies.prototype.loadCurrentCompany = function (whenLoaded, onError, refre
     ITSInstance.companies.otherCompanies = [];
     ITSInstance.genericAjaxLoader('logins/currentuser/companies', ITSInstance.companies.otherCompanies,function () {}, function () {}, undefined, -1,99999,
         'CompanyName',"N", "Y", "N" );
-
 };
 
 ITSCompanies.prototype.findOtherCompanyByID = function (CompanyID) {
