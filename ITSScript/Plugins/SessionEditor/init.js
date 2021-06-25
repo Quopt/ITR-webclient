@@ -398,7 +398,7 @@
                 } else {
                     template = template.replace(this.testCardElementNorm3, '-');
                 }
-                // make sure that norm 1 is always present. In case of accidental saves this is the proper norm. Only one norm is stored.
+                // make sure that norm 1 is always present. In case of accidental saves this is the proper norm.
                 var normIndex = currentTest.testDefinition.findNormById(currentTest.NormID1)
                 if ((normIndex >= 0) && (currentTest.Scores["__" + currentTest.testDefinition.scales[i].id]))  {
                     currentTest.normScores(normIndex);
@@ -659,6 +659,19 @@
         setTimeout(function () { window.history.back();},500);
     };
 
+
+    ITSSessionEditor.prototype.recalcSession = function (SessionID, OnDone, OnError) {
+        this.SessionID = SessionID;
+        this.currentSession = ITSInstance.candidateSessions.newCandidateSession();
+        $('#AdminInterfaceEditSessionEditTestsList').empty();
+        this.recalcSessionOnDone = OnDone;
+        this.currentSession.loadSession(this.SessionID, this.recalcSessionLoaded.bind(this), OnError.bind(this));
+    };
+
+    ITSSessionEditor.prototype.recalcSessionLoaded = function () {
+        this.generateTestsList();
+        this.recalcSessionOnDone();
+    }
 
     ITSSessionEditor.prototype.downloadSession = function () {
         ITSInstance.UIController.showInterfaceAsWaitingOn(0);

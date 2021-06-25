@@ -27,7 +27,6 @@
     var ITSDownloadDataEditor = function () {
         this.info = new ITSPortletAndEditorRegistrationInformation('ff17b35b-f3d5-4134-be88-ee430afccc32', 'DownloadData editor', '1.0', 'Copyright 2019 Quopt IT Services BV', 'Download test session data for research purposes');
         this.path = "DownloadData";
-
     };
 
     ITSDownloadDataEditor.prototype.init =function () {
@@ -98,10 +97,8 @@
             if ((this.loadAll) && (!this.cancelDownloads)) {
                 this.pageNumber++;
 
-                //this.buildFilter();
-
                 ITSInstance.JSONAjaxLoader('datagathering', this.datagathering, this.loadDataSucces.bind(this), this.loadDataError.bind(this),
-                    undefined, this.pageNumber, 5, '','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y", this.filter );
+                    undefined, this.pageNumber, 5, 'SessionID,TestDescription','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y", this.filter );
             } else {
                 this.showPreview();
             }
@@ -110,7 +107,6 @@
                 this.allDataLoaded();
             }
         }
-
     };
 
     ITSDownloadDataEditor.prototype.flattenDataSet = function () {
@@ -164,8 +160,13 @@
                         }
                     }
                 } else {
-                    ITSJSONLoad(tempObject, myObject[property1], ITSInstance, ITSObject, "ITSObject");
-                    this.flattenDataSetRecursed(fieldLead + fieldDot + property1, tempObject, myHeaders, myRec, includeFullResults, includeLimitedResults, fieldEndFilter, removeEmptyColumns);
+                    if ((typeof myObject[property1] == "undefined") || (myObject[property1].trim() == "")) {
+                        // invalid data, do nothing for now
+                    }
+                    else {
+                        ITSJSONLoad(tempObject, myObject[property1], ITSInstance, ITSObject, "ITSObject");
+                        this.flattenDataSetRecursed(fieldLead + fieldDot + property1, tempObject, myHeaders, myRec, includeFullResults, includeLimitedResults, fieldEndFilter, removeEmptyColumns);
+                    }
                 }
             } else {
                 Continue = true;
@@ -207,6 +208,9 @@
     };
 
     ITSDownloadDataEditor.prototype.downloadAll = function () {
+        $('#DataRecalculation-Label').css("display", "none");
+        $('#DataDownloading-Label').css("display", "");
+
         this.flatteneddataset = [];
         this.headers = {};
         this.datagathering = [];
@@ -218,14 +222,56 @@
             $('#DownloadData-dialog').modal("show");
             this.updateCounter(0);
             ITSInstance.JSONAjaxLoader('datagathering', this.datagathering, this.loadDataSucces.bind(this), this.loadDataError.bind(this),
-                undefined, 0, 5, '','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y", this.filter  );
+                undefined, 0, 5, 'SessionID,TestDescription','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y", this.filter  );
         } else {
             ITSInstance.UIController.showError('ITSDownloadEditor.FieldsMissing', 'Please fill all fields to start the download');
         }
     };
 
-    ITSDownloadDataEditor.prototype.updateCounter  = function (counter) {
-        $('#DataDownloading-LabelProgress').text(((this.pageNumber * 5) ) + " " + ITSInstance.translator.translate("#AdminInterfaceDataDownload.DownloadCounter", "records processed"));
+    ITSDownloadDataEditor.prototype.recalcBuildFilter = function() {
+        this.filter = "EndedAt>=" + convertDateToISO(this.calendar1.latestSelectedDateObj);
+        this.filter += ",EndedAt<=" + convertDateToISO(this.calendar2.latestSelectedDateObj);
+        this.filter += ",Status>=30";
+    }
+
+    ITSDownloadDataEditor.prototype.recalcAll = function () {
+        $('#DataRecalculation-Label').css("display", "");
+        $('#DataDownloading-Label').css("display", "none");
+
+        this.recalcBuildFilter();
+        if (this.checkFields()) {
+            this.pageNumber = 0;
+            this.cancelDownloads = false;
+            this.recalcsessions = [];
+            $('#DownloadData-dialog').modal("show");
+            this.updateCounter(0);
+            ITSInstance.JSONAjaxLoader('sessions', this.recalcsessions, this.loadRecalcSucces.bind(this), this.loadDataError.bind(this),
+                undefined, this.pageNumber, 1, 'EndedAt','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y", this.filter  );
+        } else {
+            ITSInstance.UIController.showError('ITSDownloadEditor.FieldsMissing', 'Please fill all fields to start the download');
+        }
+    };
+
+    ITSDownloadDataEditor.prototype.loadRecalcSucces = function () {
+        var recCount = this.recalcsessions.length;
+        if ( (recCount > 0)  && (!this.cancelDownloads) ) {
+            console.log(this.recalcsessions[0].ID, this.recalcsessions[0].Description);
+            ITSInstance.editSessionController.recalcSession(this.recalcsessions[0].ID, this.loadRecalcNext.bind(this), this.loadDataError.bind(this));
+        } else {
+            $('#DownloadData-dialog').modal("hide");
+        }
+    };
+
+    ITSDownloadDataEditor.prototype.loadRecalcNext = function () {
+        this.pageNumber++;
+        this.updateCounter(this.pageNumber,1);
+        ITSInstance.JSONAjaxLoader('sessions', this.recalcsessions, this.loadRecalcSucces.bind(this), this.loadDataError.bind(this),
+            undefined, this.pageNumber, 1, 'EndedAt','', $('#DownloadDataMaster')[0].checked ? "Y" : "N" , $('#DownloadDataMaster')[0].checked ? "N" : "Y", this.filter );
+    };
+
+    ITSDownloadDataEditor.prototype.updateCounter  = function (counter, pageSize) {
+        if (typeof pageSize == "undefined") pageSize=5;
+        $('#DataDownloading-LabelProgress').text(((this.pageNumber * pageSize) ) + " " + ITSInstance.translator.translate("#AdminInterfaceDataDownload.DownloadCounter", "records processed"));
     };
 
     ITSDownloadDataEditor.prototype.allDataLoaded = function () {

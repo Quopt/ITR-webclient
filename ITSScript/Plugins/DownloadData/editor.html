@@ -49,6 +49,12 @@
     <div class="form-group row col-sm-12">
         <label for="DownloadDataEndDate" id="DownloadDataEndDateLabel" class="col-sm-2 col-form-label">Last date to download</label>
         <input class="form-control col-sm-2" type="text" placeholder="" value="" novalidate NoTranslate name="datePicker" id="DownloadDataEndDate">
+        <button NoTranslate id="DownloadDataRecalcAll" type="button" class="btn btn-success"
+                onclick="ITSInstance.DownloadDataController.recalcAll();"><i
+                id="DownloadDataRecalcAll_icon" class="fa fa-fw fa-calculator"></i>
+            <span id="DownloadDataRecalcAll_buttonlabel">Recalc sessions still present</span>
+        </button>&nbsp;
+
     </div>
 </div>
 
@@ -132,6 +138,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="DataDownloading-Label">Downloading data</h5>
+                <h5 class="modal-title" id="DataRecalculation-Label">Recalculating sessions</h5>
             </div>
             <div class="modal-body">
                 <label id="DataDownloading-LabelProgress" notranslate>Processed #1</label>
