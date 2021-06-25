@@ -110,6 +110,7 @@
     };
 
     ITSDownloadDataEditor.prototype.flattenDataSet = function () {
+        var currentSessionID = "";
         for (var i=0; i < this.datagathering.length; i++) {
             var myRec = this.datagathering[i];
             var flatRec = {};
@@ -126,17 +127,36 @@
 
             //ITSLogger.logMessage(logLevel.ERROR,"Flattening " + i);
             this.updateCounter(i);
-            this.flattenDataSetRecursed("",myRec, this.headers, flatRec, includeResults, includeResultsValues, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'));
-            this.flatteneddataset.push(flatRec);
+
+            // get short test code TestName
+            var testIndex = ITSInstance.tests.findTestById(ITSInstance.tests.testList,  myRec.TestID );
+            var fieldLead = ""+myRec.TestID;
+            if (testIndex > -1) {
+                fieldLead = ITSInstance.tests.testList[testIndex].TestName;
+            }
+
+            // output to internal memory array
+            if ($('#DownloadDataSingleRowResults').prop('checked')) {
+                this.flattenDataSetRecursed("", myRec, this.headers, flatRec, includeResults, includeResultsValues, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'), fieldLead);
+
+                if (currentSessionID != myRec.SessionID) {
+                    this.flatteneddataset.push(flatRec);
+                    currentSessionID = myRec.SessionID;
+                }
+            } else {
+                this.flattenDataSetRecursed("", myRec, this.headers, flatRec, includeResults, includeResultsValues, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'), fieldLead);
+                this.flatteneddataset.push(flatRec);
+            }
         }
     };
 
-    ITSDownloadDataEditor.prototype.flattenDataSetRecursed = function ( fieldLead, myObject, myHeaders, myRec, includeFullResults, includeLimitedResults, fieldEndFilter, removeEmptyColumns ) {
+    ITSDownloadDataEditor.prototype.flattenDataSetRecursed = function ( fieldLead, myObject, myHeaders, myRec, includeFullResults, includeLimitedResults, fieldEndFilter, removeEmptyColumns, fieldLeadForTestData) {
         var fieldDot = "";
         var Continue = true;
         if (fieldLead != "") {
             fieldDot = ".";
         }
+
         for (var property1 in myObject) {
             if ((property1.indexOf("__") == 0) || (property1 == "_objectType") || (property1 == "persistentProperties")) {
                 // do nothing with __ properties
@@ -145,18 +165,29 @@
             } else if ( ["PersonData","GroupData","SessionData","TestData","PluginData"].includes(property1) ) {
                 var tempObject = {};
                 if (property1 == "TestData") {
+                    if (typeof fieldLeadForTestData == "undefined"){
+                        fieldLeadForTestData = fieldLead;
+                    }
+                    if (fieldLeadForTestData == "") { fieldLeadForTestData = property1; }
+                    ITSJSONLoad(tempObject, myObject[property1], ITSInstance, ITSObject, "ITSObject");
                     if (includeFullResults || includeLimitedResults) {
-                        ITSJSONLoad(tempObject, myObject[property1], ITSInstance, ITSObject, "ITSObject");
                         if (includeLimitedResults) {
                             // remove all fields not ending with .value
-                            this.flattenDataSetRecursed(fieldLead + fieldDot + property1, tempObject.Results, myHeaders, myRec, includeFullResults, includeLimitedResults, 'Value', removeEmptyColumns);
+                            this.flattenDataSetRecursed(fieldLeadForTestData , tempObject.Results, myHeaders, myRec, includeFullResults, includeLimitedResults, 'Value', removeEmptyColumns);
                             for (var tempProp in tempObject) {
                                 if (tempProp != "Results") {
-                                    this.flattenDataSetRecursed(fieldLead + fieldDot + property1, tempObject[tempProp], myHeaders, myRec, includeFullResults, includeLimitedResults, '', removeEmptyColumns);
+                                    this.flattenDataSetRecursed(fieldLeadForTestData , tempObject[tempProp], myHeaders, myRec, includeFullResults, includeLimitedResults, '', removeEmptyColumns);
                                 }
                             }
                         } else {
-                            this.flattenDataSetRecursed(fieldLead + fieldDot + property1, tempObject, myHeaders, myRec, includeFullResults, includeLimitedResults, fieldEndFilter, removeEmptyColumns);
+                            this.flattenDataSetRecursed(fieldLeadForTestData, tempObject, myHeaders, myRec, includeFullResults, includeLimitedResults, fieldEndFilter, removeEmptyColumns);
+                        }
+                    } else {
+                        // include only scale scores
+                        for (var tempProp in tempObject) {
+                            if (tempProp == "Scores") {
+                                this.flattenDataSetRecursed(fieldLeadForTestData , tempObject[tempProp], myHeaders, myRec, includeFullResults, includeLimitedResults, '', removeEmptyColumns);
+                            }
                         }
                     }
                 } else {

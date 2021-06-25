@@ -276,11 +276,12 @@
         }
     }
 
-    ITSSessionEditor.prototype.generateTestsList = function (NoUIElements, alternateSession ) {
+    ITSSessionEditor.prototype.generateTestsList = function (NoUIElements, alternateSession, forceRecalc) {
         var cs = this.currentSession;
         if (typeof alternateSession != "undefined") { cs = alternateSession; }
+        if (typeof forceRecalc == "undefined") forceRecalc = false;
 
-        if ($('#AdminInterfaceEditSessionEditTestsList').is(':visible') || alternateSession) {
+        if ($('#AdminInterfaceEditSessionEditTestsList').is(':visible') || alternateSession || forceRecalc) {
             $('#AdminInterfaceEditSessionEditTestsList').empty();
             ITSInstance.UIController.showInterfaceAsWaitingOff();
             //ITSLogger.logMessage(logLevel.ERROR,'generating test list');
@@ -669,7 +670,7 @@
     };
 
     ITSSessionEditor.prototype.recalcSessionLoaded = function () {
-        this.generateTestsList();
+        this.generateTestsList(false, undefined, true);
         this.recalcSessionOnDone();
     }
 
