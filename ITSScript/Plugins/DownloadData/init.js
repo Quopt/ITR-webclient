@@ -134,23 +134,24 @@
             if (testIndex > -1) {
                 fieldLead = ITSInstance.tests.testList[testIndex].TestName;
             }
+            var excludeSessionDescription = $('#DownloadDataRemoveSessionDescription').prop('checked');
 
-            // output to internal memory array
+                // output to internal memory array
             if ($('#DownloadDataSingleRowResults').prop('checked')) {
-                this.flattenDataSetRecursed("", myRec, this.headers, flatRec, includeResults, includeResultsValues, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'), fieldLead);
+                this.flattenDataSetRecursed("", myRec, this.headers, flatRec, includeResults, includeResultsValues,  excludeSessionDescription, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'), fieldLead);
 
                 if (currentSessionID != myRec.SessionID) {
                     this.flatteneddataset.push(flatRec);
                     currentSessionID = myRec.SessionID;
                 }
             } else {
-                this.flattenDataSetRecursed("", myRec, this.headers, flatRec, includeResults, includeResultsValues, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'), fieldLead);
+                this.flattenDataSetRecursed("", myRec, this.headers, flatRec, includeResults, includeResultsValues,  excludeSessionDescription, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'), fieldLead);
                 this.flatteneddataset.push(flatRec);
             }
         }
     };
 
-    ITSDownloadDataEditor.prototype.flattenDataSetRecursed = function ( fieldLead, myObject, myHeaders, myRec, includeFullResults, includeLimitedResults, fieldEndFilter, removeEmptyColumns, fieldLeadForTestData) {
+    ITSDownloadDataEditor.prototype.flattenDataSetRecursed = function ( fieldLead, myObject, myHeaders, myRec, includeFullResults, includeLimitedResults, excludeSessionDescription, fieldEndFilter, removeEmptyColumns, fieldLeadForTestData) {
         var fieldDot = "";
         var Continue = true;
         if (fieldLead != "") {
@@ -161,7 +162,7 @@
             if ((property1.indexOf("__") == 0) || (property1 == "_objectType") || (property1 == "persistentProperties")) {
                 // do nothing with __ properties
             } else if (myObject[property1] instanceof Object) {
-                this.flattenDataSetRecursed(fieldLead + fieldDot + property1, myObject[property1], myHeaders, myRec, includeFullResults, includeLimitedResults, fieldEndFilter, removeEmptyColumns)
+                this.flattenDataSetRecursed(fieldLead + fieldDot + property1, myObject[property1], myHeaders, myRec, includeFullResults, includeLimitedResults,  excludeSessionDescription, fieldEndFilter, removeEmptyColumns)
             } else if ( ["PersonData","GroupData","SessionData","TestData","PluginData"].includes(property1) ) {
                 var tempObject = {};
                 if (property1 == "TestData") {
@@ -173,20 +174,20 @@
                     if (includeFullResults || includeLimitedResults) {
                         if (includeLimitedResults) {
                             // remove all fields not ending with .value
-                            this.flattenDataSetRecursed(fieldLeadForTestData , tempObject.Results, myHeaders, myRec, includeFullResults, includeLimitedResults, 'Value', removeEmptyColumns);
+                            this.flattenDataSetRecursed(fieldLeadForTestData , tempObject.Results, myHeaders, myRec, includeFullResults, includeLimitedResults,  excludeSessionDescription, 'Value', removeEmptyColumns);
                             for (var tempProp in tempObject) {
                                 if (tempProp != "Results") {
-                                    this.flattenDataSetRecursed(fieldLeadForTestData , tempObject[tempProp], myHeaders, myRec, includeFullResults, includeLimitedResults, '', removeEmptyColumns);
+                                    this.flattenDataSetRecursed(fieldLeadForTestData , tempObject[tempProp], myHeaders, myRec, includeFullResults, includeLimitedResults,  excludeSessionDescription, '', removeEmptyColumns);
                                 }
                             }
                         } else {
-                            this.flattenDataSetRecursed(fieldLeadForTestData, tempObject, myHeaders, myRec, includeFullResults, includeLimitedResults, fieldEndFilter, removeEmptyColumns);
+                            this.flattenDataSetRecursed(fieldLeadForTestData, tempObject, myHeaders, myRec, includeFullResults, includeLimitedResults,  excludeSessionDescription, fieldEndFilter, removeEmptyColumns);
                         }
                     } else {
                         // include only scale scores
                         for (var tempProp in tempObject) {
                             if (tempProp == "Scores") {
-                                this.flattenDataSetRecursed(fieldLeadForTestData , tempObject[tempProp], myHeaders, myRec, includeFullResults, includeLimitedResults, '', removeEmptyColumns);
+                                this.flattenDataSetRecursed(fieldLeadForTestData , tempObject[tempProp], myHeaders, myRec, includeFullResults, includeLimitedResults,  excludeSessionDescription, '', removeEmptyColumns);
                             }
                         }
                     }
@@ -196,7 +197,7 @@
                     }
                     else {
                         ITSJSONLoad(tempObject, myObject[property1], ITSInstance, ITSObject, "ITSObject");
-                        this.flattenDataSetRecursed(fieldLead + fieldDot + property1, tempObject, myHeaders, myRec, includeFullResults, includeLimitedResults, fieldEndFilter, removeEmptyColumns);
+                        this.flattenDataSetRecursed(fieldLead + fieldDot + property1, tempObject, myHeaders, myRec, includeFullResults, includeLimitedResults,  excludeSessionDescription, fieldEndFilter, removeEmptyColumns);
                     }
                 }
             } else {
@@ -206,6 +207,9 @@
                     Continue = false;
                 }
                 if (removeEmptyColumns && ((typeof myObject[property1] === "undefined") || (String(myObject[property1]).trim() == ""))) Continue = false;
+                // make sure NOT to export session description since this is anonimised data
+                if ( (excludeSessionDescription) && ((fieldLead + fieldDot + property1 == "SessionDescription") || (fieldLead + fieldDot + property1 == "SessionData.Description"))) Continue = false;
+                // store the data
                 if (Continue)
                 {
                     if (!myHeaders[fieldLead + fieldDot + property1]) {
