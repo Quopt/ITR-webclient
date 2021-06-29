@@ -112,7 +112,6 @@
     ITSDownloadDataEditor.prototype.flattenDataSet = function () {
         for (var i=0; i < this.datagathering.length; i++) {
             var myRec = this.datagathering[i];
-            var flatRec = {};
             var includeResults = false;
             var includeResultsValues = false;
 
@@ -138,16 +137,18 @@
                 // output to internal memory array
             if ($('#DownloadDataSingleRowResults').prop('checked')) {
                 var tempID = "" + myRec.SessionID;
-                this.flattenDataSetRecursed("", myRec, this.headers, flatRec, includeResults, includeResultsValues,  excludeSessionDescription, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'), fieldLead);
-                //console.log('compare ',myRec.SessionDescription, this.tempSessionID, tempID, this.tempSessionID != tempID, myRec);
                 if (this.tempSessionID != tempID) {
                     this.tempSessionID = tempID;
                     //console.log('push', tempID, this.tempSessionID, flatRec);
-                    this.flatteneddataset.push(flatRec);
+                    this.flatRec = {};
+                    this.flatteneddataset.push(this.flatRec);
                 }
+                this.flattenDataSetRecursed("", myRec, this.headers, this.flatRec, includeResults, includeResultsValues,  excludeSessionDescription, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'), fieldLead);
+                //console.log('compare ',myRec.SessionDescription, this.tempSessionID, tempID, this.tempSessionID != tempID, myRec);
             } else {
-                this.flattenDataSetRecursed("", myRec, this.headers, flatRec, includeResults, includeResultsValues,  excludeSessionDescription, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'), fieldLead);
-                this.flatteneddataset.push(flatRec);
+                this.flatRec = {};
+                this.flattenDataSetRecursed("", myRec, this.headers, this.flatRec, includeResults, includeResultsValues,  excludeSessionDescription, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'), fieldLead);
+                this.flatteneddataset.push(this.flatRec);
             }
         }
     };
@@ -248,6 +249,7 @@
         $('#DataDownloading-Label').css("display", "");
 
         this.tempSessionID = "";
+        this.flatRec = {};
         this.flatteneddataset = [];
         this.headers = {};
         this.datagathering = [];
@@ -277,6 +279,8 @@
 
         this.recalcBuildFilter();
         if (this.checkFields()) {
+            this.tempSessionID = "";
+            this.flatRec = {};
             this.pageNumber = 0;
             this.cancelDownloads = false;
             this.recalcsessions = [];
