@@ -110,7 +110,6 @@
     };
 
     ITSDownloadDataEditor.prototype.flattenDataSet = function () {
-        var currentSessionID = "";
         for (var i=0; i < this.datagathering.length; i++) {
             var myRec = this.datagathering[i];
             var flatRec = {};
@@ -138,11 +137,13 @@
 
                 // output to internal memory array
             if ($('#DownloadDataSingleRowResults').prop('checked')) {
+                var tempID = "" + myRec.SessionID;
                 this.flattenDataSetRecursed("", myRec, this.headers, flatRec, includeResults, includeResultsValues,  excludeSessionDescription, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'), fieldLead);
-
-                if (currentSessionID != myRec.SessionID) {
+                //console.log('compare ',myRec.SessionDescription, this.tempSessionID, tempID, this.tempSessionID != tempID, myRec);
+                if (this.tempSessionID != tempID) {
+                    this.tempSessionID = tempID;
+                    //console.log('push', tempID, this.tempSessionID, flatRec);
                     this.flatteneddataset.push(flatRec);
-                    currentSessionID = myRec.SessionID;
                 }
             } else {
                 this.flattenDataSetRecursed("", myRec, this.headers, flatRec, includeResults, includeResultsValues,  excludeSessionDescription, '', $('#DownloadDataRemoveEmptyColumns').prop('checked'), fieldLead);
@@ -246,6 +247,7 @@
         $('#DataRecalculation-Label').css("display", "none");
         $('#DataDownloading-Label').css("display", "");
 
+        this.tempSessionID = "";
         this.flatteneddataset = [];
         this.headers = {};
         this.datagathering = [];
