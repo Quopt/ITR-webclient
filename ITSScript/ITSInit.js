@@ -329,6 +329,7 @@ ITSSession.prototype.JSONAjaxLoaderRunner = function (URL, objectToPutDataIn, On
             if ((objectToPutDataIn) && (objectToPutDataIn !== "") ) {
                 try {
                     ITSJSONLoad(objectToPutDataIn, data, objectToPutDataIn, ITSInstance, DefaultObjectType);
+                    //console.log(objectToPutDataIn,data);
                 }
                 catch (err) {
                     ITSLogger.logMessage(logLevel.ERROR, 'JSONAjaxLoaderRunner data cannot be processed ' + err.message);

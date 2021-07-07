@@ -917,6 +917,7 @@ function ITSTestNorm(par, session) {
 };
 
 ITSTestNorm.prototype.normTest = function (session, sessionTest, candidate, results, scores, ITSInstance, normPostFix) {
+    var nc={};
 
     if (!normPostFix) normPostFix = 1;
 
@@ -974,7 +975,7 @@ ITSTestNorm.prototype.normTest = function (session, sessionTest, candidate, resu
 
                     if (score) {
                         saveNormScore = false;
-                        if ($.isNumeric(nc.rawScoreBorder) && $.isNumeric(score.Score)) {
+                        if (!isNaN(nc.rawScoreBorder) && !isNaN(score.Score)) {
                             // perform numeric comparison
                             if ((this.parameters.BorderValueTreatment == 2) && (nc.rawScoreBorder != this.myParent.scales[s].minimumScore)) {
                                 if (Number(nc.rawScoreBorder) < Number(score.Score)) saveNormScore = true;
@@ -987,6 +988,7 @@ ITSTestNorm.prototype.normTest = function (session, sessionTest, candidate, resu
                                 saveNormScore = true;
                             }
                         }
+
                         if (saveNormScore) {
                             switch (normPostFix) {
                                 case 1:
@@ -1115,7 +1117,7 @@ ITSTestNorm.prototype.findNormColumnsWithScaleID = function (scaleID) {
             return this.normColumns[i];
         }
     }
-    return null;
+    return undefined;
 };
 
 ITSTestNorm.prototype.removeInvalidScalesFromNormColumns = function ()  {
@@ -1451,13 +1453,22 @@ ITSTestScreen.prototype.screenComponent = function (nameToFind) {
     return undefined;
 };
 
+ITSTestScreen.prototype.findScreenComponentByID = function (IDToFind) {
+    for (i = 0; i < this.screenComponents.length; i++) {
+        if (this.screenComponents[i].id == IDToFind) {
+            return this.screenComponents[i];
+        }
+    }
+    return undefined;
+};
+
 ITSTest.prototype.findScreenByID = function (idToFind) {
     for (i = 0; i < this.screens.length; i++) {
         if (this.screens[i].id == idToFind) {
             return this.screens[i];
         }
     }
-    return null;
+    return undefined;
 };
 
 ITSTest.prototype.findScreenIndexByID = function (idToFind) {
@@ -1468,6 +1479,16 @@ ITSTest.prototype.findScreenIndexByID = function (idToFind) {
     }
     return -1;
 };
+
+ITSTest.prototype.findScreenByName = function (nameToFind) {
+    for (i = 0; i < this.screens.length; i++) {
+        if (this.screens[i].varName == nameToFind) {
+            return this.screens[i];
+        }
+    }
+    return undefined;
+};
+
 ITSTest.prototype.findScreenIndexByName = function (nameToFind) {
     for (i = 0; i < this.screens.length; i++) {
         if (this.screens[i].varName == nameToFind) {
@@ -1567,10 +1588,23 @@ ITSTest.prototype.scoreTest = function (session, sessionTest, candidate, results
         var r = results;
         var s = scores;
         var rule = this.scoreRules[i];
-        if (r["__"+rule.SourceScreenID]) {
-            var source =  r["__"+rule.SourceScreenID];
-            if (source["__" + rule.SourceQuestionID]) {
-                source = source["__" + rule.SourceQuestionID];
+        var source =  r["__"+rule.SourceScreenID];
+        var tempScreen = {};
+        if (typeof source == "undefined") {
+            // locate the screen and try to find by screen name
+            tempScreen = this.screens.findScreenByID(rule.SourceScreenID);
+            if (typeof tempScreen != "undefined") source = r[tempScreen.Description];
+        }
+        if (typeof source != "undefined") {
+            // screen found now locate the question
+            var questionSource = source["__" + rule.SourceQuestionID];
+            if (typeof questionSource == "undefined") {
+                tempScreen = this.screens.findScreenByID(rule.SourceScreenID);
+                var tempQuestion = tempScreen.findScreenComponentByID(rule.SourceQuestionID);
+                if (typeof tempQuestion != "undefined") questionSource = source[tempQuestion.varComponentName];
+            }
+            if (typeof questionSource != "undefined") {
+                source = questionSource;
                 if (( (String(source.Value) == String(rule.SourceValue)) ||
                     ((rule.SourceValue.indexOf('%%QuestionValue%%') >= 0) && (rule.TargetScaleValue.indexOf('%%QuestionValue%%') >= 0) ) ) && (s["__" + rule.TargetScale])) {
                     var target = s["__" + rule.TargetScale];
@@ -1823,6 +1857,15 @@ ITSTestScreen.prototype.updateFromSessionStorage = function (storageObject, sess
 ITSTestScreen.prototype.findComponentByID = function (idToFind) {
     for (i = 0; i < this.screenComponents.length; i++) {
         if (this.screenComponents[i].id == idToFind) {
+            return this.screenComponents[i];
+        }
+    }
+    return undefined;
+};
+
+ITSTestScreen.prototype.findComponentByComponentName = function (idToFind) {
+    for (i = 0; i < this.screenComponents.length; i++) {
+        if (this.screenComponents[i].varComponentName == idToFind) {
             return this.screenComponents[i];
         }
     }

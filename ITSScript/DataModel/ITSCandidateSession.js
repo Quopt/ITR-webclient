@@ -191,23 +191,23 @@ ITSCandidateSession.prototype.createReportOverviewInZip = function (zip, prefixF
         '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>' +
         '<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/4/tinymce.min.js" referrerpolicy="origin"></script>'   ;
     var closingTag = '</body>'+
-        `<script>
-            $('textarea-htmledit').removeClass('form-control');
-            (function($) {
-                $.fn.changeElementType = function(newType) {
-                    var attrs = {};
-            
-                    $.each(this[0].attributes, function(idx, attr) {
-                        attrs[attr.nodeName] = attr.nodeValue;
-                    });
-            
-                    this.replaceWith(function() {
-                        return $("<" + newType + "/>", attrs).append($(this).contents()).css("border", "solid");
-                    });
-                }
-            })(jQuery);
-            $('textarea-htmledit').changeElementType('div');
-        </script></html>`;
+        "<script>" +
+    "   $('textarea-htmledit').removeClass('form-control');"+
+    "    (function($) {"+
+    "        $.fn.changeElementType = function(newType) {"+
+    "            var attrs = {};"+
+    "    "+
+    "            $.each(this[0].attributes, function(idx, attr) {"+
+    "                attrs[attr.nodeName] = attr.nodeValue;"+
+    "            });"+
+    "    "+
+    "            this.replaceWith(function() {"+
+    '                return $("<" + newType + "/>", attrs).append($(this).contents()).css("border", "solid");'+
+    "            });"+
+    "        }"+
+    "    })(jQuery);"+
+    "    $('textarea-htmledit').changeElementType('div');"+
+    "</script></html>";
 
     // add the score overview
     ITSInstance.editSessionController.generateTestsList(true, this);

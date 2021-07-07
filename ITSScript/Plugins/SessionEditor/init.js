@@ -114,11 +114,11 @@
             "  <thead><tr>" +
             "   <th col='A%%NR%%' id=\"AdminInterfaceTestTemplateEditorNorm_ScaleHeader_%%NR%%\">Scale</th>" +
             "   <th col='B%%NR%%' id=\"AdminInterfaceTestTemplateEditorNorm_RawHeader_%%NR%%\" scope=\"col\">Score</th>" +
-            "   <th col='C%%NR%%' notranslate id=\"AdminInterfaceTestTemplateEditorNorm_NormHeader1_%%NR%%\" scope=\"col\"><span id='AdminInterfaceTestTemplateEditorNorm_NormHeader'>Norm </span><select notranslate class=\"form-control form-control-sm\" id=\"AdminInterfaceTestTemplateEditorNorm%%NR%%-Norm1Select\" onchange=\"ITSInstance.editSessionController.selectNormInEditor(1,%%NR%%,this );\"></th>" +
+            "   <th col='C%%NR%%' notranslate id=\"AdminInterfaceTestTemplateEditorNorm_NormHeader1_%%NR%%\" scope=\"col\"><span id='AdminInterfaceTestTemplateEditorNorm_NormHeader'>Norm </span><select notranslate class=\"form-control form-control-sm\" id=\"AdminInterfaceTestTemplateEditorNorm%%NR%%-Norm1Select\" onchange=\"ITSInstance.editSessionController.selectNormInEditor(1,%%NR%%,this );\"></select></th>" +
             "   <th col='D%%NR%%' id=\"AdminInterfaceTestTemplateEditorNorm_PercentileHeader1_%%NR%%\" scope=\"col\">Percentile 1</th>" +
-            "   <th col='E%%NR%%' notranslate id=\"AdminInterfaceTestTemplateEditorNorm_NormHeader2_%%NR%%\" scope=\"col\"><span id='AdminInterfaceTestTemplateEditorNorm_NormHeader'>Norm </span> <select notranslate class=\"form-control form-control-sm\" id=\"AdminInterfaceTestTemplateEditorNorm%%NR%%-Norm2Select\" onchange=\"ITSInstance.editSessionController.selectNormInEditor(2,%%NR%%,this );\"></th>" +
+            "   <th col='E%%NR%%' notranslate id=\"AdminInterfaceTestTemplateEditorNorm_NormHeader2_%%NR%%\" scope=\"col\"><span id='AdminInterfaceTestTemplateEditorNorm_NormHeader'>Norm </span> <select notranslate class=\"form-control form-control-sm\" id=\"AdminInterfaceTestTemplateEditorNorm%%NR%%-Norm2Select\" onchange=\"ITSInstance.editSessionController.selectNormInEditor(2,%%NR%%,this );\"></select></th>" +
             "   <th col='F%%NR%%' id=\"AdminInterfaceTestTemplateEditorNorm_PercentileHeader2_%%NR%%\" scope=\"col\">Percentile 2</th>" +
-            "   <th col='G%%NR%%' notranslate id=\"AdminInterfaceTestTemplateEditorNorm_NormHeader3_%%NR%%\" scope=\"col\"><span id='AdminInterfaceTestTemplateEditorNorm_NormHeader'>Norm </span> <select notranslate class=\"form-control form-control-sm\" id=\"AdminInterfaceTestTemplateEditorNorm%%NR%%-Norm3Select\" onchange=\"ITSInstance.editSessionController.selectNormInEditor(3,%%NR%%,this );\"></th>" +
+            "   <th col='G%%NR%%' notranslate id=\"AdminInterfaceTestTemplateEditorNorm_NormHeader3_%%NR%%\" scope=\"col\"><span id='AdminInterfaceTestTemplateEditorNorm_NormHeader'>Norm </span> <select notranslate class=\"form-control form-control-sm\" id=\"AdminInterfaceTestTemplateEditorNorm%%NR%%-Norm3Select\" onchange=\"ITSInstance.editSessionController.selectNormInEditor(3,%%NR%%,this );\"></select></th>" +
             "   <th col='H%%NR%%' id=\"AdminInterfaceTestTemplateEditorNorm_PercentileHeader3_%%NR%%\" scope=\"col\">Percentile 3</th>" +
             "  </tr>" +
             "  </thead>";
@@ -430,9 +430,9 @@
 
         // load the tests norms
         if (noNormDropdowns) {
-            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm1Select')[0].outerHTML = "&nbsp;" + this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID1);
-            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm2Select')[0].outerHTML = "&nbsp;" + this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID2);
-            $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm3Select')[0].outerHTML = "&nbsp;" + this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID3);
+            try { $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm1Select')[0].outerHTML = "&nbsp;" + this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID1); } catch(err) {};
+            try { $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm2Select')[0].outerHTML = "&nbsp;" + this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID2); } catch(err) {};
+            try { $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm3Select')[0].outerHTML = "&nbsp;" + this.generateNormSelectedDescription(currentTest.testDefinition.norms, currentTest.NormID3); } catch(err) {};
         } else {
             $('#AdminInterfaceTestTemplateEditorNorm' + testNr + '-Norm1Select').append(this.generateNormSelection(
                 currentTest.testDefinition.norms, currentTest.NormID1

@@ -13,8 +13,6 @@
  *  limitations under the License.
  */
 
-var ITSScriptLineType = new enums.Enum("unknown", "ifthenelse", "callfunction", "assignment", "caseline", "case", "repeatloop", "functiondeclaration", "statements", "variables");
-
 function ITSScript (parent, session) {
     this.myParent = parent;
     this.ITSSession = session;
@@ -29,7 +27,7 @@ ITSScript.prototype.newScriptLine = function() {
 function ITSScriptLine (parent, session) {
     this.myParent = parent;
     this.ITSSession = session;
-    this.lineType = ITSScriptLineType.unknown;
+    this.lineType = "unknown"; // "unknown", "ifthenelse", "callfunction", "assignment", "caseline", "case", "repeatloop", "functiondeclaration", "statements", "variables"
 
     this.scriptLines = []; //only used for script blocks. Depending on the line type different fields are present.
 }
