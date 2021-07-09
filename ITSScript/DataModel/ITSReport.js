@@ -132,6 +132,20 @@ ITSReports.prototype.findReportsForTests = function (testIDs) {
     return toReturn;
 };
 
+ITSReports.prototype.findTemplateByDescription = function (theCollectionToSearch, Description, testid) {
+    var i = 0;
+
+    while (i < theCollectionToSearch.length)  {
+        if ((theCollectionToSearch[i].Description == Description) &&(theCollectionToSearch[i].TestID == testid)) {
+            return i;
+        } else {
+            i = i + 1;
+        }
+    }
+
+    return -1;
+};
+
 function ITSReport(par, session) {
     this.ITSSession = session;
     this.myParent = par;
@@ -351,6 +365,6 @@ ITSReport.prototype.copyReport = function () {
     return newReport;
 };
 
-ITSReport.prototype.getTranslatableReportText = function () {
-   return xxx (this.ReportText);
+ITSReport.prototype.resetDetailsLoaded = function () {
+    this.detailsLoaded = false;
 };

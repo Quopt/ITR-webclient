@@ -23,6 +23,17 @@
         </ul>
     </div>
     <br/><br/>
+    <div>
+        <button type="button" class="btn-sm btn-success" notranslate
+                onclick="ITSInstance.ReportTemplateSessionController.downloadZIP();">
+            <i class="fa fa-sm fa-download aria-hidden='true'"></i> <span id="ReportTemplateInterfaceEditSelectTest_DownloadZIP">Download all templates as ZIP</span>
+        </button>&nbsp;
+        <button type="button" class="btn-sm btn-success" notranslate
+                onclick="if ('FileReader' in window) { document.getElementById('ReportTemplateInterfaceEditSelectTest-files-upload').click(); } else { alert('Your browser does not support this function. Please upgrade your browser.'); }">
+            <i class="fa fa-sm fa-upload aria-hidden='true'"></i> <span id="ReportTemplateInterfaceEditSelectTest_UploadZIP">Upload ZIP</span>
+        </button>&nbsp;
+        <input type="file" onchange="ITSInstance.ReportTemplateSessionController.uploadZIP(event.target.files[0]);" style="visibility: hidden" id="ReportTemplateInterfaceEditSelectTest-files-upload" accept="*.zip"/>
+    </div>
 </div>
 
 <div class="row col-12" id="ReportTemplateInterfaceEditSelectReport">

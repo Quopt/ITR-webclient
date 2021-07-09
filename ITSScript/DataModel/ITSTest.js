@@ -747,6 +747,7 @@ ITSTests.prototype.loadAvailableTests = function (whenLoaded, onError) {
 };
 
 ITSTests.prototype.findTestById = function (testCollectionToSearch, TestID) {
+    if (typeof TestID == "undefined") return -1;
     var i = 0;
     var found = false;
     while ((i < testCollectionToSearch.length) && (!found)) {

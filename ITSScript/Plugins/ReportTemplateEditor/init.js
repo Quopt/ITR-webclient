@@ -134,6 +134,83 @@
                 'window.history.back();');
         };
 
+        ITSReportTemplateEditor.prototype.downloadZIP = function () {
+            // force reload of all screen templates
+            ITSInstance.UIController.showInterfaceAsWaitingOn();
+            for (var i=0; i < ITSInstance.reports.reportsList.length; i++) {
+                ITSInstance.reports.reportsList[i].resetDetailsLoaded();
+            }
+            for (var i=0; i < ITSInstance.reports.reportsList.length; i++) {
+                ITSInstance.reports.reportsList[i].loadDetailDefinition(this.downloadZIPContinue.bind(this), this.downloadZIPError.bind(this));
+            }
+        };
+        ITSReportTemplateEditor.prototype.downloadZIPContinue = function () {
+            for (var i=0; i < ITSInstance.reports.reportsList.length; i++) {
+                if (!ITSInstance.reports.reportsList[i].detailsLoaded) return;
+            }
+
+            ITSInstance.UIController.showInterfaceAsWaitingOff();
+
+            var zip = new JSZip();
+            var testname = "";
+            for (var i=0; i < ITSInstance.reports.reportsList.length; i++) {
+                if (ITSInstance.reports.reportsList[i].dbsource == 0)
+                    //console.log(ITSInstance.reports.reportsList[i].TestID);
+                    var testindex = ITSInstance.tests.findTestById(ITSInstance.tests.testList, ITSInstance.reports.reportsList[i].TestID);
+                    if (testindex>-1) testname = ITSInstance.tests.testList[testindex].TestName;
+                    zip.file( (testname + "_" + ITSInstance.reports.reportsList[i].Description).replace(/[^a-z0-9]/gi, '_').toLowerCase() + ".itrreporttemplate", ITSJSONStringify(ITSInstance.reports.reportsList[i]));
+            }
+            zip.generateAsync({type : "blob", compression: "DEFLATE", compressionOptions: { level: 1 }}).
+            then(function (blob) {
+                ITSInstance.UIController.showInterfaceAsWaitingOff();
+                saveFileLocally("itrreporttemplates.zip" , blob, "application/zip");
+            }.bind(this));
+        }
+        ITSReportTemplateEditor.prototype.downloadZIPError = function () {
+            ITSInstance.UIController.showInterfaceAsWaitingOff();
+            ITSInstance.UIController.showError('ITSReportTemplateEditor.LoadAllError', 'Reloading of the report templates failed. Please refresh your browser screen and retry.');
+        }
+
+        ITSReportTemplateEditor.prototype.uploadZIP = function (fileName) {
+            loadFileLocally(fileName, this.uploadZIP_process.bind(this),true);
+        };
+        ITSReportTemplateEditor.prototype.uploadZIP_process = function (zipContents) {
+            ITSInstance.ReportTemplateSessionController.saveCounter =0;
+            var jsZip = new JSZip(); //ReportTemplateSessionController
+
+            jsZip.loadAsync(zipContents).then(function (zip) {
+                Object.keys(zip.files).forEach(function (filename) {
+                    zip.files[filename].async('string').then(function (fileData) {
+                        console.log(filename); // These are your file contents
+                        var tempTemplate = new ITSReport( ITSInstance.reports, ITSInstance);
+                        ITSJSONLoad(tempTemplate, fileData, tempTemplate, ITSInstance, 'ITSReport');
+                        var existingTemplateIndex = ITSInstance.reports.findTemplateByDescription(ITSInstance.reports.reportsList, tempTemplate.Description, tempTemplate.TestID);
+                        if (existingTemplateIndex > -1) {
+                            var newTemplate = ITSInstance.reports.newReport(true);
+                            ITSJSONLoad(newTemplate, fileData, newTemplate, ITSInstance, 'ITSReport');
+                            ITSInstance.reports.reportsList[existingTemplateIndex] = newTemplate;
+                            ITSInstance.reports.reportsList[existingTemplateIndex].saveToServer(ITSInstance.ReportTemplateSessionController.uploadZIP_process_done, function () {} );
+                            ITSInstance.ReportTemplateSessionController.saveCounter++;
+                        } else {
+                            var newTemplate = ITSInstance.reports.newReport(true);
+                            newTemplate.dbsource = 0;
+                            ITSJSONLoad(newTemplate, fileData, newTemplate, ITSInstance, 'ITSReport');
+                            newTemplate.saveToServer(ITSInstance.ReportTemplateSessionController.uploadZIP_process_done, function () {} );
+                            ITSInstance.ReportTemplateSessionController.saveCounter++;
+                        }
+                    })
+                })
+            });
+        }
+        ITSReportTemplateEditor.prototype.uploadZIP_process_done = function () {
+            ITSInstance.ReportTemplateSessionController.saveCounter--;
+            if (ITSInstance.ReportTemplateSessionController.saveCounter == 0) {
+                console.log('reload');
+                temp = ITSInstance.ReportTemplateSessionController;
+                ITSInstance.reports.loadAvailableReportsList(temp.showProperView.bind(temp), temp.showListLoadError.bind(temp));
+            }
+        }
+
         ITSReportTemplateEditor.prototype.showReportEditorView = function (ReportID) {
             $('#ReportTemplateInterfaceEdit').show();
             ITSInstance.UIController.showInterfaceAsWaitingOn();

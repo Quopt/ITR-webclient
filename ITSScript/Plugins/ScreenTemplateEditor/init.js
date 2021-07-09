@@ -149,7 +149,6 @@ ITSScreenTemplateEditor.prototype.uploadZIP_process = function (zipContents) {
                 if (existingTemplateIndex > -1) {
                     ITSJSONLoad(ITSInstance.screenTemplates.screenTemplates[existingTemplateIndex], fileData, ITSInstance.screenTemplates.screenTemplates[existingTemplateIndex], ITSInstance, undefined);
                     ITSInstance.screenTemplates.screenTemplates[existingTemplateIndex].saveToServer(ITSInstance.newITSScreenTemplateEditorController.uploadZIP_process_done, function () {} );
-                    ITSInstance.newITSScreenTemplateEditorController.uploadCounter++;
                 } else {
                     var newTemplate = ITSInstance.screenTemplates.newScreenTemplate();
                     newTemplate.dbsource = 0;
