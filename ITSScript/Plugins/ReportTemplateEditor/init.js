@@ -154,11 +154,12 @@
             var zip = new JSZip();
             var testname = "";
             for (var i=0; i < ITSInstance.reports.reportsList.length; i++) {
-                if (ITSInstance.reports.reportsList[i].dbsource == 0)
+                if (ITSInstance.reports.reportsList[i].dbsource == 0) {
                     //console.log(ITSInstance.reports.reportsList[i].TestID);
                     var testindex = ITSInstance.tests.findTestById(ITSInstance.tests.testList, ITSInstance.reports.reportsList[i].TestID);
-                    if (testindex>-1) testname = ITSInstance.tests.testList[testindex].TestName;
-                    zip.file( (testname + "_" + ITSInstance.reports.reportsList[i].Description).replace(/[^a-z0-9]/gi, '_').toLowerCase() + ".itrreporttemplate", ITSJSONStringify(ITSInstance.reports.reportsList[i]));
+                    if (testindex > -1) testname = ITSInstance.tests.testList[testindex].TestName;
+                    zip.file((testname + "_" + ITSInstance.reports.reportsList[i].Description).replace(/[^a-z0-9]/gi, '_').toLowerCase() + ".itrreporttemplate", ITSJSONStringify(ITSInstance.reports.reportsList[i]));
+                }
             }
             zip.generateAsync({type : "blob", compression: "DEFLATE", compressionOptions: { level: 1 }}).
             then(function (blob) {

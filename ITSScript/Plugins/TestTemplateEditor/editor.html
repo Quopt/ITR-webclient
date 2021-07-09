@@ -31,6 +31,16 @@
                 onclick="ITSInstance.newITSTestEditorController.addNewTestDefinition(); ">
             <i class="fa fa-sm fa-plus aria-hidden='true'"></i> Add new definition
         </button>&nbsp;
+        <button type="button" class="btn-sm btn-success" notranslate
+                onclick="ITSInstance.newITSTestEditorController.downloadZIP();">
+            <i class="fa fa-sm fa-download aria-hidden='true'"></i> <span id="AdminInterfaceTestTemplateEditorEdit_DownloadZIP">Download all templates as ZIP</span>
+        </button>&nbsp;
+        <button type="button" class="btn-sm btn-success" notranslate
+                onclick="if ('FileReader' in window) { document.getElementById('AdminInterfaceTestTemplateEditorEdit-files-upload').click(); } else { alert('Your browser does not support this function. Please upgrade your browser.'); }">
+            <i class="fa fa-sm fa-upload aria-hidden='true'"></i> <span id="AdminInterfaceTestTemplateEditorEdit_UploadZIP">Upload ZIP</span>
+        </button>&nbsp;
+        <input type="file" onchange="ITSInstance.newITSTestEditorController.uploadZIP(event.target.files[0]);" style="visibility: hidden" id="AdminInterfaceTestTemplateEditorEdit-files-upload" accept="*.zip"/>
+
     </div>
 </div>
 

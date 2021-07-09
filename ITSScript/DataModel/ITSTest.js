@@ -383,6 +383,10 @@ ITSTest.prototype.removeMediaFile = function (index, OnSucces, OnError) {
     ITSInstance.genericAjaxDelete(this.createLinkForMedia(index, true),OnSucces, OnError);
 };
 
+ITSTest.prototype.resetDetailsLoaded = function () {
+    this.detailsLoaded = false;
+};
+
 ITSTest.prototype.loadTestDetailSucces = function () {
     ITSLogger.logMessage(logLevel.INFO,"Loaded test details " + this.TestName);
     this.currentlyLoading = false;

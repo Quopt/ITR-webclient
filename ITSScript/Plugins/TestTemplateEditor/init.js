@@ -358,6 +358,80 @@ ITSTestTemplateEditor.prototype.loadCurrentTestOnScreen = function () {
     this.processTestCapabilities();
 };
 
+ITSTestTemplateEditor.prototype.downloadZIP = function () {
+    // force reload of all screen templates
+    ITSInstance.UIController.showInterfaceAsWaitingOn();
+    for (var i=0; i < ITSInstance.tests.testList.length; i++) {
+        ITSInstance.tests.testList[i].resetDetailsLoaded();
+    }
+    for (var i=0; i < ITSInstance.tests.testList.length; i++) {
+        ITSInstance.tests.testList[i].loadTestDetailDefinition(this.downloadZIPContinue.bind(this), this.downloadZIPError.bind(this));
+    }
+};
+ITSTestTemplateEditor.prototype.downloadZIPContinue = function () {
+    for (var i=0; i < ITSInstance.tests.testList.length; i++) {
+        if (!ITSInstance.tests.testList[i].detailsLoaded) return;
+    }
+
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+
+    var zip = new JSZip();
+    var testname = "";
+    for (var i=0; i < ITSInstance.tests.testList.length; i++) {
+        if (ITSInstance.tests.testList[i].dbsource == 0) {
+            zip.file(ITSInstance.tests.testList[i].TestName.replace(/[^a-z0-9]/gi, '_').toLowerCase() + ".itrtesttemplate", ITSJSONStringify(ITSInstance.tests.testList[i]));
+        }
+    }
+    zip.generateAsync({type : "blob", compression: "DEFLATE", compressionOptions: { level: 1 }}).
+    then(function (blob) {
+        ITSInstance.UIController.showInterfaceAsWaitingOff();
+        saveFileLocally("itrtesttemplates.zip" , blob, "application/zip");
+    }.bind(this));
+}
+ITSTestTemplateEditor.prototype.downloadZIPError = function () {
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+    ITSInstance.UIController.showError('ITSReportTemplateEditor.LoadAllError', 'Reloading of the report templates failed. Please refresh your browser screen and retry.');
+}
+
+ITSTestTemplateEditor.prototype.uploadZIP = function (fileName) {
+    loadFileLocally(fileName, this.uploadZIP_process.bind(this),true);
+};
+ITSTestTemplateEditor.prototype.uploadZIP_process = function (zipContents) {
+    ITSInstance.newITSTestEditorController.saveCounter =0;
+    var jsZip = new JSZip(); //newITSTestEditorController
+
+    jsZip.loadAsync(zipContents).then(function (zip) {
+        Object.keys(zip.files).forEach(function (filename) {
+            zip.files[filename].async('string').then(function (fileData) {
+                console.log(filename); // These are your file contents
+                var tempTemplate = new ITSTest( ITSInstance.reports, ITSInstance);
+                ITSJSONLoad(tempTemplate, fileData, tempTemplate, ITSInstance, 'ITSTest');
+                var existingTemplateIndex = ITSInstance.reports.findTemplateByDescription(ITSInstance.tests.testList, tempTemplate.Description, tempTemplate.TestID);
+                if (existingTemplateIndex > -1) {
+                    var newTemplate = ITSInstance.tests.addNewTest();
+                    ITSJSONLoad(newTemplate, fileData, newTemplate, ITSInstance, 'ITSTest');
+                    ITSInstance.tests.testList[existingTemplateIndex] = newTemplate;
+                    ITSInstance.tests.testList[existingTemplateIndex].saveToServer(ITSInstance.newITSTestEditorController.uploadZIP_process_done, function () {} );
+                    ITSInstance.newITSTestEditorController.saveCounter++;
+                } else {
+                    var newTemplate = ITSInstance.tests.addNewTest();
+                    newTemplate.dbsource = 0;
+                    ITSJSONLoad(newTemplate, fileData, newTemplate, ITSInstance, 'ITSTest');
+                    newTemplate.saveToServer(ITSInstance.newITSTestEditorController.uploadZIP_process_done, function () {} );
+                    ITSInstance.newITSTestEditorController.saveCounter++;
+                }
+            })
+        })
+    });
+}
+ITSTestTemplateEditor.prototype.uploadZIP_process_done = function () {
+    ITSInstance.newITSTestEditorController.saveCounter--;
+    if (ITSInstance.newITSTestEditorController.saveCounter == 0) {
+        console.log('reload');
+        temp = ITSInstance.newITSTestEditorController;
+        temp.populateTests();
+    }
+}
 
 ITSTestTemplateEditor.prototype.addNewTestDefinition = function () {
     this.currentTest = ITSInstance.tests.addNewTest();
