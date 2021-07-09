@@ -260,9 +260,15 @@ ITSSession.prototype.JSONAjaxLoaderProcessQueue = function () {
                 function (xhr, ajaxOptions, thrownError) {
                     var x = this.genericJSONLoadQueue[0];
                     this.callJSONLoaderProcessing = false;
-                    if (typeof x.OnError != "undefined") setTimeout(x.OnError.bind(x,xhr, ajaxOptions, thrownError),1);
-                    this.genericJSONLoadQueue.splice(0,1);
-                    this.JSONAjaxLoaderProcessQueue();
+                    if (xhr.status ==429){
+                        ITSLogger.logMessage(logLevel.ERROR,"Too many requests error detected : " + xhr.status + " - " + thrownError + ". Retrying in one second. ");
+                        setTimeout(this.JSONAjaxLoaderProcessQueue.bind(this),1000);
+                    } else
+                    {
+                        if (typeof x.OnError != "undefined") setTimeout(x.OnError.bind(x,xhr, ajaxOptions, thrownError),1);
+                        this.genericJSONLoadQueue.splice(0, 1);
+                        this.JSONAjaxLoaderProcessQueue();
+                    }
                 }.bind(this),
                 x.DefaultObjectType,
                 x.PageNumber,

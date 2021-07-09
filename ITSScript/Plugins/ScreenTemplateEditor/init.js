@@ -100,6 +100,70 @@ ITSScreenTemplateEditor.prototype.addNewTemplate = function () {
     this.currentTemplate.generator_summary_snippet = $('#AdminInterfaceScreenTemplate-genscript-summary').val();
 };
 
+ITSScreenTemplateEditor.prototype.downloadZIP = function () {
+    // force reload of all screen templates
+    ITSInstance.UIController.showInterfaceAsWaitingOn();
+    for (var i=0; i < ITSInstance.screenTemplates.screenTemplates.length; i++) {
+        ITSInstance.screenTemplates.screenTemplates[i].resetDetailsLoaded();
+    }
+    for (var i=0; i < ITSInstance.screenTemplates.screenTemplates.length; i++) {
+        ITSInstance.screenTemplates.screenTemplates[i].loadDetailDefinition(this.downloadZIPContinue.bind(this), this.downloadZIPError.bind(this));
+    }
+};
+ITSScreenTemplateEditor.prototype.downloadZIPContinue = function () {
+    for (var i=0; i < ITSInstance.screenTemplates.screenTemplates.length; i++) {
+        if (!ITSInstance.screenTemplates.screenTemplates[i].detailsLoaded) return;
+    }
+
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+
+    var zip = new JSZip();
+    for (var i=0; i < ITSInstance.screenTemplates.screenTemplates.length; i++) {
+        if (ITSInstance.screenTemplates.screenTemplates[i].dbsource == 0)
+         zip.file(ITSInstance.screenTemplates.screenTemplates[i].Description.replace(/[^a-z0-9]/gi, '_').toLowerCase() + ".itrscreentemplate", ITSJSONStringify(ITSInstance.screenTemplates.screenTemplates[i]));
+    }
+    zip.generateAsync({type : "blob", compression: "DEFLATE", compressionOptions: { level: 1 }}).
+        then(function (blob) {
+            ITSInstance.UIController.showInterfaceAsWaitingOff();
+            saveFileLocally("itrscreentemplates.zip" , blob, "application/zip");
+        }.bind(this));
+}
+ITSScreenTemplateEditor.prototype.downloadZIPError = function () {
+    ITSInstance.UIController.showInterfaceAsWaitingOff();
+    ITSInstance.UIController.showError('ITSScreenTemplateEditor.LoadAllError', 'Reloading of the list of screen templates failed. Please refresh your browser screen and retry.');
+}
+
+ITSScreenTemplateEditor.prototype.uploadZIP = function (fileName) {
+    loadFileLocally(fileName, this.uploadZIP_process.bind(this),true);
+};
+ITSScreenTemplateEditor.prototype.uploadZIP_process = function (zipContents) {
+    var jsZip = new JSZip();
+
+    jsZip.loadAsync(zipContents).then(function (zip) {
+        Object.keys(zip.files).forEach(function (filename) {
+            zip.files[filename].async('string').then(function (fileData) {
+                console.log(filename); // These are your file contents
+                var tempTemplate = new ITSScreenTemplate( ITSInstance.screenTemplates, ITSInstance);
+                ITSJSONLoad(tempTemplate, fileData, tempTemplate, ITSInstance, undefined);
+                var existingTemplateIndex = ITSInstance.screenTemplates.findTemplateByDescription(ITSInstance.screenTemplates.screenTemplates, tempTemplate.Description);
+                if (existingTemplateIndex > -1) {
+                    ITSJSONLoad(ITSInstance.screenTemplates.screenTemplates[existingTemplateIndex], fileData, ITSInstance.screenTemplates.screenTemplates[existingTemplateIndex], ITSInstance, undefined);
+                    ITSInstance.screenTemplates.screenTemplates[existingTemplateIndex].saveToServer(ITSInstance.newITSScreenTemplateEditorController.uploadZIP_process_done, function () {} );
+                    ITSInstance.newITSScreenTemplateEditorController.uploadCounter++;
+                } else {
+                    var newTemplate = ITSInstance.screenTemplates.newScreenTemplate();
+                    newTemplate.dbsource = 0;
+                    ITSJSONLoad(newTemplate, fileData, newTemplate, ITSInstance, undefined);
+                    tempTemplate.saveToServer(ITSInstance.newITSScreenTemplateEditorController.uploadZIP_process_done, function () {} );
+                }
+            })
+        })
+    });
+}
+ITSScreenTemplateEditor.prototype.uploadZIP_process_done = function () {
+    ITSInstance.newITSScreenTemplateEditorController.populateTemplates();
+}
+
 ITSScreenTemplateEditor.prototype.populateTemplates = function () {
     // load the available templates in the select list
     $('#AdminInterfaceScreenTemplateSelectList').empty();

@@ -27,8 +27,17 @@
     <div>
         <button type="button" class="btn-sm btn-success"
                 onclick="ITSInstance.newITSScreenTemplateEditorController.addNewTemplate(); $('#AdminInterfaceScreenTemplateEditHeader').hide(); $('#AdminInterfaceScreenTemplateEdit').show(); $('#AdminInterfaceScreenTemplateSelect').hide();">
-            <i class="fa fa-sm fa-plus aria-hidden='true'"></i> Add new template
+            <i class="fa fa-sm fa-plus aria-hidden='true'"></i> <span id="AdminInterfaceScreenTemplateEdit_AddNew">Add new template</span>
         </button>&nbsp;
+        <button type="button" class="btn-sm btn-success" notranslate
+                onclick="ITSInstance.newITSScreenTemplateEditorController.downloadZIP();">
+            <i class="fa fa-sm fa-download aria-hidden='true'"></i> <span id="AdminInterfaceScreenTemplateEdit_DownloadZIP">Download all templates as ZIP</span>
+        </button>&nbsp;
+        <button type="button" class="btn-sm btn-success" notranslate
+                onclick="if ('FileReader' in window) { document.getElementById('AdminInterfaceScreenTemplate-files-upload').click(); } else { alert('Your browser does not support this function. Please upgrade your browser.'); }">
+            <i class="fa fa-sm fa-upload aria-hidden='true'"></i> <span id="AdminInterfaceScreenTemplateEdit_UploadZIP">Upload ZIP</span>
+        </button>&nbsp;
+        <input type="file" onchange="ITSInstance.newITSScreenTemplateEditorController.uploadZIP(event.target.files[0]);" style="visibility: hidden" id="AdminInterfaceScreenTemplate-files-upload" accept="*.zip"/>
     </div>
 </div>
 <div id="AdminInterfaceScreenTemplateEdit" style="visibility: visible">

@@ -84,6 +84,20 @@ ITSScreenTemplates.prototype.findTemplateById = function (theCollectionToSearch,
     }
 };
 
+ITSScreenTemplates.prototype.findTemplateByDescription = function (theCollectionToSearch, Description) {
+    var i = 0;
+
+    while (i < theCollectionToSearch.length)  {
+        if (theCollectionToSearch[i].Description == Description) {
+            return i;
+        } else {
+            i = i + 1;
+        }
+    }
+
+    return -1;
+};
+
 ITSScreenTemplates.prototype.newScreenTemplate = function () {
     var newTemplate = new ITSScreenTemplate(this, this.ITSSession);
     this.screenTemplates.push(newTemplate);
