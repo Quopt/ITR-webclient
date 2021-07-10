@@ -402,9 +402,14 @@ ITSSession.prototype.GenericAjaxUpdateProcessQueue = function () {
                 function (xhr, ajaxOptions, thrownError) {
                     var x = this.genericJSONUpdateQueue[0];
                     this.callJSONUpdateProcessing = false;
-                    if (typeof x.OnError != "undefined") setTimeout(x.OnError.bind(x,xhr, ajaxOptions, thrownError),1);
-                    this.genericJSONUpdateQueue.splice(0,1);
-                    this.GenericAjaxUpdateProcessQueue();
+                    if (xhr.status ==429){
+                        ITSLogger.logMessage(logLevel.ERROR,"Too many updates error detected : " + xhr.status + " - " + thrownError + ". Retrying in one second. ");
+                        setTimeout(this.GenericAjaxUpdateProcessQueue.bind(this),1000);
+                    } else {
+                        if (typeof x.OnError != "undefined") setTimeout(x.OnError.bind(x, xhr, ajaxOptions, thrownError), 1);
+                        this.genericJSONUpdateQueue.splice(0, 1);
+                        this.GenericAjaxUpdateProcessQueue();
+                    }
                 }.bind(this),
                 x.IncludeMaster,
                 x.IncludeClient,
